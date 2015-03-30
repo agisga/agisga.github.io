@@ -1,6 +1,6 @@
 ---
 layout: post
-title: A more intuitive #permute_columns method for NMatrix 
+title: NMatrix column permutations
 ---
 
 Recently I got surprised by the behaviour of `#permute_columns` in *NMatrix*.

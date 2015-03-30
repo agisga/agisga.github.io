@@ -3,7 +3,7 @@ layout: post
 title: NMatrix column permutations
 ---
 
-Recently I got surprised by the behaviour of `#permute_columns` in *NMatrix*.
+Recently I got surprised by the behaviour of `#permute_columns` in the *Ruby* gem *NMatrix*.
 
 Assume we have a matrix *A* consisting of five columns *a0, a1, a2, a3, a4*, and assume that we want to reorder them as *a2, a0, a3, a4, a1*.
 In *Matlab* or *R* we could easily supply the vector *(3, 1, 4, 5, 2)* as the column index in order to get the desired column permutation.
@@ -35,10 +35,10 @@ We construct an array `p` of pair-wise permutations. Since the pair-wise permuta
 we need to keep track of the order of columns after every permutation. Therefore we initialize the array `order = [0,1,2,3,4,...,n-1]`.
 We run the following iterative procedure:
 
-  0. Swap `order[0]` with `order[k]` where `k = final_order[0]`. Save `p[0] = k`.
-  1. Swap `order[1]` with `order[k]` where `k` is the index such that `order[k] = final_order[1]`. Save `p[1] = k`.
-  2. Swap `order[2]` with `order[k]` where `k` is the index such that `order[k] = final_order[2]`. Save `p[2] = k`.
-  3. etc.
+  1. Swap `order[0]` with `order[k]` where `k = final_order[0]`. Save `p[0] = k`.
+  2. Swap `order[1]` with `order[k]` where `k` is the index such that `order[k] = final_order[1]`. Save `p[1] = k`.
+  3. Swap `order[2]` with `order[k]` where `k` is the index such that `order[k] = final_order[2]`. Save `p[2] = k`.
+  4. etc.
 
 It is apparent that the procedure is going to produce a sequence of permutations, such that the ith permutation, puts the column which should be in position `i` in the end into position `i`.
 
