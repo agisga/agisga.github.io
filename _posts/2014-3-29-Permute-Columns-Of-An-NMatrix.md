@@ -19,7 +19,7 @@ Thus, in our example with the permutation array `[2, 2, 3, 4, 4]` the following 
   4. In the result from previous step swap column 3 with column 4: *a2, a0, a3, a4, a1*
   5. In the result from previous step swap column 4 with column 4: *a2, a0, a3, a4, a1*
 
-Notice, that under this convention the permutation array is also not unique. For example `[4, 3, 2, 1, 0]` and `[0, 1, 2, 3, 4]` both yield the original order of columns *a0, a1, a2, a3, a4*.
+Notice, that under this convention the permutation array is also not unique. For example `[4, 3, 2, 1, 0]` or `[4, 1, 2, 3, 4]` or simply `[4]` all yield the reordering *a4, a1, a2, a3, a0*.
 
 A lot of times in scientific computation, one needs to reorder the columns of a matrix in a specific order. It seems very inconvenient having to sit down with a pen and a piece of paper in order to translate the new column order into the sequence of successive pair-wise permutations that the `#permute_columns` method is currently requiring (I think that most people would have to do that if they needed a more complicated permutation than swapping of two columns).
 
