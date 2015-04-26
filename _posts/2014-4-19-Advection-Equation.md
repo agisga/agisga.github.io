@@ -28,8 +28,9 @@ We define and solve this equation using the [Upwind scheme](http://en.wikipedia.
 ```Ruby
 require 'spitzy'
 ic = proc { |x| Math::cos(2*Math::PI*x) + 0.2*Math::cos(10*Math::PI*x) }
-numsol = AdvectionEq.new(xrange: [1.0,2.0], trange: [5.0, 10.0], dx: 1.0/1001,
-                         dt: 0.95/1001, a: 1.0, method: :lax_wendroff, &ic)
+numsol = AdvectionEq.new(xrange: [1.0,2.0], trange: [5.0, 10.0], 
+                         dx: 1.0/1001, dt: 0.95/1001, a: 1.0,
+                         method: :upwind, &ic)
 ```
 
 We can get the equation solved by `numsol` in form of a character string using the method `#equation`.
