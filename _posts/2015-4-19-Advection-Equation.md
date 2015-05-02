@@ -18,12 +18,12 @@ Below is an example of how to use *spitzy* in order to solve a [1D linear advect
 
 We want to solve the 1D linear advection equation given as:
 
-  * PDE: `du/dt + a * du/dx = 0`,
-  * on the domain: `0 < x < 1` and `0 < t < 10`, 
-  * with periodic boundary consitions: `u(0,t) = u(1, t)`,
-  * with initial condition: `u(x,0) = cos(2*PI*x) + 0.2*cos(10*PI*x)`.
+  * PDE: $\frac{du}{dt} + a \frac{du}{dx} = 0$,
+  * on the domain: $0 < x < 1$ and $0 < t < 10$, 
+  * with periodic boundary consitions: $u(0,t) = u(1, t)$,
+  * with initial condition: $u(x,0) = \cos(2\pi x) + \frac{1}{5}\cos(10\pi x)$.
 
-We define and solve this equation using the [Upwind scheme](http://en.wikipedia.org/wiki/Upwind_scheme) with time steps `dt = 0.95/1001` and spatial steps `dx = 1/1001` (i.e. on a grid of 1000 equally sized intervals in *x*). `AdvectionEq.new` lets the user specify the parameters such as length of the space and time steps, time and space domain, the initial condition, etc.
+We define and solve this equation using the [Upwind scheme](http://en.wikipedia.org/wiki/Upwind_scheme) with time steps $dt = 0.95/1001$ and spatial steps $dx = 1/1001$ (i.e. on a grid of 1000 equally sized intervals in $x$). `AdvectionEq.new` lets the user specify the parameters such as length of the space and time steps, time and space domain, the initial condition, etc.
 
 ```Ruby
 require 'spitzy'
@@ -35,9 +35,9 @@ numsol = AdvectionEq.new(xrange: [0.0,1.0], trange: [0.0, 10.0],
 
 We can get the equation solved by `numsol` in form of a character string using the method `#equation`.
 
-There are four different numerical schemes available to solve the advection equation. Those are the Upwind, Leapfrog, Lax-Wendroff and Lax-Friedrichs methods. We can get which scheme was used by `numsol` with the attribute reader `#method`. Similarly we can access the number of *x*-steps `#mx` and *t*-steps `#mt`, as well as various other attributes.
+There are four different numerical schemes available to solve the advection equation. Those are the Upwind, Leapfrog, Lax-Wendroff and Lax-Friedrichs methods. We can get which scheme was used by `numsol` with the attribute reader `#method`. Similarly we can access the number of $x$-steps `#mx` and $t$-steps `#mt`, as well as various other attributes.
 
-Using Fourier methods we compute the exact solution of the PDE to be `cos(2*PI*(x-t)) + 0.2*cos(10*PI*(x-t))`. We can use it to check the accuracy of the numerical solution.
+Using Fourier methods we compute the exact solution of the PDE to be $\cos(2\pi (x-t)) + 0.2\cos(10\pi (x-t))$. We can use it to check the accuracy of the numerical solution.
 
 Combined, the Ruby code produces the following output (the entire code is given at the end of this post).
 
