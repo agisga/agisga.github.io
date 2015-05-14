@@ -3,7 +3,7 @@ layout: post
 title: Dissecting lme4's lmer function. Part 1.
 ---
 
-This blog posts marks the start of my GSoC project with the [Ruby Science Foundation](http://sciruby.com), where I will develop mixed linear models software for Ruby. As a preparation for my GSoC project, I will dedicate a couple of blog posts to a meticulous analysis of [`lme4`](https://github.com/lme4/lme4.git) code (so that I can steal all the ideas from it!).
+This blog posts marks the start of my [Google Summer of Code](https://www.google-melange.com/gsoc/homepage/google/gsoc2015) project with the [Ruby Science Foundation](http://sciruby.com), where I will develop mixed linear models software for Ruby. As a preparation for my GSoC project, I will dedicate a couple of blog posts to a meticulous analysis of [`lme4`](https://github.com/lme4/lme4.git) code (so that I can steal all the ideas from it!).
 
 The `R` package `lme4` is capable of fitting linear, generalized and nonlinear mixed effects models. Here, I am interested in linear mixed models exclusively. A linear mixed model fit is performed in `lme4` with an `lmer` function call. For example:
 
