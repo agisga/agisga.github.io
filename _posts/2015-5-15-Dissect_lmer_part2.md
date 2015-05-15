@@ -47,16 +47,18 @@ Finally, `devfun` is returned, which should also pass the `rho` environment impl
 ### `lmer_Deviance`
 
 This function is defined as `SEXP lmer_Deviance(SEXP pptr_, SEXP rptr_, SEXP theta_)` in `external.cpp`.
-Using the `Rcpp:::Xptr` template, it creates two external pointers to instances of the C++ classes `lmerResp` and `merPredD`, thus exposing all methods of the respective C++ object to the use from R.
+Using the `Rcpp:::Xptr` template, it creates two external pointers to instances of the C++ classes `lmerResp` and `merPredD`, thus exposing all methods of the respective C++ objects to the use from R.
 
 ```C++
         XPtr<lmerResp>   rpt(rptr_);
         XPtr<merPredD>   ppt(pptr_);
 ```
 
-The function proceeds by calling another function, `lmer_dev`, defined in the same file, which carries out the actual computation of the (profiled) deviance function. The mathematical expression of the profiled deviance is given by the following set of formulas (as I have derived in my project plan here: <http://dauns.math.tulane.edu/~agossman/pdfs/GSoC2015_LMM_project_plan.pdf>).
+The function proceeds by calling another function, `lmer_dev`, defined in the same file, which carries out the actual computation of the (profiled) deviance function. The mathematical expression of the profiled deviance is essentially given by the following set of formulas (as I have derived in my project plan here: <http://dauns.math.tulane.edu/~agossman/pdfs/GSoC2015_LMM_project_plan.pdf>).
 
 ![profiled deviance formulas (PNG image)](/images/profiled_deviance.png?raw=true "profiled_deviance.png")
+
+The Cholesky decomposed matrix is part of a linear system, predicting the random terms $u$ and the coefficient vector $\beta$.
 
 These math formulas are evaluated in `lmer_dev` via the following steps:
 
