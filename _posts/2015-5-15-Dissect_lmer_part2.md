@@ -20,7 +20,7 @@ mkLmerDevfun <- function(fr, X, reTrms, REML = TRUE, start = NULL, verbose=0, co
 
 It begins by extracting some variables from the function call, most importantly: 
 
-* `rho` - at first, set to be equal to the parent environment (containing who knows what...),
+* `rho` - a new environment with the parent being the environment from which `mkLmerDevfun` was called (containing who knows what...),
 * `rho$pp` - a new `merPredD` object, which stores the dense model matrix `X`, the transpose of the sparse model matrix for the random effects `Zt`, `Lambdat`the transpose of the sparse lower triangular relative variance, `Lind` integer vector of the same length as the `x` slot in the `Lambdat` field (I don't know yet what it's for), `theta` numeric vector of variance component parameters, `n` sample size, and other auxiliary parameters computed from these.
 * `rho$resp` - an `lmerResp` object, which essentially holds the response vector $y$, and additionally some associated parameters (like the weights for each observation, offset terms and others), as well as the REML flag.
 
