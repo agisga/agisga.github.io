@@ -14,7 +14,7 @@ I will present these new capabilities of the Ruby gem with an example. Then I wi
 The data is supplied to the model fitting method `LMM#from_formula` as a `Daru::DataFrame` (from the excellent Ruby gem [daru](https://github.com/v0dro/daru.git)). In order to test `LMM#from_formula`, I have generated a data set of the following form:
 
 ```Ruby
-> df.head
+> alien_species.head
 => 
 #<Daru::DataFrame:70197332524760 @name = 1cd9d732-526b-49ae-8cb1-35cd69541c87 @size = 10>
                   Age Aggression   Location    Species 
