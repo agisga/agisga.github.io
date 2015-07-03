@@ -3,7 +3,7 @@ layout: post
 title: P-values and confidence intervals
 ---
 
-A few days ago I started working on hypotheses tests and confidence intervals for my project [`mixed_models`](https://github.com/agisga/MixedModels), and I got pretty surprised by certain things.
+A few days ago I started working on hypotheses tests and confidence intervals for my project [`mixed_models`](https://github.com/agisga/mixed_models), and I got pretty surprised by certain things.
 
 # Methods
 
