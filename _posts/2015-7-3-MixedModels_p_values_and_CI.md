@@ -51,10 +51,6 @@ The simulated data set contains two numeric variables *Age* and *Aggression*, an
 
 We model the *Aggression* level of an individual as a linear function of the *Age* (*Aggression* decreases with *Age*), with a different constant added for each *Species* (i.e. each species has a different base level of aggression). Moreover, we assume that there is a random fluctuation in *Aggression* due to the *Location* that an individual is at. Additionally, there is a random fluctuation in how *Age* affects *Aggression* at each different *Location*. 
 
-Thus, the *Aggression* level of an individual of *Species* $spcs$ who is at the *Location* $lctn$ can be expressed as:
-$$Aggression = \beta\subscript{0} + \gamma\subscript{spcs} + Age \cdot \beta\subscript{1} + b\subscript{lctn,0} + Age \cdot b\subscript{lctn,1} + \epsilon,$$
-where $\epsilon$ is a random residual, and the random vector $(b\subscript{lctn,0}, b\subscript{lctn,1})^T$ follows a multivariate normal distribution (the same distribution but different realizations of the random vector for each *Location*). That is, we have a linear mixed model with fixed effects $\beta\subscript{0}, \beta\subscript{1}, \gamma\subscript{Dalek}, \gamma\subscript{Ood}, \dots$ and random effects $b\subscript{Asylum,0}, b\subscript{Asylum,1}, b\subscript{Earth,0},\dots$.
-
 We fit this model in Ruby using `mixed_models` with:
 
 ```Ruby
