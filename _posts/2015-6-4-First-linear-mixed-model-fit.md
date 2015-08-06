@@ -12,9 +12,9 @@ In this short blog post I want to give an example, and compare the results I get
 Mathematically, a [linear mixed model](http://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf)
 has the general form
 
-$$(y | b = \hat{b}) \sim \mathrm{N}(X\beta + Z\hat{b}, \sigma^2 I), \mathrm{\,with\,} b \sim \mathrm{N}(0, \Sigma\subscript{\theta})$$
+$$(y | b = \hat{b}) \sim \mathrm{N}(X\beta + Z\hat{b} + o, \sigma^2 W^{-1}), \mathrm{\,with\,} b \sim \mathrm{N}(0, \Sigma\subscript{\theta})$$
 
-where $y\in\mathbb{R}^n$ and $b\in\mathbb{R}^q$ are random vectors (response and random effects), $\beta\in\mathbb{R}^p$ is the vector of fixed effects, the covariance matrix $\Sigma\subscript{\theta}$ depends on the variance component parameter vector $\theta\in\mathbb{R}^l$.
+where $y\in\mathbb{R}^n$ and $b\in\mathbb{R}^q$ are random vectors (response and random effects), $\beta\in\mathbb{R}^p$ is the vector of fixed effects, $o\in\mathbb{R}^n$ is a vector of known prior offset terms, $W\in\mathbb{R}^{n\times n}$ is a diagonal matrix of known prior weights. The random effects covariance matrix $\Sigma\subscript{\theta}\in\mathbb{R}^{q\times q}$ depends on the variance component parameter vector $\theta\in\mathbb{R}^l$.
 Additionally, via the Cholesky decomposition we write 
 $$\Sigma\subscript{\theta} = \sigma^2 \Lambda\subscript{\theta} \Lambda\subscript{\theta}^T,$$
 where $\Lambda\subscript{\theta}$ is a lower triangular matrix, which is parametrized by $\theta$ in a way that is known a priori. 
