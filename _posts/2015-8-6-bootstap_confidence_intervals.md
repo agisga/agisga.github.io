@@ -19,7 +19,7 @@ Parametric bootstrap for linear mixed models is performed via `LMM#bootstrap`. B
 
 4. Repeat steps 2-3 `nsim` times.
 
-The resampling procedure can be performed in parallel using the Ruby gem [parallel](https://github.com/grosser/parallel) or single-threaded.
+This resampling procedure can be performed in parallel using the Ruby gem [parallel](https://github.com/grosser/parallel) or single-threaded (more on that below).
 
 By default `LMM#bootstrap` returns a bootstrap sample of the fixed effects coefficient estimates, but estimates of any other parameter can be returned as a bootstrap sample if an appropriate `Proc` is passed as argument `what_to_collect`.
 
