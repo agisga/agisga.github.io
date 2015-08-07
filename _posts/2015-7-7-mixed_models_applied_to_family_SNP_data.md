@@ -213,6 +213,7 @@ puts (ci_signif.keys & p_signif)
 produces the output
 
 ```
+SNPs that have Wald p-values <.05 and studentized bootstrap confidence intervals not containing zero:
 SNP2
 SNP7
 SNP10

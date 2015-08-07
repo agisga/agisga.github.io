@@ -173,4 +173,6 @@ single-threaded   101.540000   0.000000 101.540000 (101.452211)
 parallel           16.150000   0.030000 170.980000 ( 55.285422)
 ```
 
-The parallel execution does in fact utilize all of the four CPUs of my laptop (as I can simply observe by watching `htop`). However, the parallel execution turns out to be only twice as fast as single-threaded in this case. The reason is that even though the bootstrap sample is obtained by `LMM#bootstrap` in parallel, the computation of the intervals from the bootstrap sample (like finding percentiles or transformations of the bootstrap sample) is always single-threaded. Better performance can be achieved for example by writing methods specifically adapted to a given data analysis, which would utilize the argument `what_to_collect` in the method `LMM#bootstrap` in a way optimal for the given setting. 
+The parallel execution does in fact utilize all threads on both cores of my laptop (as I can simply observe by watching `htop`). As expected, the parallel execution turns out to be about twice as fast as single-threaded. 
+
+<!--The reason is that even though the bootstrap sample is obtained by `LMM#bootstrap` in parallel, the computation of the intervals from the bootstrap sample (like finding percentiles or transformations of the bootstrap sample) is always single-threaded. Better performance can be achieved for example by writing methods specifically adapted to a given data analysis, which would utilize the argument `what_to_collect` in the method `LMM#bootstrap` in a way optimal for the given setting. -->
