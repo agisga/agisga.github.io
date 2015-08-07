@@ -67,7 +67,7 @@ Of course, confidence intervals can be constructed based on the bootstrap sample
 ci_bootstrap = model_fit.fix_ef_conf_int(method: :bootstrap, boottype: :basic, nsim: 1000)
 ```
 
-The result is a Hash of intervals bounds for each fixed effects term:
+The result is a Hash of interval bounds for each fixed effects term:
 
 ```
 {:intercept=>[901.1323777908297, 1127.8830074251803], 
@@ -141,7 +141,36 @@ Since here we are dealing with data that was simulated according to the assumpti
 
 Theoretical results given in Chapter 5 of A. C. Davison and D. V. Hinkley, *Bootstrap Methods and their Application* guarantee that for statistics which are approximately normal, the studentized bootstrap confidence intervals are second order accurate, meaning that a confidence interval with confidence level of $(1-\alpha)\cdot 100$ contains the true value with a probability of $(1-\alpha) + \mathcal{O}(n^{-1})$, where $n$ is the sample size. The basic and percentile bootstrap methods however are only first order accurate, that is, the interval coverage is correct only up to an order of $n^{-1/2}$. Nevertheless, for equi-tailed confidence intervals (as are all intervals considered above), the basic and percentile methods are second order accurate as well. The normal bootstrap and Wald Z confidence intervals are first order even when they are equi-tailed. Also note that all theoretical results here assume that the bootstrap sample is sufficiently large.
 
-In general, it appears that basic, percentile and studentized intervals are superior in accuracy compared to the normal bootstrap and Wald Z intervals in all circumstances. However, the normal bootstrap interval adjusts for the bias, and only the studentized bootstrap methods adjusts for nonconstant variance and skewness as well as bias.
+In general, it appears that basic, percentile and studentized intervals are superior in accuracy compared to the normal bootstrap and Wald Z intervals in all circumstances. However, the normal bootstrap interval adjusts for the bias, and only the studentized bootstrap method adjusts for nonconstant variance and skewness as well as bias.
 
 Of course, the Wald Z method has the advantage of being computationally efficient and convenient. All bootstrap intervals are computationally very heavy, especially for big data sets.
 Thus, it is probably best to use the Wald Z intervals in the data exploration phase, and compare different kinds of bootstrap intervals once it is more clear what to look for.
+
+## Parallel execution
+
+Finally I also want to examine the parallel computing capabilities of the bootstrap confidence interval methods a little.
+The following code benchmarks the computation of studentized bootstrap confidence intervals in parallel and single-threaded.
+
+```Ruby
+require 'benchmark'
+ci_bootstrap = nil
+Benchmark.bm(17) do |bm|
+  bm.report('single-threaded') do
+    ci_bootstrap = model_fit.fix_ef_conf_int(method: :bootstrap, nsim: nsim, parallel: false)
+  end
+
+  bm.report('parallel') do
+    ci_bootstrap = model_fit.fix_ef_conf_int(method: :bootstrap, nsim: nsim, parallel: true)
+  end
+end
+```
+
+The obtained results are given in this table.
+
+```
+                        user     system      total        real
+single-threaded   101.540000   0.000000 101.540000 (101.452211)
+parallel           16.150000   0.030000 170.980000 ( 55.285422)
+```
+
+The parallel execution does in fact utilize all of the four CPUs of my laptop (as I can simply observe by watching `htop`). However, the parallel execution turns out to be only twice as fast as in this case. The reason is that even though the bootstrap sample is obtained by `LMM#bootstrap` in parallel, the computation of the intervals from the bootstrap sample (like finding percentiles, or transformations of the bootstrap sample) is always single-threaded. Better performance can be achieved for example by writing methods specifically adapted to a given data analysis, which would utilize the argument `what_to_collect` in the method `LMM#bootstrap` in a way optimal for the given setting. 
