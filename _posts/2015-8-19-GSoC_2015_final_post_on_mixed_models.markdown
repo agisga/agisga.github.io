@@ -7,38 +7,38 @@ author: Alexej Gossmann
 categories: [GSOC,GSOC2015,Statistics,Modeling,Regression]
 ---
 
-Google Summer of Code 2015 is coming to an end. During this summer I have learned too many things about statistical modeling, Ruby and software development in general to list here, and I had a lot of fun in the process!
+Google Summer of Code 2015 is coming to an end. During this summer, I have learned too many things to list here about statistical modeling, Ruby and software development in general, and I had a lot of fun in the process!
 
 ## Linear mixed models
 
-My GSoC project is the Ruby gem [mixed_models](https://github.com/agisga/mixed_models). Mixed models are statistical models, which predict the value of a response variable as a result of fixed as well as random effects. The gem in its current version can be used to fit statistical linear mixed models and perform statistical inference on the model parameters as well as to predict future observations. A number of tutorials/examples in IRuby notebook format are accessible from <https://github.com/agisga/mixed_models>.
+My GSoC project is the Ruby gem [mixed_models](https://github.com/agisga/mixed_models). Mixed models are statistical models, which predict the value of a response variable as a result of fixed and random effects. The gem in its current version can be used to fit statistical linear mixed models and perform statistical inference on the model parameters as well as to predict future observations. A number of tutorials/examples in IRuby notebook format are accessible from <https://github.com/agisga/mixed_models>.
 
 Linear mixed models are implemented in the class `LMM`. The constructor method `LMM#initialize` provides a flexible model specification interface, where an arbitrary covariance structure of the random effects terms can be passed as a `Proc` or a block. I have tried to make the code of the model fitting algorithm in `LMM#initialize` easy to read, especially compared to the implementation of the same algorithm in the `R` mixed models package `lme4`.
 
-A convenient user-friendly interface to the basic model fitting algorithm is `LMM#from_formula`, which uses the formula language of the `R` package `lme4` for model specification. With the `#from_formula` method the user can conveniently with one line of code fit models with categorical predictor variables, interaction fixed or random effects, as well as multiple crossed or nested random effects.
+A convenient user-friendly interface to the basic model fitting algorithm is `LMM#from_formula`, which uses the formula language of the `R` package `lme4` for model specification. With the `#from_formula` method, the user can conveniently fit models with categorical predictor variables, interaction fixed or random effects, as well as multiple crossed or nested random effects, all with just one line of code.
 
 ### Existing tools 
 
-Popular existing software packages for mixed models include the `R` package [`lme4`](https://cran.r-project.org/web/packages/lme4/index.html) (which arguably is currently the standard software for linear mixed models), the `R` package [`nlme`](https://cran.r-project.org/web/packages/nlme/index.html) (developed by the same author as `lme4` but older), Python's [`statmodels`](https://github.com/statsmodels/statsmodels/blob/master/statsmodels/regression/mixed_linear_model.py), and the Julia package [`MixedModels.jl`](https://github.com/dmbates/MixedModels.jl). The parameter estimation in `mixed_models` is largely based on the approach developed by the authors of `lme4`, as it is delineated in the `lme4` [vignette](https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf).
+Popular existing software packages for mixed models include the `R` package [`lme4`](https://cran.r-project.org/web/packages/lme4/index.html) (which is arguably the standard software for linear mixed models), the `R` package [`nlme`](https://cran.r-project.org/web/packages/nlme/index.html) (an older package developed by the same author as `lme4`), Python's [`statmodels`](https://github.com/statsmodels/statsmodels/blob/master/statsmodels/regression/mixed_linear_model.py), and the Julia package [`MixedModels.jl`](https://github.com/dmbates/MixedModels.jl). The parameter estimation in `mixed_models` is largely based on the approach developed by the authors of `lme4`, which is delineated in the `lme4` [vignette](https://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf).
 
-Below, I give a couple of examples illustrating some of the capabilities of `mixed_models`, and indicate how `mixed_models` compares to the alternatives.
+Below, I give a couple of examples illustrating some of the capabilities of `mixed_models` and indicate how it compares to the alternatives.
 
 ### A usage example and discussion
 
-As an example, we use [these data](http://archive.ics.uci.edu/ml/datasets/BlogFeedback) from the UCI machine learning repository, which originate from blog posts from various sources in 2010-2012, in order to model (the logarithm of) the number of comments that a blog post receives. The linear predictors are the text length, the log-transform of the average number of comments at the hosting website, the average number of trackbacks at the hosting website, the parent blog posts, and we assume a random effect on the number of comments due to the day of the week on which the blog post was published. In `mixed_models` this model can be fit with:
+As an example, we use [data](http://archive.ics.uci.edu/ml/datasets/BlogFeedback) from the UCI machine learning repository, which originate from blog posts from various sources in 2010-2012, in order to model (the logarithm of) the number of comments that a blog post receives. The linear predictors are the text length, the log-transform of the average number of comments at the hosting website, the average number of trackbacks at the hosting website, and the parent blog posts. We assume a random effect on the number of comments due to the day of the week on which the blog post was published. In `mixed_models` this model can be fit with
 
 ```Ruby
 model_fit = LMM.from_formula(formula: "log_comments ~ log_host_comments_avg + host_trackbacks_avg + length + has_parent_with_comments + (1 | day)", 
                               data: blog_data)
 ```
 
-and we can display some information about the estimated fixed effects with:
+and we can display some information about the estimated fixed effects with
 
 ```Ruby
 puts model_fit.fix_ef_summary.inspect(24)
 ```
 
-which produces the output:
+which produces the following output:
 
 ```
                                              coef                       sd                  z_score            WaldZ_p_value 
@@ -49,7 +49,7 @@ which produces the output:
 has_parent_with_comments      -0.4616662830553772      0.13936886611993773      -3.3125496095955715    0.0009244972814528296 
 ```
 
-We can also display the estimated random effects coefficients and the random effects standard deviation:
+We can also display the estimated random effects coefficients and the random effects standard deviation,
 
 ```Ruby
 puts "Random effects coefficients:"
@@ -58,7 +58,7 @@ puts "Random effects correlation structure:"
 puts model_fit.ran_ef_summary.inspect
 ```
 
-which produces:
+which produces
 
 ```
 Random effects coefficients:
@@ -97,7 +97,7 @@ we           0
  Residual             1.2614
 ```
 
-Unfortunately, `mixed_models` is rather slow when applied to such a large data set (`blog_data` is a data frame of size 22435 x 8), especially when compared to `lme4` which uses many sparse matrix tricks and is mostly written in `C++` (integrated in `R` via `Rcpp`) to speed up computation. The difference in performance between `mixed_models` and `lme4` is of the order of hours for large data, and Julia's `MixedModels.jl` promises to be even faster than `lme4`. However, there is no noticeable difference in performance speed for smaller data sets.
+Unfortunately, `mixed_models` is rather slow when applied to such a large data set (`blog_data` is a data frame of size 22435 x 8), especially when compared to `lme4` which uses many sparse matrix tricks and is mostly written in `C++` (integrated in `R` via `Rcpp`) to speed up computation. The difference in performance between `mixed_models` and `lme4` is on the order of hours for large data, and Julia's `MixedModels.jl` promises to be even faster than `lme4`. However, there is no noticeable difference in performance speed for smaller data sets.
 
 The full data analysis of the blog post data can be found [here](http://nbviewer.ipython.org/github/agisga/mixed_models/blob/master/notebooks/blog_data.ipynb).
 
@@ -106,7 +106,7 @@ The full data analysis of the blog post data can be found [here](http://nbviewer
 Often the experimental design or the data suggests a linear mixed model whose random effects are associated with multiple grouping factors. A specification of multiple random effects terms which correspond to multiple grouping factors is often referred to as *crossed random effect*, or *nested random effects* if the corresponding grouping factors are nested in each other.
 A good reference on such models is [Chapter 2](http://lme4.r-forge.r-project.org/book/Ch2.pdf) of Douglas Bates' `lme4` book.
 
-Like `lme4`, `mixed_models` is particularly well suited for models with crossed or nested random effects. The current release of `statmodels` however does not support crossed or nested random effects (according to the [documentation](http://statsmodels.sourceforge.net/devel/mixed_linear.html)).
+Like `lme4`, `mixed_models` is particularly well suited for models with crossed or nested random effects. The current release of `statmodels`, however, does not support crossed or nested random effects (according to the [documentation](http://statsmodels.sourceforge.net/devel/mixed_linear.html)).
 
 As an example we fit a linear mixed model with nested random effects to a data frame with 100 rows of the form:
 
@@ -127,15 +127,15 @@ We consider the following model:
 * We assume that the intercept varies due to variable `a`; that is, a different (random) intercept term for each level of `a`.
 * Moreover, we assume that the intercept varies due to the factor `b` which is nested in `a`; that is, different (random) intercept for each combination of levels of `a` and `b`.
 
-That is, mathematically the model can be expressed as,
+That is, mathematically the model can be expressed as
 
 ```
 y = beta_0 + beta_1 * x + gamma(a) + delta(a,b) + epsilon
 ```
 
-where `gamma(a) ~ N(0, phi**2)` and `delta(a,b) ~ N(0, psi**2)` are normally distributed random variables which assume different realizations for different values of `a` and `b`; and where `epsilon` is a random Gaussian noise term with variance `sigma**2`. The goal is to estimate the parameters `beta_0`, `beta_1`, `phi`, `psi` and `sigma`.
+where `gamma(a) ~ N(0, phi**2)` and `delta(a,b) ~ N(0, psi**2)` are normally distributed random variables which assume different realizations for different values of `a` and `b`, and where `epsilon` is a random Gaussian noise term with variance `sigma**2`. The goal is to estimate the parameters `beta_0`, `beta_1`, `phi`, `psi` and `sigma`.
 
-We fit this model in `mixed_models`, and display the estimated random effects correlation structure with:
+We fit this model in `mixed_models`, and display the estimated random effects correlation structure with
 
 ```Ruby
 mod = LMM.from_formula(formula: "y ~ x + (1|a) + (1|a:b)", 
@@ -143,7 +143,7 @@ mod = LMM.from_formula(formula: "y ~ x + (1|a) + (1|a:b)",
 puts mod.ran_ef_summary.inspect
 ```
 
-which produces the output:
+which produces the output
 
 ```
                     a    a_and_b 
@@ -153,7 +153,7 @@ which produces the output:
 
 The correlation between the factor `a` and the nested random effect `a_and_b` is denoted as `nil`, because the random effects in the model at hand are assumed to be independent.
 
-An advantage of `mixed_models` to other tools is the simplicity with which p-values and confidence intervals for the parameter estimates can be calculated using a multitude of available methods. Such methods include a likelihood ratio test implementation, multiple bootstrap based methods (which run in parallel by default), and methods based on the Wald Z statistic.
+An advantage of `mixed_models` over some other tools is the simplicity with which p-values and confidence intervals for the parameter estimates can be calculated using a multitude of available methods. Such methods include a likelihood ratio test implementation, multiple bootstrap based methods (which run in parallel by default), and methods based on the Wald Z statistic.
 
 We can compute five types of 95% confidence intervals for the fixed effects coefficients with the following line of code:
 
@@ -161,7 +161,7 @@ We can compute five types of 95% confidence intervals for the fixed effects coef
 mod.fix_ef_conf_int(method: :all, nsim: 1000)
 ```
 
-which yields the result:
+which yields the result
 
 ```
                                           intercept                                        x 
@@ -186,11 +186,11 @@ We get a p-value of 0.000999000999000999, suggesting that we probably should kee
 
 ### A third example - a less conventional model fit
 
-Another advantage of `mixed_models` against comparable tools is the possibility and easiness of fitting models with arbitrary covariance structures of the random effects, which are not covered by the formula interface of `lme4`. This can be done in a user-friendly manner by providing a block or a `Proc` to the `LMM` constructor. This unique feature of the Ruby language makes the implementation and usage of the method incredibly convenient. A danger of allowing for arbitrary covariance structures is of course that such a flexibility gives the user the freedom to specify degenerate and computationally unstable  models.
+Another advantage of `mixed_models` against comparable tools is the ease of fitting models with arbitrary covariance structures of the random effects, which are not covered by the formula interface of `lme4`. This can be done in a user-friendly manner by providing a block or a `Proc` to the `LMM` constructor. This unique feature of the Ruby language makes the implementation and usage of the method incredibly convenient. A danger of allowing for arbitrary covariance structures is, of course, that such a flexibility gives the user the freedom to specify degenerate and computationally unstable  models.
 
 As an example we look at an application to genetics, namely to SNP data ([single-nucleotide polymorphism](https://en.wikipedia.org/wiki/Single-nucleotide_polymorphism)) with known pedigree structures (family relationships of the subjects). The family information is prior knowledge that we can model in the random effects of a linear mixed effects model.
 
-We model the quantitative trait `y` (a vector of length 1200) as,
+We model the quantitative trait `y` (a vector of length 1200) as
 
 ```
 y = X * beta + b + epsilon,
@@ -200,11 +200,11 @@ where `X` is a `1200 x 130` matrix containing the genotypes (i.e. 130 SNPs for e
 
 If we denote the kinship matrix by `K`, then we can express the probability distribution of `b` as `b ~ N(0, delta**2 * 2 * K)`, where we multiply `K` by `2` because the diagonal of `K` is constant `0.5`, and where `delta**2` is a unknown scaling factor.
 
-The goal is to estimate the unknown parameters `beta`, `sigma` and `delta` and to determine which of the fixed effects coefficients are significantly different from 0 (i.e. which SNPs are possibly causing the variability in the trait `y`).
+The goal is to estimate the unknown parameters `beta`, `sigma`, and `delta`, and to determine which of the fixed effects coefficients are significantly different from 0 (i.e. which SNPs are possibly causing the variability in the trait `y`).
 
 In order to specify the covariance structure of the random effects, we need to pass a block or `Proc` that produces the upper triangular Cholesky factor of the covariance matrix of the random effects from an input Array. In this example, that would be the multiplication of the prior known Cholesky factor of the kinship matrix with a scaling factor.
 
-Having all the model matrices and vectors, we compute the Cholesky factor of the kinship matrix and fit the model with:
+Having all the model matrices and vectors, we compute the Cholesky factor of the kinship matrix and fit the model with
 
 
 ```Ruby
@@ -218,13 +218,13 @@ model_fit = LMM.new(x: x, y: y, zt: z,
                     lower_bound: [0.0]) { |th| kinship_mat_cholesky_factor * th[0] }
 ```
 
-Then we can use the available hypotheses test and confidence interval methods to determine which SNPs are significant predictors of the quantitative trait. Out of the 130 SNPs in the model we find 24 to be significant as linear predictors. 
+Then we can use the available hypotheses test and confidence interval methods to determine which SNPs are significant predictors of the quantitative trait. Out of the 130 SNPs in the model, we find 24 to be significant as linear predictors. 
 
 See [this blog post](http://agisga.github.io/mixed_models_applied_to_family_SNP_data/) for a full analysis of this data with `mixed_models`.
 
 ## Room for improvement and future work
 
-* Writing the formula language interpretation code used by `LMM#from_formula` from scratch was not easy. Much of the code can be reorganized to be easier to read and to use in other projects. Possibly, the formula interface should be separated out, similar to how it is done with the Python package package [patsy](https://github.com/pydata/patsy). Also, some shortcut symbols (namely `*`, `/`, and `||`) in the model specification formula language are currently not implemented. 
+* Writing the formula language interpretation code used by `LMM#from_formula` from scratch was not easy. Much of the code can be reorganized to be easier to read and to use in other projects. Possibly, the formula interface should be separated out, similar to how it is done with the Python package [patsy](https://github.com/pydata/patsy). Also, some shortcut symbols (namely `*`, `/`, and `||`) in the model specification formula language are currently not implemented. 
 
 * I plan to add linear mixed models for high-dimensional data (i.e. more predictors than observations) to `mixed_models`, because that work would be in line with my current PhD research.
 
@@ -232,4 +232,4 @@ See [this blog post](http://agisga.github.io/mixed_models_applied_to_family_SNP_
 
 ## Acknowledgement
 
-I want to thank Google and the [Ruby Science Foundation](sciruby.com) for giving me this excellent opportunity! Especially I want to thank [Pjotr Prins](http://thebird.nl/) who was my mentor for the project for much helpful advise and suggestions as well as his prompt responsiveness to any of my concerns. I also want to thank my fellow GSoC participants [Will](https://github.com/wlevine), [Ivan](https://github.com/dilcom) and [Sameer](https://github.com/v0dro) for their help with certain aspects of my project.
+I want to thank Google and the [Ruby Science Foundation](sciruby.com) for giving me this excellent opportunity! I especially want to thank [Pjotr Prins](http://thebird.nl/) who was my mentor for the project for much helpful advice and suggestions as well as his prompt responses to any of my concerns. I also want to thank my fellow GSoC participants [Will](https://github.com/wlevine), [Ivan](https://github.com/dilcom), and [Sameer](https://github.com/v0dro) for their help with certain aspects of my project.
