@@ -8,7 +8,7 @@ I am a PhD student in the Department of Mathematics at Tulane University in New 
 
 ### More information
 
-You can read my [CV](http://dauns.math.tulane.edu/~agossman/pdfs/Alexej_Gossmann-CV.pdf).
+You can read my [CV](pdfs/Alexej_Gossmann-CV.pdf).
 
 ### Contact me
 
