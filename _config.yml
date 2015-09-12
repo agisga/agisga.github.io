@@ -12,6 +12,9 @@ description: math, stats, coding, genetics, ...
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: https://avatars0.githubusercontent.com/u/11449372?v=3&s=460
 
+# specifies how many items should be displayed per page
+paginate: 3
+
 #
 # Flags below are optional
 #
@@ -24,10 +27,10 @@ footer-links:
   flickr:
   github: agisga
   instagram:
-  linkedin:
+  linkedin: alexejgossmann
   pinterest:
   rss: # just type anything here for a working RSS icon, make sure you set the "url" above!
-  twitter: 
+  twitter: agisga
   stackoverflow: # your stackoverflow profile, e.g. "users/50476/bart-kiers"
   youtube: # channel/<your_long_string> or user/<user-name>
 
