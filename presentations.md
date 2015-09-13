@@ -1,7 +1,7 @@
 ---
 layout: page
 title: Presentations 
-permalink: /presentations/
+permalink: /talks/
 ---
 
 * [Identification of Significant Genetic Variants via SLOPE, and its Extension to Group SLOPE](http://www.alexejgossmann.com/presentations/GroupSLOPE.html) &mdash;  The 6th ACM Conference on Bioinformatics, Computational Biology, and Health Informatics, Atlanta, GA, September, 2015.
