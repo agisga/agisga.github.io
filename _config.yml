@@ -6,8 +6,8 @@
 name: Alexej Gossmann 
 
 # Short bio or description (displayed in the header)
-description: math, stats, coding, genetics, ...
-# 10^18+3 is my favorite prime 
+description: I am interested in math, stats, coding, genetics, ...
+# description: 10^18+3 is my favorite prime 
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: https://avatars0.githubusercontent.com/u/11449372?v=3&s=460
@@ -43,7 +43,7 @@ google_analytics:
 
 # Your website URL (e.g. http://barryclark.github.io or http://www.barryclark.co)
 # Used for Sitemap.xml and your RSS feed
-url:
+url: http://www.alexejgossmann.com/
 
 # If you're hosting your site at a Project repository on GitHub pages
 # (http://yourusername.github.io/repository-name)
@@ -69,6 +69,7 @@ sass:
 # Use the following plug-ins
 gems:
   - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
+  - jemoji # Enable emoji
 
 # Exclude these files from your production _site
 exclude:
