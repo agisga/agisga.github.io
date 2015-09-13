@@ -6,9 +6,9 @@ permalink: /publications/
 
 ## Journal Publications
 
-* Shaolong Cao, Huaizhen Qin, Alexej Gossmann, Hong-Wen Deng and Yu-Ping Wang. *Unified tests for fine scale mapping and identifying sparse high-dimensional sequence associations*. &mdash; Currently under review.
+* Shaolong Cao, Huaizhen Qin, Alexej Gossmann, Hong-Wen Deng and Yu-Ping Wang. *Unified tests for fine scale mapping and identifying sparse high-dimensional sequence associations*. &mdash; :mag_right: Currently under review.
 
-* Mimi C. Sammarco, Jennifer Simkin, Alexander Cammack, Danielle Fassler, Alexej Gossmann, Luis Marrero, Michelle Lacey, Keith Van Meter, Ken Muneoka. *Hyperbaric oxygen promotes proximal bone regeneration and organized collagen composition during digit regeneration*. &mdash; Currently under review.
+* Mimi C. Sammarco, Jennifer Simkin, Alexander Cammack, Danielle Fassler, Alexej Gossmann, Luis Marrero, Michelle Lacey, Keith Van Meter, Ken Muneoka. *Hyperbaric oxygen promotes proximal bone regeneration and organized collagen composition during digit regeneration*. &mdash; :mag_right: Currently under review.
 
 ## Conference Papers
 
