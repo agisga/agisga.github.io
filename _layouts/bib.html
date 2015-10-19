@@ -4,3 +4,6 @@
 {% if entry.doi %}
 DOI: <a href="http://dx.doi.org/{{entry.doi}}">{{entry.doi}}</a>.
 {% endif %}
+{% if link %}
+<a href="{{link}}">Download PDF</a>.
+{% endif %}

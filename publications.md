@@ -11,3 +11,7 @@ permalink: /publications/
 ## Conference Papers
 
 {% bibliography --file conference --prefix C %}
+
+## Other
+
+{% bibliography --file other --prefix O %}
