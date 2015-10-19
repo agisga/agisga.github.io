@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NMatrix column permutations – Alexej Gossmann – I am interested in math, stats, coding, genetics, ...</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="Recently I got surprised by the behaviour of #permute_columns in the Ruby gem NMatrix.
+" />
+    <meta property="og:description" content="Recently I got surprised by the behaviour of #permute_columns in the Ruby gem NMatrix.
+" />
+    
+    <meta name="author" content="Alexej Gossmann" />
+
+    
+    <meta property="og:title" content="NMatrix column permutations" />
+    <meta property="twitter:title" content="NMatrix column permutations" />
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - I am interested in math, stats, coding, genetics, ..." href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+ 
+    <!-- MathJax interation-->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}});
+      MathJax.Hub.Config({TeX: {Macros:{subscript:['_{#1}',1],superscript:['^{#1}',1]}}});
+    </script> 
+    <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
+ </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="/" class="site-avatar"><img src="https://avatars0.githubusercontent.com/u/11449372?v=3&s=460" /></a>
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
+            <p class="site-description">I am interested in math, stats, coding, genetics, ...</p>
+          </div>
+
+          <nav>
+            <a href="/about">About</a>
+            <a href="/">Blog</a>
+            <a href="/talks">Presentations</a>
+            <a href="/publications">Publications</a>
+            <a href="/software">Software</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>NMatrix column permutations</h1>
+
+  <div class="entry">
+    <p>Recently I got surprised by the behaviour of <code>#permute_columns</code> in the <em>Ruby</em> gem <em>NMatrix</em>.</p>
+
+<p>Assume we have a matrix <em>A</em> consisting of five columns <em>a0, a1, a2, a3, a4</em>, and assume that we want to reorder them as <em>a2, a0, a3, a4, a1</em>.
+In <em>Matlab</em> or <em>R</em> we could easily supply the vector <em>(3, 1, 4, 5, 2)</em> as the column index in order to get the desired column permutation.
+With the current version of <em>NMatrix</em> however, we have to supply the array <code>[2, 2, 3, 4, 4]</code> as input to the method <code>#permute_columns</code> (additionally, the permutation array is not unique, see below).</p>
+
+<p>The reason for this behaviour of <em>NMatrix</em> is that <code>#permute_columns</code> is using the <em>laswp</em> LAPACK function under the hood, where the permutation array represents a sequence of pair-wise permutations which are performed successively. That is, the ith entry of the array is the index of the column to swap the ith column with, having already applied all earlier swaps. </p>
+
+<p>Thus, in our example with the permutation array <code>[2, 2, 3, 4, 4]</code> the following is happening:</p>
+
+<ol>
+<li>In the original matrix swap column 0 with column 2: <em>a2, a1, a0, a3, a4</em></li>
+<li>In the result from previous step swap column 1 with column 2: <em>a2, a0, a1, a3, a4</em></li>
+<li>In the result from previous step swap column 2 with column 3: <em>a2, a0, a3, a1, a4</em></li>
+<li>In the result from previous step swap column 3 with column 4: <em>a2, a0, a3, a4, a1</em></li>
+<li>In the result from previous step swap column 4 with column 4: <em>a2, a0, a3, a4, a1</em></li>
+</ol>
+
+<p>Notice, that under this convention the permutation array is also not unique. For example <code>[4, 3, 2, 1, 0]</code> or <code>[4, 1, 2, 3, 4]</code> or simply <code>[4]</code> all yield the reordering <em>a4, a1, a2, a3, a0</em>.</p>
+
+<p>A lot of times in scientific computation, one needs to reorder the columns of a matrix in a specific order. It seems very inconvenient having to sit down with a pen and a piece of paper in order to translate the new column order into the sequence of successive pair-wise permutations that the <code>#permute_columns</code> method is currently requiring (I think that most people would have to do that if they needed a more complicated permutation than swapping of two columns).</p>
+
+<p>I thought that it would be nice to have a more intuitive <em>Matlab</em>-like behaviour for <code>#permute_columns</code>, where the method argument would be the desired new order of columns of the matrix. In order to not break back compatibility however, the intuitive behaviour of <code>#permute_columns</code> should be an option, while the current permutation would be the default behaviour. This can be achieved by introducing an argument <code>:convention</code> which can either can be <code>:lapack</code> (the default) or <code>:intuitive</code>. That is, in the example from above we would use the permutation vector <code>[2, 0, 3, 4, 1]</code> and set <code>:convention</code> to <code>:intuitive</code> in order to get the desired reordering <em>a2, a0, a3, a4, a1</em>.</p>
+
+<p>So, a translation function is required which is going to take as input the <em>Matlab</em>-style permutation array and output a corresponding <em>LAPACK</em>-style permutation. Then the <em>LAPACK</em>-style permutation can be plugged into the existing column permutation algorithm. </p>
+
+<p>I came up with a rather simple algorithm for such a translation.
+Basically, in the step <code>i</code> of the algorithm, the column which should be in position <code>i</code> in the end is going to be swapped with whatever column is at position <code>i</code>.</p>
+
+<p>Assume the desired order of columns is given in the array <code>final_order</code>. 
+We construct an array <code>p</code> of pair-wise permutations. Since the pair-wise permutation are performed successively,
+we need to keep track of the order of columns after every permutation. Therefore we initialize the array <code>order = [0,1,2,3,4,...,n-1]</code>.
+We run the following iterative procedure:</p>
+
+<ol>
+<li>Swap <code>order[0]</code> with <code>order[k]</code> where <code>k = final_order[0]</code>. Save <code>p[0] = k</code>.</li>
+<li>Swap <code>order[1]</code> with <code>order[k]</code> where <code>k</code> is the index such that <code>order[k] = final_order[1]</code>. Save <code>p[1] = k</code>.</li>
+<li>Swap <code>order[2]</code> with <code>order[k]</code> where <code>k</code> is the index such that <code>order[k] = final_order[2]</code>. Save <code>p[2] = k</code>.</li>
+<li>etc.</li>
+</ol>
+
+<p>It is apparent that the procedure is going to produce a sequence of permutations, such that the ith permutation, puts the column which should be in position <code>i</code> in the end into position <code>i</code>.</p>
+
+<p>Here is my implementation of <code>#laswp!</code> (<code>#permute_columns</code> merely calls it), which allows the user to use the intuitive Matlab-style column permutation by setting the option <code>:convention</code> to <code>:intuitive</code>.</p>
+<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby">  <span class="c1">#</span>
+  <span class="c1"># call-seq:</span>
+  <span class="c1">#     laswp!(ary) -&gt; NMatrix</span>
+  <span class="c1">#</span>
+  <span class="c1"># In-place permute the columns of a dense matrix using LASWP according to the order given as an array +ary+.</span>
+  <span class="c1">#</span>
+  <span class="c1"># If +:convention+ is +:lapack+, then +ary+ represents a sequence of pair-wise permutations which are </span>
+  <span class="c1"># performed successively. That is, the i&#39;th entry of +ary+ is the index of the column to swap </span>
+  <span class="c1"># the i&#39;th column with, having already applied all earlier swaps. This is the default.</span>
+  <span class="c1">#</span>
+  <span class="c1"># If +:convention+ is +:intuitive+, then +ary+ represents the order of columns after the permutation. </span>
+  <span class="c1"># That is, the i&#39;th entry of +ary+ is the index of the column that will be in position i after the </span>
+  <span class="c1"># reordering (Matlab-like behaviour). </span>
+  <span class="c1">#</span>
+  <span class="c1"># Not yet implemented for yale or list. </span>
+  <span class="c1">#</span>
+  <span class="c1"># == Arguments</span>
+  <span class="c1">#</span>
+  <span class="c1"># * +ary+ - An Array specifying the order of the columns. See above for details.</span>
+  <span class="c1"># </span>
+  <span class="c1"># == Options</span>
+  <span class="c1"># </span>
+  <span class="c1"># * +:covention+ - Possible values are +:lapack+ and +:intuitive+. Default is +:lapack+. See above for details.</span>
+  <span class="c1">#</span>
+  <span class="k">def</span> <span class="nf">laswp!</span><span class="p">(</span><span class="n">ary</span><span class="p">,</span> <span class="n">opts</span><span class="o">=</span><span class="p">{})</span>
+    <span class="k">raise</span><span class="p">(</span><span class="no">StorageTypeError</span><span class="p">,</span> <span class="s2">&quot;ATLAS functions only work on dense matrices&quot;</span><span class="p">)</span> <span class="k">unless</span> <span class="nb">self</span><span class="o">.</span><span class="n">dense?</span>
+    <span class="n">opts</span> <span class="o">=</span> <span class="p">{</span> <span class="ss">convention</span><span class="p">:</span> <span class="ss">:lapack</span> <span class="p">}</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">opts</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">opts</span><span class="o">[</span><span class="ss">:convention</span><span class="o">]</span> <span class="o">==</span> <span class="ss">:intuitive</span>
+      <span class="k">if</span> <span class="n">ary</span><span class="o">.</span><span class="n">length</span> <span class="o">!=</span> <span class="n">ary</span><span class="o">.</span><span class="n">uniq</span><span class="o">.</span><span class="n">length</span>
+        <span class="k">raise</span><span class="p">(</span><span class="no">ArgumentError</span><span class="p">,</span> <span class="s2">&quot;No duplicated entries in the order array are allowed under convention :intuitive&quot;</span><span class="p">)</span>
+      <span class="k">end</span>
+      <span class="n">n</span> <span class="o">=</span> <span class="nb">self</span><span class="o">.</span><span class="n">shape</span><span class="o">[</span><span class="mi">1</span><span class="o">]</span>
+      <span class="nb">p</span> <span class="o">=</span> <span class="o">[]</span>
+      <span class="n">order</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">n</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>
+      <span class="mi">0</span><span class="o">.</span><span class="n">upto</span><span class="p">(</span><span class="n">n</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="nb">p</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">=</span> <span class="n">order</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">ary</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span>
+        <span class="n">order</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span> <span class="n">order</span><span class="o">[</span><span class="nb">p</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span> <span class="o">=</span> <span class="n">order</span><span class="o">[</span><span class="nb">p</span><span class="o">[</span><span class="n">i</span><span class="o">]]</span><span class="p">,</span> <span class="n">order</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
+      <span class="k">end</span>
+      <span class="nb">p</span><span class="o">[</span><span class="n">n</span><span class="o">-</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">n</span><span class="o">-</span><span class="mi">1</span>
+    <span class="k">else</span>
+      <span class="nb">p</span> <span class="o">=</span> <span class="n">ary</span>
+    <span class="k">end</span>
+
+    <span class="no">NMatrix</span><span class="o">::</span><span class="no">LAPACK</span><span class="o">::</span><span class="n">laswp</span><span class="p">(</span><span class="nb">self</span><span class="p">,</span> <span class="nb">p</span><span class="p">)</span>
+  <span class="k">end</span>
+</code></pre></div>
+  </div>
+
+  <div class="date">
+    Written on March 29, 2015
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'agisga';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+
+
+
+<a href="http://github.com/agisga"><i class="svg-icon github"></i></a>
+
+<a href="http://linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
+
+
+<a href="http://twitter.com/agisga"><i class="svg-icon twitter"></i></a>
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>

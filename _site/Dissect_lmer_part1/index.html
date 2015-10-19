@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dissecting lme4's lmer function. Part 1. – Alexej Gossmann – I am interested in math, stats, coding, genetics, ...</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="This blog posts marks the start of my Google Summer of Code project with the Ruby Science Foundation, where I will develop mixed linear models software for Ruby. As a preparation for my GSoC project, I will dedicate a couple of blog posts to a meticulous analysis of lme4 code (so that I can steal all the ideas from it!).
+" />
+    <meta property="og:description" content="This blog posts marks the start of my Google Summer of Code project with the Ruby Science Foundation, where I will develop mixed linear models software for Ruby. As a preparation for my GSoC project, I will dedicate a couple of blog posts to a meticulous analysis of lme4 code (so that I can steal all the ideas from it!).
+" />
+    
+    <meta name="author" content="Alexej Gossmann" />
+
+    
+    <meta property="og:title" content="Dissecting lme4's lmer function. Part 1." />
+    <meta property="twitter:title" content="Dissecting lme4's lmer function. Part 1." />
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - I am interested in math, stats, coding, genetics, ..." href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+ 
+    <!-- MathJax interation-->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}});
+      MathJax.Hub.Config({TeX: {Macros:{subscript:['_{#1}',1],superscript:['^{#1}',1]}}});
+    </script> 
+    <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
+ </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="/" class="site-avatar"><img src="https://avatars0.githubusercontent.com/u/11449372?v=3&s=460" /></a>
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
+            <p class="site-description">I am interested in math, stats, coding, genetics, ...</p>
+          </div>
+
+          <nav>
+            <a href="/about">About</a>
+            <a href="/">Blog</a>
+            <a href="/talks">Presentations</a>
+            <a href="/publications">Publications</a>
+            <a href="/software">Software</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Dissecting lme4's lmer function. Part 1.</h1>
+
+  <div class="entry">
+    <p>This blog posts marks the start of my <a href="https://www.google-melange.com/gsoc/homepage/google/gsoc2015">Google Summer of Code</a> project with the <a href="http://sciruby.com">Ruby Science Foundation</a>, where I will develop mixed linear models software for Ruby. As a preparation for my GSoC project, I will dedicate a couple of blog posts to a meticulous analysis of <a href="https://github.com/lme4/lme4.git"><code>lme4</code></a> code (so that I can steal all the ideas from it!).</p>
+
+<p>The <code>R</code> package <code>lme4</code> is capable of fitting linear, generalized and nonlinear mixed effects models. Here, I am interested in linear mixed models exclusively. A linear mixed model fit is performed in <code>lme4</code> with an <code>lmer</code> function call. For example:</p>
+<div class="highlight"><pre><code class="language-R" data-lang="R"><span class="kn">library</span><span class="p">(</span>lme4<span class="p">)</span>
+data<span class="p">(</span>sleepstudy<span class="p">)</span>
+fm1 <span class="o">&lt;-</span> lmer<span class="p">(</span>Reaction <span class="o">~</span> Days <span class="o">+</span> <span class="p">(</span>Days <span class="o">|</span> Subject<span class="p">),</span> sleepstudy<span class="p">)</span>
+</code></pre></div>
+<p>Thus, the first function to dissect is <code>lmer</code>.
+The function definition of <code>lmer</code> is located in the file <code>lmer.R</code>.
+The code is confusing. So, let&#39;s go through it step-by-step.</p>
+
+<h1>General overview</h1>
+
+<p>The general steps taken in <code>lmer</code> are:</p>
+
+<ol>
+<li><p><em>Set some parameters in the local environment</em>. In particular, deal with the function argument <code>control</code>, which usually is a list inheriting from class <code>merControl</code> (but <code>control</code> can be defined in other ways too, and the code deals with all possibilities in a multitude of lines). It includes general parameters such as the optimizer to be used, model- and data-checking specifications, and all parameters to be passed to the optimizer.</p></li>
+<li><p><em>Parse data and formula</em>. At this step the fixed effects matrix $X$, the random effects matrix $Z$, the parameter vector $\theta$, the covariance factor $\Lambda\subscript{\theta}$, etc. are created from the input data. Moreover, the <code>REML</code> flag is set, formula is rewritten in the preferred form, and warnings from checks for the random effects (e.g. about the number of levels, dimension of $Z$, rank of $Z$) are generated. This all is performed by the function <code>lFormula</code>, which is located in <code>modular.R</code>.</p></li>
+<li><p><em>Create the deviance function to be minimized</em>. Call the function <code>mkLmerDevfun</code>, which returns a function <code>devfun</code> to calculate the profiled deviance. Implicitly <code>mkLmerDevfun</code> also returns an environment required to evaluate <code>devfun</code>. The function definition of <code>mkLmerDevfun</code> can be found in <code>modular.R</code>.</p></li>
+<li><p><em>Optimize the deviance function w.r.t.</em> $\theta$. Optimize the deviance <code>devfun</code> with respect to the covariance parameters $\theta$. This is performed by the function <code>optimizeLmer</code> (located in <code>modular.R</code>), which returns the result of the optimization.</p></li>
+<li><p><em>Check convergence criteria</em>. Convergence check according to the convergence check options specified in <code>control</code>, performed by the function <code>checkConv</code>, which is implemented in the file <code>checkConv.R</code>.</p></li>
+<li><p><em>Set up a useful output object</em>. Package the results into a <code>merMod</code> object to return. This is performed by the function <code>mkMerMod</code>, located in the file <code>utilities.R</code>.</p></li>
+</ol>
+
+<p>Step 2-6 perform function calls to other sophisticated functions. We will dissect each of those separately in what follows.</p>
+
+<h1>Processing the formula - <code>lFormula</code></h1>
+
+<p>Defined as:</p>
+<div class="highlight"><pre><code class="language-R" data-lang="R">lFormula <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>formula<span class="p">,</span> data<span class="o">=</span><span class="kc">NULL</span><span class="p">,</span> REML <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
+                     <span class="kp">subset</span><span class="p">,</span> weights<span class="p">,</span> na.action<span class="p">,</span> offset<span class="p">,</span> contrasts <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
+                     control<span class="o">=</span>lmerControl<span class="p">(),</span> <span class="kc">...</span><span class="p">)</span>
+</code></pre></div>
+<p>It proceeds with the following steps:</p>
+
+<ul>
+<li><p><em>Check the input arguments</em>. Call <code>checkArgs</code> on the given input arguments, in order to produces some warnings (about &quot;family&quot; and &quot;method&quot; being deprecated, and extra unused arguments) if necessary. Check that the input for <code>check.formula.LHS</code> is a valid value via the function <code>checkCtrlLevels</code>. The function <code>checkArgs</code> is defined in <code>utilities.R</code>, and <code>checkCtrlLevels</code> is defined in <code>modular.R</code>.</p></li>
+<li><p><em>Check and adjust the given formula and data frame</em>. Check the provided formula and data with <code>checkFormulaData</code> from <code>utilities.R</code> (e.g. check missing data, check if formula has a left hand side, etc.). From the right hand side of a formula for a mixed-effects model, expand terms with <code>||</code> into separate, independent random effect terms written with <code>|</code> (<code>expandDoubleVerts</code> is defined in <code>utilities.R</code>, <code>RHSForm</code> is defined in <code>modular.R</code>). Generate a data frame with only the variables needed to use the given formula.</p></li>
+<li><p><em>Create the random effects model matrix</em> $Z$, <em>its covariance factor</em> $\Lambda\subscript{\theta}$, <em>as well as the parametrization</em> $\theta$, <em>etc</em>. This is performed by the function <code>mkReTrms</code>, which is defined in <code>utilities.R</code>. Additionally, check that all grouping structures have at least 2 levels, that for each random effect $Z$ has more columns than rows, that the rank of $Z$ is not greater than $n$, etc. with the functions <code>checkNlevels</code>, <code>checkZdims</code>, <code>checkZrank</code> (all defined in <code>modular.R</code>). </p></li>
+<li><p><em>Create the fixed effects design matrix</em> $X$. Only basic <code>R</code> functions like <code>model.matrix</code> used here.</p></li>
+<li><p><em>Return a data frame with variables required to use the formula</em>. That is, fixed effects matrix $X$; <code>reTrms</code> containing the random effects matrix $Z$, covariance factor $\Lambda\subscript{\theta}$, etc.; <code>REML</code> flag; the formula; warnings from checks for the random effects (number of levels, dimension of $Z$, rank of $Z$, etc.). </p></li>
+</ul>
+
+  </div>
+
+  <div class="date">
+    Written on May 10, 2015
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'agisga';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+
+
+
+<a href="http://github.com/agisga"><i class="svg-icon github"></i></a>
+
+<a href="http://linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
+
+
+<a href="http://twitter.com/agisga"><i class="svg-icon twitter"></i></a>
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>

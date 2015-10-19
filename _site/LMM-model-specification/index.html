@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Model specification for linear mixed model – Alexej Gossmann – I am interested in math, stats, coding, genetics, ...</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="Last week I wrote about my implementation of an algorithm that fits a linear mixed model in Ruby using the gem MixedModels, that I am working on right now. See, first rudimentary LMM fit.
+" />
+    <meta property="og:description" content="Last week I wrote about my implementation of an algorithm that fits a linear mixed model in Ruby using the gem MixedModels, that I am working on right now. See, first rudimentary LMM fit.
+" />
+    
+    <meta name="author" content="Alexej Gossmann" />
+
+    
+    <meta property="og:title" content="Model specification for linear mixed model" />
+    <meta property="twitter:title" content="Model specification for linear mixed model" />
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - I am interested in math, stats, coding, genetics, ..." href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+ 
+    <!-- MathJax interation-->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}});
+      MathJax.Hub.Config({TeX: {Macros:{subscript:['_{#1}',1],superscript:['^{#1}',1]}}});
+    </script> 
+    <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
+ </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="/" class="site-avatar"><img src="https://avatars0.githubusercontent.com/u/11449372?v=3&s=460" /></a>
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
+            <p class="site-description">I am interested in math, stats, coding, genetics, ...</p>
+          </div>
+
+          <nav>
+            <a href="/about">About</a>
+            <a href="/">Blog</a>
+            <a href="/talks">Presentations</a>
+            <a href="/publications">Publications</a>
+            <a href="/software">Software</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Model specification for linear mixed model</h1>
+
+  <div class="entry">
+    <p>Last week I wrote about my implementation of an algorithm that fits a linear mixed model in Ruby using the gem <a href="https://github.com/agisga/MixedModels">MixedModels</a>, that I am working on right now. See, <a href="http://agisga.github.io/First-linear-mixed-model-fit/">first rudimentary LMM fit</a>.</p>
+
+<p>The currently available interface to the method is rather unfriendly to the user. First, I was planning on reproducing the interface of the R mixed models library lme4, but that appears to be too complicated and too time consuming. I spend some time thinking about what to do instead. Below, I present an idea and it&#39;s comparison to the lme4 interface in R. In particular, I want to write a more user-friendly initialization method <code>LMM#from_daru</code> that will work on <a href="https://github.com/v0dro/daru">daru</a> data sets.</p>
+
+<h3>Random intercept model</h3>
+
+<p>Simplest model. The i&#39;th observation of &quot;yield&quot; in the j&#39;th batch is modeled as:
+$$Yield\subscript{ij} = Intercept + BatchEffect\subscript{j} + RandomError\subscript{ij},$$
+where &quot;Intercept&quot; is the overall mean, and &quot;BatchEffect&quot; denotes a random effect due to the batch that the i&#39;th observation was in.</p>
+
+<p>In lme4 (R):</p>
+<div class="highlight"><pre><code class="language-R" data-lang="R">fm01 <span class="o">&lt;-</span> lmer<span class="p">(</span>Yield <span class="o">~</span> <span class="m">1</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">|</span>Batch<span class="p">),</span> Dyestuff<span class="p">)</span>
+</code></pre></div>
+<p>In MixedModels (Ruby):</p>
+<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="n">fm01</span> <span class="o">=</span> <span class="no">LMM</span><span class="o">.</span><span class="n">from_daru</span><span class="p">(</span><span class="ss">response</span><span class="p">:</span> <span class="ss">:yield</span><span class="p">,</span>
+                     <span class="ss">fixed_effects</span><span class="p">:</span> <span class="ss">:intercept</span><span class="p">,</span>
+                     <span class="ss">random_effects</span><span class="p">:</span> <span class="ss">:intercept</span><span class="p">,</span>
+                     <span class="ss">grouping</span><span class="p">:</span> <span class="ss">:batch</span><span class="p">,</span>
+                     <span class="ss">data</span><span class="p">:</span> <span class="n">dyestuff</span><span class="p">)</span>
+</code></pre></div>
+<h3>Crossed random effects</h3>
+
+<p>Simple crossed random effects. The i&#39;th observation of &quot;diameter&quot; in the j&#39;th &quot;sample&quot; from the k&#39;th &quot;plate&quot; is modeled as:
+$$diameter\subscript{ijk} = Intercept + SampleIntercept\subscript{j} + PlateIntercept\subscript{k} + RandomError\subscript{ij},$$
+where &quot;Intercept&quot; is the overall average, and &quot;SampleIntercept&quot; as well as &quot;PlateIntercept&quot; are random intercept terms, due to the sample and plate that a particular observation comes from.</p>
+
+<p>In R, lme4:</p>
+<div class="highlight"><pre><code class="language-R" data-lang="R">fm03 <span class="o">&lt;-</span> lmer<span class="p">(</span>diameter <span class="o">~</span> <span class="m">1</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">|</span>plate<span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="kp">sample</span><span class="p">),</span> Penicillin<span class="p">))</span>
+</code></pre></div>
+<p>In Ruby, MixedModels:</p>
+<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="n">fm03</span> <span class="o">=</span> <span class="no">LMM</span><span class="o">.</span><span class="n">from_daru</span><span class="p">(</span><span class="ss">response</span><span class="p">:</span> <span class="ss">:diameter</span><span class="p">,</span>
+                     <span class="ss">fixed_effects</span><span class="p">:</span> <span class="ss">:intercept</span><span class="p">,</span>
+                     <span class="ss">random_effects</span><span class="p">:</span> <span class="o">[</span><span class="ss">:intercept</span><span class="p">,</span> <span class="ss">:intercept</span><span class="o">]</span><span class="p">,</span>
+                     <span class="ss">grouping</span><span class="p">:</span> <span class="o">[</span><span class="ss">:plate</span><span class="p">,</span> <span class="ss">:sample</span><span class="o">]</span><span class="p">,</span>
+                     <span class="ss">data</span><span class="p">:</span> <span class="n">penicillin</span><span class="p">)</span>
+</code></pre></div>
+<h3>Nested random effects</h3>
+
+<p>The i&#39;th observation of &quot;BoneGrowth&quot; in the m&#39;th &quot;digit&quot; of the k&#39;th &quot;foot&quot; of the j&#39;th &quot;mouse&quot; can be modelled as:
+$$BoneGrowth\subscript{ijkm} = Intercept +  MouseIntercept\subscript{j} + FootIntercept\subscript{kj} + RandomError\subscript{ijkm},$$
+i.e. the random effect &quot;foot&quot; only appears as nested within &quot;mouse&quot; (i.e. the intercept due to foot 1 in mouse 1 is different than the intercept due to foot 1 in mouse 2).</p>
+
+<p>In R, lme4:</p>
+<div class="highlight"><pre><code class="language-R" data-lang="R">bone.growth.lmer <span class="o">&lt;-</span> lmer<span class="p">(</span>BoneGrowth <span class="o">~</span> <span class="m">1</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">|</span>mouse<span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">|</span>mouse<span class="o">:</span>foot<span class="p">),</span> 
+                         data <span class="o">=</span> dat<span class="p">)</span>
+</code></pre></div>
+<p>or more succinct:</p>
+<div class="highlight"><pre><code class="language-R" data-lang="R">bone.growth.lmer <span class="o">&lt;-</span> lmer<span class="p">(</span>BoneGrowth <span class="o">~</span> <span class="p">(</span><span class="m">1</span><span class="o">|</span>mouse<span class="o">/</span>foot<span class="p">),</span> data <span class="o">=</span> dat<span class="p">)</span>
+</code></pre></div>
+<p>In Ruby, MixedModels: Construct additional data frame columns, describing the interaction of foot and mouse, by hand. Then fit a model as shown above for crossed random effects...</p>
+
+<h3>Random slopes.</h3>
+
+<p>The i&#39;th observation of &quot;politeness&quot; in the j&#39;th subject and the k&#39;th scenario is modeled as:</p>
+
+<p>$$\begin{eqnarray} 
+Politeness\subscript{ijk} &amp;=&amp; Intercept + SubjectIntercept\subscript{j} + ScenarioIntercept\subscript{k} \\
+ &amp;+&amp; IsFemale\subscript{ijk} \cdot FixedEffect + IQ\subscript{ijk} \cdot AnotherFixedEffect \\
+&amp;+&amp; Attitude\subscript{ijk} \cdot SubjectSlope\subscript{j} + Attitude\subscript{ijk} \cdot ScenarioSlope\subscript{k} \\
+ &amp;+&amp; RandomError\subscript{ijk},
+\end{eqnarray}$$</p>
+
+<p>where we assume a random intercept and slope due to &quot;subject&quot;, and a random intercept and slope due to &quot;scenario&quot;.</p>
+
+<p>This can be expressed in R as:</p>
+<div class="highlight"><pre><code class="language-R" data-lang="R">politeness.model <span class="o">=</span> lmer<span class="p">(</span>politeness <span class="o">~</span> gender <span class="o">+</span> IQ <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">+</span>attitude<span class="o">|</span>subject<span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">+</span>attitude<span class="o">|</span>scenario<span class="p">),</span> data<span class="o">=</span>politeness<span class="p">)</span>
+</code></pre></div>
+<p>And the equivalent in Ruby would be:</p>
+<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="n">politeness_model</span> <span class="o">=</span> <span class="no">LMM</span><span class="o">.</span><span class="n">from_daru</span><span class="p">(</span><span class="ss">response</span><span class="p">:</span> <span class="ss">:politeness</span><span class="p">,</span>
+                                 <span class="ss">fixed_effects</span><span class="p">:</span> <span class="o">[</span><span class="ss">:gender</span><span class="p">,</span> <span class="ss">:IQ</span><span class="o">]</span><span class="p">,</span>
+                                 <span class="ss">random_efffects</span><span class="p">:</span> <span class="o">[</span> <span class="o">[</span><span class="ss">:intercept</span><span class="p">,</span> <span class="ss">:attitude</span><span class="o">]</span><span class="p">,</span> <span class="o">[</span><span class="ss">:intercept</span><span class="p">,</span> <span class="ss">:attitude</span><span class="o">]</span> <span class="o">]</span><span class="p">,</span>
+                                 <span class="ss">grouping</span><span class="p">:</span> <span class="o">[</span><span class="ss">:subject</span><span class="p">,</span> <span class="ss">:scenario</span><span class="o">]</span><span class="p">,</span>
+                                 <span class="ss">data</span><span class="p">:</span> <span class="n">politeness</span><span class="p">)</span>
+</code></pre></div>
+<h3>Interaction effects, and transformations of the fixed effects</h3>
+
+<p>We model the i&#39;th observation in the j&#39;th batch as:
+$$z\subscript{ij} = \beta\subscript{0} + x\subscript{ij} \cdot \beta\subscript{1} + x\subscript{ij}^2 \cdot \beta\subscript{2}
++ y\subscript{ij} \cdot \beta\subscript{3} + x\subscript{ij}y\subscript{ij} \cdot \beta\subscript{4} + u\subscript{j} + \epsilon\subscript{ij},$$
+where $u\subscript{j}$ denotes the random intercept of the j&#39;th batch and $\epsilon\subscript{ij}$ is the random error.</p>
+
+<p>In R, lme4:</p>
+<div class="highlight"><pre><code class="language-R" data-lang="R">modfit <span class="o">&lt;-</span> lmer<span class="p">(</span>z <span class="o">~</span> x<span class="o">*</span>y <span class="o">+</span> <span class="kp">I</span><span class="p">(</span>x<span class="o">^</span><span class="m">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">|</span>u<span class="p">))</span>
+</code></pre></div>
+<p>In Ruby, MixedModels: By hand, generate new columns to the <code>daru</code> data frame. Namely, a column containing the squares of $x$ and a column containing the products $xy$. Then call <code>LMM#from_daru</code> as,</p>
+<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="n">modfit</span> <span class="o">=</span> <span class="no">LMM</span><span class="o">.</span><span class="n">from_daru</span><span class="p">(</span><span class="ss">response</span><span class="p">:</span> <span class="ss">:z</span><span class="p">,</span>
+                       <span class="ss">fixed_effects</span><span class="p">:</span> <span class="o">[</span><span class="ss">:intercept</span><span class="p">,</span> <span class="ss">:x</span><span class="p">,</span> <span class="ss">:x2</span><span class="p">,</span> <span class="ss">:y</span><span class="p">,</span> <span class="ss">:xy</span><span class="o">]</span><span class="p">,</span>
+                       <span class="ss">random_effects</span><span class="p">:</span> <span class="ss">:intercept</span><span class="p">,</span>
+                       <span class="ss">grouping</span><span class="p">:</span> <span class="ss">:u</span><span class="p">,</span>
+                       <span class="ss">data</span><span class="p">:</span> <span class="n">your_xyzu_data</span><span class="p">)</span>
+</code></pre></div>
+<h3>Summary</h3>
+
+<p>This list of examples is most likely far from exhaustive, but it presents some of the most common types of linear mixed model fits.</p>
+
+<p>Disadvantages of my proposed model specification interface for Ruby compared to R:</p>
+
+<ul>
+<li>Lengthy</li>
+<li>No interaction effects</li>
+<li>No nested effects</li>
+<li>No transformations of predictors</li>
+<li>...</li>
+</ul>
+
+  </div>
+
+  <div class="date">
+    Written on June 12, 2015
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'agisga';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+
+
+
+<a href="http://github.com/agisga"><i class="svg-icon github"></i></a>
+
+<a href="http://linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
+
+
+<a href="http://twitter.com/agisga"><i class="svg-icon twitter"></i></a>
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>

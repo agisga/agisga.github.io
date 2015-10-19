@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dissecting lme4's lmer function. Part 3. – Alexej Gossmann – I am interested in math, stats, coding, genetics, ...</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="This is the final part of my analysis of the function lmer, which is used to fit linear mixed models in the R package lme4.
+In two previous blog posts, we have seen the general layout of the function lmer, the dealings with the R model formula, and the setting up of the objective function for the optimization (see part 1 and part 2).
+" />
+    <meta property="og:description" content="This is the final part of my analysis of the function lmer, which is used to fit linear mixed models in the R package lme4.
+In two previous blog posts, we have seen the general layout of the function lmer, the dealings with the R model formula, and the setting up of the objective function for the optimization (see part 1 and part 2).
+" />
+    
+    <meta name="author" content="Alexej Gossmann" />
+
+    
+    <meta property="og:title" content="Dissecting lme4's lmer function. Part 3." />
+    <meta property="twitter:title" content="Dissecting lme4's lmer function. Part 3." />
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - I am interested in math, stats, coding, genetics, ..." href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+ 
+    <!-- MathJax interation-->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}});
+      MathJax.Hub.Config({TeX: {Macros:{subscript:['_{#1}',1],superscript:['^{#1}',1]}}});
+    </script> 
+    <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
+ </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="/" class="site-avatar"><img src="https://avatars0.githubusercontent.com/u/11449372?v=3&s=460" /></a>
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
+            <p class="site-description">I am interested in math, stats, coding, genetics, ...</p>
+          </div>
+
+          <nav>
+            <a href="/about">About</a>
+            <a href="/">Blog</a>
+            <a href="/talks">Presentations</a>
+            <a href="/publications">Publications</a>
+            <a href="/software">Software</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Dissecting lme4's lmer function. Part 3.</h1>
+
+  <div class="entry">
+    <p>This is the final part of my analysis of the function <code>lmer</code>, which is used to fit linear mixed models in the R package <code>lme4</code>.
+In two previous blog posts, we have seen the general layout of the function <code>lmer</code>, the dealings with the R model formula, and the setting up of the objective function for the optimization (see <a href="http://agisga.github.io/Dissect_lmer_part1/">part 1</a> and <a href="http://agisga.github.io/Dissect_lmer_part2/">part 2</a>).</p>
+
+<p>After the user-specified R model formula is evaluated to model matrices, vectors and parameters, and the objective function is generated, the function <code>optimizeLmer</code> is called from within <code>lmer</code> to carry out the optimization. We analyse <code>optimizeLmer</code> below.</p>
+
+<h1>Minimizing the deviance - <code>optimizeLmer</code></h1>
+
+<p>The function takes as input arguments the previously generated deviance function <code>devfun</code>, the provided (or previously computed by <code>mkLmerDevfun</code>) starting values <code>start</code> for the optimization, and other optimization parameters (such as the method to be used) bundled in the <code>merControl</code> object <code>control</code>.</p>
+
+<p>Then an environment is defined as <code>rho &lt;- environment(devfun)</code>. That is, <code>rho</code> contains all the parameters defined by <code>mkLmerDevfun</code> during the generation of <code>devfun</code>; and additionally, the parent environment of <code>rho</code> is the environment from which <code>mkLmerDevfun</code> was called (so, there is access to variables from there as well).</p>
+
+<p>Eventually the function <code>optwrap</code> (which is defined in <code>lmer.R</code>) is called to carry out the actual optimization. We dissect <code>optwrap</code> below. The returned object is saved as <code>opt</code>.</p>
+
+<h2><code>optwrap</code></h2>
+
+<ul>
+<li><p>Use <code>getOptfun</code> in order to check that the user-specified optimizer is supported.</p></li>
+<li><p>Deal with the peculiarities regarding the input arguments of the supported optimizer functions (e.g. modify <code>control</code> so that the verbose argument will be passed on correctly), and set up other input arguments for the optimizer with <code>arglist &lt;- list(fn = fn, par = par, lower = lower, upper = upper, control = control)</code>.</p></li>
+<li><p>Call the optimizer:</p></li>
+</ul>
+<div class="highlight"><pre><code class="language-R" data-lang="R">opt <span class="o">&lt;-</span> <span class="kp">withCallingHandlers</span><span class="p">(</span><span class="kp">do.call</span><span class="p">(</span>optfun<span class="p">,</span> arglist<span class="p">),</span>
+                           warning <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>w<span class="p">)</span> <span class="p">{</span>
+                               curWarnings <span class="o">&lt;&lt;-</span> <span class="kp">append</span><span class="p">(</span>curWarnings<span class="p">,</span><span class="kt">list</span><span class="p">(</span>w<span class="o">$</span><span class="kp">message</span><span class="p">))</span>
+                           <span class="p">})</span>
+</code></pre></div>
+<ul>
+<li><p>Do some post optimization tweaking: rename the parameters in <code>opt</code> in a consistent way and pass on all warnings.</p></li>
+<li><p>Compute the gradient for the objective function at the estimated minimal values using the function <code>deriv12</code>, which uses a central finite difference method.</p></li>
+<li><p>Store all auxiliary information and return <code>opt</code>:</p></li>
+</ul>
+<div class="highlight"><pre><code class="language-R" data-lang="R"><span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;optimizer&quot;</span><span class="p">)</span> <span class="o">&lt;-</span> optimizer
+<span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;control&quot;</span><span class="p">)</span> <span class="o">&lt;-</span> control
+<span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;warnings&quot;</span><span class="p">)</span> <span class="o">&lt;-</span> curWarnings
+<span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;derivs&quot;</span><span class="p">)</span> <span class="o">&lt;-</span> derivs
+opt
+</code></pre></div>
+<h1>Extended convergence checking - <code>checkConv</code></h1>
+
+<p>If the optimization yields a result, then it is checked against additional convergence criteria by the function <code>checkConv</code>.</p>
+
+<ul>
+<li>Compute a scaled gradient as the solution to the linear system with the Cholesky factor of the Hessian as the matrix on the left hand side, and the gradient on the right hand side:</li>
+</ul>
+<div class="highlight"><pre><code class="language-R" data-lang="R">scgrad <span class="o">&lt;-</span> <span class="kp">tryCatch</span><span class="p">(</span><span class="kp">with</span><span class="p">(</span>derivs<span class="p">,</span><span class="kp">solve</span><span class="p">(</span><span class="kp">chol</span><span class="p">(</span>Hessian<span class="p">),</span>gradient<span class="p">)),</span>
+                        error<span class="o">=</span><span class="kr">function</span><span class="p">(</span>e<span class="p">)</span>e<span class="p">)</span>
+</code></pre></div>
+<ul>
+<li><p>Find the parallel minimum of the gradient and the scaled gradient of the objective function as <code>mingrad &lt;- pmin(abs(scgrad),abs(derivs$gradient))</code>. Check whether the maximal entry of <code>mingrad</code> is above a specified threshold (default is 2e-3).</p></li>
+<li><p>Similarly check the relative gradient against a specified relative tolerance (disabled by default).</p></li>
+<li><p>Check whether the variance of any random effect is below a specified tolerance (i.e. equal to 0), that is, whether we have a singular fit. The default tolerance level here is 1e-4.</p></li>
+<li><p>Check the Hessian of the objective function for convergence. This check is implemented in the function <code>checkHess</code>, which performs the following steps:</p>
+
+<ul>
+<li>Check that the Hessian has no negative eigenvalues (less that <code>-tol</code>, where tol is 1e-6 by default).</li>
+<li>Check that the Hessian does not have very large eigenvalues, determined by $\rho(H) \cdot \mathrm{tol} &gt; 1$ (where $\rho(H)$ is the <a href="http://en.wikipedia.org/wiki/Spectral_radius">spectral radius</a> of the Hessian, and tol is 1e-6 by default).</li>
+<li>Check that the ratio of the minimal to the maximal eigenvalues is not below <code>tol</code>; which is equivalent to the <a href="http://en.wikipedia.org/wiki/Condition_number">conditional number</a> of the Hessian being smaller than <code>1/tol</code>. </li>
+</ul></li>
+<li><p>Return all messages and warnings.</p></li>
+</ul>
+
+<h1>Prepare an output object - <code>mkMerMod</code></h1>
+
+<p>This function takes as inputs the environment of the objective function, the parameter estimates obtained from the optimization, the fixed effects and random effects model matrices etc., the original function call, and the messages generated from the convergence check in <code>checkConv</code>. 
+It checks, reorganizes and renames the parameters, and finally returns everything in an object of class <code>lmerMod</code>:</p>
+<div class="highlight"><pre><code class="language-R" data-lang="R">new<span class="p">(</span><span class="kr">switch</span><span class="p">(</span>rcl<span class="p">,</span> lmerResp<span class="o">=</span><span class="s">&quot;lmerMod&quot;</span><span class="p">,</span> glmResp<span class="o">=</span><span class="s">&quot;glmerMod&quot;</span><span class="p">,</span> nlsResp<span class="o">=</span><span class="s">&quot;nlmerMod&quot;</span><span class="p">),</span>
+    call<span class="o">=</span>mc<span class="p">,</span> frame<span class="o">=</span>fr<span class="p">,</span> flist<span class="o">=</span>reTrms<span class="o">$</span>flist<span class="p">,</span> cnms<span class="o">=</span>reTrms<span class="o">$</span>cnms<span class="p">,</span>
+    Gp<span class="o">=</span>reTrms<span class="o">$</span>Gp<span class="p">,</span> theta<span class="o">=</span>pp<span class="o">$</span>theta<span class="p">,</span> beta<span class="o">=</span><span class="kp">beta</span><span class="p">,</span>
+    u<span class="o">=</span><span class="kr">if</span> <span class="p">(</span>trivial.y<span class="p">)</span> <span class="kp">rep</span><span class="p">(</span><span class="kc">NA_real_</span><span class="p">,</span><span class="kp">nrow</span><span class="p">(</span>pp<span class="o">$</span>Zt<span class="p">))</span> <span class="kr">else</span> pp<span class="o">$</span>u<span class="p">(</span>fac<span class="p">),</span>
+    lower<span class="o">=</span>reTrms<span class="o">$</span>lower<span class="p">,</span> devcomp<span class="o">=</span><span class="kt">list</span><span class="p">(</span>cmp<span class="o">=</span>cmp<span class="p">,</span> dims<span class="o">=</span>dims<span class="p">),</span>
+    pp<span class="o">=</span>pp<span class="p">,</span> resp<span class="o">=</span>resp<span class="p">,</span>
+    optinfo <span class="o">=</span> <span class="kt">list</span> <span class="p">(</span>optimizer<span class="o">=</span> <span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;optimizer&quot;</span><span class="p">),</span>
+                    control  <span class="o">=</span> <span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;control&quot;</span><span class="p">),</span>
+                    derivs   <span class="o">=</span> <span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;derivs&quot;</span><span class="p">),</span>
+                    conv  <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>opt<span class="o">=</span>opt<span class="o">$</span>conv<span class="p">,</span> lme4<span class="o">=</span>lme4conv<span class="p">),</span>
+                    feval <span class="o">=</span> <span class="kr">if</span> <span class="p">(</span><span class="kp">is.null</span><span class="p">(</span>opt<span class="o">$</span>feval<span class="p">))</span> <span class="kc">NA</span> <span class="kr">else</span> opt<span class="o">$</span>feval<span class="p">,</span>
+                    warnings <span class="o">=</span> <span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;warnings&quot;</span><span class="p">),</span> val <span class="o">=</span> opt<span class="o">$</span>par<span class="p">)</span>
+    <span class="p">)</span>
+</code></pre></div>
+  </div>
+
+  <div class="date">
+    Written on May 17, 2015
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'agisga';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+
+
+
+<a href="http://github.com/agisga"><i class="svg-icon github"></i></a>
+
+<a href="http://linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
+
+
+<a href="http://twitter.com/agisga"><i class="svg-icon twitter"></i></a>
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Solve an advection equation in Ruby with spitzy – Alexej Gossmann – I am interested in math, stats, coding, genetics, ...</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="A couple of days ago I started working on a collection of numerical methods for differential equations, wirtten in pure Ruby (I have conviced the professor of my numerical DE class that that`s a good idea for my final project in said class).
+" />
+    <meta property="og:description" content="A couple of days ago I started working on a collection of numerical methods for differential equations, wirtten in pure Ruby (I have conviced the professor of my numerical DE class that that`s a good idea for my final project in said class).
+" />
+    
+    <meta name="author" content="Alexej Gossmann" />
+
+    
+    <meta property="og:title" content="Solve an advection equation in Ruby with spitzy" />
+    <meta property="twitter:title" content="Solve an advection equation in Ruby with spitzy" />
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - I am interested in math, stats, coding, genetics, ..." href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+ 
+    <!-- MathJax interation-->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}});
+      MathJax.Hub.Config({TeX: {Macros:{subscript:['_{#1}',1],superscript:['^{#1}',1]}}});
+    </script> 
+    <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
+ </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="/" class="site-avatar"><img src="https://avatars0.githubusercontent.com/u/11449372?v=3&s=460" /></a>
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
+            <p class="site-description">I am interested in math, stats, coding, genetics, ...</p>
+          </div>
+
+          <nav>
+            <a href="/about">About</a>
+            <a href="/">Blog</a>
+            <a href="/talks">Presentations</a>
+            <a href="/publications">Publications</a>
+            <a href="/software">Software</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Solve an advection equation in Ruby with spitzy</h1>
+
+  <div class="entry">
+    <p>A couple of days ago I started working on a collection of numerical methods for differential equations, wirtten in pure Ruby (I have conviced the professor of my numerical DE class that that`s a good idea for my final project in said class).</p>
+
+<p>The Ruby gem is called <em>spitzy</em>. Spitzy also is this cute pomeranian. Spitzy reads backwards as <em>yztips</em>, which translates into:</p>
+
+<p><strong><em>Y</em>our <em>Z</em>appy-<em>T</em>appy <em>I</em>nitial value <em>P</em>artial (and ordinary) differential equation <em>S</em>olver</strong>
+<img src="/images/spitzy.jpg?raw=true" alt="Spitzy" title="Optional Title"></p>
+
+<p>I set up the basic structure of the library, and implemented four methods for the 1D linear advection equation (as a start, in order to see what`s a good way to do things). The project repository is <a href="https://github.com/agisga/spitzy.git">https://github.com/agisga/spitzy.git</a>. </p>
+
+<p>Below is an example of how to use <em>spitzy</em> in order to solve a <a href="http://farside.ph.utexas.edu/teaching/329/lectures/node90.html">1D linear advection equation</a>.</p>
+
+<h3>Advection Equation Example</h3>
+
+<p>We want to solve the 1D linear advection equation given as:</p>
+
+<ul>
+<li>PDE: $\frac{du}{dt} + a \frac{du}{dx} = 0$,</li>
+<li>on the domain: $0 &lt; x &lt; 1$ and $0 &lt; t &lt; 10$, </li>
+<li>with periodic boundary consitions: $u(0,t) = u(1, t)$,</li>
+<li>with initial condition: $u(x,0) = \cos(2\pi x) + \frac{1}{5}\cos(10\pi x)$.</li>
+</ul>
+
+<p>We define and solve this equation using the <a href="http://en.wikipedia.org/wiki/Upwind_scheme">Upwind scheme</a> with time steps $dt = 0.95/1001$ and spatial steps $dx = 1/1001$ (i.e. on a grid of 1000 equally sized intervals in $x$). <code>AdvectionEq.new</code> lets the user specify the parameters such as length of the space and time steps, time and space domain, the initial condition, etc.</p>
+<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="nb">require</span> <span class="s1">&#39;spitzy&#39;</span>
+<span class="n">ic</span> <span class="o">=</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="no">Math</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="no">Math</span><span class="o">::</span><span class="no">PI</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">0</span><span class="o">.</span><span class="mi">2</span><span class="o">*</span><span class="no">Math</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="no">Math</span><span class="o">::</span><span class="no">PI</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="p">}</span>
+<span class="n">numsol</span> <span class="o">=</span> <span class="no">AdvectionEq</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">xrange</span><span class="p">:</span> <span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="ss">trange</span><span class="p">:</span> <span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span> 
+                         <span class="ss">dx</span><span class="p">:</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">1001</span><span class="p">,</span> <span class="ss">dt</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">95</span><span class="o">/</span><span class="mi">1001</span><span class="p">,</span> <span class="ss">a</span><span class="p">:</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span>
+                         <span class="nb">method</span><span class="p">:</span> <span class="ss">:upwind</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ic</span><span class="p">)</span>
+</code></pre></div>
+<p>We can get the equation solved by <code>numsol</code> in form of a character string using the method <code>#equation</code>.</p>
+
+<p>There are four different numerical schemes available to solve the advection equation. Those are the Upwind, Leapfrog, Lax-Wendroff and Lax-Friedrichs methods. We can get which scheme was used by <code>numsol</code> with the attribute reader <code>#method</code>. Similarly we can access the number of $x$-steps <code>#mx</code> and $t$-steps <code>#mt</code>, as well as various other attributes.</p>
+
+<p>Using Fourier methods we compute the exact solution of the PDE to be $\cos(2\pi (x-t)) + 0.2\cos(10\pi (x-t))$. We can use it to check the accuracy of the numerical solution.</p>
+
+<p>Combined, the Ruby code produces the following output (the entire code is given at the end of this post).</p>
+
+<p><img src="/images/advection_equation_example_output.png?raw=true" alt="Advection equation example output" title="Advection equation example output"></p>
+
+<p>Finally, we plot the computed numerical solution at different times using the <em>gnuplot</em> gem (the Ruby code is given below). We use the character string <code>numsol.equation</code> as a header for the plot. We can see a travelling wave as expected.</p>
+
+<p><img src="/images/advection_equation_example_plot.png?raw=true" alt="Advection equation example plot" title="Advection equation example plot"></p>
+<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="nb">require</span> <span class="s1">&#39;spitzy&#39;</span>
+
+<span class="n">ic</span> <span class="o">=</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="no">Math</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="no">Math</span><span class="o">::</span><span class="no">PI</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="o">+</span> <span class="mi">0</span><span class="o">.</span><span class="mi">2</span><span class="o">*</span><span class="no">Math</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="no">Math</span><span class="o">::</span><span class="no">PI</span><span class="o">*</span><span class="n">x</span><span class="p">)</span> <span class="p">}</span>
+
+<span class="n">numsol</span> <span class="o">=</span> <span class="no">AdvectionEq</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">xrange</span><span class="p">:</span> <span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="ss">trange</span><span class="p">:</span> <span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span> 
+                         <span class="ss">dx</span><span class="p">:</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="mi">1001</span><span class="p">,</span> <span class="ss">dt</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">95</span><span class="o">/</span><span class="mi">1001</span><span class="p">,</span> <span class="ss">a</span><span class="p">:</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span>
+                         <span class="nb">method</span><span class="p">:</span> <span class="ss">:upwind</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">ic</span><span class="p">)</span>
+
+<span class="c1"># print the PDE to screen</span>
+<span class="nb">puts</span> <span class="s2">&quot;Solving the advection equation:&quot;</span>
+<span class="nb">puts</span> <span class="n">numsol</span><span class="o">.</span><span class="n">equation</span>
+<span class="nb">puts</span> <span class="s2">&quot;On </span><span class="si">#{</span><span class="n">numsol</span><span class="o">.</span><span class="n">mx</span><span class="si">}</span><span class="s2"> space steps, and </span><span class="si">#{</span><span class="n">numsol</span><span class="o">.</span><span class="n">mt</span><span class="si">}</span><span class="s2"> time steps.&quot;</span>
+<span class="nb">puts</span> <span class="s2">&quot;Using the numerical scheme:&quot;</span>
+<span class="k">case</span> <span class="n">numsol</span><span class="o">.</span><span class="n">method</span>
+  <span class="k">when</span> <span class="ss">:upwind</span> <span class="k">then</span> <span class="nb">puts</span> <span class="s2">&quot;Upwind&quot;</span>
+  <span class="k">when</span> <span class="ss">:leapfrog</span> <span class="k">then</span> <span class="nb">puts</span> <span class="s2">&quot;Leapfrog&quot;</span>
+  <span class="k">when</span> <span class="ss">:lax_wendroff</span> <span class="k">then</span> <span class="nb">puts</span> <span class="s2">&quot;Lax-Wendroff&quot;</span>
+  <span class="k">when</span> <span class="ss">:lax_friedrichs</span> <span class="k">then</span> <span class="nb">puts</span> <span class="s2">&quot;Lax-Friedrichs&quot;</span>
+<span class="k">end</span>
+
+<span class="c1"># compute the maximal error of the numerical solution</span>
+<span class="n">exactsol</span> <span class="o">=</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="p">,</span><span class="n">t</span><span class="o">|</span> <span class="no">Math</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="no">Math</span><span class="o">::</span><span class="no">PI</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">t</span><span class="p">))</span> <span class="o">+</span> <span class="mi">0</span><span class="o">.</span><span class="mi">2</span><span class="o">*</span><span class="no">Math</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="mi">10</span><span class="o">*</span><span class="no">Math</span><span class="o">::</span><span class="no">PI</span><span class="o">*</span><span class="p">(</span><span class="n">x</span><span class="o">-</span><span class="n">t</span><span class="p">))</span> <span class="p">}</span>
+<span class="n">u_exact</span> <span class="o">=</span> <span class="o">[]</span>
+<span class="n">numsol</span><span class="o">.</span><span class="n">t</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="o">|</span> <span class="n">u_exact</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">numsol</span><span class="o">.</span><span class="n">mx</span><span class="p">)</span><span class="o">.</span><span class="n">each</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">exactsol</span><span class="o">.</span><span class="n">call</span><span class="p">(</span><span class="n">numsol</span><span class="o">.</span><span class="n">x</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">,</span><span class="n">t</span><span class="p">)</span> <span class="p">}</span> <span class="p">}</span>
+<span class="n">u_exact</span><span class="o">.</span><span class="n">flatten!</span>
+<span class="n">error</span> <span class="o">=</span> <span class="o">[]</span>
+<span class="n">u_num</span> <span class="o">=</span> <span class="n">numsol</span><span class="o">.</span><span class="n">u</span><span class="o">.</span><span class="n">flatten</span>
+<span class="p">(</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="p">(</span><span class="n">numsol</span><span class="o">.</span><span class="n">mx</span><span class="o">*</span><span class="n">numsol</span><span class="o">.</span><span class="n">mt</span><span class="p">))</span><span class="o">.</span><span class="n">each</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">error</span> <span class="o">&lt;&lt;</span> <span class="p">(</span><span class="n">u_num</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">-</span> <span class="n">u_exact</span><span class="o">[</span><span class="n">i</span><span class="o">]</span><span class="p">)</span><span class="o">.</span><span class="n">abs</span> <span class="p">}</span>
+<span class="n">maxerror</span> <span class="o">=</span> <span class="n">error</span><span class="o">.</span><span class="n">max</span>
+<span class="nb">puts</span> <span class="s2">&quot;The maximal error of the numerical solution is: </span><span class="si">#{</span><span class="n">maxerror</span><span class="si">}</span><span class="se">\n</span><span class="s2">&quot;</span>
+
+<span class="c1"># plot the numerical solution</span>
+<span class="nb">require</span> <span class="s1">&#39;gnuplot&#39;</span>
+<span class="k">def</span> <span class="nf">plot</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">numsol</span><span class="p">,</span> <span class="o">*</span><span class="n">t_indices</span><span class="p">)</span>
+  <span class="no">Gnuplot</span><span class="o">.</span><span class="n">open</span> <span class="k">do</span> <span class="o">|</span><span class="n">gp</span><span class="o">|</span>
+    <span class="no">Gnuplot</span><span class="o">::</span><span class="no">Plot</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">plot</span><span class="o">|</span>
+      <span class="n">plot</span><span class="o">.</span><span class="n">title</span> <span class="n">title</span><span class="o">.</span><span class="n">to_s</span>
+      <span class="n">plot</span><span class="o">.</span><span class="n">xlabel</span> <span class="s2">&quot;x&quot;</span>
+      <span class="n">plot</span><span class="o">.</span><span class="n">ylabel</span> <span class="s2">&quot;u(x,t)&quot;</span>
+
+      <span class="n">t_indices</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">numsol</span><span class="o">.</span><span class="n">x</span>
+        <span class="n">y</span> <span class="o">=</span> <span class="n">numsol</span><span class="o">.</span><span class="n">u</span><span class="o">[</span><span class="n">i</span><span class="o">]</span>
+        <span class="n">plot</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;&lt;</span> <span class="no">Gnuplot</span><span class="o">::</span><span class="no">DataSet</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="o">]</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">ds</span><span class="o">|</span>
+          <span class="n">ds</span><span class="o">.</span><span class="n">with</span> <span class="o">=</span> <span class="s2">&quot;lines&quot;</span>
+          <span class="n">ds</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;t = </span><span class="si">#{</span><span class="n">numsol</span><span class="o">.</span><span class="n">t</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="n">round</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">end</span>
+      <span class="k">end</span>
+    <span class="k">end</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+
+<span class="n">plot</span><span class="p">(</span><span class="n">numsol</span><span class="o">.</span><span class="n">equation</span><span class="p">,</span> <span class="n">numsol</span><span class="p">,</span> 
+     <span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+</code></pre></div>
+  </div>
+
+  <div class="date">
+    Written on April 19, 2015
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'agisga';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+
+
+
+<a href="http://github.com/agisga"><i class="svg-icon github"></i></a>
+
+<a href="http://linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
+
+
+<a href="http://twitter.com/agisga"><i class="svg-icon twitter"></i></a>
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>

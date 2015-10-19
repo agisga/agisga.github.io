@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Dissecting lme4's lmer function. Part 2. – Alexej Gossmann – I am interested in math, stats, coding, genetics, ...</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="Last time I started to analyze the function lmer that is used to fit linear mixed models in the R package lme4.
+I have delineated the general steps taken by lmer, and looked at the employed formula module in more detail. The formula module evaluates the provided R model formula to model matrices, vectors and parameters. The next step is to use these to define the objective function that needs to be minimized, which is the profiled deviance or the profiled REML criterion in this case. The objective function is returned by the function mkLmerDevfun which is dissected in what follows.
+" />
+    <meta property="og:description" content="Last time I started to analyze the function lmer that is used to fit linear mixed models in the R package lme4.
+I have delineated the general steps taken by lmer, and looked at the employed formula module in more detail. The formula module evaluates the provided R model formula to model matrices, vectors and parameters. The next step is to use these to define the objective function that needs to be minimized, which is the profiled deviance or the profiled REML criterion in this case. The objective function is returned by the function mkLmerDevfun which is dissected in what follows.
+" />
+    
+    <meta name="author" content="Alexej Gossmann" />
+
+    
+    <meta property="og:title" content="Dissecting lme4's lmer function. Part 2." />
+    <meta property="twitter:title" content="Dissecting lme4's lmer function. Part 2." />
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - I am interested in math, stats, coding, genetics, ..." href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+ 
+    <!-- MathJax interation-->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}});
+      MathJax.Hub.Config({TeX: {Macros:{subscript:['_{#1}',1],superscript:['^{#1}',1]}}});
+    </script> 
+    <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
+ </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <div class="container">
+        <header class="masthead clearfix">
+          <a href="/" class="site-avatar"><img src="https://avatars0.githubusercontent.com/u/11449372?v=3&s=460" /></a>
+
+          <div class="site-info">
+            <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
+            <p class="site-description">I am interested in math, stats, coding, genetics, ...</p>
+          </div>
+
+          <nav>
+            <a href="/about">About</a>
+            <a href="/">Blog</a>
+            <a href="/talks">Presentations</a>
+            <a href="/publications">Publications</a>
+            <a href="/software">Software</a>
+          </nav>
+        </header>
+      </div>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Dissecting lme4's lmer function. Part 2.</h1>
+
+  <div class="entry">
+    <p><a href="http://agisga.github.io/Dissect_lmer_part1/">Last time</a> I started to analyze the function <code>lmer</code> that is used to fit linear mixed models in the R package <code>lme4</code>.
+I have delineated the general steps taken by <code>lmer</code>, and looked at the employed formula module in more detail. The formula module evaluates the provided R model formula to model matrices, vectors and parameters. The next step is to use these to define the objective function that needs to be minimized, which is the profiled deviance or the profiled REML criterion in this case. The objective function is returned by the function <code>mkLmerDevfun</code> which is dissected in what follows.</p>
+
+<h1>Set up the deviance function - <code>mkLmerDevfun</code></h1>
+
+<p>Much of the code of <code>mkLmerDevfun</code> and the functions called from therein deals with the situation when the user wants to fit a <em>generalized</em> or <em>nonlinear</em> mixed model, but calls <code>lmer</code> instead of other respectively designated functions. Then the code repackages the provided function arguments and passes them to the respective function (which should have been called by the user in the first place). I will disregard such passages of the code, because I&#39;m only interested in the <em>linear</em> mixed model capabilities right now (besides, I find that it would have been a better design to simply abort the function execution with a warning in such cases).</p>
+
+<p>Okay, now let&#39;s dislimb, dismember and dissect!</p>
+
+<p>The function <code>mkLmerDevfun</code> is defined in the file <code>modular.R</code> as:</p>
+<div class="highlight"><pre><code class="language-R" data-lang="R">mkLmerDevfun <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>fr<span class="p">,</span> X<span class="p">,</span> reTrms<span class="p">,</span> REML <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span> start <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span> verbose<span class="o">=</span><span class="m">0</span><span class="p">,</span> control<span class="o">=</span>lmerControl<span class="p">(),</span> <span class="kc">...</span><span class="p">)</span>
+</code></pre></div>
+<p>It begins by extracting some variables from the function call, most importantly: </p>
+
+<ul>
+<li><code>rho</code> - a new environment with the parent being the environment from which <code>mkLmerDevfun</code> was called (containing who knows what...),</li>
+<li><code>rho$pp</code> - a new <code>merPredD</code> object, which stores the dense model matrix <code>X</code>, the transpose of the sparse model matrix for the random effects <code>Zt</code>, <code>Lambdat</code>the transpose of the sparse lower triangular relative variance, <code>Lind</code> integer vector of the same length as the <code>x</code> slot in the <code>Lambdat</code> field (I don&#39;t know yet what it&#39;s for), <code>theta</code> numeric vector of variance component parameters, <code>n</code> sample size, and other auxiliary parameters computed from these.</li>
+<li><code>rho$resp</code> - an <code>lmerResp</code> object, which essentially holds the response vector $y$, and additionally some associated parameters (like the weights for each observation, offset terms and others), as well as the REML flag.</li>
+</ul>
+
+<p>Then <code>mkLmerDevfun</code> diverts to the function <code>mkdevfun</code> (defined in <code>lmer.R</code>), which takes as input the environment <code>rho</code> and returns a function <code>devfun</code> with <code>rho</code> as an associated environment. The function <code>mkdevfun</code> sets </p>
+<div class="highlight"><pre><code class="language-R" data-lang="R">rho<span class="o">$</span>lmer_Deviance <span class="o">&lt;-</span> lmer_Deviance
+</code></pre></div>
+<p>and defines <code>devfun</code> as </p>
+<div class="highlight"><pre><code class="language-R" data-lang="R"><span class="kr">function</span><span class="p">(</span>theta<span class="p">)</span> <span class="m">.</span>Call<span class="p">(</span>lmer_Deviance<span class="p">,</span> pp<span class="o">$</span>ptr<span class="p">(),</span> resp<span class="o">$</span>ptr<span class="p">(),</span> <span class="kp">as.double</span><span class="p">(</span>theta<span class="p">))</span>
+</code></pre></div>
+<p>I inspect the C++ function <code>lmer_Deviance</code> in great detail below.</p>
+
+<p>If all random effects are intercept terms (i.e. the covariance matrix of $y$ is diagonal with entries $\theta\subscript{i}$) and no starting values are provided, the function <code>mkLmerDevfun</code> continues by computing starting values for $\theta$ as $\sqrt{v / v\subscript{e}}$, where $v$ is a vector with as many entries as there are random terms, containing in each entry the sample variance of $(\bar{y}\subscript{\cdot 1},\ldots,\bar{y}\subscript{\cdot 1}, \bar{y}\subscript{\cdot 2},\ldots,\bar{y}\subscript{\cdot 2}, \ldots)^T$, and $v\subscript{e} = \mathrm{Var}(y) - \sum v\subscript{i}$ (in usual notation $\bar{y}\subscript{\cdot 1}$ denotes the average of the sample values in $y$ belonging to the first level of the random effect). That is, in more intuitive terms the starting value for $\theta\subscript{i}$ is the standard deviation due to the $i$th random effect scaled by the residual standard deviation. </p>
+
+<p>If not all random effects are intercept terms, then the initial values for $\theta$ are 0 off-diagonal and 1 on, as defined via the function <code>mkReTrms</code> called from the function <code>lFormula</code> prior to the call of <code>mkLmerDevfun</code>.</p>
+
+<p>Finally, <code>devfun</code> is returned, which should also pass the <code>rho</code> environment implicitly.</p>
+
+<h3><code>lmer_Deviance</code></h3>
+
+<p>This function is defined as <code>SEXP lmer_Deviance(SEXP pptr_, SEXP rptr_, SEXP theta_)</code> in <code>external.cpp</code>.
+Using the <code>Rcpp:::Xptr</code> template, it creates two external pointers to instances of the C++ classes <code>lmerResp</code> and <code>merPredD</code>, thus exposing all methods of the respective C++ objects to the use from R.</p>
+<div class="highlight"><pre><code class="language-C++" data-lang="C++">        <span class="n">XPtr</span><span class="o">&lt;</span><span class="n">lmerResp</span><span class="o">&gt;</span>   <span class="n">rpt</span><span class="p">(</span><span class="n">rptr_</span><span class="p">);</span>
+        <span class="n">XPtr</span><span class="o">&lt;</span><span class="n">merPredD</span><span class="o">&gt;</span>   <span class="n">ppt</span><span class="p">(</span><span class="n">pptr_</span><span class="p">);</span>
+</code></pre></div>
+<p>The function proceeds by calling another function, <code>lmer_dev</code>, defined in the same file, which carries out the actual computation of the (profiled) deviance function. The mathematical expression of the profiled deviance is essentially given by the following set of formulas (as I have derived in my project plan here: <a href="http://dauns.math.tulane.edu/%7Eagossman/pdfs/GSoC2015_LMM_project_plan.pdf">http://dauns.math.tulane.edu/~agossman/pdfs/GSoC2015_LMM_project_plan.pdf</a>).</p>
+
+<p><img src="/images/profiled_deviance.png?raw=true" alt="profiled deviance formulas (PNG image)" title="profiled_deviance.png"></p>
+
+<p>The Cholesky decomposed matrix is part of a linear system, predicting the random terms $u$ and the coefficient vector $\beta$.</p>
+
+<p>These math formulas are evaluated in <code>lmer_dev</code> via the following steps:</p>
+
+<ul>
+<li><p><code>ppt-&gt;setTheta(theta)</code> - Update the parameter vector $\theta$ and the covariance factor $\Lambda\subscript{\theta}$.</p></li>
+<li><p><code>ppt-&gt;updateXwts(rpt-&gt;sqrtXwt())</code> - Update the matrix $W$ of $X$ weights. $W$ is not shown above for simplicity, but in fact there is a factor $W^{1/2}$ in front of every $X$ or $Z$ in the above formulas.</p></li>
+<li><p><code>rpt-&gt;updateMu(ppt-&gt;linPred(0.))</code> - Update the (conditional) mean response, the weighted residuals vector, and its sum of squares, based on <code>d_beta0</code> and <code>d_u0</code>.</p></li>
+<li><p><code>ppt-&gt;updateRes(rpt-&gt;wtres())</code> - Does these auxiliary calculations:</p></li>
+</ul>
+<div class="highlight"><pre><code class="language-C++" data-lang="C++"><span class="n">d_Vtr</span>           <span class="o">=</span> <span class="n">d_V</span><span class="p">.</span><span class="n">adjoint</span><span class="p">()</span> <span class="o">*</span> <span class="n">wtres</span><span class="p">;</span>
+<span class="n">d_Utr</span>           <span class="o">=</span> <span class="n">d_LamtUt</span> <span class="o">*</span> <span class="n">wtres</span><span class="p">;</span>
+</code></pre></div>
+<p>(I don&#39;t really understand the purpose of it at the moment).</p>
+
+<ul>
+<li><p><code>ppt-&gt;solve()</code> - Performs the above Cholesky decomposition in multiple steps via <code>CHOLMOD</code> sparse Cholesky methods (possibly also estimates $u$ and maybe some other parameters, but I am not sure).</p></li>
+<li><p><code>rpt-&gt;updateMu(ppt-&gt;linPred(1.))</code> - Update the (conditional) mean response, the weighted residuals vector, and its sum of squares, based on <code>d_beta0 + d_delb</code> and <code>d_u0 + d_delu</code>. </p></li>
+<li><p><code>val=rpt-&gt;Laplace(ppt-&gt;ldL2(), ppt-&gt;ldRX2(), ppt-&gt;sqrL(1.))</code> - Evaluate the profiled deviance based on the previously computed variables (or the profiled REML criterion, which is defined similarly, if the REML flag is set).</p></li>
+<li><p>Return <code>val</code>.</p></li>
+</ul>
+
+<p>It seems that the implementation in the package <a href="https://github.com/lme4/lme4pureR"><code>lme4pureR</code></a> performs all the same calculations, but is written in a much better readable R code (much fewer lines of code, without external pointers to C++ objects and no C++/C used at all, without passing different R environments from function to function, etc.). I will look at it in detail as soon as I finish dissecting <code>lme4</code>&#39;s <code>lmer</code>.</p>
+
+  </div>
+
+  <div class="date">
+    Written on May 15, 2015
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'agisga';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+
+
+
+<a href="http://github.com/agisga"><i class="svg-icon github"></i></a>
+
+<a href="http://linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
+
+
+<a href="http://twitter.com/agisga"><i class="svg-icon twitter"></i></a>
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>
