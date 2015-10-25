@@ -7,6 +7,139 @@
     <atom:link href="http://www.alexejgossmann.com//feed.xml" rel="self" type="application/rss+xml" />
     
       <item>
+        <title>&quot;Testing Statistical Hypotheses&quot; and &quot;Theory of Point Estimation&quot; impressions</title>
+        <description>&lt;script type=&quot;text/javascript&quot;&gt;
+function toggleMe(a){
+var e=document.getElementById(a);
+if(!e)return true;
+if(e.style.display==&quot;none&quot;){
+e.style.display=&quot;block&quot;
+}
+else{
+e.style.display=&quot;none&quot;
+}
+return true;
+}
+&lt;/script&gt;
+
+&lt;p&gt;I am currently reading Lehmann &amp;amp; Romano &amp;quot;Testing Statistical Hypotheses&amp;quot; (3rd ed.) and Lehmann &amp;amp; Casella &amp;quot;Theory of Point Estimation&amp;quot; (2nd ed.), abbr. TSH and TPE. The following is a collection of &lt;del&gt;random facts&lt;/del&gt; observations I made while reading TSH and TPE.&lt;/p&gt;
+
+&lt;p&gt;&lt;img class=&#39;emoji&#39; title=&#39;:construction_worker:&#39; alt=&#39;:construction_worker:&#39; src=&#39;https://assets.github.com/images/icons/emoji/unicode/1f477.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; /&gt; &lt;em&gt;This post will be regularly updated.&lt;/em&gt; &lt;img class=&#39;emoji&#39; title=&#39;:construction_worker:&#39; alt=&#39;:construction_worker:&#39; src=&#39;https://assets.github.com/images/icons/emoji/unicode/1f477.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Clickable items:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;!-- 
+* some things that were not clear to me before, 
+* some results I found interesting, 
+* definitions that are better than their equivalents that I have seen before,
+* and other observations I made while reading TSH and TPE.
+
+Brainstorming:
+
+* LME = posterior mode with a uniform prior; LASSO estimate = posterior mode with a Laplacian prior
+* definition of unbiased
+
+--&gt;
+
+&lt;p&gt;&lt;br&gt;
+&lt;input type=&quot;button&quot; onclick=&quot;return toggleMe(&#39;para2&#39;)&quot; value=&quot;+ Conditional expectation, conditional distribution, sufficiency, decision procedures&quot;&gt;&lt;br&gt;
+&lt;div id=&quot;para2&quot; style=&quot;display:none&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;Conditional expectation, conditional distribution, sufficiency, decision procedures&lt;/h2&gt;
+
+&lt;p&gt;Consider a random variable $X$ with sample space $(\mathcal{X}, \mathcal{A})$ and probability distribution $P^X$, and a statistic $T(X)$ with range space $(\mathcal{T}, \mathcal{B})$.&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;h4&gt;Definition [$\mathrm{E}(f(X)|t)$]&lt;/h4&gt;
+
+&lt;p&gt;Let $f(x)$ be a non-negative, $\mathcal{A}$-measurable and $P^X$-integrable function.
+A $\mathcal{B}$-measurable function $g(t)$ is the &lt;em&gt;conditional expectation of&lt;/em&gt; $X$ &lt;em&gt;for given&lt;/em&gt; $t$, i.e. $\mathrm{E}(f(X)|t) = \mathrm{E}(f(X)|T=t) = g(t)$, if for all sets $B\in\mathcal{B}$ it holds that&lt;/p&gt;
+
+&lt;p&gt;$$\int\subscript{T^{-1}(B)} f(x) dP^X(x) = \int\subscript{B} g(t) dP^T(t).$$&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;In fact, if we define $f\subscript{0}(x) = g(T(x))$, then by Lemma 2.3.2 in TSH the above formula becomes&lt;/p&gt;
+
+&lt;p&gt;$$\int\subscript{A} f(x) dP^X(x) = \int\subscript{A} f\subscript{0}(x) dP^X(x), \forall A \in \mathcal{A}\subscript{0},$$&lt;/p&gt;
+
+&lt;p&gt;where $\mathcal{A}\subscript{0}$ is the $\sigma$-algebra induced by $T$.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;The existence and uniqueness $(\mathcal{A}\subscript{0}, P^X)$ of such a function $f\subscript{0}$ follows from Radon-Nikodym Theorem.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If $f$ is not non-negative, then we can use the usual decomposition $f = f^+ - f^-$ and define&lt;/p&gt;
+
+&lt;p&gt;$$\mathrm{E}(f(X)|t) = \mathrm{E}(f^+(X)|t) - \mathrm{E}(f^-(X)|t).$$&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;hr&gt;
+
+&lt;h4&gt;Definition [$P(A|t)$]&lt;/h4&gt;
+
+&lt;p&gt;Let $I\subscript{A}(X)$ be a random variable that is equal to one if and only if $X\in A$. The &lt;em&gt;conditional probability of&lt;/em&gt; $A$ &lt;em&gt;given&lt;/em&gt; $T=t$ can be defined as&lt;/p&gt;
+
+&lt;p&gt;$$P(A|t) = E(I\subscript{A}(X) | t).$$&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;This definition seems natural, and in fact, if $T$ has Euclidean domain and range spaces or if $\mathrm{E}|f(X)| &amp;lt; \infty$, then the above defines the &lt;em&gt;conditional probability distribution&lt;/em&gt; $P^{X|t}$ (see Theorems 2.5.2 and 2.5.3 in TSH).&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;h4&gt;Definition [Sufficiency]&lt;/h4&gt;
+
+&lt;p&gt;Let $\mathcal{P} = \{P\subscript{\theta} : \theta\in\Omega\}$ be a family of distributions over a sample space $(\mathcal{X}, \mathcal{A})$.&lt;/p&gt;
+
+&lt;p&gt;$T$ is sufficient for $\mathcal{P}$ (or $\theta$) if $P\subscript{\theta}(A|t)$ is independent of $\theta$ for every $A\in\mathcal{A}$.&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;In particular, the class of decision procedures depending on a sufficient statistic $T$ is &lt;em&gt;essentially complete&lt;/em&gt;. Assume that the sample space is Euclidean, then by Theorem 2.5.1 in TSH there exists the conditional probability distribution $P^{X|t}$. Let $\phi(x)$ be a decision procedure. Given only the value of the sufficient statistic $T(X)$ (but not $X$), define another decision procedure $\psi(t)$ as a random sample from the distribution $P^{X|t}$. Then $\phi(X)$ and $\psi(T)$ have identical distributions. Consequently, both decision procedures have the same risk,&lt;/p&gt;
+
+&lt;p&gt;$$R(\theta, \psi) = \mathrm{E}(L(\theta, \psi(T))) = \mathrm{E}(L(\theta, \phi(X))) = R(\theta, \phi).$$&lt;/p&gt;
+
+&lt;p&gt;Thus, for any decision procedure that is based on $X$, there is a decision procedure based on $T$ that is equally good or better.&lt;/p&gt;
+
+&lt;p&gt;For a proof in the general (non-Euclidean) case see exercise 2.13 in TSH.&lt;/p&gt;
+
+&lt;h3&gt;General conditional expectation&lt;/h3&gt;
+
+&lt;p&gt;Let $X$ and $Y$ be two real-valued random variables, which can be written as mappings $X: \Omega \to \mathbb{R}$ and $Y: \Omega \to \mathbb{R}$ over a measurable space $(\Omega, \mathcal{A}, P)$. The above definition of $\mathrm{E}(X|T(X)=t)$ suggests a similar definition of $\mathrm{E}(X|Y=y)$. Namely, $\mathrm{E}(X|Y=y) = g(y)$ if for all Borel sets $A$ it holds that&lt;/p&gt;
+
+&lt;p&gt;$$\int\subscript{Y^{-1}(A)} X(\omega) dP(\omega) = \int\subscript{A} g(y) dP^Y(y).$$&lt;/p&gt;
+
+&lt;p&gt;In fact, a more general version of this definition is given in Feller&amp;#39;s &amp;quot;An Introduction to Probability Theory and its Applications. Volume II&amp;quot; (10.6) as,&lt;/p&gt;
+
+&lt;p&gt;$$\mathrm{E}(X\cdot I\subscript{A}(Y)) = \int\subscript{A} \mathrm{E}(X | y) \mu\{dy\},$$&lt;/p&gt;
+
+&lt;p&gt;for any pair of random variables $X$ and $Y$.&lt;/p&gt;
+
+&lt;p&gt;If $X$ and $Y$ are real-valued one-dimensional, then the pair $(X,Y)$ can be viewed as a ranodm vector in the plane. Each set $\{Y \in A\}$ consists of parallels to the $x$-axis, and we can define a $\sigma$-algebra induced by $Y$ as the colloections of all sets $\{Y \in A\}$, where $A$ are Borel sets. Then $\mathrm{E}(X|Y)$ is a random variable, such that $\mathrm{E}(X\cdot I\subscript{B}) = \mathrm{E}(\mathrm{E}(X|Y) \cdot I\subscript{B})$. This leads to the following general definition.&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;h4&gt;Definition [Conditional expectation]&lt;/h4&gt;
+
+&lt;p&gt;Let $\mathcal{A}$ be the underlying $\sigma$-algebra of sets, and let $\mathcal{B}$ be a $\sigma$-algebra contained in $\mathcal{A}$. Let $X$ be a random variable. &lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;A random variable $U$ is called a &lt;em&gt;conditional expectation of&lt;/em&gt; $X$ &lt;em&gt;relative to&lt;/em&gt; $\mathcal{B}$ (or $U=\mathrm{E}(X|\mathcal{B})$), if it is $\mathcal{B}$-measurable and for all $B\in\mathcal{B}$ it holds that&lt;/p&gt;
+
+&lt;p&gt;$$\mathrm{E}(X\cdot I\subscript{B}) = \mathrm{E}(U \cdot I\subscript{B}).$$&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;If $\mathcal{B}$ is the $\sigma$-algebra generated by a random variable $Y$, then $\mathrm{E}(X|Y) := \mathrm{E}(X|\mathcal{B})$.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;&lt;/div&gt;
+&lt;br&gt;&lt;/p&gt;
+</description>
+        <pubDate>Fri, 23 Oct 2015 00:00:00 -0500</pubDate>
+        <link>http://www.alexejgossmann.com//TSH_and_TPE_observations/</link>
+        <guid isPermaLink="true">http://www.alexejgossmann.com//TSH_and_TPE_observations/</guid>
+      </item>
+    
+      <item>
         <title>NMatrix with Intel MKL on my university&#39;s HPC</title>
         <description>&lt;p&gt;In order to use &lt;a href=&quot;https://github.com/SciRuby/nmatrix&quot;&gt;NMatrix&lt;/a&gt; for the statistical analysis of big genomic data, I decided to install it on my university&amp;#39;s high performance computing system (HPC). It is called &lt;a href=&quot;http://crsc.tulane.edu/&quot;&gt;Cypress&lt;/a&gt; (like the &lt;a href=&quot;http://imgc.allpostersimages.com/images/P-473-488-90/64/6420/5OV9100Z/posters/paul-souders-cypress-reflected-in-bayou-along-highway-61-on-stormy-summer-afternoon-new-orleans-louisiana-usa.jpg&quot;&gt;typical New Orleans tree&lt;/a&gt;), and it&amp;#39;s currently the 10th best among all American universities. &lt;/p&gt;
 
@@ -1278,82 +1411,6 @@ It checks, reorganizes and renames the parameters, and finally returns everythin
         <pubDate>Sun, 17 May 2015 00:00:00 -0500</pubDate>
         <link>http://www.alexejgossmann.com//Dissect_lmer_part3/</link>
         <guid isPermaLink="true">http://www.alexejgossmann.com//Dissect_lmer_part3/</guid>
-      </item>
-    
-      <item>
-        <title>Dissecting lme4&#39;s lmer function. Part 2.</title>
-        <description>&lt;p&gt;&lt;a href=&quot;http://agisga.github.io/Dissect_lmer_part1/&quot;&gt;Last time&lt;/a&gt; I started to analyze the function &lt;code&gt;lmer&lt;/code&gt; that is used to fit linear mixed models in the R package &lt;code&gt;lme4&lt;/code&gt;.
-I have delineated the general steps taken by &lt;code&gt;lmer&lt;/code&gt;, and looked at the employed formula module in more detail. The formula module evaluates the provided R model formula to model matrices, vectors and parameters. The next step is to use these to define the objective function that needs to be minimized, which is the profiled deviance or the profiled REML criterion in this case. The objective function is returned by the function &lt;code&gt;mkLmerDevfun&lt;/code&gt; which is dissected in what follows.&lt;/p&gt;
-
-&lt;h1&gt;Set up the deviance function - &lt;code&gt;mkLmerDevfun&lt;/code&gt;&lt;/h1&gt;
-
-&lt;p&gt;Much of the code of &lt;code&gt;mkLmerDevfun&lt;/code&gt; and the functions called from therein deals with the situation when the user wants to fit a &lt;em&gt;generalized&lt;/em&gt; or &lt;em&gt;nonlinear&lt;/em&gt; mixed model, but calls &lt;code&gt;lmer&lt;/code&gt; instead of other respectively designated functions. Then the code repackages the provided function arguments and passes them to the respective function (which should have been called by the user in the first place). I will disregard such passages of the code, because I&amp;#39;m only interested in the &lt;em&gt;linear&lt;/em&gt; mixed model capabilities right now (besides, I find that it would have been a better design to simply abort the function execution with a warning in such cases).&lt;/p&gt;
-
-&lt;p&gt;Okay, now let&amp;#39;s dislimb, dismember and dissect!&lt;/p&gt;
-
-&lt;p&gt;The function &lt;code&gt;mkLmerDevfun&lt;/code&gt; is defined in the file &lt;code&gt;modular.R&lt;/code&gt; as:&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-R&quot; data-lang=&quot;R&quot;&gt;mkLmerDevfun &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;fr&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; X&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; reTrms&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; REML &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;TRUE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; start &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;NULL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; verbose&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; control&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;lmerControl&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;It begins by extracting some variables from the function call, most importantly: &lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;rho&lt;/code&gt; - a new environment with the parent being the environment from which &lt;code&gt;mkLmerDevfun&lt;/code&gt; was called (containing who knows what...),&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;rho$pp&lt;/code&gt; - a new &lt;code&gt;merPredD&lt;/code&gt; object, which stores the dense model matrix &lt;code&gt;X&lt;/code&gt;, the transpose of the sparse model matrix for the random effects &lt;code&gt;Zt&lt;/code&gt;, &lt;code&gt;Lambdat&lt;/code&gt;the transpose of the sparse lower triangular relative variance, &lt;code&gt;Lind&lt;/code&gt; integer vector of the same length as the &lt;code&gt;x&lt;/code&gt; slot in the &lt;code&gt;Lambdat&lt;/code&gt; field (I don&amp;#39;t know yet what it&amp;#39;s for), &lt;code&gt;theta&lt;/code&gt; numeric vector of variance component parameters, &lt;code&gt;n&lt;/code&gt; sample size, and other auxiliary parameters computed from these.&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;rho$resp&lt;/code&gt; - an &lt;code&gt;lmerResp&lt;/code&gt; object, which essentially holds the response vector $y$, and additionally some associated parameters (like the weights for each observation, offset terms and others), as well as the REML flag.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Then &lt;code&gt;mkLmerDevfun&lt;/code&gt; diverts to the function &lt;code&gt;mkdevfun&lt;/code&gt; (defined in &lt;code&gt;lmer.R&lt;/code&gt;), which takes as input the environment &lt;code&gt;rho&lt;/code&gt; and returns a function &lt;code&gt;devfun&lt;/code&gt; with &lt;code&gt;rho&lt;/code&gt; as an associated environment. The function &lt;code&gt;mkdevfun&lt;/code&gt; sets &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-R&quot; data-lang=&quot;R&quot;&gt;rho&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;lmer_Deviance &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; lmer_Deviance
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;and defines &lt;code&gt;devfun&lt;/code&gt; as &lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-R&quot; data-lang=&quot;R&quot;&gt;&lt;span class=&quot;kr&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;theta&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;.&lt;/span&gt;Call&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;lmer_Deviance&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; pp&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;ptr&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; resp&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;ptr&lt;span class=&quot;p&quot;&gt;(),&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;as.double&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;theta&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;I inspect the C++ function &lt;code&gt;lmer_Deviance&lt;/code&gt; in great detail below.&lt;/p&gt;
-
-&lt;p&gt;If all random effects are intercept terms (i.e. the covariance matrix of $y$ is diagonal with entries $\theta\subscript{i}$) and no starting values are provided, the function &lt;code&gt;mkLmerDevfun&lt;/code&gt; continues by computing starting values for $\theta$ as $\sqrt{v / v\subscript{e}}$, where $v$ is a vector with as many entries as there are random terms, containing in each entry the sample variance of $(\bar{y}\subscript{\cdot 1},\ldots,\bar{y}\subscript{\cdot 1}, \bar{y}\subscript{\cdot 2},\ldots,\bar{y}\subscript{\cdot 2}, \ldots)^T$, and $v\subscript{e} = \mathrm{Var}(y) - \sum v\subscript{i}$ (in usual notation $\bar{y}\subscript{\cdot 1}$ denotes the average of the sample values in $y$ belonging to the first level of the random effect). That is, in more intuitive terms the starting value for $\theta\subscript{i}$ is the standard deviation due to the $i$th random effect scaled by the residual standard deviation. &lt;/p&gt;
-
-&lt;p&gt;If not all random effects are intercept terms, then the initial values for $\theta$ are 0 off-diagonal and 1 on, as defined via the function &lt;code&gt;mkReTrms&lt;/code&gt; called from the function &lt;code&gt;lFormula&lt;/code&gt; prior to the call of &lt;code&gt;mkLmerDevfun&lt;/code&gt;.&lt;/p&gt;
-
-&lt;p&gt;Finally, &lt;code&gt;devfun&lt;/code&gt; is returned, which should also pass the &lt;code&gt;rho&lt;/code&gt; environment implicitly.&lt;/p&gt;
-
-&lt;h3&gt;&lt;code&gt;lmer_Deviance&lt;/code&gt;&lt;/h3&gt;
-
-&lt;p&gt;This function is defined as &lt;code&gt;SEXP lmer_Deviance(SEXP pptr_, SEXP rptr_, SEXP theta_)&lt;/code&gt; in &lt;code&gt;external.cpp&lt;/code&gt;.
-Using the &lt;code&gt;Rcpp:::Xptr&lt;/code&gt; template, it creates two external pointers to instances of the C++ classes &lt;code&gt;lmerResp&lt;/code&gt; and &lt;code&gt;merPredD&lt;/code&gt;, thus exposing all methods of the respective C++ objects to the use from R.&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-C++&quot; data-lang=&quot;C++&quot;&gt;        &lt;span class=&quot;n&quot;&gt;XPtr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lmerResp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;rpt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rptr_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;XPtr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;merPredD&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;   &lt;span class=&quot;n&quot;&gt;ppt&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pptr_&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;The function proceeds by calling another function, &lt;code&gt;lmer_dev&lt;/code&gt;, defined in the same file, which carries out the actual computation of the (profiled) deviance function. The mathematical expression of the profiled deviance is essentially given by the following set of formulas (as I have derived in my project plan here: &lt;a href=&quot;http://dauns.math.tulane.edu/%7Eagossman/pdfs/GSoC2015_LMM_project_plan.pdf&quot;&gt;http://dauns.math.tulane.edu/~agossman/pdfs/GSoC2015_LMM_project_plan.pdf&lt;/a&gt;).&lt;/p&gt;
-
-&lt;p&gt;&lt;img src=&quot;/images/profiled_deviance.png?raw=true&quot; alt=&quot;profiled deviance formulas (PNG image)&quot; title=&quot;profiled_deviance.png&quot;&gt;&lt;/p&gt;
-
-&lt;p&gt;The Cholesky decomposed matrix is part of a linear system, predicting the random terms $u$ and the coefficient vector $\beta$.&lt;/p&gt;
-
-&lt;p&gt;These math formulas are evaluated in &lt;code&gt;lmer_dev&lt;/code&gt; via the following steps:&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;ppt-&amp;gt;setTheta(theta)&lt;/code&gt; - Update the parameter vector $\theta$ and the covariance factor $\Lambda\subscript{\theta}$.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;ppt-&amp;gt;updateXwts(rpt-&amp;gt;sqrtXwt())&lt;/code&gt; - Update the matrix $W$ of $X$ weights. $W$ is not shown above for simplicity, but in fact there is a factor $W^{1/2}$ in front of every $X$ or $Z$ in the above formulas.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;rpt-&amp;gt;updateMu(ppt-&amp;gt;linPred(0.))&lt;/code&gt; - Update the (conditional) mean response, the weighted residuals vector, and its sum of squares, based on &lt;code&gt;d_beta0&lt;/code&gt; and &lt;code&gt;d_u0&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;ppt-&amp;gt;updateRes(rpt-&amp;gt;wtres())&lt;/code&gt; - Does these auxiliary calculations:&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-C++&quot; data-lang=&quot;C++&quot;&gt;&lt;span class=&quot;n&quot;&gt;d_Vtr&lt;/span&gt;           &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;d_V&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;adjoint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wtres&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;d_Utr&lt;/span&gt;           &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;d_LamtUt&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;wtres&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;(I don&amp;#39;t really understand the purpose of it at the moment).&lt;/p&gt;
-
-&lt;ul&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;ppt-&amp;gt;solve()&lt;/code&gt; - Performs the above Cholesky decomposition in multiple steps via &lt;code&gt;CHOLMOD&lt;/code&gt; sparse Cholesky methods (possibly also estimates $u$ and maybe some other parameters, but I am not sure).&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;rpt-&amp;gt;updateMu(ppt-&amp;gt;linPred(1.))&lt;/code&gt; - Update the (conditional) mean response, the weighted residuals vector, and its sum of squares, based on &lt;code&gt;d_beta0 + d_delb&lt;/code&gt; and &lt;code&gt;d_u0 + d_delu&lt;/code&gt;. &lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;&lt;code&gt;val=rpt-&amp;gt;Laplace(ppt-&amp;gt;ldL2(), ppt-&amp;gt;ldRX2(), ppt-&amp;gt;sqrL(1.))&lt;/code&gt; - Evaluate the profiled deviance based on the previously computed variables (or the profiled REML criterion, which is defined similarly, if the REML flag is set).&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;Return &lt;code&gt;val&lt;/code&gt;.&lt;/p&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;It seems that the implementation in the package &lt;a href=&quot;https://github.com/lme4/lme4pureR&quot;&gt;&lt;code&gt;lme4pureR&lt;/code&gt;&lt;/a&gt; performs all the same calculations, but is written in a much better readable R code (much fewer lines of code, without external pointers to C++ objects and no C++/C used at all, without passing different R environments from function to function, etc.). I will look at it in detail as soon as I finish dissecting &lt;code&gt;lme4&lt;/code&gt;&amp;#39;s &lt;code&gt;lmer&lt;/code&gt;.&lt;/p&gt;
-</description>
-        <pubDate>Fri, 15 May 2015 00:00:00 -0500</pubDate>
-        <link>http://www.alexejgossmann.com//Dissect_lmer_part2/</link>
-        <guid isPermaLink="true">http://www.alexejgossmann.com//Dissect_lmer_part2/</guid>
       </item>
     
   </channel>
