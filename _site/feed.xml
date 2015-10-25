@@ -44,23 +44,50 @@ Brainstorming:
 --&gt;
 
 &lt;p&gt;&lt;br&gt;
-&lt;input type=&quot;button&quot; onclick=&quot;return toggleMe(&#39;para2&#39;)&quot; value=&quot;+ Conditional expectation, conditional distribution, sufficiency, decision procedures&quot;&gt;&lt;br&gt;
+&lt;input type=&quot;button&quot; onclick=&quot;return toggleMe(&#39;unbiased&#39;)&quot; value=&quot;+ Topic:&quot;&gt; &lt;b&gt;Unbiasedness&lt;/b&gt;&lt;br&gt;
+&lt;div id=&quot;unbiased&quot; style=&quot;display:none&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;Unbiasedness&lt;/h2&gt;
+
+&lt;p&gt;The well-known and widely used definition of an unbiased estimator $\hat{\theta}$ of a parameter $\theta$ is&lt;/p&gt;
+
+&lt;p&gt;$$\mathrm{E}\subscript{\theta}(\hat{\theta}) = \theta.$$&lt;/p&gt;
+
+&lt;p&gt;However it can be generalized as follows. Assume that there is a loss function $L(\theta, \hat{\theta})$, which only depends on the correct parameter $\theta$ and the estimate $\hat{\theta}$ (i.e. it measures how far off the estimator is from the parameter that it aims to estimate).
+Then $\hat{\theta}$ is said to be unbiased for $\theta$ with respect to $L$, if for all $\theta^\prime$ it holds that&lt;/p&gt;
+
+&lt;p&gt;$$\mathrm{E}\subscript{\theta}(L(\theta^\prime, \hat{\theta})) \geq \mathrm{E}\subscript{\theta}(L(\theta, \hat{\theta})).$$&lt;/p&gt;
+
+&lt;p&gt;That is, if $\hat{\theta}$ is on average closer to the correct parameter $\theta$ than to any wrong parameter $\theta^\prime$ in the parameter space.&lt;/p&gt;
+
+&lt;p&gt;When estimating a real valued $\theta$ with the square of the error as loss, the above condition becomes&lt;/p&gt;
+
+&lt;p&gt;$$\mathrm{E}\subscript{\theta}\left(\left| \theta^\prime - \hat{\theta} \right|^2\right) \geq \mathrm{E}\subscript{\theta}\left(\left| \theta - \hat{\theta}\right|^2\right).$$&lt;/p&gt;
+
+&lt;p&gt;If $\mathrm{E}\subscript{\theta}\hat{\theta}$ is one of the possible values of $\theta$, then by adding and substracting $\mathrm{E}\subscript{\theta}\hat{\theta}$ inside the parentheses on both sides of the equation it follows that the above unbiasedness condition is satisfied if and only if&lt;/p&gt;
+
+&lt;p&gt;$$\mathrm{E}\subscript{\theta}(\hat{\theta}) = \theta.$$&lt;/p&gt;
+
+&lt;p&gt;This equivalence also holds under somewhat more general assumptions, see exercise 1.2 in TSH.&lt;/p&gt;
+
+&lt;p&gt;&lt;/div&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br&gt;
+&lt;input type=&quot;button&quot; onclick=&quot;return toggleMe(&#39;para2&#39;)&quot; value=&quot;+ Topic:&quot;&gt; &lt;b&gt;Conditional expectation, conditional distribution, sufficiency, decision procedures&lt;/b&gt;&lt;br&gt;
 &lt;div id=&quot;para2&quot; style=&quot;display:none&quot;&gt;&lt;/p&gt;
 
 &lt;h2&gt;Conditional expectation, conditional distribution, sufficiency, decision procedures&lt;/h2&gt;
 
 &lt;p&gt;Consider a random variable $X$ with sample space $(\mathcal{X}, \mathcal{A})$ and probability distribution $P^X$, and a statistic $T(X)$ with range space $(\mathcal{T}, \mathcal{B})$.&lt;/p&gt;
 
-&lt;hr&gt;
-
 &lt;h4&gt;Definition [$\mathrm{E}(f(X)|t)$]&lt;/h4&gt;
 
-&lt;p&gt;Let $f(x)$ be a non-negative, $\mathcal{A}$-measurable and $P^X$-integrable function.
-A $\mathcal{B}$-measurable function $g(t)$ is the &lt;em&gt;conditional expectation of&lt;/em&gt; $X$ &lt;em&gt;for given&lt;/em&gt; $t$, i.e. $\mathrm{E}(f(X)|t) = \mathrm{E}(f(X)|T=t) = g(t)$, if for all sets $B\in\mathcal{B}$ it holds that&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Let $f(x)$ be a non-negative, $\mathcal{A}$-measurable and $P^X$-integrable function.
+A $\mathcal{B}$-measurable function $g(t)$ is the conditional expectation of $X$ for given $t$, i.e. $\mathrm{E}(f(X)|t) = \mathrm{E}(f(X)|T=t) = g(t)$, if for all sets $B\in\mathcal{B}$ it holds that&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;$$\int\subscript{T^{-1}(B)} f(x) dP^X(x) = \int\subscript{B} g(t) dP^T(t).$$&lt;/p&gt;
 
-&lt;hr&gt;
+&lt;p&gt;Some observations regarding this definition:&lt;/p&gt;
 
 &lt;ul&gt;
 &lt;li&gt;&lt;p&gt;In fact, if we define $f\subscript{0}(x) = g(T(x))$, then by Lemma 2.3.2 in TSH the above formula becomes&lt;/p&gt;
@@ -74,29 +101,20 @@ A $\mathcal{B}$-measurable function $g(t)$ is the &lt;em&gt;conditional expectat
 &lt;p&gt;$$\mathrm{E}(f(X)|t) = \mathrm{E}(f^+(X)|t) - \mathrm{E}(f^-(X)|t).$$&lt;/p&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;hr&gt;
-
 &lt;h4&gt;Definition [$P(A|t)$]&lt;/h4&gt;
 
-&lt;p&gt;Let $I\subscript{A}(X)$ be a random variable that is equal to one if and only if $X\in A$. The &lt;em&gt;conditional probability of&lt;/em&gt; $A$ &lt;em&gt;given&lt;/em&gt; $T=t$ can be defined as&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Let $I\subscript{A}(X)$ be a random variable that is equal to one if and only if $X\in A$. The conditional probability of $A$ given $T=t$ can be defined as&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;$$P(A|t) = E(I\subscript{A}(X) | t).$$&lt;/p&gt;
 
-&lt;hr&gt;
-
 &lt;p&gt;This definition seems natural, and in fact, if $T$ has Euclidean domain and range spaces or if $\mathrm{E}|f(X)| &amp;lt; \infty$, then the above defines the &lt;em&gt;conditional probability distribution&lt;/em&gt; $P^{X|t}$ (see Theorems 2.5.2 and 2.5.3 in TSH).&lt;/p&gt;
-
-&lt;hr&gt;
 
 &lt;h4&gt;Definition [Sufficiency]&lt;/h4&gt;
 
-&lt;p&gt;Let $\mathcal{P} = \{P\subscript{\theta} : \theta\in\Omega\}$ be a family of distributions over a sample space $(\mathcal{X}, \mathcal{A})$.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Let $\mathcal{P} = \{P\subscript{\theta} : \theta\in\Omega\}$ be a family of distributions over a sample space $(\mathcal{X}, \mathcal{A})$.&lt;/em&gt;
+&lt;em&gt;$T$ is sufficient for $\mathcal{P}$ (or $\theta$) if $P\subscript{\theta}(A|t)$ is independent of $\theta$ for every $A\in\mathcal{A}$.&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;$T$ is sufficient for $\mathcal{P}$ (or $\theta$) if $P\subscript{\theta}(A|t)$ is independent of $\theta$ for every $A\in\mathcal{A}$.&lt;/p&gt;
-
-&lt;hr&gt;
-
-&lt;p&gt;In particular, the class of decision procedures depending on a sufficient statistic $T$ is &lt;em&gt;essentially complete&lt;/em&gt;. Assume that the sample space is Euclidean, then by Theorem 2.5.1 in TSH there exists the conditional probability distribution $P^{X|t}$. Let $\phi(x)$ be a decision procedure. Given only the value of the sufficient statistic $T(X)$ (but not $X$), define another decision procedure $\psi(t)$ as a random sample from the distribution $P^{X|t}$. Then $\phi(X)$ and $\psi(T)$ have identical distributions. Consequently, both decision procedures have the same risk,&lt;/p&gt;
+&lt;p&gt;In particular, the class of decision procedures depending on a sufficient statistic $T$ is &lt;em&gt;essentially complete&lt;/em&gt;. To see this, assume that the sample space is Euclidean, then by Theorem 2.5.1 in TSH there exists the conditional probability distribution $P^{X|t}$. Let $\phi(x)$ be a decision procedure. Given only the value of the sufficient statistic $T(X)$ (but not $X$), define another decision procedure $\psi(t)$ as a random sample from the distribution $P^{X|t}$. Then $\phi(X)$ and $\psi(T)$ have identical distributions. Consequently, both decision procedures have the same risk,&lt;/p&gt;
 
 &lt;p&gt;$$R(\theta, \psi) = \mathrm{E}(L(\theta, \psi(T))) = \mathrm{E}(L(\theta, \phi(X))) = R(\theta, \phi).$$&lt;/p&gt;
 
@@ -116,25 +134,20 @@ A $\mathcal{B}$-measurable function $g(t)$ is the &lt;em&gt;conditional expectat
 
 &lt;p&gt;for any pair of random variables $X$ and $Y$.&lt;/p&gt;
 
-&lt;p&gt;If $X$ and $Y$ are real-valued one-dimensional, then the pair $(X,Y)$ can be viewed as a ranodm vector in the plane. Each set $\{Y \in A\}$ consists of parallels to the $x$-axis, and we can define a $\sigma$-algebra induced by $Y$ as the colloections of all sets $\{Y \in A\}$, where $A$ are Borel sets. Then $\mathrm{E}(X|Y)$ is a random variable, such that $\mathrm{E}(X\cdot I\subscript{B}) = \mathrm{E}(\mathrm{E}(X|Y) \cdot I\subscript{B})$. This leads to the following general definition.&lt;/p&gt;
-
-&lt;hr&gt;
+&lt;p&gt;If $X$ and $Y$ are real-valued one-dimensional, then the pair $(X,Y)$ can be viewed as a random vector in the plane. Each set $\{Y \in A\}$ consists of parallels to the $x$-axis, and we can define a $\sigma$-algebra induced by $Y$ as the collection of all sets $\{Y \in A\}$, where $A$ are Borel sets. Then $\mathrm{E}(X|Y)$ is a random variable, such that $\mathrm{E}(X\cdot I\subscript{B}) = \mathrm{E}(\mathrm{E}(X|Y) \cdot I\subscript{B})$ for all $B=\{Y\in A\}$ with $A$ being a Borel set. This leads to the following general definition.&lt;/p&gt;
 
 &lt;h4&gt;Definition [Conditional expectation]&lt;/h4&gt;
 
-&lt;p&gt;Let $\mathcal{A}$ be the underlying $\sigma$-algebra of sets, and let $\mathcal{B}$ be a $\sigma$-algebra contained in $\mathcal{A}$. Let $X$ be a random variable. &lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Let $\mathcal{A}$ be the underlying $\sigma$-algebra of sets, and let $\mathcal{B}$ be a $\sigma$-algebra contained in $\mathcal{A}$. Let $X$ be a random variable.&lt;/em&gt;&lt;/p&gt;
 
 &lt;ol&gt;
-&lt;li&gt;&lt;p&gt;A random variable $U$ is called a &lt;em&gt;conditional expectation of&lt;/em&gt; $X$ &lt;em&gt;relative to&lt;/em&gt; $\mathcal{B}$ (or $U=\mathrm{E}(X|\mathcal{B})$), if it is $\mathcal{B}$-measurable and for all $B\in\mathcal{B}$ it holds that&lt;/p&gt;
+&lt;li&gt;&lt;p&gt;&lt;em&gt;A random variable $U$ is called a conditional expectation of $X$ relative to $\mathcal{B}$ (or $U=\mathrm{E}(X|\mathcal{B})$), if it is $\mathcal{B}$-measurable and for all $B\in\mathcal{B}$ it holds that&lt;/em&gt;&lt;/p&gt;
 
 &lt;p&gt;$$\mathrm{E}(X\cdot I\subscript{B}) = \mathrm{E}(U \cdot I\subscript{B}).$$&lt;/p&gt;&lt;/li&gt;
-&lt;li&gt;&lt;p&gt;If $\mathcal{B}$ is the $\sigma$-algebra generated by a random variable $Y$, then $\mathrm{E}(X|Y) := \mathrm{E}(X|\mathcal{B})$.&lt;/p&gt;&lt;/li&gt;
+&lt;li&gt;&lt;p&gt;&lt;em&gt;If $\mathcal{B}$ is the $\sigma$-algebra generated by a random variable $Y$, then $\mathrm{E}(X|Y) = \mathrm{E}(X|\mathcal{B})$.&lt;/em&gt;&lt;/p&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;hr&gt;
-
-&lt;p&gt;&lt;/div&gt;
-&lt;br&gt;&lt;/p&gt;
+&lt;p&gt;&lt;/div&gt;&lt;/p&gt;
 </description>
         <pubDate>Fri, 23 Oct 2015 00:00:00 -0500</pubDate>
         <link>http://www.alexejgossmann.com//TSH_and_TPE_observations/</link>
