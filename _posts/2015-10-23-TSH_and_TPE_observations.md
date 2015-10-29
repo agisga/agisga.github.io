@@ -40,10 +40,12 @@ Brainstorming:
 -->
 
 <br>
-<input type="button" onclick="return toggleMe('unbiased')" value="+ Topic:"> <b>Unbiasedness</b><br>
+<input type="button" onclick="return toggleMe('unbiased')" value="+ Topic:"> <b>Generalizing the definition of unbiasedness</b><br>
 <div id="unbiased" style="display:none">
 
-## Unbiasedness
+## Generalizing the definition of unbiasedness
+
+### Unbiased estimators
 
 The well-known and widely used definition of an unbiased estimator $\hat{\theta}$ of a parameter $\theta$ is
 
@@ -66,6 +68,41 @@ $$\mathrm{E}\subscript{\theta}(\hat{\theta}) = \theta.$$
 
 This equivalence also holds under somewhat more general assumptions, see exercise 1.2 in TSH.
 
+### Unbiased tests
+
+Consider a level $\alpha$ test $\phi$ of the hypothesis $H : \theta \in \Omega\subscript{H}$ against an alternative $K : \theta \in \Omega\subscript{K}$.
+Denote the power function of $\phi$ by $\beta\subscript{\phi}(\theta) = \mathrm{E}\subscript{\theta} \phi(X)$.
+Then it is natural to define unbiasedness of $\phi$ by the criterion
+
+$$
+\begin{eqnarray}
+\beta\subscript{\phi}(\theta) &\leq& \alpha \quad \mathrm{if}\, H : \theta \in \Omega\subscript{H}, \\\\\\
+\beta\subscript{\phi}(\theta) &\geq& \alpha \quad \mathrm{if}\,  K : \theta \in \Omega\subscript{K}. 
+\end{eqnarray}
+$$
+
+In particular, it follows that $\beta\subscript{\phi}(\theta) = \alpha$ on the common boundary of $\Omega\subscript{H}$ and $\Omega\subscript{K}$. In fact, a test that is the most powerful among all such tests, is UMP unbiased (Lemma 4.1.1 in TSH). 
+
+However, the definition of an unbiased test can be generalized in the same way as that of an unbiased estimator shown above.
+Assume that there is a loss function $L(\theta, \phi(x))$, which only depends on the true value of $\theta$ and the decision $\phi(x)$ takes by the test $\phi$. Then the hypothesis test is unbiased with respect to $L$, if for all $\theta^\prime$ it holds that
+
+$$\mathrm{E}\subscript{\theta}(L(\theta^\prime, \phi(X))) \geq \mathrm{E}\subscript{\theta}(L(\theta, \phi(X))).$$
+
+For the test $\phi$ of $H$ vs. $K$ let the loss function be equal to $\alpha$ if a Type II error is committed and equal $(1-\alpha)$ if a Type I error is committed. Then 
+
+$$
+\mathrm{E}\subscript{\theta}(L(\theta^\prime, \phi(X))) = 
+\begin{cases}
+\alpha (1 - \beta\subscript{\phi}(\theta)) \quad &\mathrm{if}&\, \theta^\prime \in \Omega\subscript{K}\\\\\\ 
+(1-\alpha) \beta\subscript{\phi}(\theta) \quad &\mathrm{if}&\, \theta^\prime \in \Omega\subscript{H},
+\end{cases}
+$$
+
+It follows that if $\theta \in \Omega\subscript{H}$ then $\alpha (1 - \beta\subscript{\phi}(\theta)) \geq (1-\alpha) \beta\subscript{\phi}(\theta)$, and consequently
+
+$$\beta\subscript{\phi}(\theta) \leq \alpha.$$
+
+Similarly, by considering $\theta\in\Omega\subscript{K}$, we get $\beta\subscript{\phi}(\theta) \geq \alpha$. Thus the usual definition is a special case of the more general loss-function-based definition.
 </div>
 
 <br>
