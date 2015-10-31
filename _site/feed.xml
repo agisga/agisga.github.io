@@ -40,14 +40,17 @@ Brainstorming:
 * definition of unbiased
 * two-sided hypotheses tests: exerises 3.54 and 3.2 (ii)
 * fundamental Neyman-Pearson lemma and generalizations
+* relationship tests x CI
 
 --&gt;
 
 &lt;p&gt;&lt;br&gt;
-&lt;input type=&quot;button&quot; onclick=&quot;return toggleMe(&#39;unbiased&#39;)&quot; value=&quot;+ Topic:&quot;&gt; &lt;b&gt;Generalizing the definition of unbiasedness&lt;/b&gt;&lt;br&gt;
+&lt;input type=&quot;button&quot; onclick=&quot;return toggleMe(&#39;unbiased&#39;)&quot; value=&quot;+ Topic:&quot;&gt; &lt;b&gt;On the notion of unbiasedness of estimators, hypotheses tests, and confidence intervals&lt;/b&gt;&lt;br&gt;
 &lt;div id=&quot;unbiased&quot; style=&quot;display:none&quot;&gt;&lt;/p&gt;
 
-&lt;h2&gt;Generalizing the definition of unbiasedness&lt;/h2&gt;
+&lt;h2&gt;On the notion of unbiasedness of estimators, hypotheses tests, and confidence intervals&lt;/h2&gt;
+
+&lt;p&gt;The following discusses various well-known definitions of unbiasedness, their generalizations and relationships with each other, as well as some of the underlying intuition (such as the relationship between hypotheses tests and confidence intervals).&lt;/p&gt;
 
 &lt;h3&gt;Unbiased estimators&lt;/h3&gt;
 
@@ -66,7 +69,7 @@ Then $\hat{\theta}$ is said to be unbiased for $\theta$ with respect to $L$, if 
 
 &lt;p&gt;$$\mathrm{E}\subscript{\theta}\left(\left| \theta^\prime - \hat{\theta} \right|^2\right) \geq \mathrm{E}\subscript{\theta}\left(\left| \theta - \hat{\theta}\right|^2\right).$$&lt;/p&gt;
 
-&lt;p&gt;If $\mathrm{E}\subscript{\theta}\hat{\theta}$ is one of the possible values of $\theta$, then by adding and substracting $\mathrm{E}\subscript{\theta}\hat{\theta}$ inside the parentheses on both sides of the equation it follows that the above unbiasedness condition is satisfied if and only if&lt;/p&gt;
+&lt;p&gt;If $\mathrm{E}\subscript{\theta}\hat{\theta}$ is one of the possible values of $\theta$, then by adding and subtracting $\mathrm{E}\subscript{\theta}\hat{\theta}$ inside the parentheses on both sides of the equation it follows that the above unbiasedness condition is satisfied if and only if&lt;/p&gt;
 
 &lt;p&gt;$$\mathrm{E}\subscript{\theta}(\hat{\theta}) = \theta.$$&lt;/p&gt;
 
@@ -106,7 +109,47 @@ $$&lt;/p&gt;
 
 &lt;p&gt;$$\beta\subscript{\phi}(\theta) \leq \alpha.$$&lt;/p&gt;
 
-&lt;p&gt;Similarly, by considering $\theta\in\Omega\subscript{K}$, we get $\beta\subscript{\phi}(\theta) \geq \alpha$. Thus the usual definition is a special case of the more general loss-function-based definition.
+&lt;p&gt;Similarly, by considering $\theta\in\Omega\subscript{K}$, we get $\beta\subscript{\phi}(\theta) \geq \alpha$. Thus the usual definition is a special case of the more general loss-function-based definition.&lt;/p&gt;
+
+&lt;h3&gt;Unbiased confidence sets&lt;/h3&gt;
+
+&lt;p&gt;As is well-known, the defining condition for a confidence interval $\left(\underline{\theta}, \overline{\theta}\right)$ is&lt;/p&gt;
+
+&lt;p&gt;$$P\subscript{\theta}\left(\underline{\theta}(X) \leq \theta \leq \overline{\theta}(X)\right) \geq 1-\alpha,$$&lt;/p&gt;
+
+&lt;p&gt;for all $\theta$.&lt;/p&gt;
+
+&lt;h4&gt;Hypotheses tests vs. confidence intervals&lt;/h4&gt;
+
+&lt;p&gt;It is well-known that hypotheses tests and confidence intervals generally do exactly the same thing.
+However, to describe with mathematical rigour in what sense it is true requires a little thinking.&lt;/p&gt;
+
+&lt;p&gt;Consider a level $\alpha$ test of a two-sided hypothesis test $H : \theta = \theta\subscript{0}$ vs. $K : \theta \neq \theta\subscript{0}$, and denote its acceptance region by $A(\theta\subscript{0})$.
+Define the inclusion region of the confidence set to be&lt;/p&gt;
+
+&lt;p&gt;$$S(x) := \{ \theta : x\in A(\theta) \},$$&lt;/p&gt;
+
+&lt;p&gt;that is, $\theta \in S(x)$ if and only if $x\in A(\theta)$. Then $S(x)$ defines a $(1-\alpha) \cdot 100\%$ confidence set, because for all $\theta$ we have&lt;/p&gt;
+
+&lt;p&gt;$$P\subscript{\theta}(\theta \in S(x)) = P\subscript{\theta}(x\in A(\theta)) \geq 1 - \alpha.$$&lt;/p&gt;
+
+&lt;p&gt;Conversely, if we start out with a family of confidence sets $\{S(x) : x\in\mathcal{X}\}$, and define $A(\theta) := \{x : \theta\in S(x)\}$, then for any $\theta$ it holds that&lt;/p&gt;
+
+&lt;p&gt;$$P\subscript{\theta}(x\in A(\theta)) = P\subscript{\theta}(\theta \in S(x)) \geq 1 - \alpha.$$&lt;/p&gt;
+
+&lt;p&gt;It follows that $P\subscript{\theta}(\mathrm{Type\,I\,error}) \leq \alpha$, that is, $A(\theta)$ is the acceptance region of a level $\alpha$ test.&lt;/p&gt;
+
+&lt;h4&gt;Unbiased confidence sets&lt;/h4&gt;
+
+&lt;p&gt;Now it suggests itself to define an unbiased confidence set as one that stems from an unbiased hypothesis test by the above procedure. 
+In the two-sided case discussed above this condition reduces to&lt;/p&gt;
+
+&lt;p&gt;$$P\subscript{\theta}\left(\underline{\theta}(x) \leq \theta^\prime \leq \overline{\theta}(x)\right) \leq 1 - \alpha$$&lt;/p&gt;
+
+&lt;p&gt;for all $\theta^\prime$ and $\theta$ such that $\theta \neq \theta^\prime$. That is, the inclusion probability of the null hypothesis parameter $\theta^\prime$ in the confidence interval, when the alternative $\theta$ is true, is less than the confidence level.&lt;/p&gt;
+
+&lt;p&gt;Similarly, uniformly most accurate confidence intervals correspond to uniformly most powerful tests (see section 3.5 in TSH for more detail).
+However, UMP tests usually do not exist, which is a reason to concentrate on unbiasedness instead. In particular, UMP unbiased tests correspond to uniformly most accurate unbiased confidence sets, i.e.  $S(x)$ such that for all $\theta^\prime$ and $\theta$ with $\theta\in K(\theta^\prime)$ the probability $P\subscript{\theta}(\theta^\prime\in S(x))$ is minimized.
 &lt;/div&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;br&gt;
@@ -186,7 +229,7 @@ A $\mathcal{B}$-measurable function $g(t)$ is the conditional expectation of $X$
 
 &lt;p&gt;&lt;/div&gt;&lt;/p&gt;
 </description>
-        <pubDate>Fri, 23 Oct 2015 00:00:00 -0500</pubDate>
+        <pubDate>Thu, 29 Oct 2015 00:00:00 -0500</pubDate>
         <link>http://www.alexejgossmann.com//TSH_and_TPE_observations/</link>
         <guid isPermaLink="true">http://www.alexejgossmann.com//TSH_and_TPE_observations/</guid>
       </item>
