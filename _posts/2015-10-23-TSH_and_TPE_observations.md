@@ -141,7 +141,7 @@ It follows that $P\subscript{\theta}(\mathrm{Type\,I\,error}) \leq \alpha$, that
 Now it suggests itself to define an unbiased confidence set as one that stems from an unbiased hypothesis test by the above procedure. 
 In the two-sided case discussed above this condition reduces to
 
-$$P\subscript{\theta}\left(\underline{\theta}(x) \leq \theta^\prime \leq \overline{\theta}(x)\right) \leq 1 - \alpha$$
+$$P\subscript{\theta}\left(\underline{\theta}(X) \leq \theta^\prime \leq \overline{\theta}(X)\right) \leq 1 - \alpha$$
 
 for all $\theta^\prime$ and $\theta$ such that $\theta \neq \theta^\prime$. That is, the inclusion probability of the null hypothesis parameter $\theta^\prime$ in the confidence interval, when the alternative $\theta$ is true, is less than the confidence level.
 
