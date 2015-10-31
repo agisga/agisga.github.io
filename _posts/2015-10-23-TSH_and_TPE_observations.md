@@ -136,14 +136,14 @@ $$P\subscript{\theta}(x\in A(\theta)) = P\subscript{\theta}(\theta \in S(x)) \ge
 
 It follows that $P\subscript{\theta}(\mathrm{Type\,I\,error}) \leq \alpha$, that is, $A(\theta)$ is the acceptance region of a level $\alpha$ test.
 
-#### Unbiased confidence sets
+#### Unbiased and uniformly most accurate unbiased confidence sets
 
 Now it suggests itself to define an unbiased confidence set as one that stems from an unbiased hypothesis test by the above procedure. 
 In the two-sided case discussed above this condition reduces to
 
 $$P\subscript{\theta}\left(\underline{\theta}(X) \leq \theta^\prime \leq \overline{\theta}(X)\right) \leq 1 - \alpha$$
 
-for all $\theta^\prime$ and $\theta$ such that $\theta \neq \theta^\prime$. That is, the inclusion probability of the null hypothesis parameter $\theta^\prime$ in the confidence interval, when the alternative $\theta$ is true, is less than the confidence level.
+for all $\theta^\prime$ and $\theta$ such that $\theta \neq \theta^\prime$. That is, the inclusion probability of the null hypothesis parameter $\theta^\prime$ in the confidence interval, when the alternative $\theta$ is true, is less than the confidence level. Lemma 5.5.1 in TSH shows that the confidence set derived from an unbiased level $\alpha$ hypothesis test has indeed the form of an interval.
 
 Similarly, uniformly most accurate confidence intervals correspond to uniformly most powerful tests (see section 3.5 in TSH for more detail).
 However, UMP tests usually do not exist, which is a reason to concentrate on unbiasedness instead. In particular, UMP unbiased tests correspond to uniformly most accurate unbiased confidence sets, i.e.  $S(x)$ such that for all $\theta^\prime$ and $\theta$ with $\theta\in K(\theta^\prime)$ the probability $P\subscript{\theta}(\theta^\prime\in S(x))$ is minimized.
