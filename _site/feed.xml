@@ -228,6 +228,64 @@ A $\mathcal{B}$-measurable function $g(t)$ is the conditional expectation of $X$
 &lt;/ol&gt;
 
 &lt;p&gt;&lt;/div&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br&gt;
+&lt;input type=&quot;button&quot; onclick=&quot;return toggleMe(&#39;permutation&#39;)&quot; value=&quot;+ Topic:&quot;&gt; &lt;b&gt;Permutation tests&lt;/b&gt;&lt;br&gt;
+&lt;div id=&quot;permutation&quot; style=&quot;display:none&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;Permutation tests&lt;/h2&gt;
+
+&lt;p&gt;When a parametric probabilistic model cannot be assumed, one can still construct exact level-$\alpha$ hypotheses tests as permutation tests. Here, based on sections 5.8 and 5.9 of TSH, I discuss the concept by considering as an example a permutation test for the difference of two means. &lt;/p&gt;
+
+&lt;p&gt;Assume that each of the random variables $X\subscript{1}, \dots, X\subscript{m}$ has mean $\eta$ and that each of $Y\subscript{1}, ..., Y\subscript{n}$ has mean $\xi$. Additionally assume that the distributions of all those variables differ only with respect to the mean, for example, $X\subscript{i} \sim \mathrm{i.i.d.}\, f(x\subscript{i})$ and $Y\subscript{i} \sim \mathrm{i.i.d.}\, f(y\subscript{i} - \Delta)$ with $\Delta = \eta - \xi$. The density function $f$ is not known apart from the fact that it is continuous a.e. We want to test the hypothesis $H : \Delta = 0$.&lt;/p&gt;
+
+&lt;p&gt;Let $N:=n+m$, denote the random vector containing all $X$s and $Y$s as $Z := (X^T, Y^T)^T$, and let $S(z)$ be the set of all permutations of the entries of a realization $z$ of the random vector $Z$.
+Then a level-$\alpha$ test $\phi$ has to satisfy&lt;/p&gt;
+
+&lt;p&gt;$$\int \phi(z) \prod\subscript{i=1}^N f(z\subscript{i}) dz = \alpha.$$&lt;/p&gt;
+
+&lt;p&gt;Interestingly, it turns out that this equality holds if and only if&lt;/p&gt;
+
+&lt;p&gt;$$\frac{1}{N!} \sum\subscript{w\in S(z)} \phi(w) = \alpha.$$&lt;/p&gt;
+
+&lt;p&gt;A more general result that accounts for population stratification is given by theorem 5.8.1 in TSH.&lt;/p&gt;
+
+&lt;p&gt;The power of $\phi$  against an alternative $h(z)$ is given by&lt;/p&gt;
+
+&lt;p&gt;$$\int \phi(z) h(z) dz = \int \mathrm{E}\left(\phi(Z) \middle| T=t\right) dP^T(t).$$&lt;/p&gt;
+
+&lt;p&gt;Let $T(Z)$ be the order statistic. It holds that $S(z) = S(T(z)) = S(t)$, and from the expression of the conditional expectation $\mathrm{E}\left(\phi(Z) \middle| T=t\right)$ (see Example 2.4.1 and Problem 2.6), it can be further derived that the most powerful test $\phi$ maximizes&lt;/p&gt;
+
+&lt;p&gt;$$\sum\subscript{z\in S(t)} \phi(z) \frac{h(z)}{\sum\subscript{w\in S(z)} h(w)}$$&lt;/p&gt;
+
+&lt;p&gt;subject to&lt;/p&gt;
+
+&lt;p&gt;$$\frac{1}{N!} \sum\subscript{z\in S(t)} \phi(z) = \alpha.$$&lt;/p&gt;
+
+&lt;p&gt;Now, the Neyman-Pearson fundamental lemma implies that the hypothesis should be rejected whenever $\frac{h(z)N!}{\sum\subscript{w\in S(z)} h(w)}$ is too large.
+This leads to a most powerful test $\phi$ given by&lt;/p&gt;
+
+&lt;p&gt;$$\phi(z) = \begin{cases}
+1, \quad\mathrm{if}\, h(z) &amp;gt; C(T(z)), \\\
+\gamma, \quad\mathrm{if}\, h(z) = C(T(z)), \\\
+0, \quad\mathrm{if}\, h(z) &amp;lt; C(T(z)).
+\end{cases}$$&lt;/p&gt;
+
+&lt;p&gt;Thus the test is carried out by... &lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;ordering the points in $S(z)$ in a decreasing order according to $h$,&lt;/li&gt;
+&lt;li&gt;rejecting if $h(z)$ is one of the $k$ largest values and rejecting with probability $\gamma$ if $h(z)$ is $(k+1)$st largest, where $k$ and $\gamma$ are determined by&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;$$k+\gamma = \alpha \cdot N!$$&lt;/p&gt;
+
+&lt;p&gt;More general versions of this approach, which incorporate population stratification and randomization, are given in section 5.8-5.13 in TSH.&lt;/p&gt;
+
+&lt;p&gt;The above test is not UMP because it depends on $h$. However, it can be shown that if under the null hypothesis each $Z\subscript{i}$ follows the same normal distribution $\mathcal{N}(\xi, \sigma^2)$, then the derived test is most powerful among all unbiased tests of level $\alpha$ against all normal alternatives under consideration (see Lemma 5.9.1 in TSH for an even more general result).
+Such an approach is appropriate when the data is assumed to be approximately normal but the assumption is not considered reliable. The permutation test is maximizing the power against all normal alternatives, while still being unbiased against all other alternatives.&lt;/p&gt;
+
+&lt;p&gt;&lt;/div&gt;&lt;/p&gt;
 </description>
         <pubDate>Thu, 29 Oct 2015 00:00:00 -0500</pubDate>
         <link>http://www.alexejgossmann.com//TSH_and_TPE_observations/</link>
