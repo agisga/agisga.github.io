@@ -26,7 +26,7 @@ return true;
 
 &lt;p&gt;&lt;img class=&#39;emoji&#39; title=&#39;:construction_worker:&#39; alt=&#39;:construction_worker:&#39; src=&#39;https://assets.github.com/images/icons/emoji/unicode/1f477.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; /&gt; &lt;em&gt;This post will be regularly updated.&lt;/em&gt; &lt;img class=&#39;emoji&#39; title=&#39;:construction_worker:&#39; alt=&#39;:construction_worker:&#39; src=&#39;https://assets.github.com/images/icons/emoji/unicode/1f477.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; /&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;strong&gt;Clickable items:&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Clickable items&lt;/strong&gt; (each could as well be a separate post)&lt;strong&gt;:&lt;/strong&gt;&lt;/p&gt;
 
 &lt;!-- 
 * some things that were not clear to me before, 
@@ -36,11 +36,10 @@ return true;
 
 Brainstorming:
 
-* LME = posterior mode with a uniform prior; LASSO estimate = posterior mode with a Laplacian prior
-* definition of unbiased
+* MLE = posterior mode with a uniform prior; LASSO estimate = posterior mode with a Laplacian prior
 * two-sided hypotheses tests: exerises 3.54 and 3.2 (ii)
-* fundamental Neyman-Pearson lemma and generalizations
-* relationship tests x CI
+* fundamental Neyman-Pearson lemma and generalizations?
+* something on linear hypotheses as chapter 7
 
 --&gt;
 
@@ -83,8 +82,10 @@ Then it is natural to define unbiasedness of $\phi$ by the criterion&lt;/p&gt;
 
 &lt;p&gt;$$
 \begin{eqnarray}
+\nonumber
 \beta\subscript{\phi}(\theta) &amp;amp;\leq&amp;amp; \alpha \quad \mathrm{if}\, H : \theta \in \Omega\subscript{H}, \\\
 \beta\subscript{\phi}(\theta) &amp;amp;\geq&amp;amp; \alpha \quad \mathrm{if}\,  K : \theta \in \Omega\subscript{K}. 
+\nonumber
 \end{eqnarray}
 $$&lt;/p&gt;
 
@@ -284,6 +285,124 @@ This leads to a most powerful test $\phi$ given by&lt;/p&gt;
 
 &lt;p&gt;The above test is not UMP because it depends on $h$. However, it can be shown that if under the null hypothesis each $Z\subscript{i}$ follows the same normal distribution $\mathcal{N}(\xi, \sigma^2)$, then the derived test is most powerful among all unbiased tests of level $\alpha$ against all normal alternatives under consideration (see Lemma 5.9.1 in TSH for an even more general result).
 Such an approach is appropriate when the data is assumed to be approximately normal but the assumption is not considered reliable. The permutation test is maximizing the power against all normal alternatives, while still being unbiased against all other alternatives.&lt;/p&gt;
+
+&lt;p&gt;&lt;/div&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;br&gt;
+&lt;input type=&quot;button&quot; onclick=&quot;return toggleMe(&#39;two-sided&#39;)&quot; value=&quot;+ Topic:&quot;&gt; &lt;b&gt;UMP tests for two-sided hypotheses&lt;/b&gt;&lt;br&gt;
+&lt;div id=&quot;two-sided&quot; style=&quot;display:none&quot;&gt;&lt;/p&gt;
+
+&lt;h2&gt;UMP tests for two-sided hypotheses&lt;/h2&gt;
+
+&lt;p&gt;The (non-) existence of uniformly most powerful (or UMP) tests for two-sided hypotheses is an interesting phenomenon. &lt;/p&gt;
+
+&lt;h4&gt;Example of existence&lt;/h4&gt;
+
+&lt;p&gt;First let&amp;#39;s look at an example when such a test does exist. This is Problem 3.2 in TSH.&lt;/p&gt;
+
+&lt;p&gt;For $i = 1,\dots, n$ let $X\subscript{i}$ be i.i.d. $\mathrm{Uniform}(0,\theta)$ random variables, denote their realizations by lower case $x\subscript{i}$s, and let $X$ denote the vector of the $X\subscript{i}$s. Consider the hypothesis $H : \theta = \theta\subscript{0}$ against the alternative $K : \theta \neq \theta\subscript{0}$.&lt;/p&gt;
+
+&lt;p&gt;Denote $x\subscript{(n)} := \max\{x\subscript{1}, \dots, x\subscript{n}\}$. Let $\phi$ be a hypothesis test which rejects $H : \theta = \theta\subscript{0}$ in favor of a two-sided alternative, if either $x\subscript{(n)} \geq \theta\subscript{0}$ or $x\subscript{(n)} &amp;lt; \theta\subscript{0} \sqrt[n]{\alpha}$.&lt;/p&gt;
+
+&lt;h5&gt;Proof&lt;/h5&gt;
+
+&lt;p&gt;Using the fundamental lemma of Neyman and Pearson, it is straightforward to prove that $\phi$ is UMP. Namely, $\phi$ is a UMP test at level $\alpha$ by Neyman-Pearson, if for any fixed $\theta\subscript{1} \neq \theta\subscript{0}$, the test $\phi$ can be written as &lt;/p&gt;
+
+&lt;p&gt;$$\phi(x) = \begin{cases} 
+1, \quad &amp;amp;\mathrm{if}\, p\subscript{\theta\subscript{1}}(x) &amp;gt; k p\subscript{\theta\subscript{0}}(x),\\\
+0, \quad &amp;amp;\mathrm{if}\, p\subscript{\theta\subscript{1}}(x) &amp;lt; k p\subscript{\theta\subscript{0}}(x), 
+\end{cases}$$&lt;/p&gt;
+
+&lt;p&gt;with a suitable $k$, and if it satisfies&lt;/p&gt;
+
+&lt;p&gt;$$\mathrm{E}\subscript{\theta\subscript{0}} \phi(X) = \alpha.$$&lt;/p&gt;
+
+&lt;p&gt;We have that&lt;/p&gt;
+
+&lt;p&gt;$$\begin{eqnarray}
+\nonumber
+\mathrm{E}\subscript{\theta\subscript{0}} \phi(X) &amp;amp;=&amp;amp; P\subscript{\theta\subscript{0}}\left(X\subscript{(n)} &amp;gt; \theta\subscript{0}\right) + P\subscript{\theta\subscript{0}}\left(X\subscript{(n)} &amp;lt; \theta\subscript{0}\sqrt[n]{\alpha}\right)\\\
+&amp;amp;=&amp;amp; 0 + \left(\frac{\theta\subscript{0} \sqrt[n]{\alpha}}{\theta\subscript{0}}\right)^n = \alpha.
+\nonumber
+\end{eqnarray}$$&lt;/p&gt;
+
+&lt;p&gt;As for the other Neyman-Pearson condition, we have to consider multiple cases:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;If $\theta\subscript{1} &amp;gt; \theta\subscript{0}$, then $k = \left(\frac{\theta\subscript{0}}{\theta\subscript{1}}\right)^n$ yields the desired result.&lt;/li&gt;
+&lt;li&gt;If $\theta\subscript{0}\sqrt[n]{\alpha} &amp;lt; \theta\subscript{1} &amp;lt; \theta\subscript{0}$, then $k = \left(\frac{\theta\subscript{0}}{\theta\subscript{1}}\right)^n$ can be used as well.&lt;/li&gt;
+&lt;li&gt;If $\theta\subscript{1} &amp;lt; \theta\subscript{0}\sqrt[n]{\alpha} &amp;lt; \theta\subscript{0}$, then $k = 0$.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div align=&quot;right&quot;&gt;
+$\blacksquare$
+&lt;/div&gt;
+
+&lt;h4&gt;Example of non-existence&lt;/h4&gt;
+
+&lt;p&gt;Thus, we saw an example of a UMP test for a two-sided hypothesis. &lt;/p&gt;
+
+&lt;p&gt;However, when the underlying distribution comes from an exponential family, then a UMP test does not exist for $H : \theta = \theta\subscript{0}$ vs. $K : \theta \neq \theta\subscript{0}$ (Problem 3.54 in TSH). This follows quite easily from the consideration of UMP tests for the one-sided hypotheses $H\subscript{1} : \theta \leq \theta\subscript{0}$ vs. $K\subscript{1} : \theta &amp;gt; \theta\subscript{0}$, and $H\subscript{2} : \theta \geq \theta\subscript{0}$ vs. $K\subscript{2} : \theta &amp;lt; \theta\subscript{0}$.
+A detailed proof follows.&lt;/p&gt;
+
+&lt;h5&gt;Proof&lt;/h5&gt;
+
+&lt;p&gt;According to Theorem 3.4.1 in TSH, a UMP test of $H\subscript{1}$ exists and can be written as&lt;/p&gt;
+
+&lt;p&gt;$$\phi\subscript{1}(x) = \begin{cases} 
+1, \quad &amp;amp;\mathrm{if}\, T(x) &amp;gt; C\subscript{1},\\\
+0, \quad &amp;amp;\mathrm{if}\, T(x) &amp;lt; C\subscript{1}.
+\end{cases}$$&lt;/p&gt;
+
+&lt;p&gt;Similarly, a UMP test of $H\subscript{2}$ exists and can be written as&lt;/p&gt;
+
+&lt;p&gt;$$\phi\subscript{2}(x) = \begin{cases} 
+1, \quad &amp;amp;\mathrm{if}\, T(x) &amp;lt; C\subscript{2},\\\
+0, \quad &amp;amp;\mathrm{if}\, T(x) &amp;gt; C\subscript{2}.
+\end{cases}$$&lt;/p&gt;
+
+&lt;p&gt;Clearly, $\phi\subscript{1}$ and $\phi\subscript{2}$ are level-$\alpha$ tests for $H$ vs. $K$ as well.&lt;/p&gt;
+
+&lt;p&gt;Let $\phi\subscript{0}$ be a level-$\alpha$ test of $H$ vs. $K$. Fix a $\theta\subscript{1} &amp;gt; \theta\subscript{0}$ and a $\theta\subscript{2} &amp;lt; \theta\subscript{0}$. Assume that &lt;/p&gt;
+
+&lt;p&gt;$$\mathrm{E}\subscript{\theta\subscript{i}} \phi\subscript{0}(X) \geq \mathrm{E}\subscript{\theta\subscript{i}} \phi\subscript{i}(X)$$&lt;/p&gt;
+
+&lt;p&gt;for $i = 1,2$. Then $\phi\subscript{0}$ is most powerful for testing $\theta\subscript{0}$ vs. $\theta\subscript{1}$ and for testing $\theta\subscript{0}$ vs. $\theta\subscript{2}$. Thus, by the fundamental lemma of Neyman and Pearson the UMP test can be rewritten as&lt;/p&gt;
+
+&lt;p&gt;$$
+\begin{equation}
+\phi\subscript{0}(x) = \begin{cases} 
+1, \quad &amp;amp;\mathrm{if}\, p\subscript{\theta\subscript{1}}(x) &amp;gt; k\subscript{1} p\subscript{\theta\subscript{0}}(x),\\\
+0, \quad &amp;amp;\mathrm{if}\, p\subscript{\theta\subscript{1}}(x) &amp;lt; k\subscript{1} p\subscript{\theta\subscript{0}}(x), 
+\end{cases}
+\label{eq1}
+\end{equation}
+$$&lt;/p&gt;
+
+&lt;p&gt;$$
+\begin{equation}
+\phi\subscript{0}(x) = \begin{cases} 
+1, \quad &amp;amp;\mathrm{if}\, p\subscript{\theta\subscript{2}}(x) &amp;gt; k\subscript{2} p\subscript{\theta\subscript{0}}(x),\\\
+0, \quad &amp;amp;\mathrm{if}\, p\subscript{\theta\subscript{2}}(x) &amp;lt; k\subscript{2} p\subscript{\theta\subscript{0}}(x).
+\end{cases}
+\label{eq2}
+\end{equation}
+$$&lt;/p&gt;
+
+&lt;p&gt;Let $x$ be such that $\phi\subscript{0}(x) = 1$. Now, from the monotonicity of the likelihood ratio, it follows that&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;if $T(y) &amp;gt; T(x)$ then $\phi\subscript{0}(y) = 1$ (by equation $\eqref{eq1}$),&lt;/li&gt;
+&lt;li&gt;if $T(y) &amp;lt; T(x)$ then $\phi\subscript{0}(y) = 1$ (by equation $\eqref{eq2}$).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;That is, either $\phi\subscript{0}(y) = 1$ for all $y$ or $\phi\subscript{0}(x) \neq 1$ for all $x$. A contradiction. It follows that $\phi\subscript{0}$ can not be more powerful than $\phi\subscript{1}$ for testing $\theta\subscript{0}$ vs. $\theta\subscript{1}$ and than $\phi\subscript{2}$ for testing $\theta\subscript{0}$ vs. $\theta\subscript{2}$. Thus, a UMP test for $H$ vs. $K$ does not exist.&lt;/p&gt;
+
+&lt;div align=&quot;right&quot;&gt;
+$\blacksquare$
+&lt;/div&gt;
+
+&lt;p&gt;Even though a UMP test for the two-sided hypothesis considered above does not exist, there exist a UMP unbiased test (i.e. a test that is uniformly most powerful among all unbiased tests). For detail see Section 4.2 in TSH.&lt;/p&gt;
 
 &lt;p&gt;&lt;/div&gt;&lt;/p&gt;
 </description>

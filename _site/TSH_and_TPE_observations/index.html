@@ -35,6 +35,12 @@
       MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}});
       MathJax.Hub.Config({TeX: {Macros:{subscript:['_{#1}',1],superscript:['^{#1}',1]}}});
     </script> 
+    <!-- Turn on equation numbering -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+    </script>
     <script type="text/javascript"
       src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
     </script>
@@ -85,7 +91,7 @@ return true;
 
 <p><img class='emoji' title=':construction_worker:' alt=':construction_worker:' src='https://assets.github.com/images/icons/emoji/unicode/1f477.png' height='20' width='20' align='absmiddle' /> <em>This post will be regularly updated.</em> <img class='emoji' title=':construction_worker:' alt=':construction_worker:' src='https://assets.github.com/images/icons/emoji/unicode/1f477.png' height='20' width='20' align='absmiddle' /></p>
 
-<p><strong>Clickable items:</strong></p>
+<p><strong>Clickable items</strong> (each could as well be a separate post)<strong>:</strong></p>
 
 <!-- 
 * some things that were not clear to me before, 
@@ -95,11 +101,10 @@ return true;
 
 Brainstorming:
 
-* LME = posterior mode with a uniform prior; LASSO estimate = posterior mode with a Laplacian prior
-* definition of unbiased
+* MLE = posterior mode with a uniform prior; LASSO estimate = posterior mode with a Laplacian prior
 * two-sided hypotheses tests: exerises 3.54 and 3.2 (ii)
-* fundamental Neyman-Pearson lemma and generalizations
-* relationship tests x CI
+* fundamental Neyman-Pearson lemma and generalizations?
+* something on linear hypotheses as chapter 7
 
 -->
 
@@ -142,8 +147,10 @@ Then it is natural to define unbiasedness of $\phi$ by the criterion</p>
 
 <p>$$
 \begin{eqnarray}
+\nonumber
 \beta\subscript{\phi}(\theta) &amp;\leq&amp; \alpha \quad \mathrm{if}\, H : \theta \in \Omega\subscript{H}, \\\
 \beta\subscript{\phi}(\theta) &amp;\geq&amp; \alpha \quad \mathrm{if}\,  K : \theta \in \Omega\subscript{K}. 
+\nonumber
 \end{eqnarray}
 $$</p>
 
@@ -343,6 +350,124 @@ This leads to a most powerful test $\phi$ given by</p>
 
 <p>The above test is not UMP because it depends on $h$. However, it can be shown that if under the null hypothesis each $Z\subscript{i}$ follows the same normal distribution $\mathcal{N}(\xi, \sigma^2)$, then the derived test is most powerful among all unbiased tests of level $\alpha$ against all normal alternatives under consideration (see Lemma 5.9.1 in TSH for an even more general result).
 Such an approach is appropriate when the data is assumed to be approximately normal but the assumption is not considered reliable. The permutation test is maximizing the power against all normal alternatives, while still being unbiased against all other alternatives.</p>
+
+<p></div></p>
+
+<p><br>
+<input type="button" onclick="return toggleMe('two-sided')" value="+ Topic:"> <b>UMP tests for two-sided hypotheses</b><br>
+<div id="two-sided" style="display:none"></p>
+
+<h2>UMP tests for two-sided hypotheses</h2>
+
+<p>The (non-) existence of uniformly most powerful (or UMP) tests for two-sided hypotheses is an interesting phenomenon. </p>
+
+<h4>Example of existence</h4>
+
+<p>First let&#39;s look at an example when such a test does exist. This is Problem 3.2 in TSH.</p>
+
+<p>For $i = 1,\dots, n$ let $X\subscript{i}$ be i.i.d. $\mathrm{Uniform}(0,\theta)$ random variables, denote their realizations by lower case $x\subscript{i}$s, and let $X$ denote the vector of the $X\subscript{i}$s. Consider the hypothesis $H : \theta = \theta\subscript{0}$ against the alternative $K : \theta \neq \theta\subscript{0}$.</p>
+
+<p>Denote $x\subscript{(n)} := \max\{x\subscript{1}, \dots, x\subscript{n}\}$. Let $\phi$ be a hypothesis test which rejects $H : \theta = \theta\subscript{0}$ in favor of a two-sided alternative, if either $x\subscript{(n)} \geq \theta\subscript{0}$ or $x\subscript{(n)} &lt; \theta\subscript{0} \sqrt[n]{\alpha}$.</p>
+
+<h5>Proof</h5>
+
+<p>Using the fundamental lemma of Neyman and Pearson, it is straightforward to prove that $\phi$ is UMP. Namely, $\phi$ is a UMP test at level $\alpha$ by Neyman-Pearson, if for any fixed $\theta\subscript{1} \neq \theta\subscript{0}$, the test $\phi$ can be written as </p>
+
+<p>$$\phi(x) = \begin{cases} 
+1, \quad &amp;\mathrm{if}\, p\subscript{\theta\subscript{1}}(x) &gt; k p\subscript{\theta\subscript{0}}(x),\\\
+0, \quad &amp;\mathrm{if}\, p\subscript{\theta\subscript{1}}(x) &lt; k p\subscript{\theta\subscript{0}}(x), 
+\end{cases}$$</p>
+
+<p>with a suitable $k$, and if it satisfies</p>
+
+<p>$$\mathrm{E}\subscript{\theta\subscript{0}} \phi(X) = \alpha.$$</p>
+
+<p>We have that</p>
+
+<p>$$\begin{eqnarray}
+\nonumber
+\mathrm{E}\subscript{\theta\subscript{0}} \phi(X) &amp;=&amp; P\subscript{\theta\subscript{0}}\left(X\subscript{(n)} &gt; \theta\subscript{0}\right) + P\subscript{\theta\subscript{0}}\left(X\subscript{(n)} &lt; \theta\subscript{0}\sqrt[n]{\alpha}\right)\\\
+&amp;=&amp; 0 + \left(\frac{\theta\subscript{0} \sqrt[n]{\alpha}}{\theta\subscript{0}}\right)^n = \alpha.
+\nonumber
+\end{eqnarray}$$</p>
+
+<p>As for the other Neyman-Pearson condition, we have to consider multiple cases:</p>
+
+<ul>
+<li>If $\theta\subscript{1} &gt; \theta\subscript{0}$, then $k = \left(\frac{\theta\subscript{0}}{\theta\subscript{1}}\right)^n$ yields the desired result.</li>
+<li>If $\theta\subscript{0}\sqrt[n]{\alpha} &lt; \theta\subscript{1} &lt; \theta\subscript{0}$, then $k = \left(\frac{\theta\subscript{0}}{\theta\subscript{1}}\right)^n$ can be used as well.</li>
+<li>If $\theta\subscript{1} &lt; \theta\subscript{0}\sqrt[n]{\alpha} &lt; \theta\subscript{0}$, then $k = 0$.</li>
+</ul>
+
+<div align="right">
+$\blacksquare$
+</div>
+
+<h4>Example of non-existence</h4>
+
+<p>Thus, we saw an example of a UMP test for a two-sided hypothesis. </p>
+
+<p>However, when the underlying distribution comes from an exponential family, then a UMP test does not exist for $H : \theta = \theta\subscript{0}$ vs. $K : \theta \neq \theta\subscript{0}$ (Problem 3.54 in TSH). This follows quite easily from the consideration of UMP tests for the one-sided hypotheses $H\subscript{1} : \theta \leq \theta\subscript{0}$ vs. $K\subscript{1} : \theta &gt; \theta\subscript{0}$, and $H\subscript{2} : \theta \geq \theta\subscript{0}$ vs. $K\subscript{2} : \theta &lt; \theta\subscript{0}$.
+A detailed proof follows.</p>
+
+<h5>Proof</h5>
+
+<p>According to Theorem 3.4.1 in TSH, a UMP test of $H\subscript{1}$ exists and can be written as</p>
+
+<p>$$\phi\subscript{1}(x) = \begin{cases} 
+1, \quad &amp;\mathrm{if}\, T(x) &gt; C\subscript{1},\\\
+0, \quad &amp;\mathrm{if}\, T(x) &lt; C\subscript{1}.
+\end{cases}$$</p>
+
+<p>Similarly, a UMP test of $H\subscript{2}$ exists and can be written as</p>
+
+<p>$$\phi\subscript{2}(x) = \begin{cases} 
+1, \quad &amp;\mathrm{if}\, T(x) &lt; C\subscript{2},\\\
+0, \quad &amp;\mathrm{if}\, T(x) &gt; C\subscript{2}.
+\end{cases}$$</p>
+
+<p>Clearly, $\phi\subscript{1}$ and $\phi\subscript{2}$ are level-$\alpha$ tests for $H$ vs. $K$ as well.</p>
+
+<p>Let $\phi\subscript{0}$ be a level-$\alpha$ test of $H$ vs. $K$. Fix a $\theta\subscript{1} &gt; \theta\subscript{0}$ and a $\theta\subscript{2} &lt; \theta\subscript{0}$. Assume that </p>
+
+<p>$$\mathrm{E}\subscript{\theta\subscript{i}} \phi\subscript{0}(X) \geq \mathrm{E}\subscript{\theta\subscript{i}} \phi\subscript{i}(X)$$</p>
+
+<p>for $i = 1,2$. Then $\phi\subscript{0}$ is most powerful for testing $\theta\subscript{0}$ vs. $\theta\subscript{1}$ and for testing $\theta\subscript{0}$ vs. $\theta\subscript{2}$. Thus, by the fundamental lemma of Neyman and Pearson the UMP test can be rewritten as</p>
+
+<p>$$
+\begin{equation}
+\phi\subscript{0}(x) = \begin{cases} 
+1, \quad &amp;\mathrm{if}\, p\subscript{\theta\subscript{1}}(x) &gt; k\subscript{1} p\subscript{\theta\subscript{0}}(x),\\\
+0, \quad &amp;\mathrm{if}\, p\subscript{\theta\subscript{1}}(x) &lt; k\subscript{1} p\subscript{\theta\subscript{0}}(x), 
+\end{cases}
+\label{eq1}
+\end{equation}
+$$</p>
+
+<p>$$
+\begin{equation}
+\phi\subscript{0}(x) = \begin{cases} 
+1, \quad &amp;\mathrm{if}\, p\subscript{\theta\subscript{2}}(x) &gt; k\subscript{2} p\subscript{\theta\subscript{0}}(x),\\\
+0, \quad &amp;\mathrm{if}\, p\subscript{\theta\subscript{2}}(x) &lt; k\subscript{2} p\subscript{\theta\subscript{0}}(x).
+\end{cases}
+\label{eq2}
+\end{equation}
+$$</p>
+
+<p>Let $x$ be such that $\phi\subscript{0}(x) = 1$. Now, from the monotonicity of the likelihood ratio, it follows that</p>
+
+<ul>
+<li>if $T(y) &gt; T(x)$ then $\phi\subscript{0}(y) = 1$ (by equation $\eqref{eq1}$),</li>
+<li>if $T(y) &lt; T(x)$ then $\phi\subscript{0}(y) = 1$ (by equation $\eqref{eq2}$).</li>
+</ul>
+
+<p>That is, either $\phi\subscript{0}(y) = 1$ for all $y$ or $\phi\subscript{0}(x) \neq 1$ for all $x$. A contradiction. It follows that $\phi\subscript{0}$ can not be more powerful than $\phi\subscript{1}$ for testing $\theta\subscript{0}$ vs. $\theta\subscript{1}$ and than $\phi\subscript{2}$ for testing $\theta\subscript{0}$ vs. $\theta\subscript{2}$. Thus, a UMP test for $H$ vs. $K$ does not exist.</p>
+
+<div align="right">
+$\blacksquare$
+</div>
+
+<p>Even though a UMP test for the two-sided hypothesis considered above does not exist, there exist a UMP unbiased test (i.e. a test that is uniformly most powerful among all unbiased tests). For detail see Section 4.2 in TSH.</p>
 
 <p></div></p>
 
