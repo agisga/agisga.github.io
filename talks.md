@@ -4,6 +4,8 @@ title: Presentations
 permalink: /talks/
 ---
 
+* [My ASHG 2015 Impressions](http://www.alexejgossmann.com/presentations/ASHG2015.html) &mdash;  Center for Bioinformatics and Genomics Research Meeting. November, 2015.
+
 * [Identification of Significant Genetic Variants via SLOPE, and its Extension to Group SLOPE](http://www.alexejgossmann.com/presentations/GroupSLOPE.html) &mdash;  The 6th ACM Conference on Bioinformatics, Computational Biology, and Health Informatics, Atlanta, GA, September, 2015.
 
 * [Network-Based Gene Set Analysis with Incomplete Network Information](http://www.alexejgossmann.com/presentations/NetGSA.html) &mdash; Presentaion for Tulane University Dept. of Biostatistics and Bioinformatics Journal Club. September, 2015.

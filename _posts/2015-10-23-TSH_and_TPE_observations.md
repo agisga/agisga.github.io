@@ -34,9 +34,8 @@ __Clickable items__ (each could as well be a separate post)__:__
 Brainstorming:
 
 * MLE = posterior mode with a uniform prior; LASSO estimate = posterior mode with a Laplacian prior
-* two-sided hypotheses tests: exerises 3.54 and 3.2 (ii)
-* fundamental Neyman-Pearson lemma and generalizations?
-* something on linear hypotheses as chapter 7
+* (informal?) fundamental Neyman-Pearson lemma and generalizations?
+* something on linear hypotheses as chapter 7, combined with treatment in McCulloch, Searle, Neuhaus
 
 -->
 
