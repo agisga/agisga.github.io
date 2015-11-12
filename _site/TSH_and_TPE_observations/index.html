@@ -295,6 +295,49 @@ A $\mathcal{B}$-measurable function $g(t)$ is the conditional expectation of $X$
 <p></div></p>
 
 <p><br>
+<input type="button" onclick="return toggleMe('neyman-pearson')" value="+ Topic:"> <b>An informal summary of Neyman-Pearson and generalizations</b><br>
+<div id="neyman-pearson" style="display:none"></p>
+
+<h2>An informal summary of Neyman-Pearson and generalizations</h2>
+
+<p>The following offers an informal view on the fundamental lemma of Neyman and Pearson and generalizations thereof.
+For a mathematically rigorous presentation see the corresponding results in TSH, which are cited in this article.</p>
+
+<p><em>Notation</em>: MP = &quot;most powerful&quot;, UMP = &quot;uniformly most powerful&quot;, $H$ denotes the null hypothesis, $K$ denotes the alternative hypothesis, $\alpha$ denotes the level of the hypothesis test, lower case Roman letters denote realizations of random variables (upper case).</p>
+
+<ol>
+<li><p>What is actually called fundamental lemma of Neyman and Pearson in TSH (Theorem 3.2.1) is concerned with a test of two simple hypotheses. Under the null hypothesis the random variable $X$ is assumed to follow a probability distribution with density $p\subscript{0}$, while under the alternative hypothesis the density is $p\subscript{1}$. </p>
+
+<p>Consider $H : p\subscript{0}$ vs. $K : p\subscript{1}$. MP test $\phi$ exists. It rejects the null if $\frac{p\subscript{1}}{p\subscript{0}} &gt; k$, accepts the null if $\frac{p\subscript{1}}{p\subscript{0}} &lt; k$, and rejects with probability $\gamma$ if $\frac{p\subscript{1}}{p\subscript{0}} = k$, where $\gamma$ and $k$ are chosen to satisfy $\mathrm{E}\subscript{p\subscript{0}} \phi(X) = \alpha$.</p></li>
+<li><p>For one-parameter families of distributions and one-sided hypotheses, the Neyman-Pearson lemma can be generalized to construct a UMP test if the distributions in question have monotone likelihood ratios. This is Theorem 3.4.1 in TSH.</p>
+
+<p>Consider $H : \theta \leq \theta\subscript{0}$ vs. $K : \theta &gt; \theta\subscript{0}$ ($\theta \in \mathbb{R}$). If $\frac{p\subscript{\theta^\prime}(x)}{p\subscript{\theta}(x)}$ is nondecreasing in $T(x)$ for any $\theta &lt; \theta^\prime$, then a UMP test $\phi$ exists. It rejects if $T(x) &gt; C$, accepts if $T(x) &lt; C$, and rejects with probability $\gamma$ if $T(x) = C$, where $C$ and $\gamma$ are determined by $\mathrm{E}\subscript{\theta\subscript{0}} \phi(X) = \alpha$.</p>
+
+<p>By interchanging the inequalities one obtains a UMP test for the dual problem $H : \theta \geq \theta\subscript{0}$ vs. $K : \theta &lt; \theta\subscript{0}$.</p>
+
+<p>Additionally, this test minimizes the Type I error subject to $\mathrm{E}\subscript{\theta\subscript{0}} \phi(X) = \alpha$.</p></li>
+<li><p>An analogous UMP test exists for a two-sided null hypothesis $H : \theta \leq \theta\subscript{1} \,\mathrm{or}\, \theta \geq \theta\subscript{2}$ in one-parameter exponential families. It rejects if $C\subscript{1} &lt; T(x) &lt; C\subscript{2}$, accepts if $T(x) &lt; C\subscript{1}$ or $T(x) &gt; C\subscript{2}$, rejects with probability $\gamma$ if $T(x) = C\subscript{i}$ (for $i=1$ or $i=2$), and satisfies $\mathrm{E}\subscript{\theta\subscript{1}} \phi(X) = \alpha = \mathrm{E}\subscript{\theta\subscript{2}} \phi(X)$. Subject to the last condition, this test minimizes the Type I error. See Theorem 3.7.1 in TSH.</p>
+
+<p>A UMP test for a two-sided alternative hypothesis $K : \theta \leq \theta\subscript{1} \,\mathrm{or}\, \theta \geq \theta\subscript{2}$ does not exist (e.g. see the corresponding section in this blog post). However, a UMP <em>unbiased</em> test analogous to the above exists (see Section 4.2 in TSH).</p></li>
+<li><p>When the null hypothesis specifies that $X$ is distributed according to one of finitely many densities $p\subscript{1}, p\subscript{2}, \dots, p\subscript{m}$, and the alternative hypothesis is $p\subscript{m+1}$, then there exists a test $\phi$ that maximizes $\int \phi p\subscript{m+1} d\mu$. For suitable constants $k\subscript{1}, k\subscript{2}, \dots, k\subscript{m}$, this test rejects the null if $p\subscript{m+1}(x) &gt; \sum\subscript{i=1}^m k\subscript{i} p\subscript{i}(x)$, it accepts the null if $p\subscript{m+1}(x) &lt; \sum\subscript{i=1}^m k\subscript{i} p\subscript{i}(x)$, and it satisfies $\int \phi p\subscript{i} d\mu \leq \alpha$ for $i = 1,2,\dots,m$.</p>
+
+<p>See Theorem 3.6.1 and Corollary 3.6.1 in TSH for more detail.</p></li>
+<li><p>Assume a setting similar to the one in the last point, except that the number of distributions under the null hypothesis does not need to be finite. That is, $H : f\subscript{\theta}, \theta \in \omega$ vs. $K : g$.
+One can define a <em>least favorable</em> distribution $\Lambda$ over $\omega$ and assume that $\theta \sim \Lambda$. As $\Lambda$ is least favorable, one can expect that it leads to a hypothesis test that works best in the works case (i.e. at values $\theta$ closest to $K$). Thus, $\Lambda$ will typically be a distribution of $H$ that is closest to $K$. In particular, one would have $\Lambda(\omega^\prime) = 1$ for some &quot;boundary region&quot; of $\omega$. Then a MP test $\phi$ exists. It rejects if $g(x) &gt; k \int f\subscript{\theta}(x) d\Lambda(\theta)$, accepts if $g(x) &lt; k \int f\subscript{\theta}(x) d\Lambda(\theta)$, and satisfies $\sup\subscript{\theta\in\omega} \mathrm{E}\subscript{\theta} \phi(X) = \alpha$.</p>
+
+<p>See Theorem 3.8.1 and Corollary 3.8.1 in TSH for rigour and detail.</p></li>
+<li><p>For multi-parameter exponential families the existence of a UMP test typically cannot be established. However, UMP <em>unbiased</em> tests can be constructed without great difficulties. Assume that $\theta\in\mathbb{R}$ is the parameter to be tested, and that $(U, T)$ is a sufficient statistic, where $U$ corresponds to $\theta$ and $T$ corresponds to all other parameters. Then UMP unbiased tests exist for most of the usual hypotheses, and can be written in the same way as in the one-parameter case, except that now all constants specifying the rejection region depend on $T$ (e.g. the rejection rule has the form $u &gt; C(t)$, etc.). Also, the size of the test is measured conditional on $T$.</p>
+
+<p>See Theorem 4.4.1 in TSH.</p></li>
+<li><p>UMP unbiased tests for multi-parameter exponential families, as discussed in the last point, are independent of $T$ if a number of additional conditions are satisfied. For example, assume that $V = h(U, T)$ is independent of $T$ (with $\theta = \theta\subscript{1}$ and $\theta = \theta\subscript{2}$) and that $h$ is increasing in $u$. Then a UMP unbiased test for a two-sided null hypothesis rejects if $C\subscript{1} &lt; v &lt; C\subscript{2}$, accepts if $v &lt; C\subscript{1}$ or $v &gt; C\subscript{2}$, etc.</p>
+
+<p>See Theorem 5.1.1 in TSH for more.</p></li>
+<li><p>If the problem of testing $H : \Omega\subscript{0}$ vs. $K : \Omega\subscript{1}$ remains invariant under a finite group $G = \{g\subscript{1}, g\subscript{2}, \dots, g\subscript{N} \}$, then there exists a UMP invariant test that rejects when $\frac{\sum p\subscript{\overline{g}\subscript{i} \theta\subscript{1}} (x)}{\sum p\subscript{\overline{g}\subscript{i} \theta\subscript{0}} (x)} &gt; C$ (for any $\theta\subscript{0} \in \Omega\subscript{0}$ and any $\theta\subscript{1}$ in $\Omega\subscript{1}$). See Theorem 6.3.1 in TSH.</p></li>
+</ol>
+
+<p></div></p>
+
+<p><br>
 <input type="button" onclick="return toggleMe('permutation')" value="+ Topic:"> <b>Permutation tests</b><br>
 <div id="permutation" style="display:none"></p>
 
