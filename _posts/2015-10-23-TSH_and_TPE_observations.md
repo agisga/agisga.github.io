@@ -261,6 +261,8 @@ One can define a *least favorable* distribution $\Lambda$ over $\omega$ and assu
 
     See Theorem 3.8.1 and Corollary 3.8.1 in TSH for rigour and detail.
 
+    This approach can also be generalized to test $H : f\subscript{\theta}, \theta \in \omega$ vs. $K : f\subscript{\theta}, \theta \in \omega^\prime$. Then a test can be established that maximizes $\inf\subscript{\theta\in\omega^\prime} \mathrm{E} \phi(X)$. Such a test is called a *maximin* test and is established in Theorem 8.1.1 and Corollary 8.1.1.
+
 6. For multi-parameter exponential families the existence of a UMP test typically cannot be established. However, UMP *unbiased* tests can be constructed without great difficulties. Assume that $\theta\in\mathbb{R}$ is the parameter to be tested, and that $(U, T)$ is a sufficient statistic, where $U$ corresponds to $\theta$ and $T$ corresponds to all other parameters. Then UMP unbiased tests exist for most of the usual hypotheses, and can be written in the same way as in the one-parameter case, except that now all constants specifying the rejection region depend on $T$ (e.g. the rejection rule has the form $u > C(t)$, etc.). Also, the size of the test is measured conditional on $T$.
 
     See Theorem 4.4.1 in TSH.
