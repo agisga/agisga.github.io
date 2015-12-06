@@ -8,67 +8,11 @@
     
       <item>
         <title>&quot;Testing Statistical Hypotheses&quot; and &quot;Theory of Point Estimation&quot; impressions</title>
-        <description>&lt;p&gt;I am currently reading Lehmann &amp;amp; Romano &amp;quot;Testing Statistical Hypotheses&amp;quot; (3rd ed.) and Lehmann &amp;amp; Casella &amp;quot;Theory of Point Estimation&amp;quot; (2nd ed.), abbr. TSH and TPE. The following is a collection of &lt;del&gt;random facts&lt;/del&gt; observations I made while reading TSH and TPE.&lt;/p&gt;
+        <description>&lt;p&gt;I spent much of the last two months reading Lehmann &amp;amp; Romano &amp;quot;Testing Statistical Hypotheses&amp;quot; (3rd ed.) and Lehmann &amp;amp; Casella &amp;quot;Theory of Point Estimation&amp;quot; (2nd ed.), abbr. TSH and TPE. The following is a collection of &lt;del&gt;random facts&lt;/del&gt; observations I made while reading TSH and TPE. The choice of topics is biased towards application in regression models.&lt;/p&gt;
 
-&lt;p&gt;&lt;img class=&#39;emoji&#39; title=&#39;:construction_worker:&#39; alt=&#39;:construction_worker:&#39; src=&#39;https://assets.github.com/images/icons/emoji/unicode/1f477.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; /&gt; &lt;em&gt;This post will be regularly updated.&lt;/em&gt; &lt;img class=&#39;emoji&#39; title=&#39;:construction_worker:&#39; alt=&#39;:construction_worker:&#39; src=&#39;https://assets.github.com/images/icons/emoji/unicode/1f477.png&#39; height=&#39;20&#39; width=&#39;20&#39; align=&#39;absmiddle&#39; /&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;      &amp;lt;a href=&amp;quot;/Lehmanns_TSH_and_TPE/unbiasedness/&amp;quot;&amp;gt;On the notion of unbiasedness of estimators, hypotheses tests, and confidence intervals&amp;lt;/a&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;h1&gt;Topics:&lt;/h1&gt;
-
-&lt;!-- 
-* some things that were not clear to me before, 
-* some results I found interesting, 
-* definitions that are better than their equivalents that I have seen before,
-* and other observations I made while reading TSH and TPE.
-
-Brainstorming:
-
-* MLE = posterior mode with a uniform prior; LASSO estimate = posterior mode with a Laplacian prior
-* (informal?) fundamental Neyman-Pearson lemma and generalizations?
-* something on linear hypotheses as chapter 7, combined with treatment in McCulloch, Searle, Neuhaus
-
---&gt;
-
-&lt;p&gt;&lt;ul&gt;&lt;/p&gt;
-&lt;div class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;  &amp;lt;li&amp;gt;
-    &amp;lt;h3&amp;gt;
-      &amp;lt;a class=&amp;quot;post-link&amp;quot; href=&amp;quot;/Lehmanns_TSH_and_TPE/unbiasedness/&amp;quot;&amp;gt;On the notion of unbiasedness of estimators, hypotheses tests, and confidence intervals&amp;lt;/a&amp;gt;
-    &amp;lt;/h3&amp;gt;
-  &amp;lt;/li&amp;gt;
-
-  &amp;lt;li&amp;gt;
-    &amp;lt;h3&amp;gt;
-      &amp;lt;a class=&amp;quot;post-link&amp;quot; href=&amp;quot;/Lehmanns_TSH_and_TPE/conditional_expectation/&amp;quot;&amp;gt;Conditional expectation, conditional distribution, sufficiency, decision procedures&amp;lt;/a&amp;gt;
-    &amp;lt;/h3&amp;gt;
-  &amp;lt;/li&amp;gt;
-
-  &amp;lt;li&amp;gt;
-    &amp;lt;h3&amp;gt;
-      &amp;lt;a class=&amp;quot;post-link&amp;quot; href=&amp;quot;/Lehmanns_TSH_and_TPE/neyman_pearson/&amp;quot;&amp;gt;An informal summary of Neyman-Pearson and generalizations&amp;lt;/a&amp;gt;
-    &amp;lt;/h3&amp;gt;
-  &amp;lt;/li&amp;gt;
-
-  &amp;lt;li&amp;gt;
-    &amp;lt;h3&amp;gt;
-      &amp;lt;a class=&amp;quot;post-link&amp;quot; href=&amp;quot;/Lehmanns_TSH_and_TPE/permutation_tests/&amp;quot;&amp;gt;Permutation tests&amp;lt;/a&amp;gt;
-    &amp;lt;/h3&amp;gt;
-  &amp;lt;/li&amp;gt;
-
-  &amp;lt;li&amp;gt;
-    &amp;lt;h3&amp;gt;
-      &amp;lt;a class=&amp;quot;post-link&amp;quot; href=&amp;quot;/Lehmanns_TSH_and_TPE/two-sided_hypotheses/&amp;quot;&amp;gt;UMP tests for two-sided hypotheses&amp;lt;/a&amp;gt;
-    &amp;lt;/h3&amp;gt;
-  &amp;lt;/li&amp;gt;
-
-  &amp;lt;li&amp;gt;
-    &amp;lt;h3&amp;gt;
-      &amp;lt;a class=&amp;quot;post-link&amp;quot; href=&amp;quot;/Lehmanns_TSH_and_TPE/LSE_so_nice/&amp;quot;&amp;gt;Least squares estimators are nice! (UMVU, MRE, BLUE)&amp;lt;/a&amp;gt;
-    &amp;lt;/h3&amp;gt;
-  &amp;lt;/li&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
-&lt;p&gt;&lt;/ul&gt;&lt;/p&gt;
+&lt;p&gt;The content of this post has moved to &lt;a href=&quot;http://www.alexejgossmann.com/Lehmanns_TSH_and_TPE/&quot;&gt;http://www.alexejgossmann.com/Lehmanns_TSH_and_TPE/&lt;/a&gt;.&lt;/p&gt;
 </description>
-        <pubDate>Thu, 29 Oct 2015 00:00:00 -0500</pubDate>
+        <pubDate>Sun, 06 Dec 2015 00:00:00 -0600</pubDate>
         <link>http://www.alexejgossmann.com//TSH_and_TPE_observations/</link>
         <guid isPermaLink="true">http://www.alexejgossmann.com//TSH_and_TPE_observations/</guid>
       </item>
