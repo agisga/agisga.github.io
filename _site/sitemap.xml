@@ -2,71 +2,71 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>http://www.alexejgossmann.com//TSH_and_TPE_observations/</loc>
-    <lastmod>2015-12-06T00:00:00-06:00</lastmod>
+    <lastmod>2015-12-06T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//nmatrix-on-my-universities-hpc/</loc>
-    <lastmod>2015-10-08T00:00:00-05:00</lastmod>
+    <lastmod>2015-10-08T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//gsoc-2015-mixed_models/</loc>
-    <lastmod>2015-08-19T00:00:00-05:00</lastmod>
+    <lastmod>2015-08-19T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//bootstap_confidence_intervals/</loc>
-    <lastmod>2015-08-06T00:00:00-05:00</lastmod>
+    <lastmod>2015-08-06T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//mixed_models_applied_to_family_SNP_data/</loc>
-    <lastmod>2015-07-07T00:00:00-05:00</lastmod>
+    <lastmod>2015-07-07T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//MixedModels_p_values_and_CI/</loc>
-    <lastmod>2015-07-03T00:00:00-05:00</lastmod>
+    <lastmod>2015-07-03T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//MixedModels_from_formula/</loc>
-    <lastmod>2015-06-17T00:00:00-05:00</lastmod>
+    <lastmod>2015-06-17T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//LMM-model-specification/</loc>
-    <lastmod>2015-06-12T00:00:00-05:00</lastmod>
+    <lastmod>2015-06-12T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//First-linear-mixed-model-fit/</loc>
-    <lastmod>2015-06-04T00:00:00-05:00</lastmod>
+    <lastmod>2015-06-04T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//Dissect_lmer_part3/</loc>
-    <lastmod>2015-05-17T00:00:00-05:00</lastmod>
+    <lastmod>2015-05-17T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//Dissect_lmer_part2/</loc>
-    <lastmod>2015-05-15T00:00:00-05:00</lastmod>
+    <lastmod>2015-05-15T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//Dissect_lmer_part1/</loc>
-    <lastmod>2015-05-10T00:00:00-05:00</lastmod>
+    <lastmod>2015-05-10T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//BVP/</loc>
-    <lastmod>2015-05-02T00:00:00-05:00</lastmod>
+    <lastmod>2015-05-02T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//ODE/</loc>
-    <lastmod>2015-04-26T00:00:00-05:00</lastmod>
+    <lastmod>2015-04-26T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//Advection-Equation/</loc>
-    <lastmod>2015-04-19T00:00:00-05:00</lastmod>
+    <lastmod>2015-04-19T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//Permute-Columns-Of-An-NMatrix/</loc>
-    <lastmod>2015-03-29T00:00:00-05:00</lastmod>
+    <lastmod>2015-03-29T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//Hello-World/</loc>
-    <lastmod>2015-03-29T00:00:00-05:00</lastmod>
+    <lastmod>2015-03-29T00:00:00+01:00</lastmod>
   </url>
   <url>
     <loc>http://www.alexejgossmann.com//404.html</loc>

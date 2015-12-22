@@ -147,16 +147,20 @@ img {
 /*********************/
 
 //
-// .masthead
+// .masthead (significantly modified the template)
 //
 
 .wrapper-masthead {
+  background-color: #1f1f1f;
+  margin: 0 auto;
+  max-width: 100%;
+  width: 100%;
   margin-bottom: 50px;
 }
 
 .masthead {
-  padding: 20px 0;
-  border-bottom: 1px solid $lightGray;
+  padding: 20px 30px;
+  border-bottom: 1px solid #402e2e;
 
   @include mobile {
     text-align: center;
@@ -192,7 +196,7 @@ img {
 
 .site-name {
   margin: 0;
-  color: $darkGray;
+  color: #c0b18b;
   cursor: pointer;
   font-family: $helveticaNeue;
   font-weight: 300;
@@ -202,7 +206,7 @@ img {
 
 .site-description {
   margin: -5px 0 0 0;
-  color: $gray;
+  color: #8f6840;
   font-size: 16px;
 
   @include mobile {
@@ -211,10 +215,10 @@ img {
 }
 
 nav {
-  float: left; // originally was right
-  margin-top: 33px; // @TODO: Vertically middle align // originally was 23
+  float: right;
+  margin-top: 23px;
   font-family: $helveticaNeue;
-  font-size: 24px; // originally was 18
+  font-size: 22px;
 
   @include mobile {
     float: none;
@@ -225,16 +229,23 @@ nav {
 
   a {
     margin-left: 20px;
-    color: $darkGray;
     text-align: right;
     font-weight: 300;
-    letter-spacing: 1px;
+    letter-spacing: 1px; 
+    color: #c0b18b;
 
     @include mobile {
       margin: 0 10px;
-      color: $blue;
+      color: #444b4b;
     }
   }
+
+  a.red { color: #d17b49 }
+  a.green { color: #7b8748 }
+  a.yellow { color: #8f6840 }
+  a.blue { color: #535c5c }
+  a.magenta { color: #775759; }
+  a.cyan { color: #6d715e; }
 }
 
 //
@@ -275,7 +286,7 @@ nav {
   margin-top: 50px;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
-  background-color: $lightGray;
+  background-color: #1f1f1f;
 }
 
 footer {

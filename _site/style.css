@@ -189,12 +189,16 @@ img {
 /* LAYOUT / SECTIONS */
 /*********************/
 .wrapper-masthead {
+  background-color: #1f1f1f;
+  margin: 0 auto;
+  max-width: 100%;
+  width: 100%;
   margin-bottom: 50px;
 }
 
 .masthead {
-  padding: 20px 0;
-  border-bottom: 1px solid #eee;
+  padding: 20px 30px;
+  border-bottom: 1px solid #402e2e;
 }
 @media screen and (max-width: 640px) {
   .masthead {
@@ -232,7 +236,7 @@ img {
 
 .site-name {
   margin: 0;
-  color: #333;
+  color: #c0b18b;
   cursor: pointer;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: 300;
@@ -242,7 +246,7 @@ img {
 
 .site-description {
   margin: -5px 0 0 0;
-  color: #666;
+  color: #8f6840;
   font-size: 16px;
 }
 @media screen and (max-width: 640px) {
@@ -252,10 +256,10 @@ img {
 }
 
 nav {
-  float: left;
-  margin-top: 33px;
+  float: right;
+  margin-top: 23px;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 24px;
+  font-size: 22px;
 }
 @media screen and (max-width: 640px) {
   nav {
@@ -267,16 +271,34 @@ nav {
 }
 nav a {
   margin-left: 20px;
-  color: #333;
   text-align: right;
   font-weight: 300;
   letter-spacing: 1px;
+  color: #c0b18b;
 }
 @media screen and (max-width: 640px) {
   nav a {
     margin: 0 10px;
-    color: #4183C4;
+    color: #444b4b;
   }
+}
+nav a.red {
+  color: #d17b49;
+}
+nav a.green {
+  color: #7b8748;
+}
+nav a.yellow {
+  color: #8f6840;
+}
+nav a.blue {
+  color: #535c5c;
+}
+nav a.magenta {
+  color: #775759;
+}
+nav a.cyan {
+  color: #6d715e;
 }
 
 .posts > .post {
@@ -309,7 +331,7 @@ nav a {
   margin-top: 50px;
   border-top: 1px solid #ddd;
   border-bottom: 1px solid #ddd;
-  background-color: #eee;
+  background-color: #1f1f1f;
 }
 
 footer {
