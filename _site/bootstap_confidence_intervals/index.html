@@ -9,9 +9,9 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
 
     
-    <meta name="description" content="During the last couple of days, I have added some parametric bootstrap capabilities to mixed_models. The following demonstrates first how to resample fixed effects coefficient estimates via bootstrapping. Then various types of bootstrap confidence intervals are presented. Examples of computation and a brief comparison of different types of bootstrap confidence intervals are given.
+    <meta name="description" content="(EDIT: I have also written a more theoretical blog post on the topic.)
 " />
-    <meta property="og:description" content="During the last couple of days, I have added some parametric bootstrap capabilities to mixed_models. The following demonstrates first how to resample fixed effects coefficient estimates via bootstrapping. Then various types of bootstrap confidence intervals are presented. Examples of computation and a brief comparison of different types of bootstrap confidence intervals are given.
+    <meta property="og:description" content="(EDIT: I have also written a more theoretical blog post on the topic.)
 " />
     
     <meta name="author" content="Alexej Gossmann" />
@@ -71,7 +71,9 @@
   <h1>Bootstrapping and bootstrap confidence intervals for linear mixed models</h1>
 
   <div class="entry">
-    <p>During the last couple of days, I have added some parametric bootstrap capabilities to <a href="https://github.com/agisga/mixed_models.git"><code>mixed_models</code></a>. The following demonstrates first how to resample fixed effects coefficient estimates via bootstrapping. Then various types of bootstrap confidence intervals are presented. Examples of computation and a brief comparison of different types of bootstrap confidence intervals are given.</p>
+    <p>(<strong>EDIT:</strong> I have also written <a href="http://www.alexejgossmann.com/Lehmanns_TSH_and_TPE/bootstrap_intervals_for_LMM/">a more theoretical blog post</a> on the topic.)</p>
+
+<p>During the last couple of days, I have added some parametric bootstrap capabilities to <a href="https://github.com/agisga/mixed_models.git"><code>mixed_models</code></a>. The following demonstrates first how to resample fixed effects coefficient estimates via bootstrapping. Then various types of bootstrap confidence intervals are presented. Examples of computation and a brief comparison of different types of bootstrap confidence intervals are given.</p>
 
 <p>Implementation of bootstrap methods is motivated by the fact that the only alternatives currently available in <code>mixed_models</code> are based on the Wald Z test statistic, which is far from being optimal in many settings, as I have briefly delineated in a <a href="http://agisga.github.io/MixedModels_p_values_and_CI/">previous blog post</a>.</p>
 
@@ -259,12 +261,13 @@ parallel           16.150000   0.030000 170.980000 ( 55.285422)
 
 
 
-<a href="http://github.com/agisga"><i class="svg-icon github"></i></a>
+<a href="https://github.com/agisga"><i class="svg-icon github"></i></a>
 
-<a href="http://linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
+<a href="https://www.linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
 
 
-<a href="http://twitter.com/agisga"><i class="svg-icon twitter"></i></a>
+<a href="https://www.twitter.com/agisga"><i class="svg-icon twitter"></i></a>
+
 
 
         </footer>

@@ -67,18 +67,6 @@
   
     <article class="post">
 
-      <h1><a href="/bootstap_confidence_intervals/">Bootstrapping and bootstrap confidence intervals for linear mixed models</a></h1>
-
-      <div class="entry">
-        <p>During the last couple of days, I have added some parametric bootstrap capabilities to <a href="https://github.com/agisga/mixed_models.git"><code>mixed_models</code></a>. The following demonstrates first how to resample fixed effects coefficient estimates via bootstrapping. Then various types of bootstrap confidence intervals are presented. Examples of computation and a brief comparison of different types of bootstrap confidence intervals are given.</p>
-
-      </div>
-
-      <a href="/bootstap_confidence_intervals/" class="read-more">Read More</a>
-    </article>
-  
-    <article class="post">
-
       <h1><a href="/mixed_models_applied_to_family_SNP_data/">A (naive) application of linear mixed models to genetics</a></h1>
 
       <div class="entry">
@@ -101,6 +89,32 @@
       <a href="/MixedModels_p_values_and_CI/" class="read-more">Read More</a>
     </article>
   
+    <article class="post">
+
+      <h1><a href="/MixedModels_from_formula/">MixedModels Formula Interface and Categorical Variables</a></h1>
+
+      <div class="entry">
+        <p>I made some more progress on my <a href="https://github.com/agisga/MixedModels">Google Summer of Code project MixedModels</a>.
+The linear mixed models fitting method is now capable of handling non-numeric (i.e. categorical) predictor variables, as well as interaction effects. Moreover, I gave the method a user friendly R-formula-like interface.
+I will present these new capabilities of the Ruby gem with an example. Then I will briefly describe their implementation.</p>
+
+      </div>
+
+      <a href="/MixedModels_from_formula/" class="read-more">Read More</a>
+    </article>
+  
+    <article class="post">
+
+      <h1><a href="/LMM-model-specification/">Model specification for linear mixed model</a></h1>
+
+      <div class="entry">
+        <p>Last week I wrote about my implementation of an algorithm that fits a linear mixed model in Ruby using the gem <a href="https://github.com/agisga/MixedModels">MixedModels</a>, that I am working on right now. See, <a href="http://agisga.github.io/First-linear-mixed-model-fit/">first rudimentary LMM fit</a>.</p>
+
+      </div>
+
+      <a href="/LMM-model-specification/" class="read-more">Read More</a>
+    </article>
+  
 </div>
 
 <!-- Pagination links -->
@@ -108,7 +122,7 @@
   
     <a href="/index.html" class="previous">Previous</a>
   
-  <span class="page_number ">Page: 2 of 6</span>
+  <span class="page_number ">Page: 2 of 5</span>
   
     <a href="/page3" class="next">Next</a>
   
@@ -157,7 +171,7 @@
       <h1><a href="/bootstap_confidence_intervals/">Bootstrapping and bootstrap confidence intervals for linear mixed models</a></h1>
 
       <div class="entry">
-        <p>During the last couple of days, I have added some parametric bootstrap capabilities to <a href="https://github.com/agisga/mixed_models.git"><code>mixed_models</code></a>. The following demonstrates first how to resample fixed effects coefficient estimates via bootstrapping. Then various types of bootstrap confidence intervals are presented. Examples of computation and a brief comparison of different types of bootstrap confidence intervals are given.</p>
+        <p>(<strong>EDIT:</strong> I have also written <a href="http://www.alexejgossmann.com/Lehmanns_TSH_and_TPE/bootstrap_intervals_for_LMM/">a more theoretical blog post</a> on the topic.)</p>
 
       </div>
 
@@ -337,12 +351,13 @@ I have delineated the general steps taken by <code>lmer</code>, and looked at th
 
 
 
-<a href="http://github.com/agisga"><i class="svg-icon github"></i></a>
+<a href="https://github.com/agisga"><i class="svg-icon github"></i></a>
 
-<a href="http://linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
+<a href="https://www.linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
 
 
-<a href="http://twitter.com/agisga"><i class="svg-icon twitter"></i></a>
+<a href="https://www.twitter.com/agisga"><i class="svg-icon twitter"></i></a>
+
 
 
         </footer>
