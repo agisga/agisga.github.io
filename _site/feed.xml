@@ -12,7 +12,7 @@
 
 &lt;p&gt;The content of this post has moved to &lt;a href=&quot;http://www.alexejgossmann.com/Lehmanns_TSH_and_TPE/&quot;&gt;http://www.alexejgossmann.com/Lehmanns_TSH_and_TPE/&lt;/a&gt;.&lt;/p&gt;
 </description>
-        <pubDate>Sun, 06 Dec 2015 00:00:00 +0100</pubDate>
+        <pubDate>Sun, 06 Dec 2015 00:00:00 -0600</pubDate>
         <link>http://www.alexejgossmann.com//TSH_and_TPE_observations/</link>
         <guid isPermaLink="true">http://www.alexejgossmann.com//TSH_and_TPE_observations/</guid>
       </item>
@@ -160,7 +160,7 @@ $ bundle exec rake install nmatrix_plugins=lapacke
 &lt;p&gt;&lt;img src=&quot;/images/link-line-1.png?raw=true&quot; alt=&quot;SDL link line&quot;&gt;
 &lt;img src=&quot;/images/link-line-2.png?raw=true&quot; alt=&quot;Static linking link line&quot;&gt;&lt;/p&gt;
 </description>
-        <pubDate>Thu, 08 Oct 2015 00:00:00 +0100</pubDate>
+        <pubDate>Thu, 08 Oct 2015 00:00:00 -0500</pubDate>
         <link>http://www.alexejgossmann.com//nmatrix-on-my-universities-hpc/</link>
         <guid isPermaLink="true">http://www.alexejgossmann.com//nmatrix-on-my-universities-hpc/</guid>
       </item>
@@ -360,7 +360,7 @@ boot_basic [-0.9676586601496888, 2.486799230544233]    [4.30540212917657, 5.0287
 
 &lt;p&gt;I want to thank Google and the &lt;a href=&quot;sciruby.com&quot;&gt;Ruby Science Foundation&lt;/a&gt; for giving me this excellent opportunity! I especially want to thank &lt;a href=&quot;http://thebird.nl/&quot;&gt;Pjotr Prins&lt;/a&gt; who was my mentor for the project for much helpful advice and suggestions as well as his prompt responses to any of my concerns. I also want to thank my fellow GSoC participants &lt;a href=&quot;https://github.com/wlevine&quot;&gt;Will&lt;/a&gt;, &lt;a href=&quot;https://github.com/dilcom&quot;&gt;Ivan&lt;/a&gt;, and &lt;a href=&quot;https://github.com/v0dro&quot;&gt;Sameer&lt;/a&gt; for their help with certain aspects of my project.&lt;/p&gt;
 </description>
-        <pubDate>Wed, 19 Aug 2015 00:00:00 +0100</pubDate>
+        <pubDate>Wed, 19 Aug 2015 00:00:00 -0500</pubDate>
         <link>http://www.alexejgossmann.com//gsoc-2015-mixed_models/</link>
         <guid isPermaLink="true">http://www.alexejgossmann.com//gsoc-2015-mixed_models/</guid>
       </item>
@@ -521,7 +521,7 @@ parallel           16.150000   0.030000 170.980000 ( 55.285422)
 
 &lt;!--The reason is that even though the bootstrap sample is obtained by `LMM#bootstrap` in parallel, the computation of the intervals from the bootstrap sample (like finding percentiles or transformations of the bootstrap sample) is always single-threaded. Better performance can be achieved for example by writing methods specifically adapted to a given data analysis, which would utilize the argument `what_to_collect` in the method `LMM#bootstrap` in a way optimal for the given setting. --&gt;
 </description>
-        <pubDate>Thu, 06 Aug 2015 00:00:00 +0100</pubDate>
+        <pubDate>Thu, 06 Aug 2015 00:00:00 -0500</pubDate>
         <link>http://www.alexejgossmann.com//bootstap_confidence_intervals/</link>
         <guid isPermaLink="true">http://www.alexejgossmann.com//bootstap_confidence_intervals/</guid>
       </item>
@@ -728,7 +728,7 @@ SNP127
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
 &lt;p&gt;We see that 24 out of the 25 SNPs detected by the Wald Z tests were also detected by the bootstrap method. In fact, it turns out that the set of SNPs detected by the studentized bootstrap is a subset of the SNP set identified by the Wald Z tests. The reason for this behaviour is probably that the fixed effects coefficient estimates are approximately normally distributed for the given data (which in itself is a interesting discovery).&lt;/p&gt;
 </description>
-        <pubDate>Tue, 07 Jul 2015 00:00:00 +0100</pubDate>
+        <pubDate>Tue, 07 Jul 2015 00:00:00 -0500</pubDate>
         <link>http://www.alexejgossmann.com//mixed_models_applied_to_family_SNP_data/</link>
         <guid isPermaLink="true">http://www.alexejgossmann.com//mixed_models_applied_to_family_SNP_data/</guid>
       </item>
@@ -875,7 +875,7 @@ Additionally, confidence intervals for the predictions (i.e. prediction interval
 Continuing our example, we have:
 --&gt;
 </description>
-        <pubDate>Fri, 03 Jul 2015 00:00:00 +0100</pubDate>
+        <pubDate>Fri, 03 Jul 2015 00:00:00 -0500</pubDate>
         <link>http://www.alexejgossmann.com//MixedModels_p_values_and_CI/</link>
         <guid isPermaLink="true">http://www.alexejgossmann.com//MixedModels_p_values_and_CI/</guid>
       </item>
@@ -995,7 +995,7 @@ SpeciesWeepingAngel
 
 &lt;p&gt;Finally, &lt;code&gt;LMM#from_daru&lt;/code&gt; constructs the model matrices, vectors and the covariance function &lt;code&gt;Proc&lt;/code&gt;, which are passed on to &lt;code&gt;LMM#initialize&lt;/code&gt; that performs the actual model fit.&lt;/p&gt;
 </description>
-        <pubDate>Wed, 17 Jun 2015 00:00:00 +0100</pubDate>
+        <pubDate>Wed, 17 Jun 2015 00:00:00 -0500</pubDate>
         <link>http://www.alexejgossmann.com//MixedModels_from_formula/</link>
         <guid isPermaLink="true">http://www.alexejgossmann.com//MixedModels_from_formula/</guid>
       </item>
@@ -1107,7 +1107,7 @@ where $u\subscript{j}$ denotes the random intercept of the j&amp;#39;th batch an
 &lt;li&gt;...&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-        <pubDate>Fri, 12 Jun 2015 00:00:00 +0100</pubDate>
+        <pubDate>Fri, 12 Jun 2015 00:00:00 -0500</pubDate>
         <link>http://www.alexejgossmann.com//LMM-model-specification/</link>
         <guid isPermaLink="true">http://www.alexejgossmann.com//LMM-model-specification/</guid>
       </item>
@@ -1201,7 +1201,7 @@ lmer.fit &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; lmer&lt;span cla
 
 &lt;p&gt;We see that all values agree between Ruby and R up to at least one digit behind the floating point (these values are the REML criterion, fixed effects estimates, random effects standard deviations and correlation, and residual variance and standard deviation, to be more precise). The slight differences are probably due to different optimization routines.&lt;/p&gt;
 </description>
-        <pubDate>Thu, 04 Jun 2015 00:00:00 +0100</pubDate>
+        <pubDate>Thu, 04 Jun 2015 00:00:00 -0500</pubDate>
         <link>http://www.alexejgossmann.com//First-linear-mixed-model-fit/</link>
         <guid isPermaLink="true">http://www.alexejgossmann.com//First-linear-mixed-model-fit/</guid>
       </item>
@@ -1286,7 +1286,7 @@ It checks, reorganizes and renames the parameters, and finally returns everythin
                     warnings &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;attr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;opt&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&amp;quot;warnings&amp;quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; val &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; opt&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;par&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
-        <pubDate>Sun, 17 May 2015 00:00:00 +0100</pubDate>
+        <pubDate>Sun, 17 May 2015 00:00:00 -0500</pubDate>
         <link>http://www.alexejgossmann.com//Dissect_lmer_part3/</link>
         <guid isPermaLink="true">http://www.alexejgossmann.com//Dissect_lmer_part3/</guid>
       </item>
