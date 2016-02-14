@@ -14,7 +14,7 @@ description: Math PhD student at Tulane University
 avatar: https://avatars0.githubusercontent.com/u/11449372?v=3&s=460
 
 # specifies how many items should be displayed per page
-paginate: 3
+paginate: 4
 
 #
 # Flags below are optional
@@ -34,6 +34,8 @@ footer-links:
   twitter: agisga
   stackoverflow: # your stackoverflow profile, e.g. "users/50476/bart-kiers"
   youtube: # channel/<your_long_string> or user/<user-name>
+  googleplus: # anything in your profile username that comes after plus.google.com/
+
 
 # Enter your Disqus shortname (not your username) to enable commenting on posts
 # You can find your shortname on the Settings page of your Disqus account
@@ -80,6 +82,7 @@ exclude:
     - Gemfile.lock
     - LICENSE
     - README.md
+    - CNAME
 
 # Jekyll-scholar configuration
 scholar:
