@@ -82,7 +82,6 @@ exclude:
     - Gemfile.lock
     - LICENSE
     - README.md
-    - CNAME
 
 # Jekyll-scholar configuration
 scholar:
