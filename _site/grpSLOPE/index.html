@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My first R package on CRAN! – Alexej Gossmann – Math PhD student at Tulane University</title>
+
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+
+    
+    <meta name="description" content="A couple of weeks ago I have released my first R package on CRAN.
+For me it turned out to be a far less painful process than many people on the internet portray it to be (even though the package uses quite a lot of C++ code via Rcpp and RcppEigen, and even though R CMD check returns two NOTEs).
+Some of the most helpful resources for publishing the package were:
+" />
+    <meta property="og:description" content="A couple of weeks ago I have released my first R package on CRAN.
+For me it turned out to be a far less painful process than many people on the internet portray it to be (even though the package uses quite a lot of C++ code via Rcpp and RcppEigen, and even though R CMD check returns two NOTEs).
+Some of the most helpful resources for publishing the package were:
+" />
+    
+    <meta name="author" content="Alexej Gossmann" />
+
+    
+    <meta property="og:title" content="My first R package on CRAN!" />
+    <meta property="twitter:title" content="My first R package on CRAN!" />
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - Math PhD student at Tulane University" href="/feed.xml" />
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+ 
+    <!-- MathJax interation-->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}});
+      MathJax.Hub.Config({TeX: {Macros:{subscript:['_{#1}',1],superscript:['^{#1}',1]}}});
+    </script> 
+    <!-- Turn on equation numbering -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+    </script>
+    <script type="text/javascript"
+      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
+ </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <header class="masthead clearfix">
+        <a href="/" class="site-avatar"><img src="https://avatars0.githubusercontent.com/u/11449372?v=3&s=460" /></a>
+
+        <div class="site-info">
+          <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
+          <p class="site-description">Math PhD student at Tulane University</p>
+        </div>
+
+        <nav>
+          <a href="/about" class="blue">About</a>
+          <a href="/" class="yellow">Blog</a>
+          <a href="/talks" class="green">Presentations</a>
+          <a href="/publications" class="magenta">Publications</a>
+          <a href="/software" class="cyan">Software</a>
+        </nav>
+      </header>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>My first R package on CRAN!</h1>
+
+  <div class="entry">
+    <p>A couple of weeks ago I have released my first R package on CRAN.
+For me it turned out to be a far less painful process than many people on the internet portray it to be (even though the package uses quite a lot of C++ code via Rcpp and RcppEigen, and even though R CMD check returns two NOTEs).
+Some of the most helpful resources for publishing the package were:</p>
+
+<ul>
+<li>Of course, the chapter <a href="http://r-pkgs.had.co.nz/release.html">&quot;Releasing a package&quot; from Hadley Wickham&#39;s book</a></li>
+<li>Julia Silge&#39;s post <a href="http://juliasilge.com/blog/How-I-Stopped/">&quot;How I Learned to Stop Worrying and Love R CMD Check&quot;</a></li>
+<li>Karl Broman&#39;s <a href="http://kbroman.org/pkg_primer/pages/cran.html">post on getting an R package to CRAN</a></li>
+</ul>
+
+<p>My package is called <code>grpSLOPE</code> (<a href="https://github.com/agisga/grpSLOPE">github</a>, <a href="https://cran.r-project.org/web/packages/grpSLOPE/index.html">CRAN</a>), and I will very briefly introduce some of it&#39;s functionality.
+The purpose of the Group SLOPE method is to fit a sparse linear regression model, while controlling the <em>group false discovery rate</em>.
+I illustrate what it means with a very simple example below (for some more detail see the <a href="https://cran.r-project.org/web/packages/grpSLOPE/vignettes/basic-usage.html">vignette</a>).</p>
+
+<p>We generate a random model with a design matrix $X \in \mathbb{R}^{1000 \times 2000}$, whose entries are sampled from the standard normal distribution, and a coefficient vector $\beta$, whose entries are mostly zeros.</p>
+<div class="highlight"><pre><code class="language-R" data-lang="R"><span class="kp">set.seed</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
+
+X    <span class="o">&lt;-</span> <span class="kt">matrix</span><span class="p">(</span>rnorm<span class="p">(</span><span class="m">1000</span><span class="o">*</span><span class="m">2000</span><span class="p">),</span> <span class="m">1000</span><span class="p">,</span> <span class="m">2000</span><span class="p">)</span>
+beta <span class="o">&lt;-</span> <span class="kp">rep</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">2000</span><span class="p">)</span>
+<span class="kp">beta</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">20</span><span class="p">]</span>      <span class="o">&lt;-</span> runif<span class="p">(</span><span class="m">20</span><span class="p">)</span>
+<span class="kp">beta</span><span class="p">[</span><span class="m">1901</span><span class="o">:</span><span class="m">1980</span><span class="p">]</span> <span class="o">&lt;-</span> runif<span class="p">(</span><span class="m">80</span><span class="p">)</span>
+y <span class="o">&lt;-</span> X <span class="o">%*%</span> beta <span class="o">+</span> rnorm<span class="p">(</span><span class="m">1000</span><span class="p">)</span>
+</code></pre></div>
+<p>We assume that the predictors (i.e., the columns of $X$) are divided into 200 blocks, each of size 10, and we want to determine which groups of predictors have an effect on the response variable $y$. That is, given the noisy observations of $y$, we want to find out, which blocks of the vector $\beta$ contain non-zero entries. As you can see above, $\beta$ has 10 non-zero blocks. Additionally, we want to make sure that we don&#39;t make too many false discoveries in the process (i.e., we want the method to keep the expected proportion of falsely selected groups below, say, 10%).
+That&#39;s exactly what the Group SLOPE method is for!</p>
+<div class="highlight"><pre><code class="language-R" data-lang="R"><span class="c1">#install.packages(&quot;grpSLOPE&quot;) # Install the package now easily from CRAN!</span>
+<span class="kn">library</span><span class="p">(</span>grpSLOPE<span class="p">)</span>
+
+group  <span class="o">&lt;-</span> <span class="kp">rep</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">200</span><span class="p">,</span> each<span class="o">=</span><span class="m">10</span><span class="p">)</span>
+grpSLOPE.result <span class="o">&lt;-</span> grpSLOPE<span class="p">(</span>X<span class="o">=</span>X<span class="p">,</span> y<span class="o">=</span>y<span class="p">,</span> group<span class="o">=</span>group<span class="p">,</span> fdr<span class="o">=</span><span class="m">0.1</span><span class="p">)</span>
+</code></pre></div>
+<p>We observe that the method has indeed selected the correct groups of predictors:</p>
+<div class="highlight"><pre><code class="language-R" data-lang="R">grpSLOPE.result<span class="o">$</span>selected
+<span class="c1">#  [1] &quot;1&quot;   &quot;2&quot;   &quot;191&quot; &quot;192&quot; &quot;193&quot; &quot;194&quot; &quot;195&quot; &quot;196&quot; &quot;197&quot; &quot;198&quot;</span>
+</code></pre></div>
+<p>And the false discovery proportion is indeed below the target of 10% in this case, while the power is at 100%:</p>
+<div class="highlight"><pre><code class="language-R" data-lang="R">truly.significant.groups <span class="o">&lt;-</span> <span class="kp">unique</span><span class="p">(</span>group<span class="p">[</span><span class="kp">which</span><span class="p">(</span>beta <span class="o">!=</span> <span class="m">0</span><span class="p">)])</span>
+truly.significant.groups
+<span class="c1">#  [1]   1   2 191 192 193 194 195 196 197 198</span>
+
+false.discoveries <span class="o">&lt;-</span> <span class="kp">setdiff</span><span class="p">(</span>grpSLOPE.result<span class="o">$</span>selected<span class="p">,</span> truly.significant.groups<span class="p">)</span>
+fdp <span class="o">&lt;-</span> <span class="kp">length</span><span class="p">(</span>false.discoveries<span class="p">)</span> <span class="o">/</span> <span class="kp">length</span><span class="p">(</span>grpSLOPE.result<span class="o">$</span>selected<span class="p">)</span>
+fdp
+<span class="c1">#  [1] 0</span>
+
+true.discoveries <span class="o">&lt;-</span> <span class="kp">intersect</span><span class="p">(</span>grpSLOPE.result<span class="o">$</span>selected<span class="p">,</span> truly.significant.groups<span class="p">)</span>
+power <span class="o">&lt;-</span> <span class="kp">length</span><span class="p">(</span>true.discoveries<span class="p">)</span> <span class="o">/</span> <span class="kp">length</span><span class="p">(</span>grpSLOPE.result<span class="o">$</span>selected<span class="p">)</span>
+power
+<span class="c1">#  [1] 1</span>
+</code></pre></div>
+<p>Of course, the method does not perform this good under all circumstances &mdash; the interested reader can learn more from the papers referred to in the <a href="https://github.com/agisga/grpSLOPE/blob/master/README.md">grpSLOPE README on github</a>.</p>
+
+  </div>
+
+  <div class="date">
+    Written on May 12, 2016
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'agisga';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+
+
+
+<a href="https://github.com/agisga"><i class="svg-icon github"></i></a>
+
+<a href="https://www.linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
+
+
+<a href="https://www.twitter.com/agisga"><i class="svg-icon twitter"></i></a>
+
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>
