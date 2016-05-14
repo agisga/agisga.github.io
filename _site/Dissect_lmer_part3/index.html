@@ -9,11 +9,11 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
 
     
-    <meta name="description" content="This is the final part of my analysis of the function lmer, which is used to fit linear mixed models in the R package lme4.
-In two previous blog posts, we have seen the general layout of the function lmer, the dealings with the R model formula, and the setting up of the objective function for the optimization (see part 1 and part 2).
+    <meta name="description" content="This is the final part of my analysis of the function lmer, which is used to fit linear mixed models in the R package lme4. In two previous blog posts, we have seen the general layout of the function lmer, the dealings with the R model formula, and the setting up of the objective function for the optimization (see part 1 and part 2).
+
 " />
-    <meta property="og:description" content="This is the final part of my analysis of the function lmer, which is used to fit linear mixed models in the R package lme4.
-In two previous blog posts, we have seen the general layout of the function lmer, the dealings with the R model formula, and the setting up of the objective function for the optimization (see part 1 and part 2).
+    <meta property="og:description" content="This is the final part of my analysis of the function lmer, which is used to fit linear mixed models in the R package lme4. In two previous blog posts, we have seen the general layout of the function lmer, the dealings with the R model formula, and the setting up of the objective function for the optimization (see part 1 and part 2).
+
 " />
     
     <meta name="author" content="Alexej Gossmann" />
@@ -73,84 +73,122 @@ In two previous blog posts, we have seen the general layout of the function lmer
   <h1>Dissecting lme4's lmer function. Part 3.</h1>
 
   <div class="entry">
-    <p>This is the final part of my analysis of the function <code>lmer</code>, which is used to fit linear mixed models in the R package <code>lme4</code>.
-In two previous blog posts, we have seen the general layout of the function <code>lmer</code>, the dealings with the R model formula, and the setting up of the objective function for the optimization (see <a href="http://agisga.github.io/Dissect_lmer_part1/">part 1</a> and <a href="http://agisga.github.io/Dissect_lmer_part2/">part 2</a>).</p>
+    <p>This is the final part of my analysis of the function <code class="highlighter-rouge">lmer</code>, which is used to fit linear mixed models in the R package <code class="highlighter-rouge">lme4</code>. In two previous blog posts, we have seen the general layout of the function <code class="highlighter-rouge">lmer</code>, the dealings with the R model formula, and the setting up of the objective function for the optimization (see <a href="http://agisga.github.io/Dissect_lmer_part1/">part 1</a> and <a href="http://agisga.github.io/Dissect_lmer_part2/">part 2</a>).</p>
 
-<p>After the user-specified R model formula is evaluated to model matrices, vectors and parameters, and the objective function is generated, the function <code>optimizeLmer</code> is called from within <code>lmer</code> to carry out the optimization. We analyse <code>optimizeLmer</code> below.</p>
+<p>After the user-specified R model formula is evaluated to model matrices, vectors and parameters, and the objective function is generated, the function <code class="highlighter-rouge">optimizeLmer</code> is called from within <code class="highlighter-rouge">lmer</code> to carry out the optimization. We analyse <code class="highlighter-rouge">optimizeLmer</code> below.</p>
 
-<h1>Minimizing the deviance - <code>optimizeLmer</code></h1>
+<h1 id="minimizing-the-deviance---optimizelmer">Minimizing the deviance - <code class="highlighter-rouge">optimizeLmer</code></h1>
 
-<p>The function takes as input arguments the previously generated deviance function <code>devfun</code>, the provided (or previously computed by <code>mkLmerDevfun</code>) starting values <code>start</code> for the optimization, and other optimization parameters (such as the method to be used) bundled in the <code>merControl</code> object <code>control</code>.</p>
+<p>The function takes as input arguments the previously generated deviance function <code class="highlighter-rouge">devfun</code>, the provided (or previously computed by <code class="highlighter-rouge">mkLmerDevfun</code>) starting values <code class="highlighter-rouge">start</code> for the optimization, and other optimization parameters (such as the method to be used) bundled in the <code class="highlighter-rouge">merControl</code> object <code class="highlighter-rouge">control</code>.</p>
 
-<p>Then an environment is defined as <code>rho &lt;- environment(devfun)</code>. That is, <code>rho</code> contains all the parameters defined by <code>mkLmerDevfun</code> during the generation of <code>devfun</code>; and additionally, the parent environment of <code>rho</code> is the environment from which <code>mkLmerDevfun</code> was called (so, there is access to variables from there as well).</p>
+<p>Then an environment is defined as <code class="highlighter-rouge">rho &lt;- environment(devfun)</code>. That is, <code class="highlighter-rouge">rho</code> contains all the parameters defined by <code class="highlighter-rouge">mkLmerDevfun</code> during the generation of <code class="highlighter-rouge">devfun</code>; and additionally, the parent environment of <code class="highlighter-rouge">rho</code> is the environment from which <code class="highlighter-rouge">mkLmerDevfun</code> was called (so, there is access to variables from there as well).</p>
 
-<p>Eventually the function <code>optwrap</code> (which is defined in <code>lmer.R</code>) is called to carry out the actual optimization. We dissect <code>optwrap</code> below. The returned object is saved as <code>opt</code>.</p>
+<p>Eventually the function <code class="highlighter-rouge">optwrap</code> (which is defined in <code class="highlighter-rouge">lmer.R</code>) is called to carry out the actual optimization. We dissect <code class="highlighter-rouge">optwrap</code> below. The returned object is saved as <code class="highlighter-rouge">opt</code>.</p>
 
-<h2><code>optwrap</code></h2>
+<h2 id="optwrap"><code class="highlighter-rouge">optwrap</code></h2>
 
 <ul>
-<li><p>Use <code>getOptfun</code> in order to check that the user-specified optimizer is supported.</p></li>
-<li><p>Deal with the peculiarities regarding the input arguments of the supported optimizer functions (e.g. modify <code>control</code> so that the verbose argument will be passed on correctly), and set up other input arguments for the optimizer with <code>arglist &lt;- list(fn = fn, par = par, lower = lower, upper = upper, control = control)</code>.</p></li>
-<li><p>Call the optimizer:</p></li>
+  <li>
+    <p>Use <code class="highlighter-rouge">getOptfun</code> in order to check that the user-specified optimizer is supported.</p>
+  </li>
+  <li>
+    <p>Deal with the peculiarities regarding the input arguments of the supported optimizer functions (e.g. modify <code class="highlighter-rouge">control</code> so that the verbose argument will be passed on correctly), and set up other input arguments for the optimizer with <code class="highlighter-rouge">arglist &lt;- list(fn = fn, par = par, lower = lower, upper = upper, control = control)</code>.</p>
+  </li>
+  <li>
+    <p>Call the optimizer:</p>
+  </li>
 </ul>
-<div class="highlight"><pre><code class="language-R" data-lang="R">opt <span class="o">&lt;-</span> <span class="kp">withCallingHandlers</span><span class="p">(</span><span class="kp">do.call</span><span class="p">(</span>optfun<span class="p">,</span> arglist<span class="p">),</span>
-                           warning <span class="o">=</span> <span class="kr">function</span><span class="p">(</span>w<span class="p">)</span> <span class="p">{</span>
-                               curWarnings <span class="o">&lt;&lt;-</span> <span class="kp">append</span><span class="p">(</span>curWarnings<span class="p">,</span><span class="kt">list</span><span class="p">(</span>w<span class="o">$</span><span class="kp">message</span><span class="p">))</span>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">opt</span> <span class="o">&lt;-</span> <span class="n">withCallingHandlers</span><span class="p">(</span><span class="n">do.call</span><span class="p">(</span><span class="n">optfun</span><span class="p">,</span> <span class="n">arglist</span><span class="p">),</span>
+                           <span class="n">warning</span> <span class="o">=</span> <span class="k">function</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="p">{</span>
+                               <span class="n">curWarnings</span> <span class="o">&lt;&lt;-</span> <span class="n">append</span><span class="p">(</span><span class="n">curWarnings</span><span class="p">,</span><span class="n">list</span><span class="p">(</span><span class="n">w</span><span class="o">$</span><span class="n">message</span><span class="p">))</span>
                            <span class="p">})</span>
-</code></pre></div>
-<ul>
-<li><p>Do some post optimization tweaking: rename the parameters in <code>opt</code> in a consistent way and pass on all warnings.</p></li>
-<li><p>Compute the gradient for the objective function at the estimated minimal values using the function <code>deriv12</code>, which uses a central finite difference method.</p></li>
-<li><p>Store all auxiliary information and return <code>opt</code>:</p></li>
-</ul>
-<div class="highlight"><pre><code class="language-R" data-lang="R"><span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;optimizer&quot;</span><span class="p">)</span> <span class="o">&lt;-</span> optimizer
-<span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;control&quot;</span><span class="p">)</span> <span class="o">&lt;-</span> control
-<span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;warnings&quot;</span><span class="p">)</span> <span class="o">&lt;-</span> curWarnings
-<span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;derivs&quot;</span><span class="p">)</span> <span class="o">&lt;-</span> derivs
-opt
-</code></pre></div>
-<h1>Extended convergence checking - <code>checkConv</code></h1>
-
-<p>If the optimization yields a result, then it is checked against additional convergence criteria by the function <code>checkConv</code>.</p>
+</code></pre>
+</div>
 
 <ul>
-<li>Compute a scaled gradient as the solution to the linear system with the Cholesky factor of the Hessian as the matrix on the left hand side, and the gradient on the right hand side:</li>
-</ul>
-<div class="highlight"><pre><code class="language-R" data-lang="R">scgrad <span class="o">&lt;-</span> <span class="kp">tryCatch</span><span class="p">(</span><span class="kp">with</span><span class="p">(</span>derivs<span class="p">,</span><span class="kp">solve</span><span class="p">(</span><span class="kp">chol</span><span class="p">(</span>Hessian<span class="p">),</span>gradient<span class="p">)),</span>
-                        error<span class="o">=</span><span class="kr">function</span><span class="p">(</span>e<span class="p">)</span>e<span class="p">)</span>
-</code></pre></div>
-<ul>
-<li><p>Find the parallel minimum of the gradient and the scaled gradient of the objective function as <code>mingrad &lt;- pmin(abs(scgrad),abs(derivs$gradient))</code>. Check whether the maximal entry of <code>mingrad</code> is above a specified threshold (default is 2e-3).</p></li>
-<li><p>Similarly check the relative gradient against a specified relative tolerance (disabled by default).</p></li>
-<li><p>Check whether the variance of any random effect is below a specified tolerance (i.e. equal to 0), that is, whether we have a singular fit. The default tolerance level here is 1e-4.</p></li>
-<li><p>Check the Hessian of the objective function for convergence. This check is implemented in the function <code>checkHess</code>, which performs the following steps:</p>
-
-<ul>
-<li>Check that the Hessian has no negative eigenvalues (less that <code>-tol</code>, where tol is 1e-6 by default).</li>
-<li>Check that the Hessian does not have very large eigenvalues, determined by $\rho(H) \cdot \mathrm{tol} &gt; 1$ (where $\rho(H)$ is the <a href="http://en.wikipedia.org/wiki/Spectral_radius">spectral radius</a> of the Hessian, and tol is 1e-6 by default).</li>
-<li>Check that the ratio of the minimal to the maximal eigenvalues is not below <code>tol</code>; which is equivalent to the <a href="http://en.wikipedia.org/wiki/Condition_number">conditional number</a> of the Hessian being smaller than <code>1/tol</code>. </li>
-</ul></li>
-<li><p>Return all messages and warnings.</p></li>
+  <li>
+    <p>Do some post optimization tweaking: rename the parameters in <code class="highlighter-rouge">opt</code> in a consistent way and pass on all warnings.</p>
+  </li>
+  <li>
+    <p>Compute the gradient for the objective function at the estimated minimal values using the function <code class="highlighter-rouge">deriv12</code>, which uses a central finite difference method.</p>
+  </li>
+  <li>
+    <p>Store all auxiliary information and return <code class="highlighter-rouge">opt</code>:</p>
+  </li>
 </ul>
 
-<h1>Prepare an output object - <code>mkMerMod</code></h1>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">attr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span><span class="s2">"optimizer"</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="n">optimizer</span>
+<span class="n">attr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span><span class="s2">"control"</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="n">control</span>
+<span class="n">attr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span><span class="s2">"warnings"</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="n">curWarnings</span>
+<span class="n">attr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span><span class="s2">"derivs"</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="n">derivs</span>
+<span class="n">opt</span>
+</code></pre>
+</div>
 
-<p>This function takes as inputs the environment of the objective function, the parameter estimates obtained from the optimization, the fixed effects and random effects model matrices etc., the original function call, and the messages generated from the convergence check in <code>checkConv</code>. 
-It checks, reorganizes and renames the parameters, and finally returns everything in an object of class <code>lmerMod</code>:</p>
-<div class="highlight"><pre><code class="language-R" data-lang="R">new<span class="p">(</span><span class="kr">switch</span><span class="p">(</span>rcl<span class="p">,</span> lmerResp<span class="o">=</span><span class="s">&quot;lmerMod&quot;</span><span class="p">,</span> glmResp<span class="o">=</span><span class="s">&quot;glmerMod&quot;</span><span class="p">,</span> nlsResp<span class="o">=</span><span class="s">&quot;nlmerMod&quot;</span><span class="p">),</span>
-    call<span class="o">=</span>mc<span class="p">,</span> frame<span class="o">=</span>fr<span class="p">,</span> flist<span class="o">=</span>reTrms<span class="o">$</span>flist<span class="p">,</span> cnms<span class="o">=</span>reTrms<span class="o">$</span>cnms<span class="p">,</span>
-    Gp<span class="o">=</span>reTrms<span class="o">$</span>Gp<span class="p">,</span> theta<span class="o">=</span>pp<span class="o">$</span>theta<span class="p">,</span> beta<span class="o">=</span><span class="kp">beta</span><span class="p">,</span>
-    u<span class="o">=</span><span class="kr">if</span> <span class="p">(</span>trivial.y<span class="p">)</span> <span class="kp">rep</span><span class="p">(</span><span class="kc">NA_real_</span><span class="p">,</span><span class="kp">nrow</span><span class="p">(</span>pp<span class="o">$</span>Zt<span class="p">))</span> <span class="kr">else</span> pp<span class="o">$</span>u<span class="p">(</span>fac<span class="p">),</span>
-    lower<span class="o">=</span>reTrms<span class="o">$</span>lower<span class="p">,</span> devcomp<span class="o">=</span><span class="kt">list</span><span class="p">(</span>cmp<span class="o">=</span>cmp<span class="p">,</span> dims<span class="o">=</span>dims<span class="p">),</span>
-    pp<span class="o">=</span>pp<span class="p">,</span> resp<span class="o">=</span>resp<span class="p">,</span>
-    optinfo <span class="o">=</span> <span class="kt">list</span> <span class="p">(</span>optimizer<span class="o">=</span> <span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;optimizer&quot;</span><span class="p">),</span>
-                    control  <span class="o">=</span> <span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;control&quot;</span><span class="p">),</span>
-                    derivs   <span class="o">=</span> <span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;derivs&quot;</span><span class="p">),</span>
-                    conv  <span class="o">=</span> <span class="kt">list</span><span class="p">(</span>opt<span class="o">=</span>opt<span class="o">$</span>conv<span class="p">,</span> lme4<span class="o">=</span>lme4conv<span class="p">),</span>
-                    feval <span class="o">=</span> <span class="kr">if</span> <span class="p">(</span><span class="kp">is.null</span><span class="p">(</span>opt<span class="o">$</span>feval<span class="p">))</span> <span class="kc">NA</span> <span class="kr">else</span> opt<span class="o">$</span>feval<span class="p">,</span>
-                    warnings <span class="o">=</span> <span class="kp">attr</span><span class="p">(</span>opt<span class="p">,</span><span class="s">&quot;warnings&quot;</span><span class="p">),</span> val <span class="o">=</span> opt<span class="o">$</span>par<span class="p">)</span>
+<h1 id="extended-convergence-checking---checkconv">Extended convergence checking - <code class="highlighter-rouge">checkConv</code></h1>
+
+<p>If the optimization yields a result, then it is checked against additional convergence criteria by the function <code class="highlighter-rouge">checkConv</code>.</p>
+
+<ul>
+  <li>Compute a scaled gradient as the solution to the linear system with the Cholesky factor of the Hessian as the matrix on the left hand side, and the gradient on the right hand side:</li>
+</ul>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">scgrad</span> <span class="o">&lt;-</span> <span class="n">tryCatch</span><span class="p">(</span><span class="n">with</span><span class="p">(</span><span class="n">derivs</span><span class="p">,</span><span class="n">solve</span><span class="p">(</span><span class="n">chol</span><span class="p">(</span><span class="n">Hessian</span><span class="p">),</span><span class="n">gradient</span><span class="p">)),</span>
+                        <span class="n">error</span><span class="o">=</span><span class="k">function</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="n">e</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<ul>
+  <li>
+    <p>Find the parallel minimum of the gradient and the scaled gradient of the objective function as <code class="highlighter-rouge">mingrad &lt;- pmin(abs(scgrad),abs(derivs$gradient))</code>. Check whether the maximal entry of <code class="highlighter-rouge">mingrad</code> is above a specified threshold (default is 2e-3).</p>
+  </li>
+  <li>
+    <p>Similarly check the relative gradient against a specified relative tolerance (disabled by default).</p>
+  </li>
+  <li>
+    <p>Check whether the variance of any random effect is below a specified tolerance (i.e. equal to 0), that is, whether we have a singular fit. The default tolerance level here is 1e-4.</p>
+  </li>
+  <li>
+    <p>Check the Hessian of the objective function for convergence. This check is implemented in the function <code class="highlighter-rouge">checkHess</code>, which performs the following steps:</p>
+
+    <ul>
+      <li>
+        <p>Check that the Hessian has no negative eigenvalues (less that <code class="highlighter-rouge">-tol</code>, where tol is 1e-6 by default).</p>
+      </li>
+      <li>
+        <p>Check that the Hessian does not have very large eigenvalues, determined by $\rho(H) \cdot \mathrm{tol} &gt; 1$ (where $\rho(H)$ is the <a href="http://en.wikipedia.org/wiki/Spectral_radius">spectral radius</a> of the Hessian, and tol is 1e-6 by default).</p>
+      </li>
+      <li>
+        <p>Check that the ratio of the minimal to the maximal eigenvalues is not below <code class="highlighter-rouge">tol</code>; which is equivalent to the <a href="http://en.wikipedia.org/wiki/Condition_number">conditional number</a> of the Hessian being smaller than <code class="highlighter-rouge">1/tol</code>.</p>
+      </li>
+    </ul>
+  </li>
+  <li>
+    <p>Return all messages and warnings.</p>
+  </li>
+</ul>
+
+<h1 id="prepare-an-output-object---mkmermod">Prepare an output object - <code class="highlighter-rouge">mkMerMod</code></h1>
+
+<p>This function takes as inputs the environment of the objective function, the parameter estimates obtained from the optimization, the fixed effects and random effects model matrices etc., the original function call, and the messages generated from the convergence check in <code class="highlighter-rouge">checkConv</code>. It checks, reorganizes and renames the parameters, and finally returns everything in an object of class <code class="highlighter-rouge">lmerMod</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">new</span><span class="p">(</span><span class="k">switch</span><span class="p">(</span><span class="n">rcl</span><span class="p">,</span> <span class="n">lmerResp</span><span class="o">=</span><span class="s2">"lmerMod"</span><span class="p">,</span> <span class="n">glmResp</span><span class="o">=</span><span class="s2">"glmerMod"</span><span class="p">,</span> <span class="n">nlsResp</span><span class="o">=</span><span class="s2">"nlmerMod"</span><span class="p">),</span>
+    <span class="n">call</span><span class="o">=</span><span class="n">mc</span><span class="p">,</span> <span class="n">frame</span><span class="o">=</span><span class="n">fr</span><span class="p">,</span> <span class="n">flist</span><span class="o">=</span><span class="n">reTrms</span><span class="o">$</span><span class="n">flist</span><span class="p">,</span> <span class="n">cnms</span><span class="o">=</span><span class="n">reTrms</span><span class="o">$</span><span class="n">cnms</span><span class="p">,</span>
+    <span class="n">Gp</span><span class="o">=</span><span class="n">reTrms</span><span class="o">$</span><span class="n">Gp</span><span class="p">,</span> <span class="n">theta</span><span class="o">=</span><span class="n">pp</span><span class="o">$</span><span class="n">theta</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="n">beta</span><span class="p">,</span>
+    <span class="n">u</span><span class="o">=</span><span class="k">if</span> <span class="p">(</span><span class="n">trivial.y</span><span class="p">)</span> <span class="n">rep</span><span class="p">(</span><span class="n">NA_real_</span><span class="p">,</span><span class="n">nrow</span><span class="p">(</span><span class="n">pp</span><span class="o">$</span><span class="n">Zt</span><span class="p">))</span> <span class="k">else</span> <span class="n">pp</span><span class="o">$</span><span class="n">u</span><span class="p">(</span><span class="n">fac</span><span class="p">),</span>
+    <span class="n">lower</span><span class="o">=</span><span class="n">reTrms</span><span class="o">$</span><span class="n">lower</span><span class="p">,</span> <span class="n">devcomp</span><span class="o">=</span><span class="n">list</span><span class="p">(</span><span class="n">cmp</span><span class="o">=</span><span class="n">cmp</span><span class="p">,</span> <span class="n">dims</span><span class="o">=</span><span class="n">dims</span><span class="p">),</span>
+    <span class="n">pp</span><span class="o">=</span><span class="n">pp</span><span class="p">,</span> <span class="n">resp</span><span class="o">=</span><span class="n">resp</span><span class="p">,</span>
+    <span class="n">optinfo</span> <span class="o">=</span> <span class="n">list</span> <span class="p">(</span><span class="n">optimizer</span><span class="o">=</span> <span class="n">attr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span><span class="s2">"optimizer"</span><span class="p">),</span>
+                    <span class="n">control</span>	 <span class="o">=</span> <span class="n">attr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span><span class="s2">"control"</span><span class="p">),</span>
+                    <span class="n">derivs</span>	 <span class="o">=</span> <span class="n">attr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span><span class="s2">"derivs"</span><span class="p">),</span>
+                    <span class="n">conv</span>  <span class="o">=</span> <span class="n">list</span><span class="p">(</span><span class="n">opt</span><span class="o">=</span><span class="n">opt</span><span class="o">$</span><span class="n">conv</span><span class="p">,</span> <span class="n">lme4</span><span class="o">=</span><span class="n">lme4conv</span><span class="p">),</span>
+                    <span class="n">feval</span> <span class="o">=</span> <span class="k">if</span> <span class="p">(</span><span class="n">is.null</span><span class="p">(</span><span class="n">opt</span><span class="o">$</span><span class="n">feval</span><span class="p">))</span> <span class="n">NA</span> <span class="k">else</span> <span class="n">opt</span><span class="o">$</span><span class="n">feval</span><span class="p">,</span>
+                    <span class="n">warnings</span> <span class="o">=</span> <span class="n">attr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span><span class="s2">"warnings"</span><span class="p">),</span> <span class="n">val</span> <span class="o">=</span> <span class="n">opt</span><span class="o">$</span><span class="n">par</span><span class="p">)</span>
     <span class="p">)</span>
-</code></pre></div>
+</code></pre>
+</div>
+
   </div>
 
   <div class="date">

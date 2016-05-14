@@ -10,8 +10,10 @@
 
     
     <meta name="description" content="Over the weekend I have written a couple of numerical solvers for one-dimensional initial value problems in Ruby, and added them to my project spitzy.
+
 " />
     <meta property="og:description" content="Over the weekend I have written a couple of numerical solvers for one-dimensional initial value problems in Ruby, and added them to my project spitzy.
+
 " />
     
     <meta name="author" content="Alexej Gossmann" />
@@ -73,147 +75,162 @@
   <div class="entry">
     <p>Over the weekend I have written a couple of numerical solvers for one-dimensional <a href="http://en.wikipedia.org/wiki/Initial_value_problem">initial value problems</a> in Ruby, and added them to my project <a href="https://github.com/agisga/spitzy">spitzy</a>.</p>
 
-<p>An initial value problem is a differential equation of the form </p>
+<p>An initial value problem is a differential equation of the form</p>
 
 <ul>
-<li>ODE: $\frac{dy}{dx} = f(x,y)$ for $a \leq x \leq b$,</li>
-<li>with initial condition $y(a) = y_0$.</li>
+  <li>ODE: $\frac{dy}{dx} = f(x,y)$ for $a \leq x \leq b$,</li>
+  <li>with initial condition $y(a) = y_0$.</li>
 </ul>
 
-<p>For this kind of differential equation I defined the class <code>Ode</code> in <code>spitzy</code>, which currently has three methods, <a href="http://en.wikipedia.org/wiki/Dormand%E2%80%93Prince_method">Dormand-Prince</a>,
-<a href="http://en.wikipedia.org/wiki/Euler_method">Forward Euler</a> and an <a href="http://en.wikipedia.org/wiki/Linear_multistep_method">Adams-Bashforth</a> method of order 2.</p>
+<p>For this kind of differential equation I defined the class <code class="highlighter-rouge">Ode</code> in <code class="highlighter-rouge">spitzy</code>, which currently has three methods, <a href="http://en.wikipedia.org/wiki/Dormand%E2%80%93Prince_method">Dormand-Prince</a>, <a href="http://en.wikipedia.org/wiki/Euler_method">Forward Euler</a> and an <a href="http://en.wikipedia.org/wiki/Linear_multistep_method">Adams-Bashforth</a> method of order 2.</p>
 
-<h3>Dormand-Prince method</h3>
+<h3 id="dormand-prince-method">Dormand-Prince method</h3>
 
-<p>The default method is Dormand-Prince. It is a Runge-Kutta method that automatically performs an error estimation and adapts the step size accordingly in order to keep the error of the numerical solution below a pre specified tolerance level. It is widely agreed on to be the go-to method for most ordinary differential equations (e.g. <a href="http://www.ams.org/journals/mcom/1986-46-173/S0025-5718-1986-0815836-3/S0025-5718-1986-0815836-3.pdf">see</a>). For example it is currently the default in MATLAB&#39;s ode45 solver, which is suggested as the first method to try by the <a href="http://www.mathworks.com/help/matlab/ref/ode45.html#bti6n8p-45">MATLAB documentation</a>.</p>
+<p>The default method is Dormand-Prince. It is a Runge-Kutta method that automatically performs an error estimation and adapts the step size accordingly in order to keep the error of the numerical solution below a pre specified tolerance level. It is widely agreed on to be the go-to method for most ordinary differential equations (e.g. <a href="http://www.ams.org/journals/mcom/1986-46-173/S0025-5718-1986-0815836-3/S0025-5718-1986-0815836-3.pdf">see</a>). For example it is currently the default in MATLAB’s ode45 solver, which is suggested as the first method to try by the <a href="http://www.mathworks.com/help/matlab/ref/ode45.html#bti6n8p-45">MATLAB documentation</a>.</p>
 
-<p>Let&#39;s look at an example. We consider the initial value problem:</p>
+<p>Let’s look at an example. We consider the initial value problem:</p>
 
 <ul>
-<li>ODE: $\frac{dy}{dx} = 1 + \frac{y}{x} + \left(\frac{y}{x}\right)^2$, $1 \leq x \leq 4$,</li>
-<li>IC: $y(1) = 0$.</li>
+  <li>ODE: $\frac{dy}{dx} = 1 + \frac{y}{x} + \left(\frac{y}{x}\right)^2$, $1 \leq x \leq 4$,</li>
+  <li>IC: $y(1) = 0$.</li>
 </ul>
 
-<p>When we apply the Dormand-Prince method, we need to specify the range of $x$ values, the initial condition, the maximal step size that we don&#39;t want the method to exceed, and the function $f(x,y)$. Optionally, we can specify the tolerance level for the error of the obtained numerical solution (the default is 0.01), and the maximal number of iterations for the algorithm (since Dormand-Prince adjusts the step sizes according to an error estimate, the algorithm might require multiple iterations to evaluate the solution at one step, i.e. the algorithm will keep on carrying out iterations until it finds a suitable step size).</p>
+<p>When we apply the Dormand-Prince method, we need to specify the range of $x$ values, the initial condition, the maximal step size that we don’t want the method to exceed, and the function $f(x,y)$. Optionally, we can specify the tolerance level for the error of the obtained numerical solution (the default is 0.01), and the maximal number of iterations for the algorithm (since Dormand-Prince adjusts the step sizes according to an error estimate, the algorithm might require multiple iterations to evaluate the solution at one step, i.e. the algorithm will keep on carrying out iterations until it finds a suitable step size).</p>
 
-<p>The following Ruby code computes a numerical solution to the above ODE using the Dormand-Prince method with a maximal step size of 0.1 in <code>spitzy</code>:</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="nb">require</span> <span class="s1">&#39;spitzy&#39;</span>
+<p>The following Ruby code computes a numerical solution to the above ODE using the Dormand-Prince method with a maximal step size of 0.1 in <code class="highlighter-rouge">spitzy</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'spitzy'</span>
 <span class="n">f</span> <span class="o">=</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="o">|</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span> <span class="o">+</span> <span class="n">y</span><span class="o">/</span><span class="n">t</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">t</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
-<span class="n">dopri_sol</span> <span class="o">=</span> <span class="no">Ode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">xrange</span><span class="p">:</span> <span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="ss">dx</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="ss">yini</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
-</code></pre></div>
+<span class="n">dopri_sol</span> <span class="o">=</span> <span class="no">Ode</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">xrange: </span><span class="p">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="p">],</span> <span class="ss">dx: </span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="ss">yini: </span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
+</code></pre>
+</div>
+
 <p>If additionally we want to set the error tolerance to 1e-6 and the maximal number of performed iterations to 1e6, we can do:</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="n">dopri_sol</span> <span class="o">=</span> <span class="no">Ode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">xrange</span><span class="p">:</span> <span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="ss">dx</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="ss">yini</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> 
-                    <span class="ss">tol</span><span class="p">:</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="ss">maxiter</span><span class="p">:</span> <span class="mi">1</span><span class="n">e6</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
-</code></pre></div>
-<p>The exact solution to the ODE is $y(x) = x\tan(\log(x))$.
-I plotted the obtained numerical solution and the exact solution using the Ruby gem <code>gnuplot</code> (Ruby code at the bottom of the page). One can clearly see that the Dormand-Prince solution agrees with the exact solution.</p>
 
-<p><img src="/images/dopri.png?raw=true" alt="Dormand-Prince example plot" title="Dormand-Prince example plot"></p>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">dopri_sol</span> <span class="o">=</span> <span class="no">Ode</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">xrange: </span><span class="p">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="p">],</span> <span class="ss">dx: </span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="ss">yini: </span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> 
+                    <span class="ss">tol: </span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="ss">maxiter: </span><span class="mi">1</span><span class="n">e6</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
+</code></pre>
+</div>
 
-<p>Using the exact solution, we can compute the error of the numerical solution. We can print further information about the obtained solution to the screen, using some of the attribute readers of <code>Ode</code>.</p>
+<p>The exact solution to the ODE is $y(x) = x\tan(\log(x))$. I plotted the obtained numerical solution and the exact solution using the Ruby gem <code class="highlighter-rouge">gnuplot</code> (Ruby code at the bottom of the page). One can clearly see that the Dormand-Prince solution agrees with the exact solution.</p>
 
-<p><img src="/images/dopri_output.png?raw=true" alt="Dormand-Prince example output" title="Dormand-Prince example output"></p>
+<p><img src="/images/dopri.png?raw=true" alt="Dormand-Prince example plot" title="Dormand-Prince example plot" /></p>
+
+<p>Using the exact solution, we can compute the error of the numerical solution. We can print further information about the obtained solution to the screen, using some of the attribute readers of <code class="highlighter-rouge">Ode</code>.</p>
+
+<p><img src="/images/dopri_output.png?raw=true" alt="Dormand-Prince example output" title="Dormand-Prince example output" /></p>
 
 <p>In particular, we see that the error of the numerical solution stays below the prescribed tolerance level, as intended.</p>
 
-<h4>Automatic step size adjustment</h4>
+<h4 id="automatic-step-size-adjustment">Automatic step size adjustment</h4>
 
-<p>We look at a second example that demonstrates the automatic step size adjustment capabilities of the Dormand-Prince method.
-Suppose we have the initial value problem:</p>
+<p>We look at a second example that demonstrates the automatic step size adjustment capabilities of the Dormand-Prince method. Suppose we have the initial value problem:</p>
 
 <ul>
-<li>ODE: $\frac{dy}{dx} = -2y + e^{-2(x-6)^2}$, $0 \leq x \leq 10$,</li>
-<li>IC: $y(0) = 1$.</li>
+  <li>ODE: $\frac{dy}{dx} = -2y + e^{-2(x-6)^2}$, $0 \leq x \leq 10$,</li>
+  <li>IC: $y(0) = 1$.</li>
 </ul>
 
 <p>We apply the Dormand-Prince method with error tolerance 1e-6:</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="n">f</span> <span class="o">=</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="o">|</span> <span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="no">Math</span><span class="o">::</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="mi">6</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="p">}</span>
-<span class="n">dopri_sol</span> <span class="o">=</span> <span class="no">Ode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">xrange</span><span class="p">:</span> <span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="ss">dx</span><span class="p">:</span> <span class="mi">1</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="ss">yini</span><span class="p">:</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> 
-                    <span class="ss">tol</span><span class="p">:</span> <span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="ss">maxiter</span><span class="p">:</span> <span class="mi">1</span><span class="n">e6</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">f</span> <span class="o">=</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="o">|</span> <span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="no">Math</span><span class="o">::</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="mi">6</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="p">}</span>
+<span class="n">dopri_sol</span> <span class="o">=</span> <span class="no">Ode</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">xrange: </span><span class="p">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="o">.</span><span class="mi">0</span><span class="p">],</span> <span class="ss">dx: </span><span class="mi">1</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="ss">yini: </span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> 
+                    <span class="ss">tol: </span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="ss">maxiter: </span><span class="mi">1</span><span class="n">e6</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
+</code></pre>
+</div>
+
 <p>and plot the obtained solution on the grid generated by the method:</p>
 
-<p><img src="/images/dopri2.png?raw=true" alt="Dormand-Prince example 2 plot" title="Dormand-Prince example 2 plot"></p>
+<p><img src="/images/dopri2.png?raw=true" alt="Dormand-Prince example 2 plot" title="Dormand-Prince example 2 plot" /></p>
 
 <p>One can clearly see that the step size decreases in regions of bigger change in the slope of the function.</p>
 
-<h3>Euler method</h3>
+<h3 id="euler-method">Euler method</h3>
 
-<p>The Euler method is the most basic method for solving ordinary differential equations. In its implementation in <code>spitzy</code>, unlike the Dormand-Prince method, it cannot automatically control the step size or estimate the error of the obtained numerical solution. We apply it to the same differential equation as in the Dormand-Prince example above.</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="n">f</span> <span class="o">=</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="o">|</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span> <span class="o">+</span> <span class="n">y</span><span class="o">/</span><span class="n">t</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">t</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
-<span class="n">euler_sol</span> <span class="o">=</span> <span class="no">Ode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">xrange</span><span class="p">:</span> <span class="o">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="ss">dx</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mo">01</span><span class="p">,</span>
-                    <span class="ss">yini</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="nb">method</span><span class="p">:</span> <span class="ss">:euler</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
-</code></pre></div>
+<p>The Euler method is the most basic method for solving ordinary differential equations. In its implementation in <code class="highlighter-rouge">spitzy</code>, unlike the Dormand-Prince method, it cannot automatically control the step size or estimate the error of the obtained numerical solution. We apply it to the same differential equation as in the Dormand-Prince example above.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">f</span> <span class="o">=</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="o">|</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span> <span class="o">+</span> <span class="n">y</span><span class="o">/</span><span class="n">t</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">t</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
+<span class="n">euler_sol</span> <span class="o">=</span> <span class="no">Ode</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">xrange: </span><span class="p">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="p">],</span> <span class="ss">dx: </span><span class="mi">0</span><span class="o">.</span><span class="mo">01</span><span class="p">,</span>
+                    <span class="ss">yini: </span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">method: :euler</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
+</code></pre>
+</div>
+
 <p>If we plot the obtained numerical solution, we can see that, even though the Euler method evaluates the solution at a much finer grid, it performs much worse than the Dormand-Prince method.</p>
 
-<p><img src="/images/euler_plot.png?raw=true" alt="Euler method example plot" title="Euler method example plot"></p>
+<p><img src="/images/euler_plot.png?raw=true" alt="Euler method example plot" title="Euler method example plot" /></p>
 
 <p>Nevertheless, there possibly are situations in which the simple Euler method is preferred over the rather complex Dormand-Prince.</p>
 
-<h3>Adams-Bashforth method</h3>
+<h3 id="adams-bashforth-method">Adams-Bashforth method</h3>
 
-<p>The Adams-Bashforth method implemented in <code>spitzy</code> is a second order method from the family of multi-step methods. As the Euler method, it operates on a fixed pre specified step size.
+<p>The Adams-Bashforth method implemented in <code class="highlighter-rouge">spitzy</code> is a second order method from the family of multi-step methods. As the Euler method, it operates on a fixed pre specified step size.<br />
 We demonstrate it by solving the following differential equation:</p>
 
 <ul>
-<li>ODE: $\frac{dy}{dx} = -2xy$, $0 \leq x \leq 4$,</li>
-<li>IC: $y(0) = 1$.</li>
+  <li>ODE: $\frac{dy}{dx} = -2xy$, $0 \leq x \leq 4$,</li>
+  <li>IC: $y(0) = 1$.</li>
 </ul>
 
 <p>The implemented Adams-Bashforth scheme is a method of order two, which means that the error of the numerical solution is proportional to the square of the step size. Consequently, if we halve the step size, then the error of the numerical solution should reduce by a factor of four. We check this theoretical property by computing two solutions with step sizes 0.1 and 0.05, and comparing their errors (the exact solution is $y(x) = e^{-x^2}$. The following short code carries out the calculation, and its output is shown below.</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="nb">require</span> <span class="s1">&#39;spitzy&#39;</span>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'spitzy'</span>
 
 <span class="n">f</span> <span class="o">=</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="o">|</span> <span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span><span class="o">*</span><span class="n">t</span><span class="o">*</span><span class="n">y</span> <span class="p">}</span>
-<span class="n">ab2_sol1</span> <span class="o">=</span> <span class="no">Ode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">xrange</span><span class="p">:</span> <span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="ss">dx</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> 
-                  <span class="ss">yini</span><span class="p">:</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="nb">method</span><span class="p">:</span> <span class="ss">:ab2</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
-<span class="n">ab2_sol2</span> <span class="o">=</span> <span class="no">Ode</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">xrange</span><span class="p">:</span> <span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="ss">dx</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mo">05</span><span class="p">,</span> 
-                   <span class="ss">yini</span><span class="p">:</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="nb">method</span><span class="p">:</span> <span class="ss">:ab2</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
+<span class="n">ab2_sol1</span> <span class="o">=</span> <span class="no">Ode</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">xrange: </span><span class="p">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="p">],</span> <span class="ss">dx: </span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> 
+                  <span class="ss">yini: </span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">method: :ab2</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
+<span class="n">ab2_sol2</span> <span class="o">=</span> <span class="no">Ode</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">xrange: </span><span class="p">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="p">],</span> <span class="ss">dx: </span><span class="mi">0</span><span class="o">.</span><span class="mo">05</span><span class="p">,</span> 
+                   <span class="ss">yini: </span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">method: :ab2</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
 
-<span class="n">exact_sol1</span> <span class="o">=</span> <span class="n">ab2_sol1</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">tt</span><span class="o">|</span> <span class="no">Math</span><span class="o">::</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">tt</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="p">}</span>
-<span class="n">maxerror1</span> <span class="o">=</span> <span class="n">exact_sol1</span><span class="o">.</span><span class="n">each_with_index</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="n">n</span><span class="p">,</span><span class="n">i</span><span class="o">|</span> <span class="n">n</span> <span class="o">-</span> <span class="n">ab2_sol1</span><span class="o">.</span><span class="n">u</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">abs</span>
-<span class="n">exact_sol2</span> <span class="o">=</span> <span class="n">ab2_sol2</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">tt</span><span class="o">|</span> <span class="no">Math</span><span class="o">::</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">tt</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="p">}</span>
-<span class="n">maxerror2</span> <span class="o">=</span> <span class="n">exact_sol2</span><span class="o">.</span><span class="n">each_with_index</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span><span class="o">|</span><span class="n">n</span><span class="p">,</span><span class="n">i</span><span class="o">|</span> <span class="n">n</span> <span class="o">-</span> <span class="n">ab2_sol2</span><span class="o">.</span><span class="n">u</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="p">}</span><span class="o">.</span><span class="n">max</span><span class="o">.</span><span class="n">abs</span>
+<span class="n">exact_sol1</span> <span class="o">=</span> <span class="n">ab2_sol1</span><span class="p">.</span><span class="nf">x</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">tt</span><span class="o">|</span> <span class="no">Math</span><span class="o">::</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">tt</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="p">}</span>
+<span class="n">maxerror1</span> <span class="o">=</span> <span class="n">exact_sol1</span><span class="p">.</span><span class="nf">each_with_index</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span><span class="o">|</span><span class="n">n</span><span class="p">,</span><span class="n">i</span><span class="o">|</span> <span class="n">n</span> <span class="o">-</span> <span class="n">ab2_sol1</span><span class="p">.</span><span class="nf">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">}.</span><span class="nf">max</span><span class="p">.</span><span class="nf">abs</span>
+<span class="n">exact_sol2</span> <span class="o">=</span> <span class="n">ab2_sol2</span><span class="p">.</span><span class="nf">x</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">tt</span><span class="o">|</span> <span class="no">Math</span><span class="o">::</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">tt</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="p">}</span>
+<span class="n">maxerror2</span> <span class="o">=</span> <span class="n">exact_sol2</span><span class="p">.</span><span class="nf">each_with_index</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span><span class="o">|</span><span class="n">n</span><span class="p">,</span><span class="n">i</span><span class="o">|</span> <span class="n">n</span> <span class="o">-</span> <span class="n">ab2_sol2</span><span class="p">.</span><span class="nf">u</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="p">}.</span><span class="nf">max</span><span class="p">.</span><span class="nf">abs</span>
 
-<span class="nb">puts</span> <span class="s2">&quot;Number of x steps: </span><span class="si">#{</span><span class="n">ab2_sol1</span><span class="o">.</span><span class="n">mx</span><span class="si">}</span><span class="s2"> and </span><span class="si">#{</span><span class="n">ab2_sol2</span><span class="o">.</span><span class="n">mx</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="nb">puts</span> <span class="s2">&quot;Error: </span><span class="si">#{</span><span class="n">maxerror1</span><span class="si">}</span><span class="s2"> and </span><span class="si">#{</span><span class="n">maxerror2</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="nb">puts</span> <span class="s2">&quot;Error ratio: </span><span class="si">#{</span><span class="n">maxerror1</span><span class="o">/</span><span class="n">maxerror2</span><span class="si">}</span><span class="s2">&quot;</span>
-</code></pre></div>
-<p><img src="/images/ab2_output.png?raw=true" alt="Adams-Bashforth example output" title="Adams-Bashforth example output"></p>
+<span class="nb">puts</span> <span class="s2">"Number of x steps: </span><span class="si">#{</span><span class="n">ab2_sol1</span><span class="p">.</span><span class="nf">mx</span><span class="si">}</span><span class="s2"> and </span><span class="si">#{</span><span class="n">ab2_sol2</span><span class="p">.</span><span class="nf">mx</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"Error: </span><span class="si">#{</span><span class="n">maxerror1</span><span class="si">}</span><span class="s2"> and </span><span class="si">#{</span><span class="n">maxerror2</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"Error ratio: </span><span class="si">#{</span><span class="n">maxerror1</span><span class="o">/</span><span class="n">maxerror2</span><span class="si">}</span><span class="s2">"</span>
+</code></pre>
+</div>
+
+<p><img src="/images/ab2_output.png?raw=true" alt="Adams-Bashforth example output" title="Adams-Bashforth example output" /></p>
 
 <p>As expected the error ratio is close to 4.</p>
 
 <p>We also plot the numerical and the exact solutions.</p>
 
-<p><img src="/images/ab2_plot.png?raw=true" alt="Adams-Bashforth method example plot" title="Adams-Bashforth method example plot"></p>
+<p><img src="/images/ab2_plot.png?raw=true" alt="Adams-Bashforth method example plot" title="Adams-Bashforth method example plot" /></p>
 
-<hr>
+<hr />
 
-<p>All plots were done using the Ruby gem <code>gnuplot</code> and the following helper function.</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="c1"># plot the numerical and the exact solutions</span>
-<span class="k">def</span> <span class="nf">plot_ode</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">numsol</span><span class="p">,</span> <span class="n">exactsol</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">num_with</span><span class="o">=</span><span class="s2">&quot;lines&quot;</span><span class="p">)</span>
-  <span class="no">Gnuplot</span><span class="o">.</span><span class="n">open</span> <span class="k">do</span> <span class="o">|</span><span class="n">gp</span><span class="o">|</span>
-    <span class="no">Gnuplot</span><span class="o">::</span><span class="no">Plot</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">plot</span><span class="o">|</span>
-      <span class="n">plot</span><span class="o">.</span><span class="n">title</span> <span class="n">title</span>
-      <span class="n">plot</span><span class="o">.</span><span class="n">xlabel</span> <span class="s2">&quot;t&quot;</span>
-      <span class="n">plot</span><span class="o">.</span><span class="n">ylabel</span> <span class="s2">&quot;u(t)&quot;</span>
+<p>All plots were done using the Ruby gem <code class="highlighter-rouge">gnuplot</code> and the following helper function.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1"># plot the numerical and the exact solutions</span>
+<span class="k">def</span> <span class="nf">plot_ode</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">numsol</span><span class="p">,</span> <span class="n">exactsol</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">num_with</span><span class="o">=</span><span class="s2">"lines"</span><span class="p">)</span>
+  <span class="no">Gnuplot</span><span class="p">.</span><span class="nf">open</span> <span class="k">do</span> <span class="o">|</span><span class="n">gp</span><span class="o">|</span>
+    <span class="no">Gnuplot</span><span class="o">::</span><span class="no">Plot</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">plot</span><span class="o">|</span>
+      <span class="n">plot</span><span class="p">.</span><span class="nf">title</span> <span class="n">title</span>
+      <span class="n">plot</span><span class="p">.</span><span class="nf">xlabel</span> <span class="s2">"t"</span>
+      <span class="n">plot</span><span class="p">.</span><span class="nf">ylabel</span> <span class="s2">"u(t)"</span>
 
       <span class="n">t</span> <span class="o">=</span> <span class="n">x</span>
       <span class="n">u</span> <span class="o">=</span> <span class="n">numsol</span> 
-      <span class="n">plot</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;&lt;</span> <span class="no">Gnuplot</span><span class="o">::</span><span class="no">DataSet</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="n">t</span><span class="p">,</span><span class="n">u</span><span class="o">]</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">ds</span><span class="o">|</span>
-        <span class="n">ds</span><span class="o">.</span><span class="n">with</span> <span class="o">=</span> <span class="n">num_with</span>
-        <span class="n">ds</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Numerical Solution&quot;</span>
+      <span class="n">plot</span><span class="p">.</span><span class="nf">data</span> <span class="o">&lt;&lt;</span> <span class="no">Gnuplot</span><span class="o">::</span><span class="no">DataSet</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="n">t</span><span class="p">,</span><span class="n">u</span><span class="p">])</span> <span class="k">do</span> <span class="o">|</span><span class="n">ds</span><span class="o">|</span>
+        <span class="n">ds</span><span class="p">.</span><span class="nf">with</span> <span class="o">=</span> <span class="n">num_with</span>
+        <span class="n">ds</span><span class="p">.</span><span class="nf">title</span> <span class="o">=</span> <span class="s2">"Numerical Solution"</span>
       <span class="k">end</span>
 
       <span class="n">y</span> <span class="o">=</span> <span class="n">exactsol</span>
-      <span class="n">plot</span><span class="o">.</span><span class="n">data</span> <span class="o">&lt;&lt;</span> <span class="no">Gnuplot</span><span class="o">::</span><span class="no">DataSet</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="o">]</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">ds</span><span class="o">|</span>
-        <span class="n">ds</span><span class="o">.</span><span class="n">with</span> <span class="o">=</span> <span class="s2">&quot;lines&quot;</span>
-        <span class="n">ds</span><span class="o">.</span><span class="n">title</span> <span class="o">=</span> <span class="s2">&quot;Exact Solution&quot;</span>
+      <span class="n">plot</span><span class="p">.</span><span class="nf">data</span> <span class="o">&lt;&lt;</span> <span class="no">Gnuplot</span><span class="o">::</span><span class="no">DataSet</span><span class="p">.</span><span class="nf">new</span><span class="p">([</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="p">])</span> <span class="k">do</span> <span class="o">|</span><span class="n">ds</span><span class="o">|</span>
+        <span class="n">ds</span><span class="p">.</span><span class="nf">with</span> <span class="o">=</span> <span class="s2">"lines"</span>
+        <span class="n">ds</span><span class="p">.</span><span class="nf">title</span> <span class="o">=</span> <span class="s2">"Exact Solution"</span>
       <span class="k">end</span>
 
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</code></pre></div>
+</code></pre>
+</div>
+
   </div>
 
   <div class="date">

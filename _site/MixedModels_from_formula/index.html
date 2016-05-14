@@ -9,13 +9,11 @@
     <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
 
     
-    <meta name="description" content="I made some more progress on my Google Summer of Code project MixedModels.
-The linear mixed models fitting method is now capable of handling non-numeric (i.e. categorical) predictor variables, as well as interaction effects. Moreover, I gave the method a user friendly R-formula-like interface.
-I will present these new capabilities of the Ruby gem with an example. Then I will briefly describe their implementation.
+    <meta name="description" content="I made some more progress on my Google Summer of Code project MixedModels. The linear mixed models fitting method is now capable of handling non-numeric (i.e., categorical) predictor variables, as well as interaction effects. Moreover, I gave the method a user friendly R-formula-like interface. I will present these new capabilities of the Ruby gem with an example. Then I will briefly describe their implementation.
+
 " />
-    <meta property="og:description" content="I made some more progress on my Google Summer of Code project MixedModels.
-The linear mixed models fitting method is now capable of handling non-numeric (i.e. categorical) predictor variables, as well as interaction effects. Moreover, I gave the method a user friendly R-formula-like interface.
-I will present these new capabilities of the Ruby gem with an example. Then I will briefly describe their implementation.
+    <meta property="og:description" content="I made some more progress on my Google Summer of Code project MixedModels. The linear mixed models fitting method is now capable of handling non-numeric (i.e., categorical) predictor variables, as well as interaction effects. Moreover, I gave the method a user friendly R-formula-like interface. I will present these new capabilities of the Ruby gem with an example. Then I will briefly describe their implementation.
+
 " />
     
     <meta name="author" content="Alexej Gossmann" />
@@ -75,16 +73,15 @@ I will present these new capabilities of the Ruby gem with an example. Then I wi
   <h1>MixedModels Formula Interface and Categorical Variables</h1>
 
   <div class="entry">
-    <p>I made some more progress on my <a href="https://github.com/agisga/MixedModels">Google Summer of Code project MixedModels</a>.
-The linear mixed models fitting method is now capable of handling non-numeric (i.e. categorical) predictor variables, as well as interaction effects. Moreover, I gave the method a user friendly R-formula-like interface.
-I will present these new capabilities of the Ruby gem with an example. Then I will briefly describe their implementation.</p>
+    <p>I made some more progress on my <a href="https://github.com/agisga/MixedModels">Google Summer of Code project MixedModels</a>. The linear mixed models fitting method is now capable of handling non-numeric (i.e., categorical) predictor variables, as well as interaction effects. Moreover, I gave the method a user friendly R-formula-like interface. I will present these new capabilities of the Ruby gem with an example. Then I will briefly describe their implementation.</p>
 
-<h1>Example</h1>
+<h1 id="example">Example</h1>
 
-<h2>Data and mathematical model formulation</h2>
+<h2 id="data-and-mathematical-model-formulation">Data and mathematical model formulation</h2>
 
-<p>The data is supplied to the model fitting method <code>LMM#from_formula</code> as a <code>Daru::DataFrame</code> (from the excellent Ruby gem <a href="https://github.com/v0dro/daru.git">daru</a>). In order to test <code>LMM#from_formula</code>, I have generated a data set of the following form:</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="o">&gt;</span> <span class="n">alien_species</span><span class="o">.</span><span class="n">head</span>
+<p>The data is supplied to the model fitting method <code class="highlighter-rouge">LMM#from_formula</code> as a <code class="highlighter-rouge">Daru::DataFrame</code> (from the excellent Ruby gem <a href="https://github.com/v0dro/daru.git">daru</a>). In order to test <code class="highlighter-rouge">LMM#from_formula</code>, I have generated a data set of the following form:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">alien_species</span><span class="p">.</span><span class="nf">head</span>
 <span class="o">=&gt;</span> 
 <span class="c1">#&lt;Daru::DataFrame:70197332524760 @name = 1cd9d732-526b-49ae-8cb1-35cd69541c87 @size = 10&gt;</span>
                   <span class="no">Age</span> <span class="no">Aggression</span>   <span class="no">Location</span>    <span class="no">Species</span> 
@@ -98,64 +95,80 @@ I will present these new capabilities of the Ruby gem with an example. Then I wi
          <span class="mi">7</span>     <span class="mi">241</span><span class="o">.</span><span class="mi">31</span> <span class="mi">1052</span><span class="o">.</span><span class="mi">36035</span>      <span class="no">Earth</span>      <span class="no">Dalek</span> 
          <span class="mi">8</span>      <span class="mi">86</span><span class="o">.</span><span class="mi">84</span> <span class="o">-</span><span class="mi">8</span><span class="o">.</span><span class="mi">5725199</span>     <span class="no">Asylum</span>        <span class="no">Ood</span> 
          <span class="mi">9</span>      <span class="mi">206</span><span class="o">.</span><span class="mi">7</span> <span class="mi">1070</span><span class="o">.</span><span class="mi">71900</span>  <span class="no">OodSphere</span>      <span class="no">Dalek</span> 
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>As we can see, the data set contains two numeric variables <em>Age</em> and <em>Aggression</em>, and two categorical variables <em>Location</em> and <em>Species</em>. These data are available for 100 individuals.</p>
 
-<p>We model the <em>Aggression</em> level of an individual as a linear function of the <em>Age</em> (<em>Aggression</em> decreases with <em>Age</em>), with a different constant added for each <em>Species</em> (i.e. each species has a different base level of aggression). Moreover, we assume that there is a random fluctuation in <em>Aggression</em> due to the <em>Location</em> that an individual is at. Additionally, there is a random fluctuation in how <em>Age</em> affects <em>Aggression</em> at each different <em>Location</em>. </p>
+<p>We model the <em>Aggression</em> level of an individual as a linear function of the <em>Age</em> (<em>Aggression</em> decreases with <em>Age</em>), with a different constant added for each <em>Species</em> (i.e. each species has a different base level of aggression). Moreover, we assume that there is a random fluctuation in <em>Aggression</em> due to the <em>Location</em> that an individual is at. Additionally, there is a random fluctuation in how <em>Age</em> affects <em>Aggression</em> at each different <em>Location</em>.</p>
 
-<p>Thus, the <em>Aggression</em> level of an individual of <em>Species</em> $spcs$ who is at the <em>Location</em> $lctn$ can be expressed as:
-$$Aggression = \beta\subscript{0} + \gamma\subscript{spcs} + Age \cdot \beta\subscript{1} + b\subscript{lctn,0} + Age \cdot b\subscript{lctn,1} + \epsilon,$$
-where $\epsilon$ is a random residual, and the random vector $(b\subscript{lctn,0}, b\subscript{lctn,1})^T$ follows a multivariate normal distribution (the same distribution but different realizations of the random vector for each <em>Location</em>). That is, we have a linear mixed model with fixed effects $\beta\subscript{0}, \beta\subscript{1}, \gamma\subscript{Dalek}, \gamma\subscript{Ood}, \dots$ and random effects $b\subscript{Asylum,0}, b\subscript{Asylum,1}, b\subscript{Earth,0},\dots$.</p>
+<p>Thus, the <em>Aggression</em> level of an individual of <em>Species</em> $spcs$ who is at the <em>Location</em> $lctn$ can be expressed as:</p>
 
-<h2>Model fit</h2>
+<script type="math/tex; mode=display">Aggression = \beta\subscript{0} + \gamma\subscript{spcs} + Age \cdot \beta\subscript{1} + b\subscript{lctn,0} + Age \cdot b\subscript{lctn,1} + \epsilon,</script>
 
-<p>We fit this model in Ruby using <code>MixedModels</code> with:</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="o">.</span><span class="n">from_formula</span><span class="p">(</span><span class="ss">formula</span><span class="p">:</span> <span class="s2">&quot;Aggression ~ Age + Species + (Age | Location)&quot;</span><span class="p">,</span> 
-                             <span class="ss">data</span><span class="p">:</span> <span class="n">alien_species</span><span class="p">)</span>
-</code></pre></div>
-<p>where the argument <code>formula</code> takes in a <code>String</code> that contains a formula written in the formula language that is used in the R-package <code>lme4</code> (<code>MixedModels</code> currently supports most of the formula language except some shortcuts).
-Since <code>lme4</code> is currently the most commonly used package for linear mixed models, a lot of documentation and tutorials to the formula interface can be found online. </p>
+<p>where $\epsilon$ is a random residual, and the random vector $(b\subscript{lctn,0}, b\subscript{lctn,1})^T$ follows a multivariate normal distribution (the same distribution but different realizations of the random vector for each <em>Location</em>). That is, we have a linear mixed model with fixed effects $\beta\subscript{0}, \beta\subscript{1}, \gamma\subscript{Dalek}, \gamma\subscript{Ood}, \dots$ and random effects $b\subscript{Asylum,0}, b\subscript{Asylum,1}, b\subscript{Earth,0},\dots$.</p>
+
+<h2 id="model-fit">Model fit</h2>
+
+<p>We fit this model in Ruby using <code class="highlighter-rouge">MixedModels</code> with:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_formula</span><span class="p">(</span><span class="ss">formula: </span><span class="s2">"Aggression ~ Age + Species + (Age | Location)"</span><span class="p">,</span> 
+                             <span class="ss">data: </span><span class="n">alien_species</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>where the argument <code class="highlighter-rouge">formula</code> takes in a <code class="highlighter-rouge">String</code> that contains a formula written in the formula language that is used in the R-package <code class="highlighter-rouge">lme4</code> (<code class="highlighter-rouge">MixedModels</code> currently supports most of the formula language except some shortcuts). Since <code class="highlighter-rouge">lme4</code> is currently the most commonly used package for linear mixed models, a lot of documentation and tutorials to the formula interface can be found online.</p>
 
 <p>We print some of the results that we have obtained:</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="nb">puts</span> <span class="s2">&quot;REML criterion: </span><span class="se">\t</span><span class="si">#{</span><span class="n">model_fit</span><span class="o">.</span><span class="n">dev_optimal</span><span class="si">}</span><span class="s2">&quot;</span>
-<span class="nb">puts</span> <span class="s2">&quot;Fixed effects:&quot;</span>
-<span class="nb">puts</span> <span class="n">model_fit</span><span class="o">.</span><span class="n">fix_ef</span>
-<span class="nb">puts</span> <span class="s2">&quot;Standard deviation: </span><span class="se">\t</span><span class="si">#{</span><span class="no">Math</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">model_fit</span><span class="o">.</span><span class="n">sigma2</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span>
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"REML criterion: </span><span class="se">\t</span><span class="si">#{</span><span class="n">model_fit</span><span class="p">.</span><span class="nf">dev_optimal</span><span class="si">}</span><span class="s2">"</span>
+<span class="nb">puts</span> <span class="s2">"Fixed effects:"</span>
+<span class="nb">puts</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef</span>
+<span class="nb">puts</span> <span class="s2">"Standard deviation: </span><span class="se">\t</span><span class="si">#{</span><span class="no">Math</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">model_fit</span><span class="p">.</span><span class="nf">sigma2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
+</code></pre>
+</div>
+
 <p>Which produces the output:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">REML criterion:     333.71553910151437
+
+<div class="highlighter-rouge"><pre class="highlight"><code>REML criterion: 	333.71553910151437
 Fixed effects:
-{&quot;x0&quot;=&gt;1016.2867207023437, &quot;x1&quot;=&gt;-0.06531615342788923, 
-&quot;x2&quot;=&gt;-499.69369529020815, &quot;x3&quot;=&gt;-899.569321353576, 
-&quot;x4&quot;=&gt;-199.5889580420067}
-Standard deviation:     0.9745169802141329
-</code></pre></div>
-<h3>Comparison with R lme4</h3>
+{"x0"=&gt;1016.2867207023437, "x1"=&gt;-0.06531615342788923, 
+"x2"=&gt;-499.69369529020815, "x3"=&gt;-899.569321353576, 
+"x4"=&gt;-199.5889580420067}
+Standard deviation: 	0.9745169802141329
+</code></pre>
+</div>
 
-<p>We fit the same model in R using the package <code>lme4</code>, and print out the estimates for the same quantities as previously:</p>
-<div class="highlight"><pre><code class="language-R" data-lang="R"><span class="o">&gt;</span> mod <span class="o">&lt;-</span> lmer<span class="p">(</span>Aggression <span class="o">~</span> Age <span class="o">+</span> Species <span class="o">+</span> <span class="p">(</span>Age <span class="o">|</span> Location<span class="p">),</span> data <span class="o">=</span> alien.species<span class="p">)</span>
-<span class="o">&gt;</span> REMLcrit<span class="p">(</span>mod<span class="p">)</span>
+<h3 id="comparison-with-r-lme4">Comparison with R lme4</h3>
+
+<p>We fit the same model in R using the package <code class="highlighter-rouge">lme4</code>, and print out the estimates for the same quantities as previously:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">mod</span> <span class="o">&lt;-</span> <span class="n">lmer</span><span class="p">(</span><span class="n">Aggression</span> <span class="o">~</span> <span class="n">Age</span> <span class="o">+</span> <span class="n">Species</span> <span class="o">+</span> <span class="p">(</span><span class="n">Age</span> <span class="o">|</span> <span class="n">Location</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">alien.species</span><span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">REMLcrit</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
 <span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">333.7155</span>
-<span class="o">&gt;</span> fixef<span class="p">(</span>mod<span class="p">)</span>
-        <span class="p">(</span>Intercept<span class="p">)</span>                 Age        SpeciesHuman          SpeciesOod 
+<span class="o">&gt;</span> <span class="n">fixef</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
+        <span class="p">(</span><span class="n">Intercept</span><span class="p">)</span>                 <span class="n">Age</span>        <span class="n">SpeciesHuman</span>          <span class="n">SpeciesOod</span> 
       <span class="m">1016.28672021</span>         <span class="m">-0.06531615</span>       <span class="m">-499.69369521</span>       <span class="m">-899.56932076</span> 
-SpeciesWeepingAngel 
+<span class="n">SpeciesWeepingAngel</span> 
       <span class="m">-199.58895813</span> 
-<span class="o">&gt;</span> sigma<span class="p">(</span>mod<span class="p">)</span>
+<span class="o">&gt;</span> <span class="n">sigma</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
 <span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">0.9745324</span>
-</code></pre></div>
-<p>We observe that the parameter estimates from Ruby and R agree up to at least four digits behind the floating point. </p>
+</code></pre>
+</div>
 
-<h1>A brief comment on the implementation</h1>
+<p>We observe that the parameter estimates from Ruby and R agree up to at least four digits behind the floating point.</p>
 
-<h2>Categorical predictor variables</h2>
+<h1 id="a-brief-comment-on-the-implementation">A brief comment on the implementation</h1>
+
+<h2 id="categorical-predictor-variables">Categorical predictor variables</h2>
 
 <p>If a predictor variable is categorical and no intercept term or other categorical variables are included in the design matrix, then the design matrix must contain a column of zeros and ones for each different level of the categorical variable. If the design matrix includes an intercept term or already contains another set of 0-1-indicators for a categorical variable, then one of the levels of the categorical variable, that we want to add to the model, must be excluded (or other so-called contrasts can be used).</p>
 
-<p>In the current implementation of <code>MixedModels</code> this is handled by the method <code>Daru::DataFrame::create_indicator_vectors_for_categorical_vectors!</code> (defined <a href="https://github.com/agisga/MixedModels/blob/master/lib/MixedModels/daru_methods.rb#L90">here</a>). It adds a set of 0-1-valued vectors for each non-numeric vector in the <code>Daru::DataFrame</code>:</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="o">&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[</span><span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="n">.</span><span class="mi">7</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span><span class="p">,</span> <span class="o">[</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;b&#39;</span><span class="p">,</span><span class="s1">&#39;a&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">,</span><span class="s1">&#39;c&#39;</span><span class="o">]]</span><span class="p">,</span>
-                           <span class="ss">order</span><span class="p">:</span> <span class="o">[</span><span class="s1">&#39;int&#39;</span><span class="p">,</span><span class="s1">&#39;char&#39;</span><span class="o">]</span><span class="p">)</span> 
-<span class="o">&gt;</span> <span class="n">df</span><span class="o">.</span><span class="n">create_indicator_vectors_for_categorical_vectors!</span>
+<p>In the current implementation of <code class="highlighter-rouge">MixedModels</code> this is handled by the method <code class="highlighter-rouge">Daru::DataFrame::create_indicator_vectors_for_categorical_vectors!</code> (defined <a href="https://github.com/agisga/MixedModels/blob/master/lib/MixedModels/daru_methods.rb#L90">here</a>). It adds a set of 0-1-valued vectors for each non-numeric vector in the <code class="highlighter-rouge">Daru::DataFrame</code>:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">new</span><span class="p">([(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">7</span><span class="p">).</span><span class="nf">to_a</span><span class="p">,</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'b'</span><span class="p">,</span><span class="s1">'b'</span><span class="p">,</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'c'</span><span class="p">,</span><span class="s1">'d'</span><span class="p">,</span><span class="s1">'c'</span><span class="p">]],</span>
+                           <span class="ss">order: </span><span class="p">[</span><span class="s1">'int'</span><span class="p">,</span><span class="s1">'char'</span><span class="p">])</span> 
+<span class="o">&gt;</span> <span class="n">df</span><span class="p">.</span><span class="nf">create_indicator_vectors_for_categorical_vectors!</span>
   <span class="c1"># =&gt; &lt;Daru::DataFrame:70212314363900 @name = 1a2a49d9-35d3-4adf-a993-5266d7d79442 @size = 7&gt;</span>
              <span class="n">int</span>       <span class="n">char</span> <span class="n">char_lvl_b</span> <span class="n">char_lvl_c</span> <span class="n">char_lvl_d</span> 
     <span class="mi">0</span>          <span class="mi">1</span>          <span class="n">a</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span> 
@@ -165,28 +178,34 @@ SpeciesWeepingAngel
     <span class="mi">4</span>          <span class="mi">5</span>          <span class="n">c</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">1</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span> 
     <span class="mi">5</span>          <span class="mi">6</span>          <span class="n">d</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">1</span><span class="o">.</span><span class="mi">0</span> 
     <span class="mi">6</span>          <span class="mi">7</span>          <span class="n">c</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">1</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>
-</code></pre></div>
-<p>(where it didn&#39;t add a vector for level &quot;a&quot; of &quot;char&quot;, because it assumes a model with intercept by default)</p>
+</code></pre>
+</div>
 
-<p>After the data frame is extended, <code>LMM#from_daru</code> checks which of the specified terms are non-numeric, and replaces them with the names of the 0-1-valued indicator columns (e.g. if a fixed effects term <code>char</code> were defined, <code>LMM#from_daru</code> would replace it with <code>char_lvl_b</code>, <code>char_lvl_c</code> and <code>char_lvl_d</code>).</p>
+<p>(where it didn’t add a vector for level “a” of “char”, because it assumes a model with intercept by default)</p>
 
-<p>I will probably end up restructuring the current implementation, in order to better accommodate interaction effects between categorical variables...</p>
+<p>After the data frame is extended, <code class="highlighter-rouge">LMM#from_daru</code> checks which of the specified terms are non-numeric, and replaces them with the names of the 0-1-valued indicator columns (e.g. if a fixed effects term <code class="highlighter-rouge">char</code> were defined, <code class="highlighter-rouge">LMM#from_daru</code> would replace it with <code class="highlighter-rouge">char_lvl_b</code>, <code class="highlighter-rouge">char_lvl_c</code> and <code class="highlighter-rouge">char_lvl_d</code>).</p>
 
-<h2>Formula interface</h2>
+<p>I will probably end up restructuring the current implementation, in order to better accommodate interaction effects between categorical variables…</p>
 
-<p><code>LMM#from_formula</code> takes in a <code>String</code> containing a formula specifying the model, for example </p>
+<h2 id="formula-interface">Formula interface</h2>
 
-<p>&quot;z ~ x + y + x:y + (x | u)&quot;.</p>
+<p><code class="highlighter-rouge">LMM#from_formula</code> takes in a <code class="highlighter-rouge">String</code> containing a formula specifying the model, for example</p>
 
-<p>It transforms this formula into another <code>String</code>, for the above example:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="s2">"z ~ x + y + x:y + (x | u)"</span><span class="o">.</span>
+</code></pre>
+</div>
 
-<p>&quot;lmm_formula(:intercept) + lmm_variable(:x) + lmm_variable(:y) + lmm_variable(:x) * lmm_variable(:y) + (lmm_variable(:intercept) + lmm_variable(:x) | lmm_variable(:u)))&quot;,</p>
+<p>It transforms this formula into another <code class="highlighter-rouge">String</code>, for the above example:</p>
 
-<p>adding intercept terms and wrapping all variables in <code>lmm_variable()</code>.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="s2">"lmm_formula(:intercept) + lmm_variable(:x) + lmm_variable(:y) + lmm_variable(:x) * lmm_variable(:y) + (lmm_variable(:intercept) + lmm_variable(:x) | lmm_variable(:u)))"</span><span class="p">,</span>
+</code></pre>
+</div>
 
-<p>The Ruby expression in the <code>String</code> is evaluated with <code>eval</code>. This evaluation uses a specially defined class <code>LMMFormula</code> (defined <a href="https://github.com/agisga/MixedModels/blob/master/lib/MixedModels/LMMFormula.rb">here</a>), which overloads the <code>+</code>, <code>*</code> and <code>|</code> operators, in order to combine the variable names into arrays, which can be fed into <code>LMM#from_daru</code>. The class <code>LMMFormula</code> was an idea that I got from Will Levine (<a href="https://github.com/wlevine">wlevine</a>). In particular, the method <code>LMMFormula#to_input_for_lmm_from_daru</code> transforms an <code>LMMFormula</code> object into a number of <code>Array</code>, which have the form required by <code>LMM#from_daru</code>.</p>
+<p>adding intercept terms and wrapping all variables in <code class="highlighter-rouge">lmm_variable()</code>.</p>
 
-<p>Finally, <code>LMM#from_daru</code> constructs the model matrices, vectors and the covariance function <code>Proc</code>, which are passed on to <code>LMM#initialize</code> that performs the actual model fit.</p>
+<p>The Ruby expression in the <code class="highlighter-rouge">String</code> is evaluated with <code class="highlighter-rouge">eval</code>. This evaluation uses a specially defined class <code class="highlighter-rouge">LMMFormula</code> (defined <a href="https://github.com/agisga/MixedModels/blob/master/lib/MixedModels/LMMFormula.rb">here</a>), which overloads the <code class="highlighter-rouge">+</code>, <code class="highlighter-rouge">*</code> and <code class="highlighter-rouge">|</code> operators, in order to combine the variable names into arrays, which can be fed into <code class="highlighter-rouge">LMM#from_daru</code>. The class <code class="highlighter-rouge">LMMFormula</code> was an idea that I got from Will Levine (<a href="https://github.com/wlevine">wlevine</a>). In particular, the method <code class="highlighter-rouge">LMMFormula#to_input_for_lmm_from_daru</code> transforms an <code class="highlighter-rouge">LMMFormula</code> object into a number of <code class="highlighter-rouge">Array</code>, which have the form required by <code class="highlighter-rouge">LMM#from_daru</code>.</p>
+
+<p>Finally, <code class="highlighter-rouge">LMM#from_daru</code> constructs the model matrices, vectors and the covariance function <code class="highlighter-rouge">Proc</code>, which are passed on to <code class="highlighter-rouge">LMM#initialize</code> that performs the actual model fit.</p>
 
   </div>
 

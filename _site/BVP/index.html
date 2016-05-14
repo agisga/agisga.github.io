@@ -10,8 +10,10 @@
 
     
     <meta name="description" content="A few days ago I programmed a numerical method for the solution for two-point boundary value problems, and today I discovered that I can use MathJax to display mathematical formulas in here (although there are some inconveniences related to the use of underscores). So, here goes another blog post!
+
 " />
     <meta property="og:description" content="A few days ago I programmed a numerical method for the solution for two-point boundary value problems, and today I discovered that I can use MathJax to display mathematical formulas in here (although there are some inconveniences related to the use of underscores). So, here goes another blog post!
+
 " />
     
     <meta name="author" content="Alexej Gossmann" />
@@ -73,103 +75,115 @@
   <div class="entry">
     <p>A few days ago I programmed a numerical method for the solution for two-point boundary value problems, and today I discovered that I can use <a href="https://www.mathjax.org/">MathJax</a> to display mathematical formulas in here (although there are some inconveniences related to the use of underscores). So, here goes another blog post!</p>
 
-<h3>Background</h3>
+<h3 id="background">Background</h3>
 
 <p>Consider an ordinary differential equation of the following general form:</p>
 
 <ul>
-<li>ODE: $-(\alpha u&#39;)&#39;(x) + (\beta u&#39;)(x) + (\gamma u)(x) = f(x)$, for $a &lt; x &lt; b$,</li>
-<li>where $\alpha$, $\beta$ and $\gamma$ are continuous functions of $x$ on $[a,b]$,</li>
-<li>with Dirichlet boundary conditions: $u(a) = u\subscript{a}$ and $u(b) = u\subscript{b}$.</li>
+  <li>ODE: $-(\alpha u’)’(x) + (\beta u’)(x) + (\gamma u)(x) = f(x)$, for $a &lt; x &lt; b$,</li>
+  <li>where $\alpha$, $\beta$ and $\gamma$ are continuous functions of $x$ on $[a,b]$,</li>
+  <li>with Dirichlet boundary conditions: $u(a) = u\subscript{a}$ and $u(b) = u\subscript{b}$.</li>
 </ul>
 
-<p>We are looking for a <a href="http://en.wikipedia.org/wiki/Weak_solution">weak solution</a> to this problem, that is, a function $u$ that satisfies the integral equation
-$$\underset{[a,b]}{\int} \alpha u&#39; v&#39; dx + \underset{[a,b]}{\int} \beta u&#39; v dx + \underset{[a,b]}{\int} \gamma u v dx = \underset{[a,b]}{\int} f v dx,$$
-for every $v$ in the so-called <a href="http://en.wikipedia.org/wiki/Distribution_%28mathematics%29#Test_functions_and_distributions">test-function space</a> $V$, which basically contains functions that have square-integrable <a href="http://en.wikipedia.org/wiki/Distribution_%28mathematics%29#Derivatives_of_distributions">distributional derivatives</a> and vanish on the boundary of the domain of the ODE. If $u$ is a solution to the original formulation of the ODE then it also satisfies to integral formulation. However, a solution $u$ of the integral equation might not be twice differentiable.</p>
+<p>We are looking for a <a href="http://en.wikipedia.org/wiki/Weak_solution">weak solution</a> to this problem, that is, a function $u$ that satisfies the integral equation</p>
 
-<h4>Galerkin Method</h4>
+<script type="math/tex; mode=display">\underset{[a,b]}{\int} \alpha u' v' dx + \underset{[a,b]}{\int} \beta u' v dx + \underset{[a,b]}{\int} \gamma u v dx = \underset{[a,b]}{\int} f v dx,</script>
 
-<p>The <a href="http://en.wikipedia.org/wiki/Galerkin_method">Galerkin method</a> approximates $V$ with a finite dimensional functional space $V\subscript{h}$, which leads to a finite number of test functions $v$ that need to be tested against $u$ with the above integral equation. We denote the basis functions of $V\subscript{h}$ by $\phi\subscript{1}, \phi\subscript{2}, \ldots, \phi\subscript{N}$. Moreover, if we assume that $u$ also lies in the space $V\subscript{h}$, then the problem reduces to a linear system
-$$A\vec{u} = \vec{f},$$
-where $A$ has entries
-$$a\subscript{ij} = \underset{[a,b]}{\int} \alpha \phi\subscript{i}&#39; \phi\subscript{j}&#39; dx + \underset{[a,b]}{\int} \beta \phi\subscript{i}&#39; \phi\subscript{j} dx + \underset{[a,b]}{\int} \gamma \phi\subscript{i} \phi\subscript{j} dx,$$
-and the right hand side vector $\vec{f}$ has entries
-$$f\subscript{i} = \underset{[a,b]}{\int} \alpha f&#39; \phi\subscript{i}&#39; dx + \underset{[a,b]}{\int} \beta f&#39; \phi\subscript{i} dx + \underset{[a,b]}{\int} \gamma f \phi\subscript{i} dx.$$</p>
+<p>for every $v$ in the so-called <a href="http://en.wikipedia.org/wiki/Distribution_%28mathematics%29#Test_functions_and_distributions">test-function space</a> $V$, which basically contains functions that have square-integrable <a href="http://en.wikipedia.org/wiki/Distribution_%28mathematics%29#Derivatives_of_distributions">distributional derivatives</a> and vanish on the boundary of the domain of the ODE. If $u$ is a solution to the original formulation of the ODE then it also satisfies to integral formulation. However, a solution $u$ of the integral equation might not be twice differentiable.</p>
+
+<h4 id="galerkin-method">Galerkin Method</h4>
+
+<p>The <a href="http://en.wikipedia.org/wiki/Galerkin_method">Galerkin method</a> approximates $V$ with a finite dimensional functional space $V\subscript{h}$, which leads to a finite number of test functions $v$ that need to be tested against $u$ with the above integral equation. We denote the basis functions of $V\subscript{h}$ by $\phi\subscript{1}, \phi\subscript{2}, \ldots, \phi\subscript{N}$. Moreover, if we assume that $u$ also lies in the space $V\subscript{h}$, then the problem reduces to a linear system</p>
+
+<script type="math/tex; mode=display">A\vec{u} = \vec{f},</script>
+
+<p>where $A$ has entries</p>
+
+<script type="math/tex; mode=display">a\subscript{ij} = \underset{[a,b]}{\int} \alpha \phi\subscript{i}' \phi\subscript{j}' dx + \underset{[a,b]}{\int} \beta \phi\subscript{i}' \phi\subscript{j} dx + \underset{[a,b]}{\int} \gamma \phi\subscript{i} \phi\subscript{j} dx,</script>
+
+<p>and the right hand side vector $\vec{f}$ has entries</p>
+
+<script type="math/tex; mode=display">f\subscript{i} = \underset{[a,b]}{\int} \alpha f' \phi\subscript{i}' dx + \underset{[a,b]}{\int} \beta f' \phi\subscript{i} dx + \underset{[a,b]}{\int} \gamma f \phi\subscript{i} dx.</script>
 
 <p>The structure of $A$ and the degree of accuracy of the numerical solution depends on the form of the basis functions $\phi\subscript{1}, \phi\subscript{2}, \ldots, \phi\subscript{N}$, that is, on the choice of $V\subscript{h}$.</p>
 
-<h4>Finite Element Method</h4>
+<h4 id="finite-element-method">Finite Element Method</h4>
 
 <p>The <a href="http://en.wikipedia.org/wiki/Finite_element_method">finite element method</a> chooses $V_h$ to be the space of continuous piecewise polynomials which are defined on subintervals of $[a, b]$ and vanish at $a$ and $b$.</p>
 
-<p>Here, we only consider polynomials of degree 1, that is, continuous piecewise linear functions.
-Given an equally spaced grid $a = x\subscript{0} &lt; x\subscript{1} &lt; \ldots &lt; x\subscript{n-1} &lt; x\subscript{n} = b$, define for $i=1,2,\ldots,n-1$ the function $\phi\subscript{i}$ to be the continuous piecewise linear function that is equal to 1 at the node $x\subscript{i}$ and 0 at all other nodes. Thus, the basis functions have the following shape (image from a <a href="http://en.wikipedia.org/wiki/Finite_element_method">wikipedia article</a>, the red line represents a linear combination of the basis functions):</p>
+<p>Here, we only consider polynomials of degree 1, that is, continuous piecewise linear functions. Given an equally spaced grid $a = x\subscript{0} &lt; x\subscript{1} &lt; \ldots &lt; x\subscript{n-1} &lt; x\subscript{n} = b$, define for $i=1,2,\ldots,n-1$ the function $\phi\subscript{i}$ to be the continuous piecewise linear function that is equal to 1 at the node $x\subscript{i}$ and 0 at all other nodes. Thus, the basis functions have the following shape (image from a <a href="http://en.wikipedia.org/wiki/Finite_element_method">wikipedia article</a>, the red line represents a linear combination of the basis functions):</p>
 
-<p><img src="/images/fin_elt_basis_func.svg?raw=true" alt="Piecewise linear basis functions" title="Piecewise linear basis functions">
-<cite>&quot;<a href="http://commons.wikimedia.org/wiki/File:Finite_element_method_1D_illustration2.svg#/media/File:Finite_element_method_1D_illustration2.svg">Finite element method 1D illustration2</a>&quot; by <a href="//commons.wikimedia.org/wiki/User:Krishnavedala" title="User:Krishnavedala">Krishnavedala</a> - <span class="int-own-work" lang="en">Own work</span>. Licensed under <a title="Creative Commons Attribution-Share Alike 3.0" href="http://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a> via <a href="//commons.wikimedia.org/wiki/">Wikimedia Commons</a>.</p>
+<p><img src="/images/fin_elt_basis_func.svg?raw=true" alt="Piecewise linear basis functions" title="Piecewise linear basis functions" /><br />
+<cite>“<a href="http://commons.wikimedia.org/wiki/File:Finite_element_method_1D_illustration2.svg#/media/File:Finite_element_method_1D_illustration2.svg">Finite element method 1D illustration2</a>” by <a href="//commons.wikimedia.org/wiki/User:Krishnavedala" title="User:Krishnavedala">Krishnavedala</a> - <span class="int-own-work" lang="en">Own work</span>. Licensed under <a title="Creative Commons Attribution-Share Alike 3.0" href="http://creativecommons.org/licenses/by-sa/3.0">CC BY-SA 3.0</a> via <a href="//commons.wikimedia.org/wiki/">Wikimedia Commons</a>.</cite></p>
 
-<h3>Implementation</h3>
+<h3 id="implementation">Implementation</h3>
 
-<p>I have implemented the linear finite element Galerkin method in class <code>Bvp</code> in Ruby for my project <a href="https://github.com/agisga/spitzy">spitzy</a>. It takes as inputs the interval of $x$ values as well as the Dirichlet boundary conditions at the two edges of the interval, the desired number of equally spaced grid points on which the numerical solution will be evaluated, and the functions $\alpha(x)$, $\beta(x)$, $\gamma(x)$ and $f(x)$ as <code>Proc</code> objects (or as <code>Numeric</code> if the function is constant).</p>
+<p>I have implemented the linear finite element Galerkin method in class <code class="highlighter-rouge">Bvp</code> in Ruby for my project <a href="https://github.com/agisga/spitzy">spitzy</a>. It takes as inputs the interval of $x$ values as well as the Dirichlet boundary conditions at the two edges of the interval, the desired number of equally spaced grid points on which the numerical solution will be evaluated, and the functions $\alpha(x)$, $\beta(x)$, $\gamma(x)$ and $f(x)$ as <code class="highlighter-rouge">Proc</code> objects (or as <code class="highlighter-rouge">Numeric</code> if the function is constant).</p>
 
-<p>The linear finite element Galerkin method boils down to a linear system
-$A\vec{u} = \vec{f}$, where the matrix $A$ is tridiagonal. Currently, my Ruby implementation uses the <code>#solve</code> method from the <code>NMatrix</code> gem.
-However, the memory usage as well as the speed of the algorithm can be improved, as soon as pull request <a href="https://github.com/SciRuby/nmatrix/pull/301">#301</a>, which implements a <code>#solve_tridiagonal</code> method, is merged into the project.</p>
+<p>The linear finite element Galerkin method boils down to a linear system $A\vec{u} = \vec{f}$, where the matrix $A$ is tridiagonal. Currently, my Ruby implementation uses the <code class="highlighter-rouge">#solve</code> method from the <code class="highlighter-rouge">NMatrix</code> gem. However, the memory usage as well as the speed of the algorithm can be improved, as soon as pull request <a href="https://github.com/SciRuby/nmatrix/pull/301">#301</a>, which implements a <code class="highlighter-rouge">#solve_tridiagonal</code> method, is merged into the project.</p>
 
-<h3>Examples</h3>
+<h3 id="examples">Examples</h3>
 
-<p>Now let&#39;s look at some examples.</p>
+<p>Now let’s look at some examples.</p>
 
 <!-- * ODE: $-(\alpha u')'(x) + (\beta u')(x) + (\gamma u)(x) = f(x)$, for $a < x < b$,
 * where $\alpha$, $\beta$ and $\gamma$ are continuous functions of $x$ on $[a,b]$,
 * with Dirichlet boundary condition: $u(a) = u\subscript{a}$ and $u(b) = u\subscript{b}$. -->
 
-<h4>Constant coefficients</h4>
+<h4 id="constant-coefficients">Constant coefficients</h4>
 
 <p>First we look at example, where $\alpha$, $\beta$ and $\gamma$ are constants independent of $x$:</p>
 
 <ul>
-<li>ODE: $-800\pi u&#39;&#39; + 8\pi u = 0$, $0 &lt; x &lt; 100$,</li>
-<li>BC: $u(0) = 10$, $u(100) = \frac{10}{\cosh(10)}$.</li>
+  <li>ODE: $-800\pi u’’ + 8\pi u = 0$, $0 &lt; x &lt; 100$,</li>
+  <li>BC: $u(0) = 10$, $u(100) = \frac{10}{\cosh(10)}$.</li>
 </ul>
 
 <p>We compute the numerical solution:</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="nb">require</span> <span class="s1">&#39;spitzy&#39;</span>
-<span class="n">bvp_sol</span> <span class="o">=</span> <span class="no">Bvp</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">xrange</span><span class="p">:</span> <span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="ss">mx</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="ss">bc</span><span class="p">:</span> <span class="o">[</span><span class="mi">10</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">.</span><span class="mo">000</span><span class="mi">90799859</span><span class="o">]</span><span class="p">,</span> 
-                  <span class="ss">a</span><span class="p">:</span> <span class="mi">800</span><span class="o">.</span><span class="mi">0</span><span class="o">*</span><span class="no">Math</span><span class="o">::</span><span class="no">PI</span><span class="p">,</span> <span class="ss">b</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">c</span><span class="p">:</span> <span class="mi">8</span><span class="o">.</span><span class="mi">0</span><span class="o">*</span><span class="no">Math</span><span class="o">::</span><span class="no">PI</span><span class="p">,</span> <span class="ss">f</span><span class="p">:</span> <span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
-</code></pre></div>
-<p>The exact solution is 
-$$u(x) = 10 \frac{\cosh\left(\frac{100 - x}{10}\right)}{\cosh(10)}.$$</p>
 
-<p>We compare the obtained numerical to the exact solution by plotting both using the Ruby <code>gnuplot</code> gem:</p>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'spitzy'</span>
+<span class="n">bvp_sol</span> <span class="o">=</span> <span class="no">Bvp</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">xrange: </span><span class="p">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="o">.</span><span class="mi">0</span><span class="p">],</span> <span class="ss">mx: </span><span class="mi">100</span><span class="p">,</span> <span class="ss">bc: </span><span class="p">[</span><span class="mi">10</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="o">.</span><span class="mo">000</span><span class="mi">90799859</span><span class="p">],</span> 
+                  <span class="ss">a: </span><span class="mi">800</span><span class="o">.</span><span class="mi">0</span><span class="o">*</span><span class="no">Math</span><span class="o">::</span><span class="no">PI</span><span class="p">,</span> <span class="ss">b: </span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">c: </span><span class="mi">8</span><span class="o">.</span><span class="mi">0</span><span class="o">*</span><span class="no">Math</span><span class="o">::</span><span class="no">PI</span><span class="p">,</span> <span class="ss">f: </span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span>
+</code></pre>
+</div>
 
-<p><img src="/images/bvp1.png?raw=true" alt="BVP example 1 plot" title="BVP example 1 plot"></p>
+<p>The exact solution is</p>
 
-<h4>Non-constant coefficients</h4>
+<script type="math/tex; mode=display">u(x) = 10 \frac{\cosh\left(\frac{100 - x}{10}\right)}{\cosh(10)}.</script>
 
-<p>Now, let&#39;s consider an example where $\alpha$, $\beta$, $\gamma$ and $f$ are all functions of $x$.</p>
+<p>We compare the obtained numerical to the exact solution by plotting both using the Ruby <code class="highlighter-rouge">gnuplot</code> gem:</p>
+
+<p><img src="/images/bvp1.png?raw=true" alt="BVP example 1 plot" title="BVP example 1 plot" /></p>
+
+<h4 id="non-constant-coefficients">Non-constant coefficients</h4>
+
+<p>Now, let’s consider an example where $\alpha$, $\beta$, $\gamma$ and $f$ are all functions of $x$.</p>
 
 <ul>
-<li>ODE: $-\frac{d}{dx}(-\cos(x)u&#39;(x)) + \sin(x)u&#39;(x) + \cos(x) u(x) = -2\cos^2(x)$, $0 &lt; x &lt; 10$,</li>
-<li>BC: $u(0) = 0$, $u(10) = -9\sin(10)$.</li>
+  <li>ODE: $-\frac{d}{dx}(-\cos(x)u’(x)) + \sin(x)u’(x) + \cos(x) u(x) = -2\cos^2(x)$, $0 &lt; x &lt; 10$,</li>
+  <li>BC: $u(0) = 0$, $u(10) = -9\sin(10)$.</li>
 </ul>
 
-<p>We use <code>spitzy</code> to compute the numerical solution:</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="n">a</span> <span class="o">=</span> <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="o">-</span><span class="no">Math</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">}</span>
-<span class="n">b</span> <span class="o">=</span> <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="no">Math</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">}</span>
-<span class="n">c</span> <span class="o">=</span> <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="no">Math</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">}</span>
-<span class="n">f</span> <span class="o">=</span> <span class="no">Proc</span><span class="o">.</span><span class="n">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span><span class="o">*</span><span class="p">(</span><span class="no">Math</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
-<span class="n">xrange</span> <span class="o">=</span> <span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="o">.</span><span class="mi">0</span><span class="o">]</span>
-<span class="n">bc</span> <span class="o">=</span> <span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span> <span class="o">-</span> <span class="mi">10</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="no">Math</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="mi">10</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span><span class="o">]</span>
-<span class="n">bvp_sol</span> <span class="o">=</span> <span class="no">Bvp</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="ss">xrange</span><span class="p">:</span> <span class="n">xrange</span><span class="p">,</span> <span class="ss">mx</span><span class="p">:</span> <span class="mi">100</span><span class="p">,</span> <span class="ss">bc</span><span class="p">:</span> <span class="n">bc</span><span class="p">,</span> 
-                  <span class="ss">a</span><span class="p">:</span> <span class="n">a</span><span class="p">,</span> <span class="ss">b</span><span class="p">:</span> <span class="n">b</span><span class="p">,</span> <span class="ss">c</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span> <span class="ss">f</span><span class="p">:</span> <span class="n">f</span><span class="p">)</span>
-</code></pre></div>
-<p>By taking derivatives one can check that the exact solution is given by
-$$u(x) = (1-x)\sin(x).$$</p>
+<p>We use <code class="highlighter-rouge">spitzy</code> to compute the numerical solution:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">a</span> <span class="o">=</span> <span class="no">Proc</span><span class="p">.</span><span class="nf">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="o">-</span><span class="no">Math</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">}</span>
+<span class="n">b</span> <span class="o">=</span> <span class="no">Proc</span><span class="p">.</span><span class="nf">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="no">Math</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">}</span>
+<span class="n">c</span> <span class="o">=</span> <span class="no">Proc</span><span class="p">.</span><span class="nf">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="no">Math</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="p">}</span>
+<span class="n">f</span> <span class="o">=</span> <span class="no">Proc</span><span class="p">.</span><span class="nf">new</span> <span class="p">{</span> <span class="o">|</span><span class="n">x</span><span class="o">|</span> <span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span><span class="o">*</span><span class="p">(</span><span class="no">Math</span><span class="o">::</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">))</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
+<span class="n">xrange</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="o">.</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">bc</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="p">(</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span> <span class="o">-</span> <span class="mi">10</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span> <span class="o">*</span> <span class="no">Math</span><span class="o">::</span><span class="n">sin</span><span class="p">(</span><span class="mi">10</span><span class="o">.</span><span class="mi">0</span><span class="p">)]</span>
+<span class="n">bvp_sol</span> <span class="o">=</span> <span class="no">Bvp</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">xrange: </span><span class="n">xrange</span><span class="p">,</span> <span class="ss">mx: </span><span class="mi">100</span><span class="p">,</span> <span class="ss">bc: </span><span class="n">bc</span><span class="p">,</span> 
+                  <span class="ss">a: </span><span class="n">a</span><span class="p">,</span> <span class="ss">b: </span><span class="n">b</span><span class="p">,</span> <span class="ss">c: </span><span class="n">c</span><span class="p">,</span> <span class="ss">f: </span><span class="n">f</span><span class="p">)</span>
+</code></pre>
+</div>
+
+<p>By taking derivatives one can check that the exact solution is given by</p>
+
+<script type="math/tex; mode=display">u(x) = (1-x)\sin(x).</script>
 
 <p>Again, we plot both, the numerical and the exact solution, and observe that they approximately agree.</p>
 
-<p><img src="/images/bvp2.png?raw=true" alt="BVP example 2 plot" title="BVP example 2 plot"></p>
+<p><img src="/images/bvp2.png?raw=true" alt="BVP example 2 plot" title="BVP example 2 plot" /></p>
 
   </div>
 

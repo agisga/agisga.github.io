@@ -81,6 +81,7 @@ sass:
 gems:
   - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
   - jemoji # Enable emoji
+  - jekyll-paginate
 
 # Exclude these files from your production _site
 exclude:

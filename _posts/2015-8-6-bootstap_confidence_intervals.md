@@ -27,7 +27,7 @@ By default `LMM#bootstrap` returns a bootstrap sample of the fixed effects coeff
 
 As an example let's generate a bootstrap sample of the intercept term for the [alien species data](http://agisga.github.io/MixedModels_from_formula/). The following code does the job:
 
-```Ruby
+```ruby
 require 'mixed_models'
 df = Daru::DataFrame.from_csv './data/alien_species.csv'
 model_fit = LMM.from_formula(formula: "Aggression ~ Age + Species + (Age | Location)", data: df)
@@ -43,7 +43,7 @@ Using the gem `gnuplotrb`, I can plot a histogram of the obtained bootstrap samp
 
 The image was produced by the following code.
 
-```Ruby
+```ruby
 require 'gnuplotrb'
 include GnuplotRB
 bin_width = (y.max - y.min)/10.0
@@ -65,7 +65,7 @@ plot = Plot.new([[bins_center, rel_freq], with: 'boxes', notitle: true],
 
 Of course, confidence intervals can be constructed based on the bootstrap samples obtained via `LMM#bootstrap`. This functionality is now included in `LMM#fix_ef_conf_int`. For example, still using the alien species data, basic bootstrap confidence intervals with confidence level of 95% for the fixed effects coefficient estimates can be computed with:
 
-```Ruby
+```ruby
 ci_bootstrap = model_fit.fix_ef_conf_int(method: :bootstrap, boottype: :basic, nsim: 1000)
 ```
 
@@ -89,8 +89,7 @@ Denote the $p$ percentile of the bootstrap sample of a parameter $\theta$ as $\t
 
 $$(2\hat{\theta} -\theta\subscript{(1-\alpha/2)}^{\ast}, 2\hat{\theta} -\theta\subscript{(\alpha/2)}^{\ast}).$$
 
-* Normal bootstrap intervals are based on the normal distribution using resampling estimates $b\subscript{R}$ and $v\subscript{R}$
-for bias correction and variance estimation, as given in (5.5) in Chapter 5 of Davison & Hinkley. The corresponding formula is
+* Normal bootstrap intervals are based on the normal distribution using resampling estimates $b\subscript{R}$ and $v\subscript{R}$ for bias correction and variance estimation, as given in (5.5) in Chapter 5 of Davison & Hinkley. The corresponding formula is
 
 $$(\hat{\theta} - b\subscript{R} - \sqrt{v\subscript{R}}z\subscript{(1-\alpha/2)}, \hat{\theta} - b\subscript{R} + \sqrt{v\subscript{R}}z\subscript{(1-\alpha/2)}).$$
 
@@ -110,13 +109,13 @@ Which confidence interval method to use is determined by the arguments `method` 
 
 The method `:all` returns a `Daru::DataFrame` containing the confidence intervals obtained by each of the available methods. The data frame can be printed in form of a nice looking table for inspection. For example for the alien species data we obtain all types of 95% confidence intervals with
 
-```Ruby
+```ruby
 ci = model_fit.fix_ef_conf_int(method: :all, nsim: 1000)
 ```
 
 and print them to screen as a table with
 
-```Ruby
+```ruby
 # round all results to two decimal places
 ci.each_vector do |v|
   v.each_index { |i| v[i][0], v[i][1] = v[i][0].round(2), v[i][1].round(2)}
@@ -145,15 +144,13 @@ Theoretical results given in Chapter 5 of A. C. Davison and D. V. Hinkley, *Boot
 
 In general, it appears that basic, percentile and studentized intervals are superior in accuracy compared to the normal bootstrap and Wald Z intervals in all circumstances. However, the normal bootstrap interval adjusts for the bias, and only the studentized bootstrap method adjusts for nonconstant variance and skewness as well as bias.
 
-Of course, the Wald Z method has the advantage of being computationally efficient and convenient. All bootstrap intervals are computationally very heavy, especially for big data sets.
-Thus, it is probably best to use the Wald Z intervals in the data exploration phase, and compare different kinds of bootstrap intervals once it is more clear what to look for.
+Of course, the Wald Z method has the advantage of being computationally efficient and convenient. All bootstrap intervals are computationally very heavy, especially for big data sets. Thus, it is probably best to use the Wald Z intervals in the data exploration phase, and compare different kinds of bootstrap intervals once it is more clear what to look for.
 
 ## Parallel execution
 
-Finally I also want to examine the parallel computing capabilities of the bootstrap confidence interval methods a little.
-The following code benchmarks the computation of studentized bootstrap confidence intervals in parallel and single-threaded.
+Finally I also want to examine the parallel computing capabilities of the bootstrap confidence interval methods a little. The following code benchmarks the computation of studentized bootstrap confidence intervals in parallel and single-threaded.
 
-```Ruby
+```ruby
 require 'benchmark'
 ci_bootstrap = nil
 Benchmark.bm(17) do |bm|

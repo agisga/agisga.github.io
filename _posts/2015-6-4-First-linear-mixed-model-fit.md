@@ -4,19 +4,19 @@ title: A rudimentary first linear mixed model fit
 ---
 
 During the last two weeks I made some progress on my [Google Summer of Code project](https://github.com/agisga/MixedModels).
-The Ruby gem is now capable of fitting linear mixed models.
-In this short blog post I want to give an example, and compare the results I get in Ruby to those obtained by `lme4` in R.
+The Ruby gem is now capable of fitting linear mixed models. In this short blog post I want to give an example, and compare the results I get in Ruby to those obtained by `lme4` in R.
 
 # LMM Mathematical Basics
 
-Mathematically, a [linear mixed model](http://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf)
-has the general form
+Mathematically, a [linear mixed model](http://cran.r-project.org/web/packages/lme4/vignettes/lmer.pdf) has the general form
 
-$$(y | b = \hat{b}) \sim \mathrm{N}(X\beta + Z\hat{b} + o, \sigma^2 W^{-1}), \mathrm{\,with\,} b \sim \mathrm{N}(0, \Sigma\subscript{\theta})$$
+$$(y | b = \hat{b}) \sim \mathrm{N}(X\beta + Z\hat{b} + o, \sigma^2 W^{-1}), \mathrm{\,with\,} b \sim \mathrm{N}(0, \Sigma\subscript{\theta}),$$
 
 where $y\in\mathbb{R}^n$ and $b\in\mathbb{R}^q$ are random vectors (response and random effects), $\beta\in\mathbb{R}^p$ is the vector of fixed effects, $o\in\mathbb{R}^n$ is a vector of known prior offset terms, $W\in\mathbb{R}^{n\times n}$ is a diagonal matrix of known prior weights. The random effects covariance matrix $\Sigma\subscript{\theta}\in\mathbb{R}^{q\times q}$ depends on the variance component parameter vector $\theta\in\mathbb{R}^l$.
 Additionally, via the Cholesky decomposition we write 
+
 $$\Sigma\subscript{\theta} = \sigma^2 \Lambda\subscript{\theta} \Lambda\subscript{\theta}^T,$$
+
 where $\Lambda\subscript{\theta}$ is a lower triangular matrix, which is parametrized by $\theta$ in a way that is known a priori. 
 
 The goal of the model fitting process is to find parameter estimates $\hat{\theta}$, $\hat{\beta}$ and $\hat{b}$ that fit the observed data best. Then the LMM fit can be used for prediction and inference.
@@ -29,8 +29,7 @@ The only currently available user interface is rudimentary. It requires the user
 
 Now, let's look at the simulated data that I use to test the implemented method. 
 
-I generate a 50x2 design matrix $X$ with one column of ones (for the intercept) and one column of numbers 1,2,3,...,50.
-The data is divided into five groups of equal size (consecutive blocks of 10 rows of $X$). Each of these groups has its own random intercept and random slope. Thus, the random effects model matrix $Z$ is of size 50x10, and has the form
+I generate a 50x2 design matrix $X$ with one column of ones (for the intercept) and one column of numbers 1,2,3,...,50. The data is divided into five groups of equal size (consecutive blocks of 10 rows of $X$). Each of these groups has its own random intercept and random slope. Thus, the random effects model matrix $Z$ is of size 50x10, and has the form
 
 ```
 1 1  0 0  0 ...
@@ -50,7 +49,7 @@ The random effects `b` are generated from the multivariate distribution with mea
 
 Finally I generate the response vector `y` as
 
-```Ruby
+```ruby
 y = (x.dot beta) + (z.dot b) + epsilon
 ```
 
@@ -58,7 +57,7 @@ y = (x.dot beta) + (z.dot b) + epsilon
 
 The model fit can be performed with [`MixedModels`](https://github.com/agisga/MixedModels) in Ruby via:
 
-```Ruby
+```ruby
 model_fit = LMM.new(x: x, y: y, zt: z.transpose, lambdat: lambdat, 
                     start_point: [1,0,1], lower_bound: Array[0,-Float::INFINITY,0],
                     &parametrization) 
@@ -68,7 +67,7 @@ My entire Ruby code for this example can be found on github [here](https://githu
 
 Behind the scenes, `LMM#initialize` essentially performs the following three steps:
 
-```Ruby
+```ruby
 # (1) Create the data structure in a LMMData object
 @model_data = LMMData.new(x: x, y: y, zt: zt, lambdat: lambdat, 
                           weights: weights, offset: offset, &thfun)

@@ -3,8 +3,7 @@ layout: post
 title: Dissecting lme4's lmer function. Part 2.
 ---
 
-[Last time](http://agisga.github.io/Dissect_lmer_part1/) I started to analyze the function `lmer` that is used to fit linear mixed models in the R package `lme4`.
-I have delineated the general steps taken by `lmer`, and looked at the employed formula module in more detail. The formula module evaluates the provided R model formula to model matrices, vectors and parameters. The next step is to use these to define the objective function that needs to be minimized, which is the profiled deviance or the profiled REML criterion in this case. The objective function is returned by the function `mkLmerDevfun` which is dissected in what follows.
+[Last time](http://agisga.github.io/Dissect_lmer_part1/) I started to analyze the function `lmer` that is used to fit linear mixed models in the R package `lme4`. I have delineated the general steps taken by `lmer`, and looked at the employed formula module in more detail. The formula module evaluates the provided R model formula to model matrices, vectors and parameters. The next step is to use these to define the objective function that needs to be minimized, which is the profiled deviance or the profiled REML criterion in this case. The objective function is returned by the function `mkLmerDevfun` which is dissected in what follows.
 
 # Set up the deviance function - `mkLmerDevfun`
 

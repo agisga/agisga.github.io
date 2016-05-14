@@ -17,11 +17,15 @@ The exact parameters provided to the SeqSIMLA software can be found in a [text f
 ## The model
 
 We model the quantitative trait $y$ (a vector of length 1200) as,
+
 $$y = X\beta + b + \epsilon,$$
+
 where $X$ is a $1200\times 130$ matrix containing the genotypes, $\epsilon$ is a vector of i.i.d. random residuals with variances equal to $\sigma\subscript{e}^2$, $\beta$ is a vector of unknown fixed effects coefficients, and $b$ is a vector of random effects.
 
 If we denote the kinship matrix by $K$, then we can express the probability distribution of $b$ as
+
 $$b\sim N(0, \sigma\subscript{b}^2 2K),$$
+
 where we multiply $K$ by $2$ because the diagonal of $K$ is constant $0.5$, and where $\sigma\subscript{b}^2$ is a scaling factor.
 
 The goal is to estimate the unknown parameters $\beta$, $\sigma\subscript{e}^2$ and $\sigma\subscript{b}^2$, and to determine which of the fixed effects coefficients are significantly different from 0 (i.e. which SNPs are possibly causing the variability in the phenotype).
@@ -30,7 +34,7 @@ The goal is to estimate the unknown parameters $\beta$, $\sigma\subscript{e}^2$ 
 
 First, we need to load the generated design matrix $X$, the response vector $y$, and the kinship matrix $K$.
 
-```Ruby
+```ruby
 def read_csv_into_array(filename)
   f = File.new(filename)
   lines_array = Array.new
@@ -67,7 +71,7 @@ In this case, the Cholesky factor of the covariance matrix is $\sqrt{2} \sigma\s
 
 Before we call `LMM.new`, we also need to define the random effects model matrix $Z$ (which is the identity matrix in this case), find the Cholesky factor $\Lambda$ of the kinship matrix $K$, and specify the column names for the SNP matrix $X$. These steps and the model fit are performed by the following Ruby code.
 
-```Ruby
+```ruby
 require 'mixed_models'
 
 z = NMatrix.identity([n,n], dtype: :float64)
@@ -92,7 +96,7 @@ It takes a couple of minutes to run.
 
 We can start by looking at some parameters describing the model fit:
 
-```Ruby
+```ruby
 puts "Optimal theta: \t#{model_fit.theta}"
 puts "REML criterion: \t#{model_fit.deviance}"
 ```
@@ -104,11 +108,11 @@ Optimal theta: 	[2.508012294769287]
 REML criterion: 	3919.756682815396
 ```
 
-(I know not very meaningful to look at... At least, we see that the optimization method converged.)
+(I know, not very meaningful to look at... At least, we see that the optimization method converged.)
 
 Now, we might be interested to see which of the SNPs explain the variation in the quantitative trait best. To this end, we print those SNPs to the screen, which have a Wald p-value less than 0.05 ([I have written before about Wald Z tests not being adequate](http://agisga.github.io/MixedModels_p_values_and_CI/), also see __update__ below).
 
-```Ruby
+```ruby
 p_vals = model_fit.fix_ef_p
 p_signif = Array.new
 p_vals.each_key { |k| p_signif.push(k) if p_vals[k] < 0.05 }
@@ -129,11 +133,14 @@ Because the data is simulated, we know that the true causal SNPs are \#1, \#3, \
 Also, it might be of interest to see just how much of the remaining (not-explained-by-SNPs) variability of the response is explained by family relatedness as compared to individual random fluctuations of each subject. We address this question by comparing the estimates of $\sigma\subscript{b}^2$ and $\sigma\subscript{e}^2$.
 
 Because $\theta$ is the scaling factor of the Cholesky factor $\Lambda$ of the kinship matrix $K$, and the covariance of the random effects $b$ is given by
+
 $$\Sigma = \sigma\subscript{b}^2 2K = (\theta \Lambda) (\theta \Lambda^T),$$
+
 it follows that
+
 $$\sigma\subscript{b}^2 = \theta^2 / 2.$$ 
 
-```Ruby
+```ruby
 puts "Variance due to family relatedness: \t#{model_fit.theta[0]**2.0 / 2}"
 puts "Residual variance: \t#{model_fit.sigma2}"
 ```
@@ -149,17 +156,15 @@ Residual variance: 	0.3189292035466212
 
 ## Update
 
-As an alternative to the Wald Z tests performed above we can make use of the equivalence of confidence intervals and significance tests. That is, if the 95% confidence interval of a fixed effect does not include zero, then the fixed effect coefficient in question differs from zero with a p-value of 0.05.
-I have summarized different types of bootstrap confidence intervals available in `mixed_models` in a [blog post](http://agisga.github.io/bootstap_confidence_intervals/).
-We can compute studentized bootstrap confidence intervals with 95% coverage using the following code.
+As an alternative to the Wald Z tests performed above we can make use of the equivalence of confidence intervals and significance tests. That is, if the 95% confidence interval of a fixed effect does not include zero, then the fixed effect coefficient in question differs from zero with a p-value of 0.05. I have summarized different types of bootstrap confidence intervals available in `mixed_models` in a [blog post](http://agisga.github.io/bootstap_confidence_intervals/). We can compute studentized bootstrap confidence intervals with 95% coverage using the following code.
 
-```Ruby
+```ruby
 ci_bootstrap = model_fit.fix_ef_conf_int(method: :bootstrap, nsim: 1000)
 ```
 
 Due to the size of the data (1200 observations of 130 variables) the 1000 performed bootstrap simulations ran for more then 10 hours on my laptop (Intel Core i5 processor of fifth generation). Instead of examining all confidence intervals, I only print those which do not contain zero, using the following code.
 
-```Ruby
+```ruby
 ci_signif = Hash.new
 ci_bootstrap.each_key do |key|
   # check if the CI contains 0
@@ -201,11 +206,11 @@ Studentized bootstrap confidence intervals not containing zero:
 :SNP127=>[0.006116174706046959, 0.1803563547638151]}
 ```
 
-As the Wald Z tests above, the studentized bootstrap methods detects only one of the true causal SNPs \#1, \#3, \#5 and \#11. As explained above, this happens because of very high correlations between the SNPs. 
+As the Wald Z tests above, the studentized bootstrap method detects only one of the true causal SNPs \#1, \#3, \#5 and \#11. As explained above, this happens because of very high correlations between the SNPs. 
 
 Another question that we may want to answer is how similar the results of the studentized bootstrap method are to those of the Wald Z tests. To answer that question we look at the intersection of the two sets of selected SNPs. The code
 
-```Ruby
+```ruby
 puts "SNPs that have Wald p-values <.05 and studentized bootstrap confidence intervals not containing zero:"
 puts (ci_signif.keys & p_signif)
 ```
@@ -240,4 +245,4 @@ SNP125
 SNP127
 ```
 
-We see that 24 out of the 25 SNPs detected by the Wald Z tests were also detected by the bootstrap method. In fact, it turns out that the set of SNPs detected by the studentized bootstrap is a subset of the SNP set identified by the Wald Z tests. The reason for this behaviour is probably that the fixed effects coefficient estimates are approximately normally distributed for the given data (which in itself is a interesting discovery).
+We see that 24 out of the 25 SNPs detected by the Wald Z tests were also detected by the bootstrap method. In fact, it turns out that the set of SNPs detected by the studentized bootstrap is a subset of the SNP set identified by the Wald Z tests. The reason for this behaviour is probably that the fixed effects coefficient estimates are approximately normally distributed for the given data (which in itself is an interesting discovery).

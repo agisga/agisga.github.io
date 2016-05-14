@@ -3,17 +3,15 @@ layout: post
 title: My first R package on CRAN!
 ---
 
-A couple of weeks ago I have released my first R package on CRAN.
-For me it turned out to be a far less painful process than many people on the internet portray it to be (even though the package uses quite a lot of C++ code via Rcpp and RcppEigen, and even though R CMD check returns two NOTEs).
-Some of the most helpful resources for publishing the package were:
+A couple of weeks ago I have released my first R package on CRAN. For me it turned out to be a far less painful process than many people on the internet portray it to be (even though the package uses quite a lot of C++ code via Rcpp and RcppEigen, and even though R CMD check returns two NOTEs). Some of the most helpful resources for publishing the package were:
 
 * Of course, the chapter ["Releasing a package" from Hadley Wickham's book](http://r-pkgs.had.co.nz/release.html)
 * Julia Silge's post ["How I Learned to Stop Worrying and Love R CMD Check"](http://juliasilge.com/blog/How-I-Stopped/)
 * Karl Broman's [post on getting an R package to CRAN](http://kbroman.org/pkg_primer/pages/cran.html)
 
-My package is called `grpSLOPE` ([github](https://github.com/agisga/grpSLOPE), [CRAN](https://cran.r-project.org/web/packages/grpSLOPE/index.html)), and I will very briefly introduce some of it's functionality.
-The purpose of the Group SLOPE method is to fit a sparse linear regression model, while controlling the _group false discovery rate_.
-I illustrate what it means with a very simple example below (for some more detail see the [vignette](https://cran.r-project.org/web/packages/grpSLOPE/vignettes/basic-usage.html)).
+### grpSLOPE
+
+My package is called `grpSLOPE` ([github](https://github.com/agisga/grpSLOPE), [CRAN](https://cran.r-project.org/web/packages/grpSLOPE/index.html)), and I will very briefly introduce some of it's functionality. The purpose of the Group SLOPE method is to fit a sparse linear regression model, while controlling the _group false discovery rate_. I illustrate what it means with a very simple example below (for some more detail see the [vignette](https://cran.r-project.org/web/packages/grpSLOPE/vignettes/basic-usage.html)).
 
 We generate a random model with a design matrix $X \in \mathbb{R}^{1000 \times 2000}$, whose entries are sampled from the standard normal distribution, and a coefficient vector $\beta$, whose entries are mostly zeros.
 
@@ -27,8 +25,7 @@ beta[1901:1980] <- runif(80)
 y <- X %*% beta + rnorm(1000)
 ```
 
-We assume that the predictors (i.e., the columns of $X$) are divided into 200 blocks, each of size 10, and we want to determine which groups of predictors have an effect on the response variable $y$. That is, given the noisy observations of $y$, we want to find out, which blocks of the vector $\beta$ contain non-zero entries. As you can see above, $\beta$ has 10 non-zero blocks. Additionally, we want to make sure that we don't make too many false discoveries in the process (i.e., we want the method to keep the expected proportion of falsely selected groups below, say, 10%).
-That's exactly what the Group SLOPE method is for!
+We assume that the predictors (i.e., the columns of $X$) are divided into 200 blocks, each of size 10, and we want to determine which groups of predictors have an effect on the response variable $y$. That is, given the noisy observations of $y$, we want to find out, which blocks of the vector $\beta$ contain non-zero entries. As you can see above, $\beta$ has 10 non-zero blocks. Additionally, we want to make sure that we don't make too many false discoveries in the process (i.e., we want the method to keep the expected proportion of falsely selected groups below, say, 10%). That's exactly what the Group SLOPE method is for!
 
 ```R
 #install.packages("grpSLOPE") # Install the package now easily from CRAN!
@@ -63,4 +60,4 @@ power
 #  [1] 1
 ```
 
-Of course, the method does not perform this good under all circumstances &mdash; the interested reader can learn more from the papers referred to in the [grpSLOPE README on github](https://github.com/agisga/grpSLOPE/blob/master/README.md).
+Of course, the method does not perform this good under all circumstances &mdash; the interested reader can learn more from the papers referred to in the [grpSLOPE README on github](https://github.com/agisga/grpSLOPE/blob/master/README.md) (unfortunately, the "real" journal publication is still under preparation, and another related journal publication is currently under review, so, not publicly available yet either).

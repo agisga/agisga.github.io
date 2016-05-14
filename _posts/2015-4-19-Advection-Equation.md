@@ -8,6 +8,7 @@ A couple of days ago I started working on a collection of numerical methods for 
 The Ruby gem is called *spitzy*. Spitzy also is this cute pomeranian. Spitzy reads backwards as *yztips*, which translates into:
 
 ***Y*our *Z*appy-*T*appy *I*nitial value *P*artial (and ordinary) differential equation *S*olver**
+
 ![Spitzy](/images/spitzy.jpg?raw=true "Optional Title")
 
 I set up the basic structure of the library, and implemented four methods for the 1D linear advection equation (as a start, in order to see what`s a good way to do things). The project repository is [https://github.com/agisga/spitzy.git](https://github.com/agisga/spitzy.git). 
@@ -25,7 +26,7 @@ We want to solve the 1D linear advection equation given as:
 
 We define and solve this equation using the [Upwind scheme](http://en.wikipedia.org/wiki/Upwind_scheme) with time steps $dt = 0.95/1001$ and spatial steps $dx = 1/1001$ (i.e. on a grid of 1000 equally sized intervals in $x$). `AdvectionEq.new` lets the user specify the parameters such as length of the space and time steps, time and space domain, the initial condition, etc.
 
-```Ruby
+```ruby
 require 'spitzy'
 ic = proc { |x| Math::cos(2*Math::PI*x) + 0.2*Math::cos(10*Math::PI*x) }
 numsol = AdvectionEq.new(xrange: [0.0,1.0], trange: [0.0, 10.0], 
@@ -47,7 +48,7 @@ Finally, we plot the computed numerical solution at different times using the *g
 
 ![Advection equation example plot](/images/advection_equation_example_plot.png?raw=true "Advection equation example plot")
 
-```Ruby
+```ruby
 require 'spitzy'
 
 ic = proc { |x| Math::cos(2*Math::PI*x) + 0.2*Math::cos(10*Math::PI*x) }

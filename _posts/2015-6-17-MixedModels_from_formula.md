@@ -3,9 +3,7 @@ layout: post
 title: MixedModels Formula Interface and Categorical Variables
 ---
 
-I made some more progress on my [Google Summer of Code project MixedModels](https://github.com/agisga/MixedModels).
-The linear mixed models fitting method is now capable of handling non-numeric (i.e. categorical) predictor variables, as well as interaction effects. Moreover, I gave the method a user friendly R-formula-like interface.
-I will present these new capabilities of the Ruby gem with an example. Then I will briefly describe their implementation.
+I made some more progress on my [Google Summer of Code project MixedModels](https://github.com/agisga/MixedModels). The linear mixed models fitting method is now capable of handling non-numeric (i.e., categorical) predictor variables, as well as interaction effects. Moreover, I gave the method a user friendly R-formula-like interface. I will present these new capabilities of the Ruby gem with an example. Then I will briefly describe their implementation.
 
 # Example
 
@@ -13,7 +11,7 @@ I will present these new capabilities of the Ruby gem with an example. Then I wi
 
 The data is supplied to the model fitting method `LMM#from_formula` as a `Daru::DataFrame` (from the excellent Ruby gem [daru](https://github.com/v0dro/daru.git)). In order to test `LMM#from_formula`, I have generated a data set of the following form:
 
-```Ruby
+```ruby
 > alien_species.head
 => 
 #<Daru::DataFrame:70197332524760 @name = 1cd9d732-526b-49ae-8cb1-35cd69541c87 @size = 10>
@@ -35,24 +33,25 @@ As we can see, the data set contains two numeric variables *Age* and *Aggression
 We model the *Aggression* level of an individual as a linear function of the *Age* (*Aggression* decreases with *Age*), with a different constant added for each *Species* (i.e. each species has a different base level of aggression). Moreover, we assume that there is a random fluctuation in *Aggression* due to the *Location* that an individual is at. Additionally, there is a random fluctuation in how *Age* affects *Aggression* at each different *Location*. 
 
 Thus, the *Aggression* level of an individual of *Species* $spcs$ who is at the *Location* $lctn$ can be expressed as:
+
 $$Aggression = \beta\subscript{0} + \gamma\subscript{spcs} + Age \cdot \beta\subscript{1} + b\subscript{lctn,0} + Age \cdot b\subscript{lctn,1} + \epsilon,$$
+
 where $\epsilon$ is a random residual, and the random vector $(b\subscript{lctn,0}, b\subscript{lctn,1})^T$ follows a multivariate normal distribution (the same distribution but different realizations of the random vector for each *Location*). That is, we have a linear mixed model with fixed effects $\beta\subscript{0}, \beta\subscript{1}, \gamma\subscript{Dalek}, \gamma\subscript{Ood}, \dots$ and random effects $b\subscript{Asylum,0}, b\subscript{Asylum,1}, b\subscript{Earth,0},\dots$.
 
 ## Model fit
 
 We fit this model in Ruby using `MixedModels` with:
 
-```Ruby
+```ruby
 model_fit = LMM.from_formula(formula: "Aggression ~ Age + Species + (Age | Location)", 
                              data: alien_species)
 ```
 
-where the argument `formula` takes in a `String` that contains a formula written in the formula language that is used in the R-package `lme4` (`MixedModels` currently supports most of the formula language except some shortcuts).
-Since `lme4` is currently the most commonly used package for linear mixed models, a lot of documentation and tutorials to the formula interface can be found online. 
+where the argument `formula` takes in a `String` that contains a formula written in the formula language that is used in the R-package `lme4` (`MixedModels` currently supports most of the formula language except some shortcuts). Since `lme4` is currently the most commonly used package for linear mixed models, a lot of documentation and tutorials to the formula interface can be found online. 
 
 We print some of the results that we have obtained:
 
-```Ruby
+```ruby
 puts "REML criterion: \t#{model_fit.dev_optimal}"
 puts "Fixed effects:"
 puts model_fit.fix_ef
@@ -97,7 +96,7 @@ If a predictor variable is categorical and no intercept term or other categorica
 
 In the current implementation of `MixedModels` this is handled by the method `Daru::DataFrame::create_indicator_vectors_for_categorical_vectors!` (defined [here](https://github.com/agisga/MixedModels/blob/master/lib/MixedModels/daru_methods.rb#L90)). It adds a set of 0-1-valued vectors for each non-numeric vector in the `Daru::DataFrame`:
 
-```Ruby
+```ruby
 > df = Daru::DataFrame.new([(1..7).to_a, ['a','b','b','a','c','d','c']],
                            order: ['int','char']) 
 > df.create_indicator_vectors_for_categorical_vectors!
@@ -122,16 +121,18 @@ I will probably end up restructuring the current implementation, in order to bet
 
 `LMM#from_formula` takes in a `String` containing a formula specifying the model, for example 
 
+```ruby
 "z ~ x + y + x:y + (x | u)".
+```
 
 It transforms this formula into another `String`, for the above example:
 
-"lmm\_formula(:intercept) + lmm\_variable(:x) + lmm\_variable(:y) + lmm\_variable(:x) * lmm\_variable(:y) + (lmm\_variable(:intercept) + lmm\_variable(:x) | lmm\_variable(:u)))",
+```ruby
+"lmm_formula(:intercept) + lmm_variable(:x) + lmm_variable(:y) + lmm_variable(:x) * lmm_variable(:y) + (lmm_variable(:intercept) + lmm_variable(:x) | lmm_variable(:u)))",
+```
 
 adding intercept terms and wrapping all variables in `lmm_variable()`.
 
 The Ruby expression in the `String` is evaluated with `eval`. This evaluation uses a specially defined class `LMMFormula` (defined [here](https://github.com/agisga/MixedModels/blob/master/lib/MixedModels/LMMFormula.rb)), which overloads the `+`, `*` and `|` operators, in order to combine the variable names into arrays, which can be fed into `LMM#from_daru`. The class `LMMFormula` was an idea that I got from Will Levine ([wlevine](https://github.com/wlevine)). In particular, the method `LMMFormula#to_input_for_lmm_from_daru` transforms an `LMMFormula` object into a number of `Array`, which have the form required by `LMM#from_daru`.
 
 Finally, `LMM#from_daru` constructs the model matrices, vectors and the covariance function `Proc`, which are passed on to `LMM#initialize` that performs the actual model fit.
-
-

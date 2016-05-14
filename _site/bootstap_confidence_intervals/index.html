@@ -10,8 +10,10 @@
 
     
     <meta name="description" content="(EDIT: I have also written a more theoretical blog post on the topic.)
+
 " />
     <meta property="og:description" content="(EDIT: I have also written a more theoretical blog post on the topic.)
+
 " />
     
     <meta name="author" content="Alexej Gossmann" />
@@ -73,117 +75,143 @@
   <div class="entry">
     <p>(<strong>EDIT:</strong> I have also written <a href="http://www.alexejgossmann.com/Lehmanns_TSH_and_TPE/bootstrap_intervals_for_LMM/">a more theoretical blog post</a> on the topic.)</p>
 
-<p>During the last couple of days, I have added some parametric bootstrap capabilities to <a href="https://github.com/agisga/mixed_models.git"><code>mixed_models</code></a>. The following demonstrates first how to resample fixed effects coefficient estimates via bootstrapping. Then various types of bootstrap confidence intervals are presented. Examples of computation and a brief comparison of different types of bootstrap confidence intervals are given.</p>
+<p>During the last couple of days, I have added some parametric bootstrap capabilities to <a href="https://github.com/agisga/mixed_models.git"><code class="highlighter-rouge">mixed_models</code></a>. The following demonstrates first how to resample fixed effects coefficient estimates via bootstrapping. Then various types of bootstrap confidence intervals are presented. Examples of computation and a brief comparison of different types of bootstrap confidence intervals are given.</p>
 
-<p>Implementation of bootstrap methods is motivated by the fact that the only alternatives currently available in <code>mixed_models</code> are based on the Wald Z test statistic, which is far from being optimal in many settings, as I have briefly delineated in a <a href="http://agisga.github.io/MixedModels_p_values_and_CI/">previous blog post</a>.</p>
+<p>Implementation of bootstrap methods is motivated by the fact that the only alternatives currently available in <code class="highlighter-rouge">mixed_models</code> are based on the Wald Z test statistic, which is far from being optimal in many settings, as I have briefly delineated in a <a href="http://agisga.github.io/MixedModels_p_values_and_CI/">previous blog post</a>.</p>
 
-<h2>Parametric bootstrap</h2>
+<h2 id="parametric-bootstrap">Parametric bootstrap</h2>
 
-<p>Parametric bootstrap for linear mixed models is performed via <code>LMM#bootstrap</code>. Behind the scenes, for the model formulation which is summarized in a <a href="http://agisga.github.io/First-linear-mixed-model-fit/">previous blog post</a>, bootstrap samples of the parameter estimates are obtained by the following procedure (as outlines in <a href="http://personal.bgsu.edu/%7Ejshang/AICb_assumption.pdf">this paper</a>).</p>
+<p>Parametric bootstrap for linear mixed models is performed via <code class="highlighter-rouge">LMM#bootstrap</code>. Behind the scenes, for the model formulation which is summarized in a <a href="http://agisga.github.io/First-linear-mixed-model-fit/">previous blog post</a>, bootstrap samples of the parameter estimates are obtained by the following procedure (as outlines in <a href="http://personal.bgsu.edu/~jshang/AICb_assumption.pdf">this paper</a>).</p>
 
 <ol>
-<li><p>Fit a linear mixed model to obtain the estimated fixed effects $\hat{\beta}$, the estimated random effects covariance matrix $\hat{\Sigma}$, and the estimated scaling factor (or residual variance) $\hat{\sigma}^2$. </p></li>
-<li><p>Generate a bootstrap sample as $y^{\ast} = X\hat{\beta} + Zb^{\ast} + o + \varepsilon^{\ast}$, where we randomly sample $b^{\ast} \sim N(0, \hat{\Sigma})$ and $\varepsilon^{\ast} \sim N(0, \hat{\sigma}^2 W^{-1})$.</p></li>
-<li><p>Re-fit the linear mixed model to the bootstrap data to obtain bootstrap parameter estimates.</p></li>
-<li><p>Repeat steps 2-3 <code>nsim</code> times.</p></li>
+  <li>
+    <p>Fit a linear mixed model to obtain the estimated fixed effects $\hat{\beta}$, the estimated random effects covariance matrix $\hat{\Sigma}$, and the estimated scaling factor (or residual variance) $\hat{\sigma}^2$.</p>
+  </li>
+  <li>
+    <p>Generate a bootstrap sample as $y^{\ast} = X\hat{\beta} + Zb^{\ast} + o + \varepsilon^{\ast}$, where we randomly sample $b^{\ast} \sim N(0, \hat{\Sigma})$ and $\varepsilon^{\ast} \sim N(0, \hat{\sigma}^2 W^{-1})$.</p>
+  </li>
+  <li>
+    <p>Re-fit the linear mixed model to the bootstrap data to obtain bootstrap parameter estimates.</p>
+  </li>
+  <li>
+    <p>Repeat steps 2-3 <code class="highlighter-rouge">nsim</code> times.</p>
+  </li>
 </ol>
 
 <p>This resampling procedure can be performed in parallel using the Ruby gem <a href="https://github.com/grosser/parallel">parallel</a> or single-threaded (more on that below).</p>
 
-<p>By default <code>LMM#bootstrap</code> returns a bootstrap sample of the fixed effects coefficient estimates, but estimates of any other parameter can be returned as a bootstrap sample if an appropriate <code>Proc</code> is passed as argument <code>what_to_collect</code>.</p>
+<p>By default <code class="highlighter-rouge">LMM#bootstrap</code> returns a bootstrap sample of the fixed effects coefficient estimates, but estimates of any other parameter can be returned as a bootstrap sample if an appropriate <code class="highlighter-rouge">Proc</code> is passed as argument <code class="highlighter-rouge">what_to_collect</code>.</p>
 
-<p>As an example let&#39;s generate a bootstrap sample of the intercept term for the <a href="http://agisga.github.io/MixedModels_from_formula/">alien species data</a>. The following code does the job:</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="nb">require</span> <span class="s1">&#39;mixed_models&#39;</span>
-<span class="n">df</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="o">.</span><span class="n">from_csv</span> <span class="s1">&#39;./data/alien_species.csv&#39;</span>
-<span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="o">.</span><span class="n">from_formula</span><span class="p">(</span><span class="ss">formula</span><span class="p">:</span> <span class="s2">&quot;Aggression ~ Age + Species + (Age | Location)&quot;</span><span class="p">,</span> <span class="ss">data</span><span class="p">:</span> <span class="n">df</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">model_fit</span><span class="o">.</span><span class="n">bootstrap</span><span class="p">(</span><span class="ss">nsim</span><span class="p">:</span> <span class="mi">1000</span><span class="p">)</span>
-<span class="n">y</span> <span class="o">=</span> <span class="n">nsim</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">result</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="ss">:intercept</span><span class="o">]</span> <span class="p">}</span>
-</code></pre></div>
-<p>Notice that I didn&#39;t pass the argument <code>what_to_collect</code> to <code>#bootstrap</code>, because the intercept is one of the fixed effects terms which are collected by default.</p>
+<p>As an example let’s generate a bootstrap sample of the intercept term for the <a href="http://agisga.github.io/MixedModels_from_formula/">alien species data</a>. The following code does the job:</p>
 
-<p>Using the gem <code>gnuplotrb</code>, I can plot a histogram of the obtained bootstrap sample, in order to see the shape of its distribution. As expected, it looks approximately like a normal density.</p>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'mixed_models'</span>
+<span class="n">df</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">from_csv</span> <span class="s1">'./data/alien_species.csv'</span>
+<span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_formula</span><span class="p">(</span><span class="ss">formula: </span><span class="s2">"Aggression ~ Age + Species + (Age | Location)"</span><span class="p">,</span> <span class="ss">data: </span><span class="n">df</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">bootstrap</span><span class="p">(</span><span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">nsim</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="ss">:intercept</span><span class="p">]</span> <span class="p">}</span>
+</code></pre>
+</div>
 
-<p><img src="/images/histogram_of_intercept.png?raw=true" alt="histogram"></p>
+<p>Notice that I didn’t pass the argument <code class="highlighter-rouge">what_to_collect</code> to <code class="highlighter-rouge">#bootstrap</code>, because the intercept is one of the fixed effects terms which are collected by default.</p>
+
+<p>Using the gem <code class="highlighter-rouge">gnuplotrb</code>, I can plot a histogram of the obtained bootstrap sample, in order to see the shape of its distribution. As expected, it looks approximately like a normal density.</p>
+
+<p><img src="/images/histogram_of_intercept.png?raw=true" alt="histogram" /></p>
 
 <p>The image was produced by the following code.</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="nb">require</span> <span class="s1">&#39;gnuplotrb&#39;</span>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'gnuplotrb'</span>
 <span class="kp">include</span> <span class="no">GnuplotRB</span>
-<span class="n">bin_width</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">max</span> <span class="o">-</span> <span class="n">y</span><span class="o">.</span><span class="n">min</span><span class="p">)</span><span class="o">/</span><span class="mi">10</span><span class="o">.</span><span class="mi">0</span>
-<span class="n">bins</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">min</span><span class="o">.</span><span class="n">.y</span><span class="o">.</span><span class="n">max</span><span class="p">)</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">bin_width</span><span class="p">)</span><span class="o">.</span><span class="n">to_a</span>
-<span class="n">rel_freq</span> <span class="o">=</span> <span class="nb">Array</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">bins</span><span class="o">.</span><span class="n">length</span><span class="o">-</span><span class="mi">1</span><span class="p">){</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">}</span>
-<span class="n">y</span><span class="o">.</span><span class="n">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span>
-  <span class="mi">0</span><span class="o">.</span><span class="n">upto</span><span class="p">(</span><span class="n">bins</span><span class="o">.</span><span class="n">length</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
-    <span class="k">if</span> <span class="n">r</span> <span class="o">&gt;=</span> <span class="n">bins</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">&amp;&amp;</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">bins</span><span class="o">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="o">]</span> <span class="k">then</span>
-      <span class="n">rel_freq</span><span class="o">[</span><span class="n">i</span><span class="o">]</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="n">y</span><span class="o">.</span><span class="n">length</span>
+<span class="n">bin_width</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="nf">max</span> <span class="o">-</span> <span class="n">y</span><span class="p">.</span><span class="nf">min</span><span class="p">)</span><span class="o">/</span><span class="mi">10</span><span class="o">.</span><span class="mi">0</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="nf">min</span><span class="p">.</span><span class="nf">.</span><span class="n">y</span><span class="p">.</span><span class="nf">max</span><span class="p">).</span><span class="nf">step</span><span class="p">(</span><span class="n">bin_width</span><span class="p">).</span><span class="nf">to_a</span>
+<span class="n">rel_freq</span> <span class="o">=</span> <span class="no">Array</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">bins</span><span class="p">.</span><span class="nf">length</span><span class="o">-</span><span class="mi">1</span><span class="p">){</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">}</span>
+<span class="n">y</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span>
+  <span class="mi">0</span><span class="p">.</span><span class="nf">upto</span><span class="p">(</span><span class="n">bins</span><span class="p">.</span><span class="nf">length</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+    <span class="k">if</span> <span class="n">r</span> <span class="o">&gt;=</span> <span class="n">bins</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">bins</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="k">then</span>
+      <span class="n">rel_freq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="n">y</span><span class="p">.</span><span class="nf">length</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
-<span class="n">bins_center</span> <span class="o">=</span> <span class="n">bins</span><span class="o">[</span><span class="mi">0</span><span class="o">.</span><span class="n">.</span><span class="o">.</span><span class="n">-</span><span class="mi">1</span><span class="o">].</span><span class="n">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">b</span><span class="o">|</span> <span class="n">b</span> <span class="o">+</span> <span class="n">bin_width</span><span class="o">/</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="p">}</span>
-<span class="n">plot</span> <span class="o">=</span> <span class="no">Plot</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="o">[[</span><span class="n">bins_center</span><span class="p">,</span> <span class="n">rel_freq</span><span class="o">]</span><span class="p">,</span> <span class="ss">with</span><span class="p">:</span> <span class="s1">&#39;boxes&#39;</span><span class="p">,</span> <span class="ss">notitle</span><span class="p">:</span> <span class="kp">true</span><span class="o">]</span><span class="p">,</span>
-                <span class="ss">style</span><span class="p">:</span> <span class="s1">&#39;fill solid 0.5&#39;</span><span class="p">)</span>
-</code></pre></div>
-<h2>Bootstrap confidence intervals</h2>
+<span class="n">bins_center</span> <span class="o">=</span> <span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">-</span><span class="mi">1</span><span class="p">].</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">b</span><span class="o">|</span> <span class="n">b</span> <span class="o">+</span> <span class="n">bin_width</span><span class="o">/</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="p">}</span>
+<span class="n">plot</span> <span class="o">=</span> <span class="no">Plot</span><span class="p">.</span><span class="nf">new</span><span class="p">([[</span><span class="n">bins_center</span><span class="p">,</span> <span class="n">rel_freq</span><span class="p">],</span> <span class="ss">with: </span><span class="s1">'boxes'</span><span class="p">,</span> <span class="ss">notitle: </span><span class="kp">true</span><span class="p">],</span>
+                <span class="ss">style: </span><span class="s1">'fill solid 0.5'</span><span class="p">)</span>
+</code></pre>
+</div>
 
-<p>Of course, confidence intervals can be constructed based on the bootstrap samples obtained via <code>LMM#bootstrap</code>. This functionality is now included in <code>LMM#fix_ef_conf_int</code>. For example, still using the alien species data, basic bootstrap confidence intervals with confidence level of 95% for the fixed effects coefficient estimates can be computed with:</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="n">model_fit</span><span class="o">.</span><span class="n">fix_ef_conf_int</span><span class="p">(</span><span class="nb">method</span><span class="p">:</span> <span class="ss">:bootstrap</span><span class="p">,</span> <span class="ss">boottype</span><span class="p">:</span> <span class="ss">:basic</span><span class="p">,</span> <span class="ss">nsim</span><span class="p">:</span> <span class="mi">1000</span><span class="p">)</span>
-</code></pre></div>
+<h2 id="bootstrap-confidence-intervals">Bootstrap confidence intervals</h2>
+
+<p>Of course, confidence intervals can be constructed based on the bootstrap samples obtained via <code class="highlighter-rouge">LMM#bootstrap</code>. This functionality is now included in <code class="highlighter-rouge">LMM#fix_ef_conf_int</code>. For example, still using the alien species data, basic bootstrap confidence intervals with confidence level of 95% for the fixed effects coefficient estimates can be computed with:</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :bootstrap</span><span class="p">,</span> <span class="ss">boottype: :basic</span><span class="p">,</span> <span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
+</code></pre>
+</div>
+
 <p>The result is a Hash of interval bounds for each fixed effects term:</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">{:intercept=&gt;[901.1323777908297, 1127.8830074251803], 
-:Age=&gt;[-0.24497613247630068, 0.10778076861255856], 
-:Species_lvl_Human=&gt;[-500.23358644022164, -499.1708950551018], 
-:Species_lvl_Ood=&gt;[-900.1587789864999, -899.0059837383694], 
-:Species_lvl_WeepingAngel=&gt;[-200.1445476541481, -199.0552908625565]}
-</code></pre></div>
-<h3>Bootstrap interval types</h3>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="err">:intercept=&gt;[901.1323777908297,</span><span class="w"> </span><span class="err">1127.8830074251803],</span><span class="w"> 
+</span><span class="err">:Age=&gt;[-0.24497613247630068,</span><span class="w"> </span><span class="err">0.10778076861255856],</span><span class="w"> 
+</span><span class="err">:Species_lvl_Human=&gt;[-500.23358644022164,</span><span class="w"> </span><span class="err">-499.1708950551018],</span><span class="w"> 
+</span><span class="err">:Species_lvl_Ood=&gt;[-900.1587789864999,</span><span class="w"> </span><span class="err">-899.0059837383694],</span><span class="w"> 
+</span><span class="err">:Species_lvl_WeepingAngel=&gt;[-200.1445476541481,</span><span class="w"> </span><span class="err">-199.0552908625565]</span><span class="p">}</span><span class="w">
+</span></code></pre>
+</div>
+
+<h3 id="bootstrap-interval-types">Bootstrap interval types</h3>
 
 <p>There are currently four types of bootstrap confidence intervals implemented: <em>basic</em>, <em>normal</em>, <em>percentile</em> and <em>studentized</em> (default). All methods are taken from Chapter 5 in A. C. Davison and D. V. Hinkley, <em>Bootstrap Methods and their Application</em> (Cambridge Series in Statistical and Probabilistic Mathematics, 1997).</p>
 
 <p>Denote the $p$ percentile of the bootstrap sample of a parameter $\theta$ as $\theta\subscript{p}^{\ast}$. Denote the point estimate of $\theta$ as $\hat{\theta}$, and the point estimate of the variance $v$ of $\theta$ as $\hat{v}$.</p>
 
 <ul>
-<li>Basic bootstrap intervals are computed according to (5.6) in Chapter 5 of Davison &amp; Hinkley as</li>
+  <li>Basic bootstrap intervals are computed according to (5.6) in Chapter 5 of Davison &amp; Hinkley as</li>
 </ul>
 
-<p>$$(2\hat{\theta} -\theta\subscript{(1-\alpha/2)}^{\ast}, 2\hat{\theta} -\theta\subscript{(\alpha/2)}^{\ast}).$$</p>
+<script type="math/tex; mode=display">(2\hat{\theta} -\theta\subscript{(1-\alpha/2)}^{\ast}, 2\hat{\theta} -\theta\subscript{(\alpha/2)}^{\ast}).</script>
 
 <ul>
-<li>Normal bootstrap intervals are based on the normal distribution using resampling estimates $b\subscript{R}$ and $v\subscript{R}$
-for bias correction and variance estimation, as given in (5.5) in Chapter 5 of Davison &amp; Hinkley. The corresponding formula is</li>
+  <li>Normal bootstrap intervals are based on the normal distribution using resampling estimates $b\subscript{R}$ and $v\subscript{R}$ for bias correction and variance estimation, as given in (5.5) in Chapter 5 of Davison &amp; Hinkley. The corresponding formula is</li>
 </ul>
 
-<p>$$(\hat{\theta} - b\subscript{R} - \sqrt{v\subscript{R}}z\subscript{(1-\alpha/2)}, \hat{\theta} - b\subscript{R} + \sqrt{v\subscript{R}}z\subscript{(1-\alpha/2)}).$$</p>
+<script type="math/tex; mode=display">(\hat{\theta} - b\subscript{R} - \sqrt{v\subscript{R}}z\subscript{(1-\alpha/2)}, \hat{\theta} - b\subscript{R} + \sqrt{v\subscript{R}}z\subscript{(1-\alpha/2)}).</script>
 
 <ul>
-<li>Percentile bootstrap intervals are computed according to (5.18) in Davison &amp; Hinkley as</li>
+  <li>Percentile bootstrap intervals are computed according to (5.18) in Davison &amp; Hinkley as</li>
 </ul>
 
-<p>$$(\theta\subscript{(\alpha/2)}^{\ast}, \theta\subscript{(1-\alpha/2)}^{\ast}).$$</p>
+<script type="math/tex; mode=display">(\theta\subscript{(\alpha/2)}^{\ast}, \theta\subscript{(1-\alpha/2)}^{\ast}).</script>
 
 <ul>
-<li>Studentized bootstrap confidence intervals, also known as bootstrap-t, are based on the normal approximation confidence limits but use a bootstrapped version of the $N(0,1)$ variable $z$, as given in (5.7) in Chapter 5 of Davison &amp; Hinkley. The studentized interval can be written as</li>
+  <li>Studentized bootstrap confidence intervals, also known as bootstrap-t, are based on the normal approximation confidence limits but use a bootstrapped version of the $N(0,1)$ variable $z$, as given in (5.7) in Chapter 5 of Davison &amp; Hinkley. The studentized interval can be written as</li>
 </ul>
 
-<p>$$(\hat{\theta} - \sqrt{\hat{v}} \cdot z\subscript{(1-\alpha/2)}^{\ast}, \hat{\theta} - \sqrt{\hat{v}} \cdot z\subscript{(\alpha/2)}^{\ast}), \quad\mathrm{with}\, z^{\ast} = \frac{\theta^{\ast} - \hat{\theta}}{\sqrt{v^{\ast}}}.$$</p>
+<script type="math/tex; mode=display">(\hat{\theta} - \sqrt{\hat{v}} \cdot z\subscript{(1-\alpha/2)}^{\ast}, \hat{\theta} - \sqrt{\hat{v}} \cdot z\subscript{(\alpha/2)}^{\ast}), \quad\mathrm{with}\, z^{\ast} = \frac{\theta^{\ast} - \hat{\theta}}{\sqrt{v^{\ast}}}.</script>
 
 <p>For more detail on the computation of the confidence intervals we refer to Davison &amp; Hinkley and <a href="https://en.wikipedia.org/wiki/Bootstrapping_%28statistics%29#Deriving_confidence_intervals_from_the_bootstrap_distribution">this wikipedia article</a>.</p>
 
-<h3>Comparison of confidence interval methods</h3>
+<h3 id="comparison-of-confidence-interval-methods">Comparison of confidence interval methods</h3>
 
-<p>Which confidence interval method to use is determined by the arguments <code>method</code> (possible are <code>:wald</code>, <code>:bootstrap</code> and <code>:all</code>) and <code>boottype</code> (possible are <code>:basic</code>, <code>:normal</code>, <code>:studentized</code> and <code>:percentile</code>). </p>
+<p>Which confidence interval method to use is determined by the arguments <code class="highlighter-rouge">method</code> (possible are <code class="highlighter-rouge">:wald</code>, <code class="highlighter-rouge">:bootstrap</code> and <code class="highlighter-rouge">:all</code>) and <code class="highlighter-rouge">boottype</code> (possible are <code class="highlighter-rouge">:basic</code>, <code class="highlighter-rouge">:normal</code>, <code class="highlighter-rouge">:studentized</code> and <code class="highlighter-rouge">:percentile</code>).</p>
 
-<p>The method <code>:all</code> returns a <code>Daru::DataFrame</code> containing the confidence intervals obtained by each of the available methods. The data frame can be printed in form of a nice looking table for inspection. For example for the alien species data we obtain all types of 95% confidence intervals with</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="n">ci</span> <span class="o">=</span> <span class="n">model_fit</span><span class="o">.</span><span class="n">fix_ef_conf_int</span><span class="p">(</span><span class="nb">method</span><span class="p">:</span> <span class="ss">:all</span><span class="p">,</span> <span class="ss">nsim</span><span class="p">:</span> <span class="mi">1000</span><span class="p">)</span>
-</code></pre></div>
+<p>The method <code class="highlighter-rouge">:all</code> returns a <code class="highlighter-rouge">Daru::DataFrame</code> containing the confidence intervals obtained by each of the available methods. The data frame can be printed in form of a nice looking table for inspection. For example for the alien species data we obtain all types of 95% confidence intervals with</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">ci</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :all</span><span class="p">,</span> <span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
+</code></pre>
+</div>
+
 <p>and print them to screen as a table with</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="c1"># round all results to two decimal places</span>
-<span class="n">ci</span><span class="o">.</span><span class="n">each_vector</span> <span class="k">do</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span>
-  <span class="n">v</span><span class="o">.</span><span class="n">each_index</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">v</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">0</span><span class="o">]</span><span class="p">,</span> <span class="n">v</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">1</span><span class="o">]</span> <span class="o">=</span> <span class="n">v</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">0</span><span class="o">].</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">v</span><span class="o">[</span><span class="n">i</span><span class="o">][</span><span class="mi">1</span><span class="o">].</span><span class="n">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)}</span>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1"># round all results to two decimal places</span>
+<span class="n">ci</span><span class="p">.</span><span class="nf">each_vector</span> <span class="k">do</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span>
+  <span class="n">v</span><span class="p">.</span><span class="nf">each_index</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">].</span><span class="nf">round</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">].</span><span class="nf">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)}</span>
 <span class="k">end</span>
-<span class="nb">puts</span> <span class="s2">&quot;Confidence intervals obtained with each of the available methods:&quot;</span>
-<span class="nb">puts</span> <span class="n">ci</span><span class="o">.</span><span class="n">inspect</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
-</code></pre></div>
+<span class="nb">puts</span> <span class="s2">"Confidence intervals obtained with each of the available methods:"</span>
+<span class="nb">puts</span> <span class="n">ci</span><span class="p">.</span><span class="nf">inspect</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</code></pre>
+</div>
+
 <p>which yields</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">Confidence intervals obtained with each of the available methods:
+
+<div class="highlighter-rouge"><pre class="highlight"><code>Confidence intervals obtained with each of the available methods:
 
 #&lt;Daru::DataFrame:70245799731260 @name = 1a212339-2e38-4c4c-8f08-f2edc3668f30 @size = 5&gt;
                                 intercept                  Age    Species_lvl_Human      Species_lvl_Ood Species_lvl_WeepingA 
@@ -192,38 +220,44 @@ for bias correction and variance estimation, as given in (5.5) in Chapter 5 of D
            boot_norm    [897.88, 1131.31]        [-0.23, 0.11]    [-500.2, -499.16]   [-900.09, -899.01]   [-200.12, -199.05] 
               boot_t    [902.48, 1136.56]        [-0.24, 0.11]   [-500.22, -499.18]    [-900.1, -899.03]   [-200.13, -199.06] 
            boot_perc     [896.02, 1130.1]         [-0.25, 0.1]   [-500.21, -499.17]   [-900.11, -899.04]   [-200.12, -199.05]
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>Since here we are dealing with data that was simulated according to the assumptions of the linear mixed model, all parameters end up approximately meeting the normality assumptions, and therefore all confidence interval methods turn out to be pretty much equivalent. Often when analyzing less ideal data, this will not be the case. Then it might be necessary to compare different types of confidence intervals in order to draw the right conclusions.</p>
 
 <p>Theoretical results given in Chapter 5 of A. C. Davison and D. V. Hinkley, <em>Bootstrap Methods and their Application</em> guarantee that for statistics which are approximately normal, the studentized bootstrap confidence intervals are second order accurate, meaning that a confidence interval with confidence level of $(1-\alpha)\cdot 100$ contains the true value with a probability of $(1-\alpha) + \mathcal{O}(n^{-1})$, where $n$ is the sample size. The basic and percentile bootstrap methods however are only first order accurate, that is, the interval coverage is correct only up to an order of $n^{-1/2}$. Nevertheless, for equi-tailed confidence intervals (as are all intervals considered above), the basic and percentile methods are second order accurate as well. The normal bootstrap and Wald Z confidence intervals are first order even when they are equi-tailed. Also note that all theoretical results here assume that the bootstrap sample is sufficiently large.</p>
 
 <p>In general, it appears that basic, percentile and studentized intervals are superior in accuracy compared to the normal bootstrap and Wald Z intervals in all circumstances. However, the normal bootstrap interval adjusts for the bias, and only the studentized bootstrap method adjusts for nonconstant variance and skewness as well as bias.</p>
 
-<p>Of course, the Wald Z method has the advantage of being computationally efficient and convenient. All bootstrap intervals are computationally very heavy, especially for big data sets.
-Thus, it is probably best to use the Wald Z intervals in the data exploration phase, and compare different kinds of bootstrap intervals once it is more clear what to look for.</p>
+<p>Of course, the Wald Z method has the advantage of being computationally efficient and convenient. All bootstrap intervals are computationally very heavy, especially for big data sets. Thus, it is probably best to use the Wald Z intervals in the data exploration phase, and compare different kinds of bootstrap intervals once it is more clear what to look for.</p>
 
-<h2>Parallel execution</h2>
+<h2 id="parallel-execution">Parallel execution</h2>
 
-<p>Finally I also want to examine the parallel computing capabilities of the bootstrap confidence interval methods a little.
-The following code benchmarks the computation of studentized bootstrap confidence intervals in parallel and single-threaded.</p>
-<div class="highlight"><pre><code class="language-Ruby" data-lang="Ruby"><span class="nb">require</span> <span class="s1">&#39;benchmark&#39;</span>
+<p>Finally I also want to examine the parallel computing capabilities of the bootstrap confidence interval methods a little. The following code benchmarks the computation of studentized bootstrap confidence intervals in parallel and single-threaded.</p>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'benchmark'</span>
 <span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="kp">nil</span>
-<span class="no">Benchmark</span><span class="o">.</span><span class="n">bm</span><span class="p">(</span><span class="mi">17</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">bm</span><span class="o">|</span>
-  <span class="n">bm</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="s1">&#39;single-threaded&#39;</span><span class="p">)</span> <span class="k">do</span>
-    <span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="n">model_fit</span><span class="o">.</span><span class="n">fix_ef_conf_int</span><span class="p">(</span><span class="nb">method</span><span class="p">:</span> <span class="ss">:bootstrap</span><span class="p">,</span> <span class="ss">nsim</span><span class="p">:</span> <span class="n">nsim</span><span class="p">,</span> <span class="ss">parallel</span><span class="p">:</span> <span class="kp">false</span><span class="p">)</span>
+<span class="no">Benchmark</span><span class="p">.</span><span class="nf">bm</span><span class="p">(</span><span class="mi">17</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">bm</span><span class="o">|</span>
+  <span class="n">bm</span><span class="p">.</span><span class="nf">report</span><span class="p">(</span><span class="s1">'single-threaded'</span><span class="p">)</span> <span class="k">do</span>
+    <span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :bootstrap</span><span class="p">,</span> <span class="ss">nsim: </span><span class="n">nsim</span><span class="p">,</span> <span class="ss">parallel: </span><span class="kp">false</span><span class="p">)</span>
   <span class="k">end</span>
 
-  <span class="n">bm</span><span class="o">.</span><span class="n">report</span><span class="p">(</span><span class="s1">&#39;parallel&#39;</span><span class="p">)</span> <span class="k">do</span>
-    <span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="n">model_fit</span><span class="o">.</span><span class="n">fix_ef_conf_int</span><span class="p">(</span><span class="nb">method</span><span class="p">:</span> <span class="ss">:bootstrap</span><span class="p">,</span> <span class="ss">nsim</span><span class="p">:</span> <span class="n">nsim</span><span class="p">,</span> <span class="ss">parallel</span><span class="p">:</span> <span class="kp">true</span><span class="p">)</span>
+  <span class="n">bm</span><span class="p">.</span><span class="nf">report</span><span class="p">(</span><span class="s1">'parallel'</span><span class="p">)</span> <span class="k">do</span>
+    <span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :bootstrap</span><span class="p">,</span> <span class="ss">nsim: </span><span class="n">nsim</span><span class="p">,</span> <span class="ss">parallel: </span><span class="kp">true</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</code></pre></div>
+</code></pre>
+</div>
+
 <p>The obtained results are given in this table.</p>
-<div class="highlight"><pre><code class="language-text" data-lang="text">                        user     system      total        real
+
+<div class="highlighter-rouge"><pre class="highlight"><code>                        user     system      total        real
 single-threaded   101.540000   0.000000 101.540000 (101.452211)
 parallel           16.150000   0.030000 170.980000 ( 55.285422)
-</code></pre></div>
-<p>The parallel execution does in fact utilize all threads on both cores of my laptop (as I can simply observe by watching <code>htop</code>). As expected, the parallel execution turns out to be about twice as fast as single-threaded. </p>
+</code></pre>
+</div>
+
+<p>The parallel execution does in fact utilize all threads on both cores of my laptop (as I can simply observe by watching <code class="highlighter-rouge">htop</code>). As expected, the parallel execution turns out to be about twice as fast as single-threaded.</p>
 
 <!--The reason is that even though the bootstrap sample is obtained by `LMM#bootstrap` in parallel, the computation of the intervals from the bootstrap sample (like finding percentiles or transformations of the bootstrap sample) is always single-threaded. Better performance can be achieved for example by writing methods specifically adapted to a given data analysis, which would utilize the argument `what_to_collect` in the method `LMM#bootstrap` in a way optimal for the given setting. -->
 

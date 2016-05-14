@@ -7,15 +7,13 @@ In order to use [NMatrix](https://github.com/SciRuby/nmatrix) for the statistica
 
 At first, I tried to install the latest development version of `nmatrix` and `nmatrix-atlas` or `nmatrix-lapacke` in the same way as I do it on my laptop or desktop. However, this failed in the compilation stage because the BLAS and LAPACK libraries could not be found.
 
-Therefore, I decided to put some more effort into it, and install NMatrix with support for Intel MKL.
-[Intel MKL (or Math Kernel Library)](https://software.intel.com/en-us/intel-mkl) promises BLAS and LAPACK functionality with much better performance on Intel hardware than the alternatives (such as ATLAS). Additionally, on Cypress, automatic offload of some LAPACK routines to the [Xeon Phi Coprocessors](http://www.intel.com/content/www/us/en/processors/xeon/xeon-phi-detail.html?gclid=CKrYx9LGtcgCFc2PHwodG9YLuw&gclsrc=aw.ds) can be enabled at run time, when Intel MKL is used.
+Therefore, I decided to put some more effort into it, and install NMatrix with support for Intel MKL. [Intel MKL (or Math Kernel Library)](https://software.intel.com/en-us/intel-mkl) promises BLAS and LAPACK functionality with much better performance on Intel hardware than the alternatives (such as ATLAS). Additionally, on Cypress, automatic offload of some LAPACK routines to the [Xeon Phi Coprocessors](http://www.intel.com/content/www/us/en/processors/xeon/xeon-phi-detail.html?gclid=CKrYx9LGtcgCFc2PHwodG9YLuw&gclsrc=aw.ds) can be enabled at run time, when Intel MKL is used.
 
 I document the installation process in what follows (mainly for myself, in case I need to do it again).
 
 # Installation
 
-Cypress uses the `module` utility to manage multiple compilers, set environment variables, etc.
-In order to use Ruby as well as Intel MKL (which is contained in the Intel Parallel Studio XE suite), I need to load the corresponding modules:
+Cypress uses the `module` utility to manage multiple compilers, set environment variables, etc. In order to use Ruby as well as Intel MKL (which is contained in the Intel Parallel Studio XE suite), I need to load the corresponding modules:
 
 ```
 $ module load ruby
@@ -26,9 +24,7 @@ Now I can use Ruby in version 2.2.3 as well as the Intel compiler suite and Inte
 
 ## Installing gems in the user's home directory 
 
-As a student I of course don't have permission to install software system-wide on my university's HPC.
-The option `--user-install` can be used with `gem install` to install gems locally in the user's home directory.
-For more convenience one can add the line
+As a student I of course don't have permission to install software system-wide on my university's HPC. The option `--user-install` can be used with `gem install` to install gems locally in the user's home directory. For more convenience one can add the line
 
 ```
 gem: --user-install
@@ -76,33 +72,33 @@ There are three types of linking &mdash; static, dynamic, and SDL (single dynami
 
 1. Using static linking with the MKL LP64 libraries, `nmatrix-lapacke` can be compiled with the support for automatic offload to the Intel Xeon Phi Coprocessor (there are two of those at every cluster node). It compiles, passes the tests, and installs. However, when I tried to [enable the automatic offload by setting `MKL_MIC_ENABLE` to 1](https://wiki.hpc.tulane.edu/trac/wiki/cypress/XeonPhi), I couldn't get my Cholesky factorization toy problem to work (see below). With automatic offload disabled (`unset MKL_MIC_ENABLE`), everything works fine.
 
-     In this case, the following link line needs to be added to [`nmatix/ext/nmatrix_lapacke/extconf.rb`](https://github.com/SciRuby/nmatrix/blob/b7d367f544a9d48af5f1b9dedb7ef6adcf488091/ext/nmatrix_lapacke/extconf.rb#L178):
+   In this case, the following link line needs to be added to [`nmatix/ext/nmatrix_lapacke/extconf.rb`](https://github.com/SciRuby/nmatrix/blob/b7d367f544a9d48af5f1b9dedb7ef6adcf488091/ext/nmatrix_lapacke/extconf.rb#L178):
    
-       ```
-    $libs += " -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_core.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a -Wl,--end-group -liomp5 -ldl -lpthread "
-       ```
+   ```
+   $libs += " -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_core.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a -Wl,--end-group -liomp5 -ldl -lpthread "
+   ```
 
 2. Using linking via SDL, `nmatrix-lapacke` compiles, passes the tests, installs, and works great. However, usage of Intel Xeon Phi Coprocessors is not possible if SDL is used for linking.
 
-     SDL offers further, rather convenient features of [selection of the threading and interface layer at run time](https://software.intel.com/en-us/node/528522):
+   SDL offers further, rather convenient features of [selection of the threading and interface layer at run time](https://software.intel.com/en-us/node/528522):
 
-      > To set the threading layer at run time, use the `mkl_set_threading_layer` function or set `MKL_THREADING_LAYER` variable to one of the following values: `INTEL`, `SEQUENTIAL`, `PGI`. To set interface layer at run time, use the `mkl_set_interface_layer` function or set the `MKL_INTERFACE_LAYER` variable to `LP64` or `ILP64`. 
+   > To set the threading layer at run time, use the `mkl_set_threading_layer` function or set `MKL_THREADING_LAYER` variable to one of the following values: `INTEL`, `SEQUENTIAL`, `PGI`. To set interface layer at run time, use the `mkl_set_interface_layer` function or set the `MKL_INTERFACE_LAYER` variable to `LP64` or `ILP64`. 
 
-       The necessary link line that should be used in [`nmatix/ext/nmatrix_lapacke/extconf.rb`](https://github.com/SciRuby/nmatrix/blob/b7d367f544a9d48af5f1b9dedb7ef6adcf488091/ext/nmatrix_lapacke/extconf.rb#L178) is:
+   The necessary link line that should be used in [`nmatix/ext/nmatrix_lapacke/extconf.rb`](https://github.com/SciRuby/nmatrix/blob/b7d367f544a9d48af5f1b9dedb7ef6adcf488091/ext/nmatrix_lapacke/extconf.rb#L178) is:
 
-       ```
-    $libs += " -Wl,--no-as-needed -L${MKLROOT}/lib/intel64  -lmkl_rt -lpthread "
-       ```
+   ```
+   $libs += " -Wl,--no-as-needed -L${MKLROOT}/lib/intel64  -lmkl_rt -lpthread "
+   ```
 
 ### Final steps
 
 After the linking flags have been determined and added into the code, the development version of `nmatrix` and `nmatrix-lapacke` can be compiled, tested, and installed as described in the [NMatrix README](https://github.com/SciRuby/nmatrix) with the following lines of terminal input:
 
-  ```
+```
 $ bundle exec rake compile nmatrix_plugins=lapacke
 $ bundle exec rake spec nmatrix_plugins=lapacke
 $ bundle exec rake install nmatrix_plugins=lapacke
-   ```
+```
 
 
 ## Simple performance tests
@@ -113,7 +109,7 @@ I performed some quick tests for different installations of `nmatrix` and `nmatr
 
 Consider the SVD of a 100 &times; 100 matrix:
 
-```Ruby
+```ruby
 10000.times do |i|
   a = NMatrix.random([100,100], dtype: :float64)
   u, s, vt = a.gesvd
@@ -138,7 +134,7 @@ The results are:
 
 Consider a Cholesky factorization of a 5000 &times; 5000 matrix:
 
-```Ruby
+```ruby
 10.times do |i|
   a = NMatrix.random([5000,5000], dtype: :float64)
   b = a.dot a.transpose

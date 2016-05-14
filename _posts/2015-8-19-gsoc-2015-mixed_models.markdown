@@ -25,8 +25,7 @@ The parameter estimation in `LMM#initialize` is largely based on the approach de
 
 The `lme4` code is largely written in C++, which is integrated in R via the packages `Rcpp` and `RcppEigen`. It uses [CHOLMOD](https://developer.nvidia.com/cholmod) code for various sparse matrix tricks, and it involves passing pointers to C++ object to R (and vice versa) many times, and passing different R environments from function to function. All this makes the `lme4` code rather hard to read. Even Douglas Bates, the main developer of `lme4`, admits that ["The end result is confusing (my fault entirely) and fragile"](https://stat.ethz.ch/pipermail/r-sig-mixed-models/2014q4/022791.html), because of all the utilized performance improvements. I have analyzed the `lme4` code in three blog posts ([part 1](http://agisga.github.io/Dissect_lmer_part1/), [part 2](http://agisga.github.io/Dissect_lmer_part2/) and [part 3](http://agisga.github.io/Dissect_lmer_part3/)) before starting to work on my gem `mixed_models`.
 
-The method `LMM#initialize` is written in a more functional style, which makes the code shorter and (I find) easier to follow.  All matrix calculations are performed using the gem [`nmatrix`](https://github.com/SciRuby/nmatrix), which has a quite intuitive syntax and contributes to the overall code readability as well.
-The Ruby gem loses with respect to memory consumption and speed in comparison to `lme4`, because it is written in pure Ruby and does not utilize any sparse matrix tricks. However, for the same reasons the `mixed_models` code is much shorter and easier to read than `lme4`. Moreover, the linear mixed model formulation in `mixed_models` is a little bit more general, because it does not assume that the random effects covariance matrix is sparse. More about the implementation of `LMM#initialize` can be found in [this blog post](http://agisga.github.io/First-linear-mixed-model-fit/).
+The method `LMM#initialize` is written in a more functional style, which makes the code shorter and (I find) easier to follow.  All matrix calculations are performed using the gem [`nmatrix`](https://github.com/SciRuby/nmatrix), which has a quite intuitive syntax and contributes to the overall code readability as well. The Ruby gem loses with respect to memory consumption and speed in comparison to `lme4`, because it is written in pure Ruby and does not utilize any sparse matrix tricks. However, for the same reasons the `mixed_models` code is much shorter and easier to read than `lme4`. Moreover, the linear mixed model formulation in `mixed_models` is a little bit more general, because it does not assume that the random effects covariance matrix is sparse. More about the implementation of `LMM#initialize` can be found in [this blog post](http://agisga.github.io/First-linear-mixed-model-fit/).
 
 ### Other existing tools 
 
@@ -38,14 +37,14 @@ Below, I give a couple of examples illustrating some of the capabilities of `mix
 
 As an example, we use [data](http://archive.ics.uci.edu/ml/datasets/BlogFeedback) from the UCI machine learning repository, which originate from blog posts from various sources in 2010-2012, in order to model (the logarithm of) the number of comments that a blog post receives. The linear predictors are the text length, the log-transform of the average number of comments at the hosting website, the average number of trackbacks at the hosting website, and the parent blog posts. We assume a random effect on the number of comments due to the day of the week on which the blog post was published. In `mixed_models` this model can be fit with
 
-```Ruby
+```ruby
 model_fit = LMM.from_formula(formula: "log_comments ~ log_host_comments_avg + host_trackbacks_avg + length + has_parent_with_comments + (1 | day)", 
                               data: blog_data)
 ```
 
 and we can display some information about the estimated fixed effects with
 
-```Ruby
+```ruby
 puts model_fit.fix_ef_summary.inspect(24)
 ```
 
@@ -62,7 +61,7 @@ has_parent_with_comments      -0.4616662830553772      0.13936886611993773      
 
 We can also display the estimated random effects coefficients and the random effects standard deviation,
 
-```Ruby
+```ruby
 puts "Random effects coefficients:"
 puts model_fit.ran_ef
 puts "Random effects correlation structure:"
@@ -81,11 +80,9 @@ Random effects standard deviation:
        day        0.0 
 ```
 
-Interestingly, the estimates of the random effects coefficients and standard deviation are all zero!
-That is, we have a singular fit. Thus, our results imply that the day of the week on which a blog post is published has no effect on the number of comments that the blog post will receive. 
+Interestingly, the estimates of the random effects coefficients and standard deviation are all zero! That is, we have a singular fit. Thus, our results imply that the day of the week on which a blog post is published has no effect on the number of comments that the blog post will receive. 
 
-It is worth pointing out that such a model fit with a singular covariance matrix is problematic with the current version of Python's `statmodels` (described as "numerically challenging" in the [documentation](http://statsmodels.sourceforge.net/devel/mixed_linear.html)) and the R package `nlme` ("Singular covariance matrices correspond to infinite parameter values", a [mailing list reply](https://stat.ethz.ch/pipermail/r-sig-mixed-models/2014q4/022791.html) by Douglas Bates, the author of `nlme`). However, `mixed_models`, `lme4` and `MixedModels.jl` can handle singular fits without problems.
-In fact, like `mixed_models` above, `lme4` estimates the random effects coefficients and standard deviation to be zero, as we can see from the following R output:
+It is worth pointing out that such a model fit with a singular covariance matrix is problematic with the current version of Python's `statmodels` (described as "numerically challenging" in the [documentation](http://statsmodels.sourceforge.net/devel/mixed_linear.html)) and the R package `nlme` ("Singular covariance matrices correspond to infinite parameter values", a [mailing list reply](https://stat.ethz.ch/pipermail/r-sig-mixed-models/2014q4/022791.html) by Douglas Bates, the author of `nlme`). However, `mixed_models`, `lme4` and `MixedModels.jl` can handle singular fits without problems. In fact, like `mixed_models` above, `lme4` estimates the random effects coefficients and standard deviation to be zero, as we can see from the following R output:
 
 ```R
 > mod <- lmer(log_comments ~ log_host_comments_avg + host_trackbacks_avg + length + has_parent_with_comments + (1|day), data = df)
@@ -114,14 +111,13 @@ Unfortunately, `mixed_models` is rather slow when applied to such a large data s
 
 ### A second example and statistical inference on the parameter estimates
 
-Often, the experimental design or the data suggests a linear mixed model whose random effects are associated with multiple grouping factors. A specification of multiple random effects terms which correspond to multiple grouping factors is often referred to as *crossed random effect*, or *nested random effects* if the corresponding grouping factors are nested in each other.
-A good reference on such models is [Chapter 2](http://lme4.r-forge.r-project.org/book/Ch2.pdf) of Douglas Bates' `lme4` book.
+Often, the experimental design or the data suggests a linear mixed model whose random effects are associated with multiple grouping factors. A specification of multiple random effects terms which correspond to multiple grouping factors is often referred to as *crossed random effect*, or *nested random effects* if the corresponding grouping factors are nested in each other. A good reference on such models is [Chapter 2](http://lme4.r-forge.r-project.org/book/Ch2.pdf) of Douglas Bates' `lme4` book.
 
 Like `lme4`, `mixed_models` is particularly well suited for models with crossed or nested random effects. The current release of `statmodels`, however, does not support crossed or nested random effects (according to the [documentation](http://statsmodels.sourceforge.net/devel/mixed_linear.html)).
 
 As an example we fit a linear mixed model with nested random effects to a data frame with 100 rows, of the form:
 
-```Ruby
+```ruby
 #<Daru::DataFrame:69912847885160 @name = 2b161c5d-00de-4240-be50-8fa84f3aed24 @size = 5>
                     a          b          x          y 
          0         a3         b1 0.38842531 5.10364866 
@@ -148,7 +144,7 @@ where `gamma(a) ~ N(0, phi**2)` and `delta(a,b) ~ N(0, psi**2)` are normally dis
 
 We fit this model in `mixed_models`, and display the estimated random effects correlation structure with
 
-```Ruby
+```ruby
 mod = LMM.from_formula(formula: "y ~ x + (1|a) + (1|a:b)", 
                        data: df, reml: false)
 puts mod.ran_ef_summary.inspect
@@ -168,7 +164,7 @@ An advantage of `mixed_models` over some other tools is the simplicity with whic
 
 We can compute five types of 95% confidence intervals for the fixed effects coefficients with the following line of code:
 
-```Ruby
+```ruby
 mod.fix_ef_conf_int(method: :all, nsim: 1000)
 ```
 
@@ -188,7 +184,7 @@ For example, we see here that the intercept term is likely not significantly dif
 
 We can also test the nested random effect for significance, in order to decide whether we should drop that term from the model to reduce model complexity. We can use a bootstrap based version of likelihood ratio test as follows.
 
-```Ruby
+```ruby
 mod.ran_ef_p(variable: :intercept, grouping: [:a, :b], 
              method: :bootstrap, nsim: 1000)
 ```
@@ -218,7 +214,7 @@ In order to specify the covariance structure of the random effects, we need to p
 Having all the model matrices and vectors, we compute the Cholesky factor of the kinship matrix and fit the model with
 
 
-```Ruby
+```ruby
 # upper triangulat Cholesky factor
 kinship_mat_cholesky_factor = kinship_mat.factorize_cholesky[0] 
 

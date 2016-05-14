@@ -7,14 +7,9 @@ A few days ago I started working on hypotheses tests and confidence intervals fo
 
 # Methods
 
-There does not seem to be an agreement on a method to compute p-values (or whether to compute them at all) and confidence intervals for (generalized) linear mixed models in the scientific community. See for example the multitude of discussions on Cross Validated ([(1)](http://stats.stackexchange.com/questions/118416/getting-p-value-with-mixed-effect-with-lme4-package), 
-[(2)](http://stats.stackexchange.com/questions/95054/how-to-get-the-overall-effect-for-linear-mixed-model-in-lme4-in-r),
-[(3)](http://stats.stackexchange.com/questions/65489/how-do-i-get-a-a-p-value-for-the-output-of-an-lme-model-with-lme4), 
-[(4)](http://stats.stackexchange.com/questions/22988/significant-effect-in-lme4-mixed-model) among others), or the longish [statement](https://stat.ethz.ch/pipermail/r-help/2006-May/094765.html) on the topic by the creator of `lme4` and `nlme` Douglas Bates.
+There does not seem to be an agreement on a method to compute p-values (or whether to compute them at all) and confidence intervals for (generalized) linear mixed models in the scientific community. See for example the multitude of discussions on Cross Validated ([(1)](http://stats.stackexchange.com/questions/118416/getting-p-value-with-mixed-effect-with-lme4-package), [(2)](http://stats.stackexchange.com/questions/95054/how-to-get-the-overall-effect-for-linear-mixed-model-in-lme4-in-r), [(3)](http://stats.stackexchange.com/questions/65489/how-do-i-get-a-a-p-value-for-the-output-of-an-lme-model-with-lme4), [(4)](http://stats.stackexchange.com/questions/22988/significant-effect-in-lme4-mixed-model) among others), or the longish [statement](https://stat.ethz.ch/pipermail/r-help/2006-May/094765.html) on the topic by the creator of `lme4` and `nlme` Douglas Bates.
 
-There are many ways to perform hypothesis tests and to compute confidence intervals for the fixed effects coefficients of a linear mixed model.
-For a list see for example [this entry from the wiki of the r-sig-mixed-models mailing list](http://glmm.wikidot.com/faq).
-Unfortunately, the more accurate and universally applicable among the methods are computationally expensive and difficult to implement within Ruby's current infrastructure of gems. 
+There are many ways to perform hypothesis tests and to compute confidence intervals for the fixed effects coefficients of a linear mixed model. For a list see for example [this entry from the wiki of the r-sig-mixed-models mailing list](http://glmm.wikidot.com/faq). Unfortunately, the more accurate and universally applicable among the methods are computationally expensive and difficult to implement within Ruby's current infrastructure of gems. 
 
 The method that is most convenient to compute is the Wald Z-test. However, its validity is often questionable. [The wiki of the r-sig-mixed-models mailing list](http://glmm.wikidot.com/faq) names the following reasons:
 
@@ -31,7 +26,7 @@ For future extensibility I have included an argument `:method` in all of the met
 For purposes of illustration, I use the same data as in my previous [blog post](http://agisga.github.io/MixedModels_from_formula/).
 The simulated data set contains two numeric variables *Age* and *Aggression*, and two categorical variables *Location* and *Species*. These data are available for 100 individuals.
 
-```Ruby
+```ruby
 > alien_species.head
 => 
 #<Daru::DataFrame:70197332524760 @name = 1cd9d732-526b-49ae-8cb1-35cd69541c87 @size = 10>
@@ -53,7 +48,7 @@ We model the *Aggression* level of an individual as a linear function of the *Ag
 
 We fit this model in Ruby using `mixed_models` with:
 
-```Ruby
+```ruby
 require 'mixed_models'
 alien_species = Daru::DataFrame.from_csv './data/alien_species.csv'
 model_fit = LMM.from_formula(formula: "Aggression ~ Age + Species + (Age | Location)", 
@@ -64,7 +59,7 @@ model_fit = LMM.from_formula(formula: "Aggression ~ Age + Species + (Age | Locat
 
 The [Wald Z test statistics](https://en.wikipedia.org/wiki/Wald_test#Test_on_a_single_parameter) for the fixed effects coefficients can be computed with:
 
-```Ruby
+```ruby
 model_fit.fix_ef_z
 
 # => {:intercept=>16.882603431075875, :Age=>-0.7266646548258817, 
@@ -77,13 +72,16 @@ We see that the variable `Species` seems to have a huge influence on `Aggression
 ## P-values
 
 Based on the above test statistics, we can carry out hypotheses tests for each fixed effects term $\beta\subscript{i}$, testing the null
+
 $$H\subscript{0} : \beta\subscript{i} = 0$$
+
 against the alternative
+
 $$H\subscript{a} : \beta\subscript{i} \neq 0.$$
 
 The corresponding (approximate) p-values are obtained with:
 
-```Ruby
+```ruby
 model_fit.fix_ef_p(method: :wald)
 
 # => {:intercept=>0.0, :Age=>0.4674314106158888, 
@@ -93,14 +91,13 @@ model_fit.fix_ef_p(method: :wald)
 
 We see that indeed the aggression level of each species is highly significantly different from the base level (which is the species `Dalek` in this model), while statistically we don't have enough evidence to conclude that the age of an individual is a good predictor of his/her/its aggression level.
 
-I have specified `method: :wald` above for illustration purposes only, because the Wald method is currently the default and the only available method.
-In the future I might implement other methods which are more reliable and more computationally difficult at the same time.
+I have specified `method: :wald` above for illustration purposes only, because the Wald method is currently the default and the only available method. In the future I might implement other methods which are more reliable and more computationally difficult at the same time.
 
 ## Confidence intervals
 
 We can use the Wald method for confidence intervals as well. For example 90% confidence intervals for each fixed effects coefficient estimate can be computed as follows.
 
-```Ruby
+```ruby
 model_fit.fix_ef_conf_int(level: 0.9, method: :wald)
 
 # => {:intercept=>[917.2710135369496, 1115.302428002405],

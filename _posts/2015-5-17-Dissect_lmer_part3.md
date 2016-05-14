@@ -3,8 +3,7 @@ layout: post
 title: Dissecting lme4's lmer function. Part 3.
 ---
 
-This is the final part of my analysis of the function `lmer`, which is used to fit linear mixed models in the R package `lme4`.
-In two previous blog posts, we have seen the general layout of the function `lmer`, the dealings with the R model formula, and the setting up of the objective function for the optimization (see [part 1](http://agisga.github.io/Dissect_lmer_part1/) and [part 2](http://agisga.github.io/Dissect_lmer_part2/)).
+This is the final part of my analysis of the function `lmer`, which is used to fit linear mixed models in the R package `lme4`. In two previous blog posts, we have seen the general layout of the function `lmer`, the dealings with the R model formula, and the setting up of the objective function for the optimization (see [part 1](http://agisga.github.io/Dissect_lmer_part1/) and [part 2](http://agisga.github.io/Dissect_lmer_part2/)).
 
 After the user-specified R model formula is evaluated to model matrices, vectors and parameters, and the objective function is generated, the function `optimizeLmer` is called from within `lmer` to carry out the optimization. We analyse `optimizeLmer` below.
 
@@ -76,8 +75,7 @@ scgrad <- tryCatch(with(derivs,solve(chol(Hessian),gradient)),
 
 # Prepare an output object - `mkMerMod`
 
-This function takes as inputs the environment of the objective function, the parameter estimates obtained from the optimization, the fixed effects and random effects model matrices etc., the original function call, and the messages generated from the convergence check in `checkConv`. 
-It checks, reorganizes and renames the parameters, and finally returns everything in an object of class `lmerMod`:
+This function takes as inputs the environment of the objective function, the parameter estimates obtained from the optimization, the fixed effects and random effects model matrices etc., the original function call, and the messages generated from the convergence check in `checkConv`. It checks, reorganizes and renames the parameters, and finally returns everything in an object of class `lmerMod`:
 
 ```R
 new(switch(rcl, lmerResp="lmerMod", glmResp="glmerMod", nlsResp="nlmerMod"),
@@ -94,4 +92,3 @@ new(switch(rcl, lmerResp="lmerMod", glmResp="glmerMod", nlsResp="nlmerMod"),
                     warnings = attr(opt,"warnings"), val = opt$par)
     )
 ```
-

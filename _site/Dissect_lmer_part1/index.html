@@ -10,8 +10,10 @@
 
     
     <meta name="description" content="This blog posts marks the start of my Google Summer of Code project with the Ruby Science Foundation, where I will develop mixed linear models software for Ruby. As a preparation for my GSoC project, I will dedicate a couple of blog posts to a meticulous analysis of lme4 code (so that I can steal all the ideas from it!).
+
 " />
     <meta property="og:description" content="This blog posts marks the start of my Google Summer of Code project with the Ruby Science Foundation, where I will develop mixed linear models software for Ruby. As a preparation for my GSoC project, I will dedicate a couple of blog posts to a meticulous analysis of lme4 code (so that I can steal all the ideas from it!).
+
 " />
     
     <meta name="author" content="Alexej Gossmann" />
@@ -71,47 +73,75 @@
   <h1>Dissecting lme4's lmer function. Part 1.</h1>
 
   <div class="entry">
-    <p>This blog posts marks the start of my <a href="https://www.google-melange.com/gsoc/homepage/google/gsoc2015">Google Summer of Code</a> project with the <a href="http://sciruby.com">Ruby Science Foundation</a>, where I will develop mixed linear models software for Ruby. As a preparation for my GSoC project, I will dedicate a couple of blog posts to a meticulous analysis of <a href="https://github.com/lme4/lme4.git"><code>lme4</code></a> code (so that I can steal all the ideas from it!).</p>
+    <p>This blog posts marks the start of my <a href="https://www.google-melange.com/gsoc/homepage/google/gsoc2015">Google Summer of Code</a> project with the <a href="http://sciruby.com">Ruby Science Foundation</a>, where I will develop mixed linear models software for Ruby. As a preparation for my GSoC project, I will dedicate a couple of blog posts to a meticulous analysis of <a href="https://github.com/lme4/lme4.git"><code class="highlighter-rouge">lme4</code></a> code (so that I can steal all the ideas from it!).</p>
 
-<p>The <code>R</code> package <code>lme4</code> is capable of fitting linear, generalized and nonlinear mixed effects models. Here, I am interested in linear mixed models exclusively. A linear mixed model fit is performed in <code>lme4</code> with an <code>lmer</code> function call. For example:</p>
-<div class="highlight"><pre><code class="language-R" data-lang="R"><span class="kn">library</span><span class="p">(</span>lme4<span class="p">)</span>
-data<span class="p">(</span>sleepstudy<span class="p">)</span>
-fm1 <span class="o">&lt;-</span> lmer<span class="p">(</span>Reaction <span class="o">~</span> Days <span class="o">+</span> <span class="p">(</span>Days <span class="o">|</span> Subject<span class="p">),</span> sleepstudy<span class="p">)</span>
-</code></pre></div>
-<p>Thus, the first function to dissect is <code>lmer</code>.
-The function definition of <code>lmer</code> is located in the file <code>lmer.R</code>.
-The code is confusing. So, let&#39;s go through it step-by-step.</p>
+<p>The <code class="highlighter-rouge">R</code> package <code class="highlighter-rouge">lme4</code> is capable of fitting linear, generalized and nonlinear mixed effects models. Here, I am interested in linear mixed models exclusively. A linear mixed model fit is performed in <code class="highlighter-rouge">lme4</code> with an <code class="highlighter-rouge">lmer</code> function call. For example:</p>
 
-<h1>General overview</h1>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">lme4</span><span class="p">)</span>
+<span class="n">data</span><span class="p">(</span><span class="n">sleepstudy</span><span class="p">)</span>
+<span class="n">fm1</span> <span class="o">&lt;-</span> <span class="n">lmer</span><span class="p">(</span><span class="n">Reaction</span> <span class="o">~</span> <span class="n">Days</span> <span class="o">+</span> <span class="p">(</span><span class="n">Days</span> <span class="o">|</span> <span class="n">Subject</span><span class="p">),</span> <span class="n">sleepstudy</span><span class="p">)</span>
+</code></pre>
+</div>
 
-<p>The general steps taken in <code>lmer</code> are:</p>
+<p>Thus, the first function to dissect is <code class="highlighter-rouge">lmer</code>.<br />
+The function definition of <code class="highlighter-rouge">lmer</code> is located in the file <code class="highlighter-rouge">lmer.R</code>.<br />
+The code is confusing. So, let’s go through it step-by-step.</p>
+
+<h1 id="general-overview">General overview</h1>
+
+<p>The general steps taken in <code class="highlighter-rouge">lmer</code> are:</p>
 
 <ol>
-<li><p><em>Set some parameters in the local environment</em>. In particular, deal with the function argument <code>control</code>, which usually is a list inheriting from class <code>merControl</code> (but <code>control</code> can be defined in other ways too, and the code deals with all possibilities in a multitude of lines). It includes general parameters such as the optimizer to be used, model- and data-checking specifications, and all parameters to be passed to the optimizer.</p></li>
-<li><p><em>Parse data and formula</em>. At this step the fixed effects matrix $X$, the random effects matrix $Z$, the parameter vector $\theta$, the covariance factor $\Lambda\subscript{\theta}$, etc. are created from the input data. Moreover, the <code>REML</code> flag is set, formula is rewritten in the preferred form, and warnings from checks for the random effects (e.g. about the number of levels, dimension of $Z$, rank of $Z$) are generated. This all is performed by the function <code>lFormula</code>, which is located in <code>modular.R</code>.</p></li>
-<li><p><em>Create the deviance function to be minimized</em>. Call the function <code>mkLmerDevfun</code>, which returns a function <code>devfun</code> to calculate the profiled deviance. Implicitly <code>mkLmerDevfun</code> also returns an environment required to evaluate <code>devfun</code>. The function definition of <code>mkLmerDevfun</code> can be found in <code>modular.R</code>.</p></li>
-<li><p><em>Optimize the deviance function w.r.t.</em> $\theta$. Optimize the deviance <code>devfun</code> with respect to the covariance parameters $\theta$. This is performed by the function <code>optimizeLmer</code> (located in <code>modular.R</code>), which returns the result of the optimization.</p></li>
-<li><p><em>Check convergence criteria</em>. Convergence check according to the convergence check options specified in <code>control</code>, performed by the function <code>checkConv</code>, which is implemented in the file <code>checkConv.R</code>.</p></li>
-<li><p><em>Set up a useful output object</em>. Package the results into a <code>merMod</code> object to return. This is performed by the function <code>mkMerMod</code>, located in the file <code>utilities.R</code>.</p></li>
+  <li>
+    <p><em>Set some parameters in the local environment</em>. In particular, deal with the function argument <code class="highlighter-rouge">control</code>, which usually is a list inheriting from class <code class="highlighter-rouge">merControl</code> (but <code class="highlighter-rouge">control</code> can be defined in other ways too, and the code deals with all possibilities in a multitude of lines). It includes general parameters such as the optimizer to be used, model- and data-checking specifications, and all parameters to be passed to the optimizer.</p>
+  </li>
+  <li>
+    <p><em>Parse data and formula</em>. At this step the fixed effects matrix $X$, the random effects matrix $Z$, the parameter vector $\theta$, the covariance factor $\Lambda\subscript{\theta}$, etc. are created from the input data. Moreover, the <code class="highlighter-rouge">REML</code> flag is set, formula is rewritten in the preferred form, and warnings from checks for the random effects (e.g. about the number of levels, dimension of $Z$, rank of $Z$) are generated. This all is performed by the function <code class="highlighter-rouge">lFormula</code>, which is located in <code class="highlighter-rouge">modular.R</code>.</p>
+  </li>
+  <li>
+    <p><em>Create the deviance function to be minimized</em>. Call the function <code class="highlighter-rouge">mkLmerDevfun</code>, which returns a function <code class="highlighter-rouge">devfun</code> to calculate the profiled deviance. Implicitly <code class="highlighter-rouge">mkLmerDevfun</code> also returns an environment required to evaluate <code class="highlighter-rouge">devfun</code>. The function definition of <code class="highlighter-rouge">mkLmerDevfun</code> can be found in <code class="highlighter-rouge">modular.R</code>.</p>
+  </li>
+  <li>
+    <p><em>Optimize the deviance function w.r.t.</em> $\theta$. Optimize the deviance <code class="highlighter-rouge">devfun</code> with respect to the covariance parameters $\theta$. This is performed by the function <code class="highlighter-rouge">optimizeLmer</code> (located in <code class="highlighter-rouge">modular.R</code>), which returns the result of the optimization.</p>
+  </li>
+  <li>
+    <p><em>Check convergence criteria</em>. Convergence check according to the convergence check options specified in <code class="highlighter-rouge">control</code>, performed by the function <code class="highlighter-rouge">checkConv</code>, which is implemented in the file <code class="highlighter-rouge">checkConv.R</code>.</p>
+  </li>
+  <li>
+    <p><em>Set up a useful output object</em>. Package the results into a <code class="highlighter-rouge">merMod</code> object to return. This is performed by the function <code class="highlighter-rouge">mkMerMod</code>, located in the file <code class="highlighter-rouge">utilities.R</code>.</p>
+  </li>
 </ol>
 
 <p>Step 2-6 perform function calls to other sophisticated functions. We will dissect each of those separately in what follows.</p>
 
-<h1>Processing the formula - <code>lFormula</code></h1>
+<h1 id="processing-the-formula---lformula">Processing the formula - <code class="highlighter-rouge">lFormula</code></h1>
 
 <p>Defined as:</p>
-<div class="highlight"><pre><code class="language-R" data-lang="R">lFormula <span class="o">&lt;-</span> <span class="kr">function</span><span class="p">(</span>formula<span class="p">,</span> data<span class="o">=</span><span class="kc">NULL</span><span class="p">,</span> REML <span class="o">=</span> <span class="kc">TRUE</span><span class="p">,</span>
-                     <span class="kp">subset</span><span class="p">,</span> weights<span class="p">,</span> na.action<span class="p">,</span> offset<span class="p">,</span> contrasts <span class="o">=</span> <span class="kc">NULL</span><span class="p">,</span>
-                     control<span class="o">=</span>lmerControl<span class="p">(),</span> <span class="kc">...</span><span class="p">)</span>
-</code></pre></div>
+
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">lFormula</span> <span class="o">&lt;-</span> <span class="k">function</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">NULL</span><span class="p">,</span> <span class="n">REML</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">,</span>
+                     <span class="n">subset</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">na.action</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">contrasts</span> <span class="o">=</span> <span class="n">NULL</span><span class="p">,</span>
+                     <span class="n">control</span><span class="o">=</span><span class="n">lmerControl</span><span class="p">(),</span> <span class="k">...</span><span class="p">)</span>
+</code></pre>
+</div>
+
 <p>It proceeds with the following steps:</p>
 
 <ul>
-<li><p><em>Check the input arguments</em>. Call <code>checkArgs</code> on the given input arguments, in order to produces some warnings (about &quot;family&quot; and &quot;method&quot; being deprecated, and extra unused arguments) if necessary. Check that the input for <code>check.formula.LHS</code> is a valid value via the function <code>checkCtrlLevels</code>. The function <code>checkArgs</code> is defined in <code>utilities.R</code>, and <code>checkCtrlLevels</code> is defined in <code>modular.R</code>.</p></li>
-<li><p><em>Check and adjust the given formula and data frame</em>. Check the provided formula and data with <code>checkFormulaData</code> from <code>utilities.R</code> (e.g. check missing data, check if formula has a left hand side, etc.). From the right hand side of a formula for a mixed-effects model, expand terms with <code>||</code> into separate, independent random effect terms written with <code>|</code> (<code>expandDoubleVerts</code> is defined in <code>utilities.R</code>, <code>RHSForm</code> is defined in <code>modular.R</code>). Generate a data frame with only the variables needed to use the given formula.</p></li>
-<li><p><em>Create the random effects model matrix</em> $Z$, <em>its covariance factor</em> $\Lambda\subscript{\theta}$, <em>as well as the parametrization</em> $\theta$, <em>etc</em>. This is performed by the function <code>mkReTrms</code>, which is defined in <code>utilities.R</code>. Additionally, check that all grouping structures have at least 2 levels, that for each random effect $Z$ has more columns than rows, that the rank of $Z$ is not greater than $n$, etc. with the functions <code>checkNlevels</code>, <code>checkZdims</code>, <code>checkZrank</code> (all defined in <code>modular.R</code>). </p></li>
-<li><p><em>Create the fixed effects design matrix</em> $X$. Only basic <code>R</code> functions like <code>model.matrix</code> used here.</p></li>
-<li><p><em>Return a data frame with variables required to use the formula</em>. That is, fixed effects matrix $X$; <code>reTrms</code> containing the random effects matrix $Z$, covariance factor $\Lambda\subscript{\theta}$, etc.; <code>REML</code> flag; the formula; warnings from checks for the random effects (number of levels, dimension of $Z$, rank of $Z$, etc.). </p></li>
+  <li>
+    <p><em>Check the input arguments</em>. Call <code class="highlighter-rouge">checkArgs</code> on the given input arguments, in order to produces some warnings (about “family” and “method” being deprecated, and extra unused arguments) if necessary. Check that the input for <code class="highlighter-rouge">check.formula.LHS</code> is a valid value via the function <code class="highlighter-rouge">checkCtrlLevels</code>. The function <code class="highlighter-rouge">checkArgs</code> is defined in <code class="highlighter-rouge">utilities.R</code>, and <code class="highlighter-rouge">checkCtrlLevels</code> is defined in <code class="highlighter-rouge">modular.R</code>.</p>
+  </li>
+  <li>
+    <p><em>Check and adjust the given formula and data frame</em>. Check the provided formula and data with <code class="highlighter-rouge">checkFormulaData</code> from <code class="highlighter-rouge">utilities.R</code> (e.g. check missing data, check if formula has a left hand side, etc.). From the right hand side of a formula for a mixed-effects model, expand terms with <code class="highlighter-rouge">||</code> into separate, independent random effect terms written with <code class="highlighter-rouge">|</code> (<code class="highlighter-rouge">expandDoubleVerts</code> is defined in <code class="highlighter-rouge">utilities.R</code>, <code class="highlighter-rouge">RHSForm</code> is defined in <code class="highlighter-rouge">modular.R</code>). Generate a data frame with only the variables needed to use the given formula.</p>
+  </li>
+  <li>
+    <p><em>Create the random effects model matrix</em> $Z$, <em>its covariance factor</em> $\Lambda\subscript{\theta}$, <em>as well as the parametrization</em> $\theta$, <em>etc</em>. This is performed by the function <code class="highlighter-rouge">mkReTrms</code>, which is defined in <code class="highlighter-rouge">utilities.R</code>. Additionally, check that all grouping structures have at least 2 levels, that for each random effect $Z$ has more columns than rows, that the rank of $Z$ is not greater than $n$, etc. with the functions <code class="highlighter-rouge">checkNlevels</code>, <code class="highlighter-rouge">checkZdims</code>, <code class="highlighter-rouge">checkZrank</code> (all defined in <code class="highlighter-rouge">modular.R</code>).</p>
+  </li>
+  <li>
+    <p><em>Create the fixed effects design matrix</em> $X$. Only basic <code class="highlighter-rouge">R</code> functions like <code class="highlighter-rouge">model.matrix</code> used here.</p>
+  </li>
+  <li>
+    <p><em>Return a data frame with variables required to use the formula</em>. That is, fixed effects matrix $X$; <code class="highlighter-rouge">reTrms</code> containing the random effects matrix $Z$, covariance factor $\Lambda\subscript{\theta}$, etc.; <code class="highlighter-rouge">REML</code> flag; the formula; warnings from checks for the random effects (number of levels, dimension of $Z$, rank of $Z$, etc.).</p>
+  </li>
 </ul>
 
   </div>
