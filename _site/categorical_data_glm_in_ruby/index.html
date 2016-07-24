@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Logistic regression with categorical data in Ruby – Alexej Gossmann – Math PhD student at Tulane University</title>
+
+        <meta charset="utf-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    
+    <meta name="description" content="I had some fun analysing the shelter animal data from kaggle using the Ruby gems daru for data wrangling and statsample-glm for model fitting. In this blog post, I want to demonstrate that data wrangling and statistical modeling is not an area of absolute predominance of Python and R, but that it is possible in Ruby too (though, currently to a much lesser extent).
+
+">
+    <meta property="og:description" content="I had some fun analysing the shelter animal data from kaggle using the Ruby gems daru for data wrangling and statsample-glm for model fitting. In this blog post, I want to demonstrate that data wrangling and statistical modeling is not an area of absolute predominance of Python and R, but that it is possible in Ruby too (though, currently to a much lesser extent).
+
+">
+    
+    <meta name="author" content="Alexej Gossmann">
+
+    
+    <meta property="og:title" content="Logistic regression with categorical data in Ruby">
+    <meta property="twitter:title" content="Logistic regression with categorical data in Ruby">
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - Math PhD student at Tulane University" href="/feed.xml">
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+ 
+    <!-- MathJax interation-->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}});
+      MathJax.Hub.Config({TeX: {Macros:{subscript:['_{#1}',1],superscript:['^{#1}',1]}}});
+    </script> 
+    <!-- Turn on equation numbering -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
+ </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <header class="masthead clearfix">
+        <a href="/" class="site-avatar"><img src="https://avatars0.githubusercontent.com/u/11449372?v=3&amp;s=460"></a>
+
+        <div class="site-info">
+          <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
+          <p class="site-description">Math PhD student at Tulane University</p>
+        </div>
+
+        <nav>
+          <a href="/about" class="blue">About</a>
+          <a href="/" class="yellow">Blog</a>
+          <a href="/talks" class="green">Presentations</a>
+          <a href="/publications" class="magenta">Publications</a>
+          <a href="/software" class="cyan">Software</a>
+        </nav>
+      </header>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Logistic regression with categorical data in Ruby</h1>
+
+  <div class="entry">
+    <p>I had some fun analysing the <a href="https://www.kaggle.com/c/shelter-animal-outcomes">shelter animal data</a> from <a href="https://www.kaggle.com/competitions">kaggle</a> using the Ruby gems <code class="highlighter-rouge">daru</code> for data wrangling and <code class="highlighter-rouge">statsample-glm</code> for model fitting. In this blog post, I want to demonstrate that data wrangling and statistical modeling is not an area of absolute predominance of Python and R, but that it is possible in Ruby too (though, currently to a much lesser extent).</p>
+
+<p>The presented data analysis steps are only possible thanks to <a href="https://summerofcode.withgoogle.com/projects/#6288543399804928">the Google Summer of Code 2016 work of Lokesh Sharma</a> (github: <a href="https://github.com/lokeshh">@lokeshh</a>), who is working on categorical data support for <code class="highlighter-rouge">daru</code> and <code class="highlighter-rouge">statsample-glm</code>. For the following code snippets I have used the <a href="https://github.com/v0dro/daru">current development version of <code class="highlighter-rouge">daru</code></a> and Lokesh’s <a href="https://github.com/lokeshh/statsample-glm/tree/cat_data"><code class="highlighter-rouge">cat_data</code> branch of <code class="highlighter-rouge">statsample-glm</code></a>.</p>
+
+<h2 id="what-is-the-model-what-are-we-predicting-and-what-are-the-predictors">What is the model, what are we predicting, and what are the predictors?</h2>
+
+<p>The training dataset provides information including age, breed, color, sex, and outcome (such as adopted, euthanized, transferred, etc.)  for over 26000 shelter animals from the <a href="http://www.austintexas.gov/department/animal-services">Austin Animal Center</a>. The goal is to predict the outcome for each animal in the test data.</p>
+
+<p>After reading in the training data with <code class="highlighter-rouge">daru</code>, we observe that there are five possible outcomes:</p>
+
+<div class="highlighter-rouge">
+<pre class="highlight"><code><span class="nb">require</span> <span class="s1">'daru'</span>
+<span class="n">shelter_data</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">from_csv</span> <span class="s1">'animal_shelter_train.csv'</span>
+<span class="n">shelter_data</span><span class="p">[</span><span class="s2">"OutcomeType"</span><span class="p">].</span><span class="nf">to_a</span><span class="p">.</span><span class="nf">uniq</span>
+<span class="c1"># =&gt; ["Return_to_owner", "Euthanasia", "Adoption", "Transfer", "Died"]</span>
+</code></pre>
+</div>
+
+<p>and that most predictor variables (such as breed, color, animal type, etc.) are categorical.</p>
+
+<p>Because multinomial logistic regression is not supported by statsample-glm, we fit five different one-vs-all logistic regression models instead. That is, one model has a 0-1-valued indicator vector of whether the animal got adopted as the response. The next model uses as the response variable a 0-1-valued indicator for whether the animal got euthanized. And likewise, for the remaining three models, the response variables signify whether the animal got reunited with its previous owner, or died of natural causes, or transferred. Obtaining a prediction from each of the five models, we will be able to assign each animal a “score” for each of the five possible outcomes.</p>
+
+<p>For simplicity, and since this data analysis is just for demonstration purposes, we keep only the variables “AgeuponOutcome”, “AnimalType”, “Breed”, “Color”, and “SexuponOutcome” as predictors in the model.</p>
+
+<h2 id="preprocessing-the-training-data">Preprocessing the training data</h2>
+
+<p>First, we get rid of observations (i.e., data frame rows) with missing values and of the variables (i.e., data frame columns), which won’t be used in the subsequent analysis:</p>
+
+<div class="highlighter-rouge">
+<pre class="highlight"><code><span class="n">shelter_data</span><span class="p">.</span><span class="nf">delete_vectors</span> <span class="o">*</span><span class="sx">%W[AnimalID Name DateTime OutcomeSubtype]</span>
+<span class="n">shelter_data</span> <span class="o">=</span> <span class="n">shelter_data</span><span class="p">.</span><span class="nf">filter_rows</span> <span class="k">do</span>
+  <span class="o">|</span><span class="n">row</span><span class="o">|</span> <span class="o">!</span><span class="n">row</span><span class="p">.</span><span class="nf">has_missing_data?</span>
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Next, we transform “AgeuponOutcome”, which is not given in a consistent unit, to a numeric variable:</p>
+
+<div class="highlighter-rouge">
+<pre class="highlight"><code><span class="n">shelter_data</span><span class="p">[</span><span class="s1">'AgeuponOutcome'</span><span class="p">].</span><span class="nf">map!</span> <span class="k">do</span> <span class="o">|</span><span class="n">age</span><span class="o">|</span>
+  <span class="n">num</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="n">age</span><span class="p">.</span><span class="nf">split</span>
+  <span class="n">num</span> <span class="o">=</span> <span class="n">num</span><span class="p">.</span><span class="nf">to_f</span>
+  <span class="k">case</span> <span class="n">unit</span>
+  <span class="k">when</span> <span class="s2">"year"</span><span class="p">,</span> <span class="s2">"years"</span>
+    <span class="mi">52</span><span class="o">.</span><span class="mi">0</span> <span class="o">*</span> <span class="n">num</span>
+  <span class="k">when</span> <span class="s2">"month"</span><span class="p">,</span> <span class="s2">"months"</span>
+    <span class="mi">4</span><span class="o">.</span><span class="mi">5</span> <span class="o">*</span> <span class="n">num</span>
+  <span class="k">when</span> <span class="s2">"week"</span><span class="p">,</span> <span class="s2">"weeks"</span>
+    <span class="n">num</span>
+  <span class="k">when</span> <span class="s2">"day"</span><span class="p">,</span> <span class="s2">"days"</span>
+    <span class="n">num</span> <span class="o">/</span> <span class="mi">7</span><span class="o">.</span><span class="mi">0</span>
+  <span class="k">else</span>
+    <span class="k">raise</span> <span class="s2">"Unknown AgeuponOutcome unit!"</span>
+  <span class="k">end</span>  
+<span class="k">end</span>
+</code></pre>
+</div>
+
+<p>Then we tell the <code class="highlighter-rouge">Daru::DataFrame</code>, which variables should be treated as categorical:</p>
+
+<div class="highlighter-rouge">
+<pre class="highlight"><code><span class="n">shelter_data</span><span class="p">.</span><span class="nf">to_category</span> <span class="s1">'OutcomeType'</span><span class="p">,</span> <span class="s1">'AnimalType'</span><span class="p">,</span> <span class="s1">'SexuponOutcome'</span><span class="p">,</span> <span class="s1">'Breed'</span><span class="p">,</span> <span class="s1">'Color'</span>
+</code></pre>
+</div>
+
+<p>Since the variable “Breed” has more than 1000 distinct values, which leads to model fitting problems, we recode it such that rare breeds are summarized into one category, “other” (arguably, there are much better, but much more complex, ways to summarize “Breed” into fewer categories, for example such as presented <a href="https://www.kaggle.com/andraszsom/shelter-animal-outcomes/dog-breeds-dog-groups">here</a>):</p>
+
+<div class="highlighter-rouge">
+<pre class="highlight"><code><span class="nb">puts</span> <span class="n">shelter_data</span><span class="p">[</span><span class="s1">'Breed'</span><span class="p">].</span><span class="nf">to_a</span><span class="p">.</span><span class="nf">uniq</span><span class="p">.</span><span class="nf">length</span>
+<span class="c1"># =&gt; 1380</span>
+
+<span class="n">other_breed</span> <span class="o">=</span> <span class="n">shelter_data</span><span class="p">[</span><span class="s1">'Breed'</span><span class="p">].</span><span class="nf">categories</span><span class="p">.</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">shelter_data</span><span class="p">[</span><span class="s1">'Breed'</span><span class="p">].</span><span class="nf">count</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">100</span> <span class="p">}</span>
+<span class="n">other_breed_hash</span> <span class="o">=</span> <span class="n">other_breed</span><span class="p">.</span><span class="nf">zip</span><span class="p">([</span><span class="s1">'other'</span><span class="p">]</span><span class="o">*</span><span class="n">other_breed</span><span class="p">.</span><span class="nf">size</span><span class="p">).</span><span class="nf">to_h</span>
+<span class="n">shelter_data</span><span class="p">[</span><span class="s1">'Breed'</span><span class="p">].</span><span class="nf">rename_categories</span> <span class="n">other_breed_hash</span>
+<span class="n">shelter_data</span><span class="p">[</span><span class="s1">'Breed'</span><span class="p">].</span><span class="nf">base_category</span> <span class="o">=</span> <span class="s1">'other'</span>
+
+<span class="nb">puts</span> <span class="n">shelter_data</span><span class="p">[</span><span class="s1">'Breed'</span><span class="p">].</span><span class="nf">to_a</span><span class="p">.</span><span class="nf">uniq</span><span class="p">.</span><span class="nf">length</span>
+<span class="c1"># =&gt; 28 </span>
+</code></pre>
+</div>
+
+<p>In the same way, we recode the variable “Color” into fewer categories (no potential dog owner can distinguish 366 colors anyway <img class="emoji" title=":stuck_out_tongue_closed_eyes:" alt=":stuck_out_tongue_closed_eyes:" src="https://assets.github.com/images/icons/emoji/unicode/1f61d.png" height="20" width="20" align="absmiddle">):</p>
+
+<div class="highlighter-rouge">
+<pre class="highlight"><code><span class="nb">puts</span> <span class="n">shelter_data</span><span class="p">[</span><span class="s1">'Color'</span><span class="p">].</span><span class="nf">to_a</span><span class="p">.</span><span class="nf">uniq</span><span class="p">.</span><span class="nf">length</span>
+<span class="c1"># =&gt; 366</span>
+
+<span class="n">other_color</span> <span class="o">=</span> <span class="n">shelter_data</span><span class="p">[</span><span class="s1">'Color'</span><span class="p">].</span><span class="nf">categories</span><span class="p">.</span><span class="nf">select</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">shelter_data</span><span class="p">[</span><span class="s1">'Color'</span><span class="p">].</span><span class="nf">count</span><span class="p">(</span><span class="n">i</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">100</span> <span class="p">}</span>
+<span class="n">other_color_hash</span> <span class="o">=</span> <span class="n">other_color</span><span class="p">.</span><span class="nf">zip</span><span class="p">([</span><span class="s1">'other'</span><span class="p">]</span><span class="o">*</span><span class="n">other_color</span><span class="p">.</span><span class="nf">size</span><span class="p">).</span><span class="nf">to_h</span>
+<span class="n">shelter_data</span><span class="p">[</span><span class="s1">'Color'</span><span class="p">].</span><span class="nf">rename_categories</span> <span class="n">other_color_hash</span>
+<span class="n">shelter_data</span><span class="p">[</span><span class="s1">'Color'</span><span class="p">].</span><span class="nf">base_category</span> <span class="o">=</span> <span class="s1">'other'</span>
+<span class="n">shelter_data</span><span class="p">[</span><span class="s1">'Color'</span><span class="p">].</span><span class="nf">frequencies</span>
+
+<span class="nb">puts</span> <span class="n">shelter_data</span><span class="p">[</span><span class="s1">'Color'</span><span class="p">].</span><span class="nf">to_a</span><span class="p">.</span><span class="nf">uniq</span><span class="p">.</span><span class="nf">length</span>
+<span class="c1"># =&gt; 43</span>
+</code></pre>
+</div>
+
+<p>Again, there are certainly more clever ways to summarize colors into a handful of meaningful categories, but this is for demonstration purposes only.</p>
+
+<p>Finally, we save the preprocessed data frame as a CSV file:</p>
+
+<div class="highlighter-rouge">
+<pre class="highlight"><code><span class="n">shelter_data</span><span class="p">.</span><span class="nf">write_csv</span> <span class="s2">"animal_shelter_train_processed.csv"</span>
+</code></pre>
+</div>
+
+<h2 id="generalized-linear-model-fit-and-predictions">Generalized linear model fit and predictions</h2>
+
+<p>As described in the beginning, we fit a separate one-vs-all logistic regression model for each outcome type. Thus, to avoid repetition, the following shows the code for the model with outcome type adoption only. The four models for each of the other four outcome types are fit in exactly the same way.</p>
+
+<p>We load the preprocessed training data, and define a dummy variable for outcome type adoption, to be used as the model response:</p>
+
+<div class="highlighter-rouge">
+<pre class="highlight"><code><span class="nb">require</span> <span class="s1">'daru'</span>
+<span class="n">train_data</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">from_csv</span> <span class="s1">'animal_shelter_train_processed.csv'</span>
+<span class="c1"># define the 0-1-valued response variable</span>
+<span class="n">train_data</span><span class="p">.</span><span class="nf">to_category</span> <span class="s1">'OutcomeType'</span>
+<span class="n">train_data</span><span class="p">[</span><span class="s1">'Adoption'</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">train_data</span><span class="p">[</span><span class="s1">'OutcomeType'</span><span class="p">].</span><span class="nf">contrast_code</span><span class="p">)[</span><span class="s1">'OutcomeType_Adoption'</span><span class="p">]</span>
+</code></pre>
+</div>
+
+<p>Then we fit a GLM with <code class="highlighter-rouge">statsample-glm</code> using a formula language, familiar from R and Python, for model specification:</p>
+
+<div class="highlighter-rouge">
+<pre class="highlight"><code><span class="nb">require</span> <span class="s1">'statsample-glm'</span>
+<span class="n">formula</span> <span class="o">=</span> <span class="s1">'Adoption~AnimalType+Breed+AgeuponOutcome+Color+SexuponOutcome'</span>
+<span class="n">glm_adoption</span> <span class="o">=</span> <span class="no">Statsample</span><span class="o">::</span><span class="no">GLM</span><span class="o">::</span><span class="no">Regression</span><span class="p">.</span><span class="nf">new</span> <span class="n">formula</span><span class="p">,</span> <span class="n">train_data</span><span class="p">,</span> <span class="ss">:logistic</span><span class="p">,</span> <span class="ss">epsilon: </span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">2</span>
+</code></pre>
+</div>
+
+<p>Finally, we use the obtained GLM to compute predictions on test data (the test data didn’t require much preprocessing, apart from the imputation of a couple missing age values):</p>
+
+<div class="highlighter-rouge">
+<pre class="highlight"><code><span class="n">test_data</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">from_csv</span> <span class="s1">'animal_shelter_test_processed.csv'</span>
+<span class="n">adoption_pred</span> <span class="o">=</span> <span class="n">glm_adoption</span><span class="p">.</span><span class="nf">predict</span> <span class="n">test_data</span> 
+</code></pre>
+</div>
+
+<p>Unfortunately, <code class="highlighter-rouge">statsample-glm</code> is currently not optimized for computation on medium or big sized data. In the present case, where the design matrix is approximately of size $26000 \times 80$, the model fitting algorithm ran for a couple hours and used more memory than the 12 GB that my laptop has (so, I had to run the code on my university’s computer cluster).</p>
+
+<h2 id="thats-it">That’s it!</h2>
+
+<p>Out of curiosity I have actually submitted the obtained predictions to kaggle. The submission currently ranks 1090 out of 1451, as expected of such an unsophisticated GLM (see <a href="https://www.kaggle.com/c/shelter-animal-outcomes/leaderboard">the leaderboard</a>, submission is under name agisga).  At least I am not last (personal goal achieved <img class="emoji" title=":smiley:" alt=":smiley:" src="https://assets.github.com/images/icons/emoji/unicode/1f603.png" height="20" width="20" align="absmiddle">)! All scripts used for the presented data analysis can be found in <a href="https://github.com/agisga/animal_shelter_data">this github repository</a>.</p>
+
+  </div>
+
+  <div class="date">
+    Written on July 23, 2016
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'agisga';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+
+
+
+<a href="https://github.com/agisga"><i class="svg-icon github"></i></a>
+
+<a href="https://www.linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
+
+
+<a href="https://www.twitter.com/agisga"><i class="svg-icon twitter"></i></a>
+
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>
