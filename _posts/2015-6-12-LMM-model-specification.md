@@ -4,6 +4,7 @@ title: Model specification for linear mixed model
 tags:
 - ruby
 - mixed_models
+- lme4
 - regression
 - LMM
 ---
