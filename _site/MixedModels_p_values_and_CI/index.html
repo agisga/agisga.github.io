@@ -95,10 +95,10 @@
 
 <h2 id="example-data">Example data</h2>
 
-<p>For purposes of illustration, I use the same data as in my previous <a href="http://agisga.github.io/MixedModels_from_formula/">blog post</a>.<br />
+<p>For purposes of illustration, I use the same data as in my previous <a href="http://agisga.github.io/MixedModels_from_formula/">blog post</a>.
 The simulated data set contains two numeric variables <em>Age</em> and <em>Aggression</em>, and two categorical variables <em>Location</em> and <em>Species</em>. These data are available for 100 individuals.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">alien_species</span><span class="p">.</span><span class="nf">head</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">alien_species</span><span class="p">.</span><span class="nf">head</span>
 <span class="o">=&gt;</span> 
 <span class="c1">#&lt;Daru::DataFrame:70197332524760 @name = 1cd9d732-526b-49ae-8cb1-35cd69541c87 @size = 10&gt;</span>
                   <span class="no">Age</span> <span class="no">Aggression</span>   <span class="no">Location</span>    <span class="no">Species</span> 
@@ -119,7 +119,7 @@ The simulated data set contains two numeric variables <em>Age</em> and <em>Aggre
 
 <p>We fit this model in Ruby using <code class="highlighter-rouge">mixed_models</code> with:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'mixed_models'</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'mixed_models'</span>
 <span class="n">alien_species</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">from_csv</span> <span class="s1">'./data/alien_species.csv'</span>
 <span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_formula</span><span class="p">(</span><span class="ss">formula: </span><span class="s2">"Aggression ~ Age + Species + (Age | Location)"</span><span class="p">,</span> 
                              <span class="ss">data: </span><span class="n">alien_species</span><span class="p">)</span>
@@ -130,7 +130,7 @@ The simulated data set contains two numeric variables <em>Age</em> and <em>Aggre
 
 <p>The <a href="https://en.wikipedia.org/wiki/Wald_test#Test_on_a_single_parameter">Wald Z test statistics</a> for the fixed effects coefficients can be computed with:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_z</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_z</span>
 
 <span class="c1"># =&gt; {:intercept=&gt;16.882603431075875, :Age=&gt;-0.7266646548258817, </span>
 <span class="ss">:Species_lvl_Human</span><span class="o">=&gt;-</span><span class="mi">1862</span><span class="o">.</span><span class="mi">7747813759402</span><span class="p">,</span> <span class="ss">:Species_lvl_Ood</span><span class="o">=&gt;-</span><span class="mi">3196</span><span class="o">.</span><span class="mi">2289922406044</span><span class="p">,</span> 
@@ -152,7 +152,7 @@ The simulated data set contains two numeric variables <em>Age</em> and <em>Aggre
 
 <p>The corresponding (approximate) p-values are obtained with:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_p</span><span class="p">(</span><span class="ss">method: :wald</span><span class="p">)</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_p</span><span class="p">(</span><span class="ss">method: :wald</span><span class="p">)</span>
 
 <span class="c1"># =&gt; {:intercept=&gt;0.0, :Age=&gt;0.4674314106158888, </span>
 <span class="ss">:Species_lvl_Human</span><span class="o">=&gt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">:Species_lvl_Ood</span><span class="o">=&gt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> 
@@ -168,7 +168,7 @@ The simulated data set contains two numeric variables <em>Age</em> and <em>Aggre
 
 <p>We can use the Wald method for confidence intervals as well. For example 90% confidence intervals for each fixed effects coefficient estimate can be computed as follows.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">level: </span><span class="mi">0</span><span class="o">.</span><span class="mi">9</span><span class="p">,</span> <span class="ss">method: :wald</span><span class="p">)</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">level: </span><span class="mi">0</span><span class="o">.</span><span class="mi">9</span><span class="p">,</span> <span class="ss">method: :wald</span><span class="p">)</span>
 
 <span class="c1"># =&gt; {:intercept=&gt;[917.2710135369496, 1115.302428002405],</span>
  <span class="ss">:Age</span><span class="o">=&gt;</span><span class="p">[</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">2131635992213468</span><span class="p">,</span> <span class="mi">0</span><span class="o">.</span><span class="mi">08253129235199347</span><span class="p">],</span>
@@ -230,6 +230,19 @@ Continuing our example, we have:
 
   <div class="date">
     Written on July  3, 2015
+  </div>
+
+  <div class="date">
+    Tags:
+		
+		<a href="/tag/ruby">+ruby</a>
+		
+		<a href="/tag/mixed_models">+mixed_models</a>
+		
+		<a href="/tag/regression">+regression</a>
+		
+		<a href="/tag/LMM">+LMM</a>
+		
   </div>
 
   
