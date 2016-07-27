@@ -1,6 +1,11 @@
 ---
 layout: post
 title: A rudimentary first linear mixed model fit
+tags:
+- ruby
+- mixed_models
+- regression
+- LMM
 ---
 
 During the last two weeks I made some progress on my [Google Summer of Code project](https://github.com/agisga/MixedModels).

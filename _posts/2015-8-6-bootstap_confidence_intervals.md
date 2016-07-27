@@ -1,6 +1,11 @@
 ---
 layout: post
 title: Bootstrapping and bootstrap confidence intervals for linear mixed models
+tags:
+- ruby
+- mixed_models
+- regression
+- LMM
 ---
 
 (**EDIT:** I have also written [a more theoretical blog post](http://www.alexejgossmann.com/Lehmanns_TSH_and_TPE/bootstrap_intervals_for_LMM/) on the topic.)

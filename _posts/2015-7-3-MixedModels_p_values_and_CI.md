@@ -1,6 +1,11 @@
 ---
 layout: post
 title: P-values and confidence intervals
+tags:
+- ruby
+- mixed_models
+- regression
+- LMM
 ---
 
 A few days ago I started working on hypotheses tests and confidence intervals for my project [`mixed_models`](https://github.com/agisga/mixed_models), and I got pretty surprised by certain things.

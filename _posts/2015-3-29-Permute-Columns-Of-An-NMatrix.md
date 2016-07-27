@@ -1,6 +1,10 @@
 ---
 layout: post
 title: NMatrix column permutations
+tags:
+- ruby
+- nmatrix
+- math
 ---
 
 Recently I got surprised by the behaviour of `#permute_columns` in the *Ruby* gem *NMatrix*.

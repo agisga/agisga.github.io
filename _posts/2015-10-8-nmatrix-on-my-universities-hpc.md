@@ -1,6 +1,9 @@
 ---
 layout: post
 title: NMatrix with Intel MKL on my university's HPC
+tags:
+- ruby
+- nmatrix
 ---
 
 In order to use [NMatrix](https://github.com/SciRuby/nmatrix) for the statistical analysis of big genomic data, I decided to install it on my university's high performance computing system (HPC). It is called [Cypress](http://crsc.tulane.edu/) (like the [typical New Orleans tree](http://imgc.allpostersimages.com/images/P-473-488-90/64/6420/5OV9100Z/posters/paul-souders-cypress-reflected-in-bayou-along-highway-61-on-stormy-summer-afternoon-new-orleans-louisiana-usa.jpg)), and it's currently the 10th best among all American universities. 

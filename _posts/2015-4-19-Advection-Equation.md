@@ -1,6 +1,10 @@
 ---
 layout: post
-title: Solve an advection equation in Ruby with spitzy 
+title: Solve an advection equation in Ruby with spitzy
+tags:
+- ruby
+- spitzy
+- differential equations 
 ---
 
 A couple of days ago I started working on a collection of numerical methods for differential equations, wirtten in pure Ruby (I have conviced the professor of my numerical DE class that that`s a good idea for my final project in said class).

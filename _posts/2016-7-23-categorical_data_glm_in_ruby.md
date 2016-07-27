@@ -1,6 +1,13 @@
 ---
 layout: post
 title: Logistic regression with categorical data in Ruby
+tags:
+- ruby
+- daru
+- statsample-glm
+- regression 
+- GLM
+- kaggle
 ---
 
 I had some fun analysing the [shelter animal data](https://www.kaggle.com/c/shelter-animal-outcomes) from [kaggle](https://www.kaggle.com/competitions) using the Ruby gems `daru` for data wrangling and `statsample-glm` for model fitting. In this blog post, I want to demonstrate that data wrangling and statistical modeling is not an area of absolute predominance of Python and R, but that it is possible in Ruby too (though, currently to a much lesser extent).

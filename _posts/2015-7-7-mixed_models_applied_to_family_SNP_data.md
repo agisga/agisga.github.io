@@ -1,6 +1,12 @@
 ---
 layout: post
 title: A (naive) application of linear mixed models to genetics
+tags:
+- ruby
+- mixed_models
+- regression
+- LMM
+- genomics
 ---
 
 The following shows an application of class `LMM` from the Ruby gem [`mixed_models`](https://github.com/agisga/mixed_models.git) to SNP data ([single-nucleotide polymorphism](https://en.wikipedia.org/wiki/Single-nucleotide_polymorphism)) with known pedigree structures. The family information is prior knowledge that we can model in the random effects of a linear mixed effects model.

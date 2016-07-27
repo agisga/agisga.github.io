@@ -1,6 +1,11 @@
 ---
 layout: post
 title: MixedModels Formula Interface and Categorical Variables
+tags:
+- ruby
+- mixed_models
+- regression
+- LMM
 ---
 
 I made some more progress on my [Google Summer of Code project MixedModels](https://github.com/agisga/MixedModels). The linear mixed models fitting method is now capable of handling non-numeric (i.e., categorical) predictor variables, as well as interaction effects. Moreover, I gave the method a user friendly R-formula-like interface. I will present these new capabilities of the Ruby gem with an example. Then I will briefly describe their implementation.

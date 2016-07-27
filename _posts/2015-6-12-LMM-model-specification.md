@@ -1,6 +1,11 @@
 ---
 layout: post
 title: Model specification for linear mixed model 
+tags:
+- ruby
+- mixed_models
+- regression
+- LMM
 ---
 
 Last week I wrote about my implementation of an algorithm that fits a linear mixed model in Ruby using the gem [MixedModels](https://github.com/agisga/MixedModels), that I am working on right now. See, [first rudimentary LMM fit](http://agisga.github.io/First-linear-mixed-model-fit/).

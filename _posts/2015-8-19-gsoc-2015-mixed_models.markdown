@@ -4,7 +4,11 @@ title: "Statistical linear mixed models in Ruby with mixed_models (GSoC2015)"
 date: 2015-08-19
 comments: true
 author: Alexej Gossmann
-categories: [GSOC,GSOC2015,Statistics,Modeling,Regression]
+tags:
+- ruby
+- mixed_models
+- regression
+- LMM
 ---
 
 Google Summer of Code 2015 is coming to an end. During this summer, I have learned too many things to list here about statistical modeling, Ruby and software development in general, and I had a lot of fun in the process!

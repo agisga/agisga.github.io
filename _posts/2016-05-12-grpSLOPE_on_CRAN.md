@@ -1,6 +1,11 @@
 ---
 layout: post
-title: My first R package on CRAN!
+title: My first R package on CRAN
+tags:
+- r
+- grpSLOPE
+- regression
+- FDR 
 ---
 
 A couple of weeks ago I have released my first R package on CRAN. For me it turned out to be a far less painful process than many people on the internet portray it to be (even though the package uses quite a lot of C++ code via Rcpp and RcppEigen, and even though R CMD check returns two NOTEs). Some of the most helpful resources for publishing the package were:
