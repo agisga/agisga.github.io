@@ -13,5 +13,12 @@ layout: default
     Written on {{ page.date | date: "%B %e, %Y" }}
   </div>
 
+  <div class="date">
+    Tags:
+		{% for tag in page.tags %}
+		<a href="/tag/{{ tag }}">+{{ tag }}</a>
+		{% endfor %}
+  </div>
+
   {% include disqus.html %}
 </article>
