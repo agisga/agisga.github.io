@@ -11,6 +11,9 @@ I am a PhD student in the Department of Mathematics at Tulane University in New 
 * I am part of [the Multiscale Bioimaging and Bioinformatics Laboratory](http://www.tulane.edu/~wyp/).
 * You can read my [CV]({{ site.baseurl }}/pdfs/Alexej_Gossmann-CV.pdf).
 
-### Contact me
+### Blogs I like
 
-[alexej.go@googlemail.com](mailto:alexej.go@googlemail.com)
+* <http://simplystatistics.org/>
+* <http://www.r-bloggers.com/>
+* <http://blog.kaggle.com/>
+* <https://liorpachter.wordpress.com/>
