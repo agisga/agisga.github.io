@@ -99,7 +99,7 @@
 
 <p>The following Ruby code computes a numerical solution to the above ODE using the Dormand-Prince method with a maximal step size of 0.1 in <code class="highlighter-rouge">spitzy</code>:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'spitzy'</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'spitzy'</span>
 <span class="n">f</span> <span class="o">=</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="o">|</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span> <span class="o">+</span> <span class="n">y</span><span class="o">/</span><span class="n">t</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">t</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
 <span class="n">dopri_sol</span> <span class="o">=</span> <span class="no">Ode</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">xrange: </span><span class="p">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="p">],</span> <span class="ss">dx: </span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="ss">yini: </span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
 </code></pre>
@@ -107,7 +107,7 @@
 
 <p>If additionally we want to set the error tolerance to 1e-6 and the maximal number of performed iterations to 1e6, we can do:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">dopri_sol</span> <span class="o">=</span> <span class="no">Ode</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">xrange: </span><span class="p">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="p">],</span> <span class="ss">dx: </span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="ss">yini: </span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> 
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">dopri_sol</span> <span class="o">=</span> <span class="no">Ode</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">xrange: </span><span class="p">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="p">],</span> <span class="ss">dx: </span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> <span class="ss">yini: </span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> 
                     <span class="ss">tol: </span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="ss">maxiter: </span><span class="mi">1</span><span class="n">e6</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
 </code></pre>
 </div>
@@ -133,7 +133,7 @@
 
 <p>We apply the Dormand-Prince method with error tolerance 1e-6:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">f</span> <span class="o">=</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="o">|</span> <span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="no">Math</span><span class="o">::</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="mi">6</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="p">}</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">f</span> <span class="o">=</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="o">|</span> <span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="no">Math</span><span class="o">::</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="o">*</span> <span class="p">(</span><span class="n">t</span> <span class="o">-</span> <span class="mi">6</span><span class="o">.</span><span class="mi">0</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="p">}</span>
 <span class="n">dopri_sol</span> <span class="o">=</span> <span class="no">Ode</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">xrange: </span><span class="p">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="o">.</span><span class="mi">0</span><span class="p">],</span> <span class="ss">dx: </span><span class="mi">1</span><span class="o">.</span><span class="mi">5</span><span class="p">,</span> <span class="ss">yini: </span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> 
                     <span class="ss">tol: </span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">6</span><span class="p">,</span> <span class="ss">maxiter: </span><span class="mi">1</span><span class="n">e6</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
 </code></pre>
@@ -149,7 +149,7 @@
 
 <p>The Euler method is the most basic method for solving ordinary differential equations. In its implementation in <code class="highlighter-rouge">spitzy</code>, unlike the Dormand-Prince method, it cannot automatically control the step size or estimate the error of the obtained numerical solution. We apply it to the same differential equation as in the Dormand-Prince example above.</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">f</span> <span class="o">=</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="o">|</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span> <span class="o">+</span> <span class="n">y</span><span class="o">/</span><span class="n">t</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">t</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">f</span> <span class="o">=</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="o">|</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span> <span class="o">+</span> <span class="n">y</span><span class="o">/</span><span class="n">t</span> <span class="o">+</span> <span class="p">(</span><span class="n">y</span><span class="o">/</span><span class="n">t</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="p">}</span>
 <span class="n">euler_sol</span> <span class="o">=</span> <span class="no">Ode</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">xrange: </span><span class="p">[</span><span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="p">],</span> <span class="ss">dx: </span><span class="mi">0</span><span class="o">.</span><span class="mo">01</span><span class="p">,</span>
                     <span class="ss">yini: </span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">method: :euler</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">f</span><span class="p">)</span> 
 </code></pre>
@@ -163,7 +163,7 @@
 
 <h3 id="adams-bashforth-method">Adams-Bashforth method</h3>
 
-<p>The Adams-Bashforth method implemented in <code class="highlighter-rouge">spitzy</code> is a second order method from the family of multi-step methods. As the Euler method, it operates on a fixed pre specified step size.
+<p>The Adams-Bashforth method implemented in <code class="highlighter-rouge">spitzy</code> is a second order method from the family of multi-step methods. As the Euler method, it operates on a fixed pre specified step size.<br />
 We demonstrate it by solving the following differential equation:</p>
 
 <ul>
@@ -173,7 +173,7 @@ We demonstrate it by solving the following differential equation:</p>
 
 <p>The implemented Adams-Bashforth scheme is a method of order two, which means that the error of the numerical solution is proportional to the square of the step size. Consequently, if we halve the step size, then the error of the numerical solution should reduce by a factor of four. We check this theoretical property by computing two solutions with step sizes 0.1 and 0.05, and comparing their errors (the exact solution is $y(x) = e^{-x^2}$. The following short code carries out the calculation, and its output is shown below.</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'spitzy'</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'spitzy'</span>
 
 <span class="n">f</span> <span class="o">=</span> <span class="nb">proc</span> <span class="p">{</span> <span class="o">|</span><span class="n">t</span><span class="p">,</span><span class="n">y</span><span class="o">|</span> <span class="o">-</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span><span class="o">*</span><span class="n">t</span><span class="o">*</span><span class="n">y</span> <span class="p">}</span>
 <span class="n">ab2_sol1</span> <span class="o">=</span> <span class="no">Ode</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">xrange: </span><span class="p">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span><span class="mi">4</span><span class="o">.</span><span class="mi">0</span><span class="p">],</span> <span class="ss">dx: </span><span class="mi">0</span><span class="o">.</span><span class="mi">1</span><span class="p">,</span> 
@@ -204,7 +204,7 @@ We demonstrate it by solving the following differential equation:</p>
 
 <p>All plots were done using the Ruby gem <code class="highlighter-rouge">gnuplot</code> and the following helper function.</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="c1"># plot the numerical and the exact solutions</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1"># plot the numerical and the exact solutions</span>
 <span class="k">def</span> <span class="nf">plot_ode</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">numsol</span><span class="p">,</span> <span class="n">exactsol</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">num_with</span><span class="o">=</span><span class="s2">"lines"</span><span class="p">)</span>
   <span class="no">Gnuplot</span><span class="p">.</span><span class="nf">open</span> <span class="k">do</span> <span class="o">|</span><span class="n">gp</span><span class="o">|</span>
     <span class="no">Gnuplot</span><span class="o">::</span><span class="no">Plot</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">gp</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">plot</span><span class="o">|</span>
@@ -280,7 +280,7 @@ We demonstrate it by solving the following differential equation:</p>
 
 <a href="https://www.linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
 
-
+<a href="/feed.xml"><i class="svg-icon rss"></i></a>
 <a href="https://www.twitter.com/agisga"><i class="svg-icon twitter"></i></a>
 
 

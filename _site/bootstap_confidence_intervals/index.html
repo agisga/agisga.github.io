@@ -104,7 +104,7 @@
 
 <p>As an example let’s generate a bootstrap sample of the intercept term for the <a href="http://agisga.github.io/MixedModels_from_formula/">alien species data</a>. The following code does the job:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'mixed_models'</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'mixed_models'</span>
 <span class="n">df</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">from_csv</span> <span class="s1">'./data/alien_species.csv'</span>
 <span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_formula</span><span class="p">(</span><span class="ss">formula: </span><span class="s2">"Aggression ~ Age + Species + (Age | Location)"</span><span class="p">,</span> <span class="ss">data: </span><span class="n">df</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">bootstrap</span><span class="p">(</span><span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
@@ -120,7 +120,7 @@
 
 <p>The image was produced by the following code.</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'gnuplotrb'</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'gnuplotrb'</span>
 <span class="kp">include</span> <span class="no">GnuplotRB</span>
 <span class="n">bin_width</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="nf">max</span> <span class="o">-</span> <span class="n">y</span><span class="p">.</span><span class="nf">min</span><span class="p">)</span><span class="o">/</span><span class="mi">10</span><span class="o">.</span><span class="mi">0</span>
 <span class="n">bins</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="nf">min</span><span class="p">.</span><span class="nf">.</span><span class="n">y</span><span class="p">.</span><span class="nf">max</span><span class="p">).</span><span class="nf">step</span><span class="p">(</span><span class="n">bin_width</span><span class="p">).</span><span class="nf">to_a</span>
@@ -142,7 +142,7 @@
 
 <p>Of course, confidence intervals can be constructed based on the bootstrap samples obtained via <code class="highlighter-rouge">LMM#bootstrap</code>. This functionality is now included in <code class="highlighter-rouge">LMM#fix_ef_conf_int</code>. For example, still using the alien species data, basic bootstrap confidence intervals with confidence level of 95% for the fixed effects coefficient estimates can be computed with:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :bootstrap</span><span class="p">,</span> <span class="ss">boottype: :basic</span><span class="p">,</span> <span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :bootstrap</span><span class="p">,</span> <span class="ss">boottype: :basic</span><span class="p">,</span> <span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
 </code></pre>
 </div>
 
@@ -194,13 +194,13 @@
 
 <p>The method <code class="highlighter-rouge">:all</code> returns a <code class="highlighter-rouge">Daru::DataFrame</code> containing the confidence intervals obtained by each of the available methods. The data frame can be printed in form of a nice looking table for inspection. For example for the alien species data we obtain all types of 95% confidence intervals with</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">ci</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :all</span><span class="p">,</span> <span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">ci</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :all</span><span class="p">,</span> <span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
 </code></pre>
 </div>
 
 <p>and print them to screen as a table with</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="c1"># round all results to two decimal places</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1"># round all results to two decimal places</span>
 <span class="n">ci</span><span class="p">.</span><span class="nf">each_vector</span> <span class="k">do</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span>
   <span class="n">v</span><span class="p">.</span><span class="nf">each_index</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">].</span><span class="nf">round</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">].</span><span class="nf">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)}</span>
 <span class="k">end</span>
@@ -235,7 +235,7 @@
 
 <p>Finally I also want to examine the parallel computing capabilities of the bootstrap confidence interval methods a little. The following code benchmarks the computation of studentized bootstrap confidence intervals in parallel and single-threaded.</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'benchmark'</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'benchmark'</span>
 <span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="kp">nil</span>
 <span class="no">Benchmark</span><span class="p">.</span><span class="nf">bm</span><span class="p">(</span><span class="mi">17</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">bm</span><span class="o">|</span>
   <span class="n">bm</span><span class="p">.</span><span class="nf">report</span><span class="p">(</span><span class="s1">'single-threaded'</span><span class="p">)</span> <span class="k">do</span>
@@ -312,7 +312,7 @@ parallel           16.150000   0.030000 170.980000 ( 55.285422)
 
 <a href="https://www.linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
 
-
+<a href="/feed.xml"><i class="svg-icon rss"></i></a>
 <a href="https://www.twitter.com/agisga"><i class="svg-icon twitter"></i></a>
 
 
