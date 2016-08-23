@@ -17,11 +17,11 @@ But recently, I came across a much more satisfactory definition for the case of 
 
 &lt;p&gt;where $D$ is a diagonal matrix with the eigenvalues of $A$ on its diagonal, and $Q$ is an orthogonal matrix with eigenvectors of $A$ as its columns (which magically form an orthogonal set :astonished:, just kidding, &lt;a href=&quot;http://math.stackexchange.com/questions/82467/eigenvectors-of-real-symmetric-matrices-are-orthogonal&quot;&gt;absolutely no magic involved&lt;/a&gt;).&lt;/p&gt;
 
-&lt;p&gt;Now, assume that $A$ is of size $n\times n$ and has rank $k \leq n$. Denoting the $k$ &lt;em&gt;non-zero&lt;/em&gt; eigenvalues of $A$ by $\lambda_1, \dots, \lambda_k$ and the first $k$ columns of $Q$ by $q_1, \dots, q_k$, we have that&lt;/p&gt;
+&lt;h3 id=&quot;the-definition-heart&quot;&gt;The Definition :heart:&lt;/h3&gt;
+
+&lt;p&gt;Assume that $A$ is of size $n\times n$ and has rank $k \leq n$. Denoting the $k$ &lt;em&gt;non-zero&lt;/em&gt; eigenvalues of $A$ by $\lambda_1, \dots, \lambda_k$ and the corresponding $k$ columns of $Q$ by $q_1, \dots, q_k$, we have that&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;A = QDQ^T = \sum_{i=1}^k \lambda_i q_i q_i^T.&lt;/script&gt;
-
-&lt;h3 id=&quot;the-definition-heart&quot;&gt;The Definition :heart:&lt;/h3&gt;
 
 &lt;p&gt;&lt;em&gt;We define the generalized inverse of&lt;/em&gt; $A$ &lt;em&gt;by&lt;/em&gt;&lt;/p&gt;
 

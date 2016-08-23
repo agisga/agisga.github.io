@@ -16,13 +16,13 @@ $$
 
 where $D$ is a diagonal matrix with the eigenvalues of $A$ on its diagonal, and $Q$ is an orthogonal matrix with eigenvectors of $A$ as its columns (which magically form an orthogonal set :astonished:, just kidding, [absolutely no magic involved](http://math.stackexchange.com/questions/82467/eigenvectors-of-real-symmetric-matrices-are-orthogonal)).
 
-Now, assume that $A$ is of size $n\times n$ and has rank $k \leq n$. Denoting the $k$ *non-zero* eigenvalues of $A$ by $\lambda_1, \dots, \lambda_k$ and the first $k$ columns of $Q$ by $q_1, \dots, q_k$, we have that
+### The Definition :heart:
+
+Assume that $A$ is of size $n\times n$ and has rank $k \leq n$. Denoting the $k$ *non-zero* eigenvalues of $A$ by $\lambda_1, \dots, \lambda_k$ and the corresponding $k$ columns of $Q$ by $q_1, \dots, q_k$, we have that
 
 $$
 A = QDQ^T = \sum_{i=1}^k \lambda_i q_i q_i^T.
 $$
-
-### The Definition :heart:
 
 *We define the generalized inverse of* $A$ *by*
 

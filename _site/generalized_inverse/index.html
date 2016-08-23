@@ -83,12 +83,12 @@ But recently, I came across a much more satisfactory definition for the case of 
 
 <p>where $D$ is a diagonal matrix with the eigenvalues of $A$ on its diagonal, and $Q$ is an orthogonal matrix with eigenvectors of $A$ as its columns (which magically form an orthogonal set <img class="emoji" title=":astonished:" alt=":astonished:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f632.png" height="20" width="20" align="absmiddle">, just kidding, <a href="http://math.stackexchange.com/questions/82467/eigenvectors-of-real-symmetric-matrices-are-orthogonal">absolutely no magic involved</a>).</p>
 
-<p>Now, assume that $A$ is of size $n\times n$ and has rank $k \leq n$. Denoting the $k$ <em>non-zero</em> eigenvalues of $A$ by $\lambda_1, \dots, \lambda_k$ and the first $k$ columns of $Q$ by $q_1, \dots, q_k$, we have that</p>
-
-<script type="math/tex; mode=display">A = QDQ^T = \sum_{i=1}^k \lambda_i q_i q_i^T.</script>
-
 <h3 id="the-definition-heart">The Definition <img class="emoji" title=":heart:" alt=":heart:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2764.png" height="20" width="20" align="absmiddle">
 </h3>
+
+<p>Assume that $A$ is of size $n\times n$ and has rank $k \leq n$. Denoting the $k$ <em>non-zero</em> eigenvalues of $A$ by $\lambda_1, \dots, \lambda_k$ and the corresponding $k$ columns of $Q$ by $q_1, \dots, q_k$, we have that</p>
+
+<script type="math/tex; mode=display">A = QDQ^T = \sum_{i=1}^k \lambda_i q_i q_i^T.</script>
 
 <p><em>We define the generalized inverse of</em> $A$ <em>by</em></p>
 
