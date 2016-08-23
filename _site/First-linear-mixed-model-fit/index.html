@@ -75,7 +75,7 @@ The Ruby gem is now capable of fitting linear mixed models. In this short blog p
   <h1>A rudimentary first linear mixed model fit</h1>
 
   <div class="entry">
-    <p>During the last two weeks I made some progress on my <a href="https://github.com/agisga/MixedModels">Google Summer of Code project</a>.
+    <p>During the last two weeks I made some progress on my <a href="https://github.com/agisga/MixedModels">Google Summer of Code project</a>.<br />
 The Ruby gem is now capable of fitting linear mixed models. In this short blog post I want to give an example, and compare the results I get in Ruby to those obtained by <code class="highlighter-rouge">lme4</code> in R.</p>
 
 <h1 id="lmm-mathematical-basics">LMM Mathematical Basics</h1>
@@ -84,7 +84,7 @@ The Ruby gem is now capable of fitting linear mixed models. In this short blog p
 
 <script type="math/tex; mode=display">(y | b = \hat{b}) \sim \mathrm{N}(X\beta + Z\hat{b} + o, \sigma^2 W^{-1}), \mathrm{\,with\,} b \sim \mathrm{N}(0, \Sigma\subscript{\theta}),</script>
 
-<p>where $y\in\mathbb{R}^n$ and $b\in\mathbb{R}^q$ are random vectors (response and random effects), $\beta\in\mathbb{R}^p$ is the vector of fixed effects, $o\in\mathbb{R}^n$ is a vector of known prior offset terms, $W\in\mathbb{R}^{n\times n}$ is a diagonal matrix of known prior weights. The random effects covariance matrix $\Sigma\subscript{\theta}\in\mathbb{R}^{q\times q}$ depends on the variance component parameter vector $\theta\in\mathbb{R}^l$.
+<p>where $y\in\mathbb{R}^n$ and $b\in\mathbb{R}^q$ are random vectors (response and random effects), $\beta\in\mathbb{R}^p$ is the vector of fixed effects, $o\in\mathbb{R}^n$ is a vector of known prior offset terms, $W\in\mathbb{R}^{n\times n}$ is a diagonal matrix of known prior weights. The random effects covariance matrix $\Sigma\subscript{\theta}\in\mathbb{R}^{q\times q}$ depends on the variance component parameter vector $\theta\in\mathbb{R}^l$.<br />
 Additionally, via the Cholesky decomposition we write</p>
 
 <script type="math/tex; mode=display">\Sigma\subscript{\theta} = \sigma^2 \Lambda\subscript{\theta} \Lambda\subscript{\theta}^T,</script>
@@ -121,7 +121,7 @@ Additionally, via the Cholesky decomposition we write</p>
 
 <p>Finally I generate the response vector <code class="highlighter-rouge">y</code> as</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="nf">dot</span> <span class="n">beta</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">z</span><span class="p">.</span><span class="nf">dot</span> <span class="n">b</span><span class="p">)</span> <span class="o">+</span> <span class="n">epsilon</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">y</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">.</span><span class="nf">dot</span> <span class="n">beta</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">z</span><span class="p">.</span><span class="nf">dot</span> <span class="n">b</span><span class="p">)</span> <span class="o">+</span> <span class="n">epsilon</span>
 </code></pre>
 </div>
 
@@ -129,7 +129,7 @@ Additionally, via the Cholesky decomposition we write</p>
 
 <p>The model fit can be performed with <a href="https://github.com/agisga/MixedModels"><code class="highlighter-rouge">MixedModels</code></a> in Ruby via:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">x: </span><span class="n">x</span><span class="p">,</span> <span class="ss">y: </span><span class="n">y</span><span class="p">,</span> <span class="ss">zt: </span><span class="n">z</span><span class="p">.</span><span class="nf">transpose</span><span class="p">,</span> <span class="ss">lambdat: </span><span class="n">lambdat</span><span class="p">,</span> 
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">x: </span><span class="n">x</span><span class="p">,</span> <span class="ss">y: </span><span class="n">y</span><span class="p">,</span> <span class="ss">zt: </span><span class="n">z</span><span class="p">.</span><span class="nf">transpose</span><span class="p">,</span> <span class="ss">lambdat: </span><span class="n">lambdat</span><span class="p">,</span> 
                     <span class="ss">start_point: </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">],</span> <span class="ss">lower_bound: </span><span class="no">Array</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="no">Float</span><span class="o">::</span><span class="no">INFINITY</span><span class="p">,</span><span class="mi">0</span><span class="p">],</span>
                     <span class="o">&amp;</span><span class="n">parametrization</span><span class="p">)</span> 
 </code></pre>
@@ -139,7 +139,7 @@ Additionally, via the Cholesky decomposition we write</p>
 
 <p>Behind the scenes, <code class="highlighter-rouge">LMM#initialize</code> essentially performs the following three steps:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="c1"># (1) Create the data structure in a LMMData object</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1"># (1) Create the data structure in a LMMData object</span>
 <span class="vi">@model_data</span> <span class="o">=</span> <span class="no">LMMData</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">x: </span><span class="n">x</span><span class="p">,</span> <span class="ss">y: </span><span class="n">y</span><span class="p">,</span> <span class="ss">zt: </span><span class="n">zt</span><span class="p">,</span> <span class="ss">lambdat: </span><span class="n">lambdat</span><span class="p">,</span> 
                           <span class="ss">weights: </span><span class="n">weights</span><span class="p">,</span> <span class="ss">offset: </span><span class="n">offset</span><span class="p">,</span> <span class="o">&amp;</span><span class="n">thfun</span><span class="p">)</span>
 
@@ -158,10 +158,10 @@ Additionally, via the Cholesky decomposition we write</p>
 
 <p>We can fit a linear mixed model in R to the same matrix and vector data with:</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">dat.frm</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.data.frame</span><span class="p">(</span><span class="n">cbind</span><span class="p">(</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">[,</span><span class="m">2</span><span class="p">],</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span><span class="n">each</span><span class="o">=</span><span class="m">10</span><span class="p">)))</span><span class="w">
-</span><span class="nf">names</span><span class="p">(</span><span class="n">dat.frm</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"y"</span><span class="p">,</span><span class="w"> </span><span class="s2">"x"</span><span class="p">,</span><span class="w"> </span><span class="s2">"grp"</span><span class="p">)</span><span class="w">
-</span><span class="n">lmer.fit</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lmer</span><span class="p">(</span><span class="n">y</span><span class="o">~</span><span class="n">x</span><span class="o">+</span><span class="p">(</span><span class="n">x</span><span class="o">|</span><span class="n">grp</span><span class="p">),</span><span class="w"> </span><span class="n">dat.frm</span><span class="p">)</span><span class="w">
-</span></code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">dat.frm</span> <span class="o">&lt;-</span> <span class="n">as.data.frame</span><span class="p">(</span><span class="n">cbind</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">X</span><span class="p">[,</span><span class="m">2</span><span class="p">],</span> <span class="n">rep</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">5</span><span class="p">,</span><span class="n">each</span><span class="o">=</span><span class="m">10</span><span class="p">)))</span>
+<span class="n">names</span><span class="p">(</span><span class="n">dat.frm</span><span class="p">)</span> <span class="o">&lt;-</span> <span class="n">c</span><span class="p">(</span><span class="s2">"y"</span><span class="p">,</span> <span class="s2">"x"</span><span class="p">,</span> <span class="s2">"grp"</span><span class="p">)</span>
+<span class="n">lmer.fit</span> <span class="o">&lt;-</span> <span class="n">lmer</span><span class="p">(</span><span class="n">y</span><span class="o">~</span><span class="n">x</span><span class="o">+</span><span class="p">(</span><span class="n">x</span><span class="o">|</span><span class="n">grp</span><span class="p">),</span> <span class="n">dat.frm</span><span class="p">)</span>
+</code></pre>
 </div>
 
 <p>Let’s look at some of the results.</p>
@@ -185,13 +185,13 @@ Additionally, via the Cholesky decomposition we write</p>
   <div class="date">
     Tags:
 		
-		<a href="/tag/ruby">+ruby</a>
+		<a href="/tag/ruby">#ruby</a>
 		
-		<a href="/tag/mixed_models">+mixed_models</a>
+		<a href="/tag/mixed_models">#mixed_models</a>
 		
-		<a href="/tag/regression">+regression</a>
+		<a href="/tag/regression">#regression</a>
 		
-		<a href="/tag/LMM">+LMM</a>
+		<a href="/tag/LMM">#LMM</a>
 		
   </div>
 
@@ -220,14 +220,14 @@ Additionally, via the Cholesky decomposition we write</p>
       <div class="container">
         <footer class="footer">
           
-
-
+<a href="mailto:alexej.go@googlemail.com"><i class="svg-icon email"></i></a>
+<a href="https://www.facebook.com/alexej.yexela"><i class="svg-icon facebook"></i></a>
 
 <a href="https://github.com/agisga"><i class="svg-icon github"></i></a>
 
 <a href="https://www.linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
 
-
+<a href="/feed.xml"><i class="svg-icon rss"></i></a>
 <a href="https://www.twitter.com/agisga"><i class="svg-icon twitter"></i></a>
 
 

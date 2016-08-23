@@ -77,14 +77,14 @@
 
 <p>The <code class="highlighter-rouge">R</code> package <code class="highlighter-rouge">lme4</code> is capable of fitting linear, generalized and nonlinear mixed effects models. Here, I am interested in linear mixed models exclusively. A linear mixed model fit is performed in <code class="highlighter-rouge">lme4</code> with an <code class="highlighter-rouge">lmer</code> function call. For example:</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">lme4</span><span class="p">)</span><span class="w">
-</span><span class="n">data</span><span class="p">(</span><span class="n">sleepstudy</span><span class="p">)</span><span class="w">
-</span><span class="n">fm1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lmer</span><span class="p">(</span><span class="n">Reaction</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">Days</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">Days</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Subject</span><span class="p">),</span><span class="w"> </span><span class="n">sleepstudy</span><span class="p">)</span><span class="w">
-</span></code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">lme4</span><span class="p">)</span>
+<span class="n">data</span><span class="p">(</span><span class="n">sleepstudy</span><span class="p">)</span>
+<span class="n">fm1</span> <span class="o">&lt;-</span> <span class="n">lmer</span><span class="p">(</span><span class="n">Reaction</span> <span class="o">~</span> <span class="n">Days</span> <span class="o">+</span> <span class="p">(</span><span class="n">Days</span> <span class="o">|</span> <span class="n">Subject</span><span class="p">),</span> <span class="n">sleepstudy</span><span class="p">)</span>
+</code></pre>
 </div>
 
-<p>Thus, the first function to dissect is <code class="highlighter-rouge">lmer</code>.
-The function definition of <code class="highlighter-rouge">lmer</code> is located in the file <code class="highlighter-rouge">lmer.R</code>.
+<p>Thus, the first function to dissect is <code class="highlighter-rouge">lmer</code>.<br />
+The function definition of <code class="highlighter-rouge">lmer</code> is located in the file <code class="highlighter-rouge">lmer.R</code>.<br />
 The code is confusing. So, let’s go through it step-by-step.</p>
 
 <h1 id="general-overview">General overview</h1>
@@ -118,10 +118,10 @@ The code is confusing. So, let’s go through it step-by-step.</p>
 
 <p>Defined as:</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">lFormula</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="o">=</span><span class="kc">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">REML</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w">
-                     </span><span class="n">subset</span><span class="p">,</span><span class="w"> </span><span class="n">weights</span><span class="p">,</span><span class="w"> </span><span class="n">na.action</span><span class="p">,</span><span class="w"> </span><span class="n">offset</span><span class="p">,</span><span class="w"> </span><span class="n">contrasts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NULL</span><span class="p">,</span><span class="w">
-                     </span><span class="n">control</span><span class="o">=</span><span class="n">lmerControl</span><span class="p">(),</span><span class="w"> </span><span class="n">...</span><span class="p">)</span><span class="w">
-</span></code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">lFormula</span> <span class="o">&lt;-</span> <span class="k">function</span><span class="p">(</span><span class="n">formula</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">NULL</span><span class="p">,</span> <span class="n">REML</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">,</span>
+                     <span class="n">subset</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">na.action</span><span class="p">,</span> <span class="n">offset</span><span class="p">,</span> <span class="n">contrasts</span> <span class="o">=</span> <span class="n">NULL</span><span class="p">,</span>
+                     <span class="n">control</span><span class="o">=</span><span class="n">lmerControl</span><span class="p">(),</span> <span class="k">...</span><span class="p">)</span>
+</code></pre>
 </div>
 
 <p>It proceeds with the following steps:</p>
@@ -153,7 +153,7 @@ The code is confusing. So, let’s go through it step-by-step.</p>
   <div class="date">
     Tags:
 		
-		<a href="/tag/lme4">+lme4</a>
+		<a href="/tag/lme4">#lme4</a>
 		
   </div>
 
@@ -182,14 +182,14 @@ The code is confusing. So, let’s go through it step-by-step.</p>
       <div class="container">
         <footer class="footer">
           
-
-
+<a href="mailto:alexej.go@googlemail.com"><i class="svg-icon email"></i></a>
+<a href="https://www.facebook.com/alexej.yexela"><i class="svg-icon facebook"></i></a>
 
 <a href="https://github.com/agisga"><i class="svg-icon github"></i></a>
 
 <a href="https://www.linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
 
-
+<a href="/feed.xml"><i class="svg-icon rss"></i></a>
 <a href="https://www.twitter.com/agisga"><i class="svg-icon twitter"></i></a>
 
 

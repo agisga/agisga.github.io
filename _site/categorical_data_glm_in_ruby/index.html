@@ -82,7 +82,7 @@
 
 <p>After reading in the training data with <code class="highlighter-rouge">daru</code>, we observe that there are five possible outcomes:</p>
 
-<div class="language-ruby highlighter-rouge">
+<div class="highlighter-rouge">
 <pre class="highlight"><code><span class="nb">require</span> <span class="s1">'daru'</span>
 <span class="n">shelter_data</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">from_csv</span> <span class="s1">'animal_shelter_train.csv'</span>
 <span class="n">shelter_data</span><span class="p">[</span><span class="s2">"OutcomeType"</span><span class="p">].</span><span class="nf">to_a</span><span class="p">.</span><span class="nf">uniq</span>
@@ -100,7 +100,7 @@
 
 <p>First, we get rid of observations (i.e., data frame rows) with missing values and of the variables (i.e., data frame columns), which won’t be used in the subsequent analysis:</p>
 
-<div class="language-ruby highlighter-rouge">
+<div class="highlighter-rouge">
 <pre class="highlight"><code><span class="n">shelter_data</span><span class="p">.</span><span class="nf">delete_vectors</span> <span class="o">*</span><span class="sx">%W[AnimalID Name DateTime OutcomeSubtype]</span>
 <span class="n">shelter_data</span> <span class="o">=</span> <span class="n">shelter_data</span><span class="p">.</span><span class="nf">filter_rows</span> <span class="k">do</span>
   <span class="o">|</span><span class="n">row</span><span class="o">|</span> <span class="o">!</span><span class="n">row</span><span class="p">.</span><span class="nf">has_missing_data?</span>
@@ -110,7 +110,7 @@
 
 <p>Next, we transform “AgeuponOutcome”, which is not given in a consistent unit, to a numeric variable:</p>
 
-<div class="language-ruby highlighter-rouge">
+<div class="highlighter-rouge">
 <pre class="highlight"><code><span class="n">shelter_data</span><span class="p">[</span><span class="s1">'AgeuponOutcome'</span><span class="p">].</span><span class="nf">map!</span> <span class="k">do</span> <span class="o">|</span><span class="n">age</span><span class="o">|</span>
   <span class="n">num</span><span class="p">,</span> <span class="n">unit</span> <span class="o">=</span> <span class="n">age</span><span class="p">.</span><span class="nf">split</span>
   <span class="n">num</span> <span class="o">=</span> <span class="n">num</span><span class="p">.</span><span class="nf">to_f</span>
@@ -132,14 +132,14 @@
 
 <p>Then we tell the <code class="highlighter-rouge">Daru::DataFrame</code>, which variables should be treated as categorical:</p>
 
-<div class="language-ruby highlighter-rouge">
+<div class="highlighter-rouge">
 <pre class="highlight"><code><span class="n">shelter_data</span><span class="p">.</span><span class="nf">to_category</span> <span class="s1">'OutcomeType'</span><span class="p">,</span> <span class="s1">'AnimalType'</span><span class="p">,</span> <span class="s1">'SexuponOutcome'</span><span class="p">,</span> <span class="s1">'Breed'</span><span class="p">,</span> <span class="s1">'Color'</span>
 </code></pre>
 </div>
 
 <p>Since the variable “Breed” has more than 1000 distinct values, which leads to model fitting problems, we recode it such that rare breeds are summarized into one category, “other” (arguably, there are much better, but much more complex, ways to summarize “Breed” into fewer categories, for example such as presented <a href="https://www.kaggle.com/andraszsom/shelter-animal-outcomes/dog-breeds-dog-groups">here</a>):</p>
 
-<div class="language-ruby highlighter-rouge">
+<div class="highlighter-rouge">
 <pre class="highlight"><code><span class="nb">puts</span> <span class="n">shelter_data</span><span class="p">[</span><span class="s1">'Breed'</span><span class="p">].</span><span class="nf">to_a</span><span class="p">.</span><span class="nf">uniq</span><span class="p">.</span><span class="nf">length</span>
 <span class="c1"># =&gt; 1380</span>
 
@@ -153,9 +153,9 @@
 </code></pre>
 </div>
 
-<p>In the same way, we recode the variable “Color” into fewer categories (no potential dog owner can distinguish 366 colors anyway <img class="emoji" title=":stuck_out_tongue_closed_eyes:" alt=":stuck_out_tongue_closed_eyes:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f61d.png" height="20" width="20" align="absmiddle">):</p>
+<p>In the same way, we recode the variable “Color” into fewer categories (no potential dog owner can distinguish 366 colors anyway <img class="emoji" title=":stuck_out_tongue_closed_eyes:" alt=":stuck_out_tongue_closed_eyes:" src="https://assets.github.com/images/icons/emoji/unicode/1f61d.png" height="20" width="20" align="absmiddle">):</p>
 
-<div class="language-ruby highlighter-rouge">
+<div class="highlighter-rouge">
 <pre class="highlight"><code><span class="nb">puts</span> <span class="n">shelter_data</span><span class="p">[</span><span class="s1">'Color'</span><span class="p">].</span><span class="nf">to_a</span><span class="p">.</span><span class="nf">uniq</span><span class="p">.</span><span class="nf">length</span>
 <span class="c1"># =&gt; 366</span>
 
@@ -174,7 +174,7 @@
 
 <p>Finally, we save the preprocessed data frame as a CSV file:</p>
 
-<div class="language-ruby highlighter-rouge">
+<div class="highlighter-rouge">
 <pre class="highlight"><code><span class="n">shelter_data</span><span class="p">.</span><span class="nf">write_csv</span> <span class="s2">"animal_shelter_train_processed.csv"</span>
 </code></pre>
 </div>
@@ -185,7 +185,7 @@
 
 <p>We load the preprocessed training data, and define a dummy variable for outcome type adoption, to be used as the model response:</p>
 
-<div class="language-ruby highlighter-rouge">
+<div class="highlighter-rouge">
 <pre class="highlight"><code><span class="nb">require</span> <span class="s1">'daru'</span>
 <span class="n">train_data</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">from_csv</span> <span class="s1">'animal_shelter_train_processed.csv'</span>
 <span class="c1"># define the 0-1-valued response variable</span>
@@ -196,7 +196,7 @@
 
 <p>Then we fit a GLM with <code class="highlighter-rouge">statsample-glm</code> using a formula language, familiar from R and Python, for model specification:</p>
 
-<div class="language-ruby highlighter-rouge">
+<div class="highlighter-rouge">
 <pre class="highlight"><code><span class="nb">require</span> <span class="s1">'statsample-glm'</span>
 <span class="n">formula</span> <span class="o">=</span> <span class="s1">'Adoption~AnimalType+Breed+AgeuponOutcome+Color+SexuponOutcome'</span>
 <span class="n">glm_adoption</span> <span class="o">=</span> <span class="no">Statsample</span><span class="o">::</span><span class="no">GLM</span><span class="o">::</span><span class="no">Regression</span><span class="p">.</span><span class="nf">new</span> <span class="n">formula</span><span class="p">,</span> <span class="n">train_data</span><span class="p">,</span> <span class="ss">:logistic</span><span class="p">,</span> <span class="ss">epsilon: </span><span class="mi">1</span><span class="n">e</span><span class="o">-</span><span class="mi">2</span>
@@ -205,7 +205,7 @@
 
 <p>Finally, we use the obtained GLM to compute predictions on test data (the test data didn’t require much preprocessing, apart from the imputation of a couple missing age values):</p>
 
-<div class="language-ruby highlighter-rouge">
+<div class="highlighter-rouge">
 <pre class="highlight"><code><span class="n">test_data</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">from_csv</span> <span class="s1">'animal_shelter_test_processed.csv'</span>
 <span class="n">adoption_pred</span> <span class="o">=</span> <span class="n">glm_adoption</span><span class="p">.</span><span class="nf">predict</span> <span class="n">test_data</span> 
 </code></pre>
@@ -215,7 +215,7 @@
 
 <h2 id="thats-it">That’s it!</h2>
 
-<p>Out of curiosity I have actually submitted the obtained predictions to kaggle. The submission currently ranks 1090 out of 1451, as expected of such an unsophisticated GLM (see <a href="https://www.kaggle.com/c/shelter-animal-outcomes/leaderboard">the leaderboard</a>, submission is under name agisga).  At least I am not last (personal goal achieved <img class="emoji" title=":smiley:" alt=":smiley:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f603.png" height="20" width="20" align="absmiddle">)! All scripts used for the presented data analysis can be found in <a href="https://github.com/agisga/animal_shelter_data">this github repository</a>.</p>
+<p>Out of curiosity I have actually submitted the obtained predictions to kaggle. The submission currently ranks 1090 out of 1451, as expected of such an unsophisticated GLM (see <a href="https://www.kaggle.com/c/shelter-animal-outcomes/leaderboard">the leaderboard</a>, submission is under name agisga).  At least I am not last (personal goal achieved <img class="emoji" title=":smiley:" alt=":smiley:" src="https://assets.github.com/images/icons/emoji/unicode/1f603.png" height="20" width="20" align="absmiddle">)! All scripts used for the presented data analysis can be found in <a href="https://github.com/agisga/animal_shelter_data">this github repository</a>.</p>
 
   </div>
 
@@ -226,17 +226,17 @@
   <div class="date">
     Tags:
 		
-		<a href="/tag/ruby">+ruby</a>
+		<a href="/tag/ruby">#ruby</a>
 		
-		<a href="/tag/daru">+daru</a>
+		<a href="/tag/daru">#daru</a>
 		
-		<a href="/tag/statsample-glm">+statsample-glm</a>
+		<a href="/tag/statsample-glm">#statsample-glm</a>
 		
-		<a href="/tag/regression">+regression</a>
+		<a href="/tag/regression">#regression</a>
 		
-		<a href="/tag/GLM">+GLM</a>
+		<a href="/tag/GLM">#GLM</a>
 		
-		<a href="/tag/kaggle">+kaggle</a>
+		<a href="/tag/kaggle">#kaggle</a>
 		
   </div>
 
@@ -266,14 +266,14 @@
       <div class="container">
         <footer class="footer">
           
-
-
+<a href="mailto:alexej.go@googlemail.com"><i class="svg-icon email"></i></a>
+<a href="https://www.facebook.com/alexej.yexela"><i class="svg-icon facebook"></i></a>
 
 <a href="https://github.com/agisga"><i class="svg-icon github"></i></a>
 
 <a href="https://www.linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
 
-
+<a href="/feed.xml"><i class="svg-icon rss"></i></a>
 <a href="https://www.twitter.com/agisga"><i class="svg-icon twitter"></i></a>
 
 

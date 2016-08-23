@@ -1,0 +1,25 @@
+---
+layout: null
+---
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Alexej's blog</title>
+    <description>Articles with tag "r"</description>
+    <link>{{ site.url }}</link>
+    {% for post in site.posts %}
+      {% for tag in post.tags %}
+        {% if tag == "r" %}
+          {% unless post.draft %}
+            <item>
+              <title>{{ post.title | xml_escape }}</title>
+              <description>{{ post.content | xml_escape }}</description>
+              <pubdate>{{ post.date | date_to_xmlschema }}</pubdate>
+              <link>{{ post.url | prepend: site.url }}</link>
+              <guid ispermalink="true">{{ post.url | prepend: site.url }}</guid>
+            </item>
+          {% endunless %}
+        {% endif %}
+      {% endfor %}
+    {% endfor %}
+  </channel>
+</rss>
