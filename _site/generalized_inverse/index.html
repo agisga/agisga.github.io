@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Generalized inverse of a symmetric matrix – Alexej Gossmann – Math PhD student at Tulane University</title>
+
+        <meta charset="utf-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    
+    <meta name="description" content="I have always found the common definition of the generalized inverse of a matrix quite unsatisfactory, because it is usually defined by a mere property, $A A^{-} A = A$, which does not really give intuition on when such a matrix exists or on how it can be constructed, etc… 
+But recently, I came across a much more satisfactory definition for the case of symmetric (or more general, normal) matrices. :smiley:
+
+">
+    <meta property="og:description" content="I have always found the common definition of the generalized inverse of a matrix quite unsatisfactory, because it is usually defined by a mere property, $A A^{-} A = A$, which does not really give intuition on when such a matrix exists or on how it can be constructed, etc… 
+But recently, I came across a much more satisfactory definition for the case of symmetric (or more general, normal) matrices. :smiley:
+
+">
+    
+    <meta name="author" content="Alexej Gossmann">
+
+    
+    <meta property="og:title" content="Generalized inverse of a symmetric matrix">
+    <meta property="twitter:title" content="Generalized inverse of a symmetric matrix">
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - Math PhD student at Tulane University" href="/feed.xml">
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+ 
+    <!-- MathJax interation-->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}});
+      MathJax.Hub.Config({TeX: {Macros:{subscript:['_{#1}',1],superscript:['^{#1}',1]}}});
+    </script> 
+    <!-- Turn on equation numbering -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
+ </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <header class="masthead clearfix">
+        <a href="/" class="site-avatar"><img src="https://avatars0.githubusercontent.com/u/11449372?v=3&amp;s=460"></a>
+
+        <div class="site-info">
+          <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
+          <p class="site-description">Math PhD student at Tulane University</p>
+        </div>
+
+        <nav>
+          <a href="/about" class="blue">About</a>
+          <a href="/" class="yellow">Blog</a>
+          <a href="/talks" class="green">Presentations</a>
+          <a href="/publications" class="magenta">Publications</a>
+          <a href="/software" class="cyan">Software</a>
+        </nav>
+      </header>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Generalized inverse of a symmetric matrix</h1>
+
+  <div class="entry">
+    <p>I have always found the common definition of the <a href="https://en.wikipedia.org/wiki/Generalized_inverse">generalized inverse</a> of a matrix quite unsatisfactory, because it is usually defined by a mere property, $A A^{-} A = A$, which does not really give intuition on when such a matrix exists or on how it can be constructed, etc… 
+But recently, I came across a much more satisfactory definition for the case of symmetric (or more general, <a href="https://en.wikipedia.org/wiki/Normal_matrix">normal</a>) matrices. <img class="emoji" title=":smiley:" alt=":smiley:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f603.png" height="20" width="20" align="absmiddle"></p>
+
+<p>As is well known, any symmetric matrix $A$ is diagonalizable,</p>
+
+<script type="math/tex; mode=display">A = QDQ^T,</script>
+
+<p>where $D$ is a diagonal matrix with the eigenvalues of $A$ on its diagonal, and $Q$ is an orthogonal matrix with eigenvectors of $A$ as its columns (which magically form an orthogonal set <img class="emoji" title=":astonished:" alt=":astonished:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f632.png" height="20" width="20" align="absmiddle">, just kidding, <a href="http://math.stackexchange.com/questions/82467/eigenvectors-of-real-symmetric-matrices-are-orthogonal">absolutely no magic involved</a>).</p>
+
+<p>Now, assume that $A$ is of size $n\times n$ and has rank $k \leq n$. Denoting the $k$ <em>non-zero</em> eigenvalues of $A$ by $\lambda_1, \dots, \lambda_k$ and the first $k$ columns of $Q$ by $q_1, \dots, q_k$, we have that</p>
+
+<script type="math/tex; mode=display">A = QDQ^T = \sum_{i=1}^k \lambda_i q_i q_i^T.</script>
+
+<h3 id="the-definition-heart">The Definition <img class="emoji" title=":heart:" alt=":heart:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2764.png" height="20" width="20" align="absmiddle">
+</h3>
+
+<p><em>We define the generalized inverse of</em> $A$ <em>by</em></p>
+
+<script type="math/tex; mode=display">\begin{equation}
+\label{TheDefinition}
+A^{-} :=  \sum_{i=1}^k \frac{1}{\lambda_i} q_i q_i^T.
+\end{equation}</script>
+
+<h3 id="why-this-definition-makes-sense-triumph">Why this definition makes sense <img class="emoji" title=":triumph:" alt=":triumph:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f624.png" height="20" width="20" align="absmiddle">
+</h3>
+
+<ol>
+  <li>
+    <p>The common definition/property of generalized inverse still holds:</p>
+
+    <script type="math/tex; mode=display">% <![CDATA[
+\begin{eqnarray}
+ A A^{-} A &=& \sum_{i=1}^k \lambda_i q_i q_i^T \sum_{m=1}^k \frac{1}{\lambda_m} q_m q_m^T \sum_{j=1}^k \lambda_j q_j q_j^T \nonumber \\
+ &=& \sum_{i,m=1,\dots,k} \lambda_i \frac{1}{\lambda_m} q_i q_i^T q_m q_m^T \sum_{j=1}^k \lambda_j q_j q_j^T \nonumber \\
+ &=& \sum_{i=1}^k q_i q_i^T \sum_{j=1}^k \lambda_j q_j q_j^T \nonumber \\
+ &=& \sum_{i,j=1,\dots,k} \lambda_j q_i q_i^T q_j q_j^T \nonumber \\
+ &=& \sum_{i=1}^k \lambda_i q_i q_i^T = A, \nonumber
+ \end{eqnarray} %]]></script>
+
+    <p>where we used the fact that $q_i^T q_j = 0$ unless $i = j$ (i.e., orthogonality of $Q$).</p>
+  </li>
+  <li>
+    <p>By a similar calculation, if $A$ is invertible, then $k = n$ and it holds that</p>
+
+    <script type="math/tex; mode=display">A A^{-} = \sum_{i=1}^n q_i q_i^T = QQ^T = I.</script>
+  </li>
+  <li>
+    <p>If $A$ is invertible, then $A^{-1}$ has eigenvalues $\frac{1}{\lambda_i}$ and eigenvectors $q_i$ (because $A^{-1}q_i = \frac{1}{\lambda_i} A^{-1} \lambda_i q_i = \frac{1}{\lambda_i} A^{-1} A q_i = \frac{1}{\lambda_i} q_i$ for all $i = 1,\dots,n$).</p>
+
+    <p>Thus, Definition ($\ref{TheDefinition}$) is simply the diagonalization of $A^{-1}$ if $A$ is invertible.</p>
+  </li>
+  <li>
+    <p>Since $q_1, \dots, q_k$ form an orthonormal basis for the range of A, it follows that the matrix</p>
+
+    <script type="math/tex; mode=display">A A^{-} = \sum_{i=1}^k q_i q_i^T = Q_{1:k} Q_{1:k}^T</script>
+
+    <p>is the projection operator onto the range of $A$.</p>
+  </li>
+</ol>
+
+<h3 id="references">References</h3>
+
+<p>Definition $(\ref{TheDefinition})$ is mentioned in passing on page 87 in</p>
+
+<ul>
+  <li>Morris L. Eaton, <em>Multivariate Statistics: A Vector Space Approach.</em> Beachwood,
+Ohio, USA: Institute of Mathematical Statistics, 2007.</li>
+</ul>
+
+  </div>
+
+  <div class="date">
+    Written on August 23, 2016
+  </div>
+
+  <div class="date">
+    Tags:
+		
+		<a href="/tag/math">#math</a>
+		
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'agisga';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+<a href="mailto:alexej.go@googlemail.com"><i class="svg-icon email"></i></a>
+<a href="https://www.facebook.com/alexej.yexela"><i class="svg-icon facebook"></i></a>
+
+<a href="https://github.com/agisga"><i class="svg-icon github"></i></a>
+
+<a href="https://www.linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
+
+<a href="/feed.xml"><i class="svg-icon rss"></i></a>
+<a href="https://www.twitter.com/agisga"><i class="svg-icon twitter"></i></a>
+
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+
+  </body>
+</html>

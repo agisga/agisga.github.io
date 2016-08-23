@@ -3,16 +3,16 @@
   <head>
     <title>Alexej Gossmann – Math PhD student at Tulane University</title>
 
-        <meta charset="utf-8" />
-    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
+        <meta charset="utf-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 
     
     <meta name="description" content="Math PhD student at Tulane University">
-    <meta property="og:description" content="Math PhD student at Tulane University" />
+    <meta property="og:description" content="Math PhD student at Tulane University">
     
-    <meta name="author" content="Alexej Gossmann" />
+    <meta name="author" content="Alexej Gossmann">
 
     
 
@@ -20,8 +20,8 @@
       <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <link rel="stylesheet" type="text/css" href="/style.css" />
-    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - Math PhD student at Tulane University" href="/feed.xml" />
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - Math PhD student at Tulane University" href="/feed.xml">
 
     <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
  
@@ -36,15 +36,14 @@
       TeX: { equationNumbers: { autoNumber: "AMS" } }
     });
     </script>
-    <script type="text/javascript"
-      src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
     </script>
  </head>
 
   <body>
     <div class="wrapper-masthead">
       <header class="masthead clearfix">
-        <a href="/" class="site-avatar"><img src="https://avatars0.githubusercontent.com/u/11449372?v=3&s=460" /></a>
+        <a href="/" class="site-avatar"><img src="https://avatars0.githubusercontent.com/u/11449372?v=3&amp;s=460"></a>
 
         <div class="site-info">
           <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
@@ -64,6 +63,19 @@
     <div id="main" role="main" class="container">
       <div class="posts">
   <!-- This loops through the paginated posts -->
+  
+    <article class="post">
+
+      <h1><a href="/mixed_models_applied_to_family_SNP_data/">A (naive) application of linear mixed models to genetics</a></h1>
+
+      <div class="entry">
+        <p>The following shows an application of class <code class="highlighter-rouge">LMM</code> from the Ruby gem <a href="https://github.com/agisga/mixed_models.git"><code class="highlighter-rouge">mixed_models</code></a> to SNP data (<a href="https://en.wikipedia.org/wiki/Single-nucleotide_polymorphism">single-nucleotide polymorphism</a>) with known pedigree structures. The family information is prior knowledge that we can model in the random effects of a linear mixed effects model.</p>
+
+
+      </div>
+
+      <a href="/mixed_models_applied_to_family_SNP_data/" class="read-more">Read More</a>
+    </article>
   
     <article class="post">
 
@@ -104,20 +116,6 @@
       <a href="/LMM-model-specification/" class="read-more">Read More</a>
     </article>
   
-    <article class="post">
-
-      <h1><a href="/First-linear-mixed-model-fit/">A rudimentary first linear mixed model fit</a></h1>
-
-      <div class="entry">
-        <p>During the last two weeks I made some progress on my <a href="https://github.com/agisga/MixedModels">Google Summer of Code project</a>.<br />
-The Ruby gem is now capable of fitting linear mixed models. In this short blog post I want to give an example, and compare the results I get in Ruby to those obtained by <code class="highlighter-rouge">lme4</code> in R.</p>
-
-
-      </div>
-
-      <a href="/First-linear-mixed-model-fit/" class="read-more">Read More</a>
-    </article>
-  
 </div>
 
 <!-- Pagination links -->
@@ -125,13 +123,27 @@ The Ruby gem is now capable of fitting linear mixed models. In this short blog p
   
     <a href="/page2" class="previous">Previous</a>
   
-  <span class="page_number ">Page: 3 of 5</span>
+  <span class="page_number ">Page: 3 of 6</span>
   
     <a href="/page4" class="next">Next</a>
   
 </div>
 
 <!--<div class="posts">
+  
+    <article class="post">
+
+      <h1><a href="/generalized_inverse/">Generalized inverse of a symmetric matrix</a></h1>
+
+      <div class="entry">
+        <p>I have always found the common definition of the <a href="https://en.wikipedia.org/wiki/Generalized_inverse">generalized inverse</a> of a matrix quite unsatisfactory, because it is usually defined by a mere property, $A A^{-} A = A$, which does not really give intuition on when such a matrix exists or on how it can be constructed, etc… 
+But recently, I came across a much more satisfactory definition for the case of symmetric (or more general, <a href="https://en.wikipedia.org/wiki/Normal_matrix">normal</a>) matrices. :smiley:</p>
+
+
+      </div>
+
+      <a href="/generalized_inverse/" class="read-more">Read More</a>
+    </article>
   
     <article class="post">
 
@@ -281,7 +293,7 @@ The Ruby gem is now capable of fitting linear mixed models. In this short blog p
       <h1><a href="/First-linear-mixed-model-fit/">A rudimentary first linear mixed model fit</a></h1>
 
       <div class="entry">
-        <p>During the last two weeks I made some progress on my <a href="https://github.com/agisga/MixedModels">Google Summer of Code project</a>.<br />
+        <p>During the last two weeks I made some progress on my <a href="https://github.com/agisga/MixedModels">Google Summer of Code project</a>.
 The Ruby gem is now capable of fitting linear mixed models. In this short blog post I want to give an example, and compare the results I get in Ruby to those obtained by <code class="highlighter-rouge">lme4</code> in R.</p>
 
 
