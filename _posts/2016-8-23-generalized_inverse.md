@@ -5,8 +5,7 @@ tags:
 - math 
 ---
 
-I have always found the common definition of the [generalized inverse](https://en.wikipedia.org/wiki/Generalized_inverse) of a matrix quite unsatisfactory, because it is usually defined by a mere property, $A A^{-} A = A$, which does not really give intuition on when such a matrix exists or on how it can be constructed, etc... 
-But recently, I came across a much more satisfactory definition for the case of symmetric (or more general, [normal](https://en.wikipedia.org/wiki/Normal_matrix)) matrices. :smiley:
+I have always found the common definition of the [generalized inverse](https://en.wikipedia.org/wiki/Generalized_inverse) of a matrix quite unsatisfactory, because it is usually defined by a mere property, $A A^{-} A = A$, which does not really give intuition on when such a matrix exists or on how it can be constructed, etc... But recently, I came across a much more satisfactory definition for the case of symmetric (or more general, [normal](https://en.wikipedia.org/wiki/Normal_matrix)) matrices. :smiley:
 
 As is well known, any symmetric matrix $A$ is diagonalizable,
 
@@ -18,7 +17,7 @@ where $D$ is a diagonal matrix with the eigenvalues of $A$ on its diagonal, and 
 
 ### The Definition :heart:
 
-Assume that $A$ is of size $n\times n$ and has rank $k \leq n$. Denoting the $k$ *non-zero* eigenvalues of $A$ by $\lambda_1, \dots, \lambda_k$ and the corresponding $k$ columns of $Q$ by $q_1, \dots, q_k$, we have that
+Assume that $A$ is a real symmetric matrix of size $n\times n$ and has rank $k \leq n$. Denoting the $k$ *non-zero* eigenvalues of $A$ by $\lambda_1, \dots, \lambda_k$ and the corresponding $k$ columns of $Q$ by $q_1, \dots, q_k$, we have that
 
 $$
 A = QDQ^T = \sum_{i=1}^k \lambda_i q_i q_i^T.
@@ -66,6 +65,18 @@ $$
     $$
 
     is the projection operator onto the range of $A$.
+
+### But what if A is not symmetric? :fearful:
+
+Well, then $A$ is not diagonalizable, but instead we can use the singular value decomposition
+
+$$A = U \Sigma V^T = \sum_{i = 1}^k \sigma_i u_i v_i^T,$$
+
+and define 
+
+$$A^{-} := \sum_{i = 1}^k \frac{1}{\sigma_i} v_i u_i^T.$$ 
+
+Easy. :relieved:
 
 ### References
 

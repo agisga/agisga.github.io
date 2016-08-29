@@ -87,48 +87,48 @@
 
 <p>We generate a random model with a design matrix $X \in \mathbb{R}^{1000 \times 2000}$, whose entries are sampled from the standard normal distribution, and a coefficient vector $\beta$, whose entries are mostly zeros.</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">set.seed</span><span class="p">(</span><span class="m">1</span><span class="p">)</span><span class="w">
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">set.seed</span><span class="p">(</span><span class="m">1</span><span class="p">)</span>
 
-</span><span class="n">X</span><span class="w">    </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">matrix</span><span class="p">(</span><span class="n">rnorm</span><span class="p">(</span><span class="m">1000</span><span class="o">*</span><span class="m">2000</span><span class="p">),</span><span class="w"> </span><span class="m">1000</span><span class="p">,</span><span class="w"> </span><span class="m">2000</span><span class="p">)</span><span class="w">
-</span><span class="n">beta</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">2000</span><span class="p">)</span><span class="w">
-</span><span class="n">beta</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">20</span><span class="p">]</span><span class="w">      </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">runif</span><span class="p">(</span><span class="m">20</span><span class="p">)</span><span class="w">
-</span><span class="n">beta</span><span class="p">[</span><span class="m">1901</span><span class="o">:</span><span class="m">1980</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">runif</span><span class="p">(</span><span class="m">80</span><span class="p">)</span><span class="w">
-</span><span class="n">y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">X</span><span class="w"> </span><span class="o">%*%</span><span class="w"> </span><span class="n">beta</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">rnorm</span><span class="p">(</span><span class="m">1000</span><span class="p">)</span><span class="w">
-</span></code></pre>
+<span class="n">X</span>    <span class="o">&lt;-</span> <span class="n">matrix</span><span class="p">(</span><span class="n">rnorm</span><span class="p">(</span><span class="m">1000</span><span class="o">*</span><span class="m">2000</span><span class="p">),</span> <span class="m">1000</span><span class="p">,</span> <span class="m">2000</span><span class="p">)</span>
+<span class="n">beta</span> <span class="o">&lt;-</span> <span class="n">rep</span><span class="p">(</span><span class="m">0</span><span class="p">,</span> <span class="m">2000</span><span class="p">)</span>
+<span class="n">beta</span><span class="p">[</span><span class="m">1</span><span class="o">:</span><span class="m">20</span><span class="p">]</span>      <span class="o">&lt;-</span> <span class="n">runif</span><span class="p">(</span><span class="m">20</span><span class="p">)</span>
+<span class="n">beta</span><span class="p">[</span><span class="m">1901</span><span class="o">:</span><span class="m">1980</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="n">runif</span><span class="p">(</span><span class="m">80</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">&lt;-</span> <span class="n">X</span> <span class="o">%*%</span> <span class="n">beta</span> <span class="o">+</span> <span class="n">rnorm</span><span class="p">(</span><span class="m">1000</span><span class="p">)</span>
+</code></pre>
 </div>
 
 <p>We assume that the predictors (i.e., the columns of $X$) are divided into 200 blocks, each of size 10, and we want to determine which groups of predictors have an effect on the response variable $y$. That is, given the noisy observations of $y$, we want to find out, which blocks of the vector $\beta$ contain non-zero entries. As you can see above, $\beta$ has 10 non-zero blocks. Additionally, we want to make sure that we don’t make too many false discoveries in the process (i.e., we want the method to keep the expected proportion of falsely selected groups below, say, 10%). That’s exactly what the Group SLOPE method is for!</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="c1">#install.packages("grpSLOPE") # Install the package now easily from CRAN!
-</span><span class="n">library</span><span class="p">(</span><span class="n">grpSLOPE</span><span class="p">)</span><span class="w">
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="c1">#install.packages("grpSLOPE") # Install the package now easily from CRAN!
+</span><span class="n">library</span><span class="p">(</span><span class="n">grpSLOPE</span><span class="p">)</span>
 
-</span><span class="n">group</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">200</span><span class="p">,</span><span class="w"> </span><span class="n">each</span><span class="o">=</span><span class="m">10</span><span class="p">)</span><span class="w">
-</span><span class="n">grpSLOPE.result</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">grpSLOPE</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span><span class="w"> </span><span class="n">fdr</span><span class="o">=</span><span class="m">0.1</span><span class="p">)</span><span class="w">
-</span></code></pre>
+<span class="n">group</span>  <span class="o">&lt;-</span> <span class="n">rep</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">200</span><span class="p">,</span> <span class="n">each</span><span class="o">=</span><span class="m">10</span><span class="p">)</span>
+<span class="n">grpSLOPE.result</span> <span class="o">&lt;-</span> <span class="n">grpSLOPE</span><span class="p">(</span><span class="n">X</span><span class="o">=</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="n">y</span><span class="p">,</span> <span class="n">group</span><span class="o">=</span><span class="n">group</span><span class="p">,</span> <span class="n">fdr</span><span class="o">=</span><span class="m">0.1</span><span class="p">)</span>
+</code></pre>
 </div>
 
 <p>We observe that the method has indeed selected the correct groups of predictors:</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">grpSLOPE.result</span><span class="o">$</span><span class="n">selected</span><span class="w">
-</span><span class="c1">#  [1] "1"   "2"   "191" "192" "193" "194" "195" "196" "197" "198"
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">grpSLOPE.result</span><span class="o">$</span><span class="n">selected</span>
+<span class="c1">#  [1] "1"   "2"   "191" "192" "193" "194" "195" "196" "197" "198"
 </span></code></pre>
 </div>
 
 <p>And the false discovery proportion is indeed below the target of 10% in this case, while the power is at 100%:</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">truly.significant.groups</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">unique</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="n">which</span><span class="p">(</span><span class="n">beta</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">0</span><span class="p">)])</span><span class="w">
-</span><span class="n">truly.significant.groups</span><span class="w">
-</span><span class="c1">#  [1]   1   2 191 192 193 194 195 196 197 198
-</span><span class="w">
-</span><span class="n">false.discoveries</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">setdiff</span><span class="p">(</span><span class="n">grpSLOPE.result</span><span class="o">$</span><span class="n">selected</span><span class="p">,</span><span class="w"> </span><span class="n">truly.significant.groups</span><span class="p">)</span><span class="w">
-</span><span class="n">fdp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="n">false.discoveries</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="n">grpSLOPE.result</span><span class="o">$</span><span class="n">selected</span><span class="p">)</span><span class="w">
-</span><span class="n">fdp</span><span class="w">
-</span><span class="c1">#  [1] 0
-</span><span class="w">
-</span><span class="n">true.discoveries</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">intersect</span><span class="p">(</span><span class="n">grpSLOPE.result</span><span class="o">$</span><span class="n">selected</span><span class="p">,</span><span class="w"> </span><span class="n">truly.significant.groups</span><span class="p">)</span><span class="w">
-</span><span class="n">power</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="n">true.discoveries</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="n">grpSLOPE.result</span><span class="o">$</span><span class="n">selected</span><span class="p">)</span><span class="w">
-</span><span class="n">power</span><span class="w">
-</span><span class="c1">#  [1] 1
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">truly.significant.groups</span> <span class="o">&lt;-</span> <span class="n">unique</span><span class="p">(</span><span class="n">group</span><span class="p">[</span><span class="n">which</span><span class="p">(</span><span class="n">beta</span> <span class="o">!=</span> <span class="m">0</span><span class="p">)])</span>
+<span class="n">truly.significant.groups</span>
+<span class="c1">#  [1]   1   2 191 192 193 194 195 196 197 198
+</span>
+<span class="n">false.discoveries</span> <span class="o">&lt;-</span> <span class="n">setdiff</span><span class="p">(</span><span class="n">grpSLOPE.result</span><span class="o">$</span><span class="n">selected</span><span class="p">,</span> <span class="n">truly.significant.groups</span><span class="p">)</span>
+<span class="n">fdp</span> <span class="o">&lt;-</span> <span class="n">length</span><span class="p">(</span><span class="n">false.discoveries</span><span class="p">)</span> <span class="o">/</span> <span class="n">length</span><span class="p">(</span><span class="n">grpSLOPE.result</span><span class="o">$</span><span class="n">selected</span><span class="p">)</span>
+<span class="n">fdp</span>
+<span class="c1">#  [1] 0
+</span>
+<span class="n">true.discoveries</span> <span class="o">&lt;-</span> <span class="n">intersect</span><span class="p">(</span><span class="n">grpSLOPE.result</span><span class="o">$</span><span class="n">selected</span><span class="p">,</span> <span class="n">truly.significant.groups</span><span class="p">)</span>
+<span class="n">power</span> <span class="o">&lt;-</span> <span class="n">length</span><span class="p">(</span><span class="n">true.discoveries</span><span class="p">)</span> <span class="o">/</span> <span class="n">length</span><span class="p">(</span><span class="n">grpSLOPE.result</span><span class="o">$</span><span class="n">selected</span><span class="p">)</span>
+<span class="n">power</span>
+<span class="c1">#  [1] 1
 </span></code></pre>
 </div>
 

@@ -83,8 +83,8 @@
 
 <p>The function <code class="highlighter-rouge">mkLmerDevfun</code> is defined in the file <code class="highlighter-rouge">modular.R</code> as:</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">mkLmerDevfun</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">fr</span><span class="p">,</span><span class="w"> </span><span class="n">X</span><span class="p">,</span><span class="w"> </span><span class="n">reTrms</span><span class="p">,</span><span class="w"> </span><span class="n">REML</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">verbose</span><span class="o">=</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">control</span><span class="o">=</span><span class="n">lmerControl</span><span class="p">(),</span><span class="w"> </span><span class="n">...</span><span class="p">)</span><span class="w">
-</span></code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">mkLmerDevfun</span> <span class="o">&lt;-</span> <span class="k">function</span><span class="p">(</span><span class="n">fr</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">reTrms</span><span class="p">,</span> <span class="n">REML</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">start</span> <span class="o">=</span> <span class="n">NULL</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="m">0</span><span class="p">,</span> <span class="n">control</span><span class="o">=</span><span class="n">lmerControl</span><span class="p">(),</span> <span class="k">...</span><span class="p">)</span>
+</code></pre>
 </div>
 
 <p>It begins by extracting some variables from the function call, most importantly:</p>
@@ -97,14 +97,14 @@
 
 <p>Then <code class="highlighter-rouge">mkLmerDevfun</code> diverts to the function <code class="highlighter-rouge">mkdevfun</code> (defined in <code class="highlighter-rouge">lmer.R</code>), which takes as input the environment <code class="highlighter-rouge">rho</code> and returns a function <code class="highlighter-rouge">devfun</code> with <code class="highlighter-rouge">rho</code> as an associated environment. The function <code class="highlighter-rouge">mkdevfun</code> sets</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">rho</span><span class="o">$</span><span class="n">lmer_Deviance</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lmer_Deviance</span><span class="w">
-</span></code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">rho</span><span class="o">$</span><span class="n">lmer_Deviance</span> <span class="o">&lt;-</span> <span class="n">lmer_Deviance</span>
+</code></pre>
 </div>
 
 <p>and defines <code class="highlighter-rouge">devfun</code> as</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="k">function</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span><span class="w"> </span><span class="n">.Call</span><span class="p">(</span><span class="n">lmer_Deviance</span><span class="p">,</span><span class="w"> </span><span class="n">pp</span><span class="o">$</span><span class="n">ptr</span><span class="p">(),</span><span class="w"> </span><span class="n">resp</span><span class="o">$</span><span class="n">ptr</span><span class="p">(),</span><span class="w"> </span><span class="nf">as.double</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span><span class="w">
-</span></code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">function</span><span class="p">(</span><span class="n">theta</span><span class="p">)</span> <span class="n">.Call</span><span class="p">(</span><span class="n">lmer_Deviance</span><span class="p">,</span> <span class="n">pp</span><span class="o">$</span><span class="n">ptr</span><span class="p">(),</span> <span class="n">resp</span><span class="o">$</span><span class="n">ptr</span><span class="p">(),</span> <span class="n">as.double</span><span class="p">(</span><span class="n">theta</span><span class="p">))</span>
+</code></pre>
 </div>
 
 <p>I inspect the C++ function <code class="highlighter-rouge">lmer_Deviance</code> in great detail below.</p>
@@ -117,7 +117,7 @@
 
 <h3 id="lmerdeviance"><code class="highlighter-rouge">lmer_Deviance</code></h3>
 
-<p>This function is defined as <code class="highlighter-rouge">SEXP lmer_Deviance(SEXP pptr_, SEXP rptr_, SEXP theta_)</code> in <code class="highlighter-rouge">external.cpp</code>.
+<p>This function is defined as <code class="highlighter-rouge">SEXP lmer_Deviance(SEXP pptr_, SEXP rptr_, SEXP theta_)</code> in <code class="highlighter-rouge">external.cpp</code>.<br />
 Using the <code class="highlighter-rouge">Rcpp:::Xptr</code> template, it creates two external pointers to instances of the C++ classes <code class="highlighter-rouge">lmerResp</code> and <code class="highlighter-rouge">merPredD</code>, thus exposing all methods of the respective C++ objects to the use from R.</p>
 
 <pre><code class="language-C++">        XPtr&lt;lmerResp&gt;   rpt(rptr_);

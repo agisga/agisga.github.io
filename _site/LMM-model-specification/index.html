@@ -87,13 +87,13 @@
 
 <p>In lme4 (R):</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">fm01</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lmer</span><span class="p">(</span><span class="n">Yield</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">Batch</span><span class="p">),</span><span class="w"> </span><span class="n">Dyestuff</span><span class="p">)</span><span class="w">
-</span></code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">fm01</span> <span class="o">&lt;-</span> <span class="n">lmer</span><span class="p">(</span><span class="n">Yield</span> <span class="o">~</span> <span class="m">1</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">Batch</span><span class="p">),</span> <span class="n">Dyestuff</span><span class="p">)</span>
+</code></pre>
 </div>
 
 <p>In MixedModels (Ruby):</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">fm01</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_daru</span><span class="p">(</span><span class="ss">response: :yield</span><span class="p">,</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">fm01</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_daru</span><span class="p">(</span><span class="ss">response: :yield</span><span class="p">,</span>
                      <span class="ss">fixed_effects: :intercept</span><span class="p">,</span>
                      <span class="ss">random_effects: :intercept</span><span class="p">,</span>
                      <span class="ss">grouping: :batch</span><span class="p">,</span>
@@ -111,13 +111,13 @@
 
 <p>In R, lme4:</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">fm03</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lmer</span><span class="p">(</span><span class="n">diameter</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">plate</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">sample</span><span class="p">),</span><span class="w"> </span><span class="n">Penicillin</span><span class="p">))</span><span class="w">
-</span></code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">fm03</span> <span class="o">&lt;-</span> <span class="n">lmer</span><span class="p">(</span><span class="n">diameter</span> <span class="o">~</span> <span class="m">1</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">plate</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">sample</span><span class="p">),</span> <span class="n">Penicillin</span><span class="p">))</span>
+</code></pre>
 </div>
 
 <p>In Ruby, MixedModels:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">fm03</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_daru</span><span class="p">(</span><span class="ss">response: :diameter</span><span class="p">,</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">fm03</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_daru</span><span class="p">(</span><span class="ss">response: :diameter</span><span class="p">,</span>
                      <span class="ss">fixed_effects: :intercept</span><span class="p">,</span>
                      <span class="ss">random_effects: </span><span class="p">[</span><span class="ss">:intercept</span><span class="p">,</span> <span class="ss">:intercept</span><span class="p">],</span>
                      <span class="ss">grouping: </span><span class="p">[</span><span class="ss">:plate</span><span class="p">,</span> <span class="ss">:sample</span><span class="p">],</span>
@@ -135,15 +135,15 @@
 
 <p>In R, lme4:</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">bone.growth.lmer</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lmer</span><span class="p">(</span><span class="n">BoneGrowth</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">mouse</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">mouse</span><span class="o">:</span><span class="n">foot</span><span class="p">),</span><span class="w"> 
-                         </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dat</span><span class="p">)</span><span class="w">
-</span></code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">bone.growth.lmer</span> <span class="o">&lt;-</span> <span class="n">lmer</span><span class="p">(</span><span class="n">BoneGrowth</span> <span class="o">~</span> <span class="m">1</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">mouse</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">mouse</span><span class="o">:</span><span class="n">foot</span><span class="p">),</span> 
+                         <span class="n">data</span> <span class="o">=</span> <span class="n">dat</span><span class="p">)</span>
+</code></pre>
 </div>
 
 <p>or more succinct:</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">bone.growth.lmer</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lmer</span><span class="p">(</span><span class="n">BoneGrowth</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">mouse</span><span class="o">/</span><span class="n">foot</span><span class="p">),</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dat</span><span class="p">)</span><span class="w">
-</span></code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">bone.growth.lmer</span> <span class="o">&lt;-</span> <span class="n">lmer</span><span class="p">(</span><span class="n">BoneGrowth</span> <span class="o">~</span> <span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">mouse</span><span class="o">/</span><span class="n">foot</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">dat</span><span class="p">)</span>
+</code></pre>
 </div>
 
 <p>In Ruby, MixedModels: Construct additional data frame columns, describing the interaction of foot and mouse, by hand. Then fit a model as shown above for crossed random effects…</p>
@@ -164,13 +164,13 @@ Politeness\subscript{ijk} &=& Intercept + SubjectIntercept\subscript{j} + Scenar
 
 <p>This can be expressed in R as:</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">politeness.model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lmer</span><span class="p">(</span><span class="n">politeness</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">gender</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">IQ</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="m">1</span><span class="o">+</span><span class="n">attitude</span><span class="o">|</span><span class="n">subject</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="m">1</span><span class="o">+</span><span class="n">attitude</span><span class="o">|</span><span class="n">scenario</span><span class="p">),</span><span class="w"> </span><span class="n">data</span><span class="o">=</span><span class="n">politeness</span><span class="p">)</span><span class="w">
-</span></code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">politeness.model</span> <span class="o">=</span> <span class="n">lmer</span><span class="p">(</span><span class="n">politeness</span> <span class="o">~</span> <span class="n">gender</span> <span class="o">+</span> <span class="n">IQ</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">+</span><span class="n">attitude</span><span class="o">|</span><span class="n">subject</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">+</span><span class="n">attitude</span><span class="o">|</span><span class="n">scenario</span><span class="p">),</span> <span class="n">data</span><span class="o">=</span><span class="n">politeness</span><span class="p">)</span>
+</code></pre>
 </div>
 
 <p>And the equivalent in Ruby would be:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">politeness_model</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_daru</span><span class="p">(</span><span class="ss">response: :politeness</span><span class="p">,</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">politeness_model</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_daru</span><span class="p">(</span><span class="ss">response: :politeness</span><span class="p">,</span>
                                  <span class="ss">fixed_effects: </span><span class="p">[</span><span class="ss">:gender</span><span class="p">,</span> <span class="ss">:IQ</span><span class="p">],</span>
                                  <span class="ss">random_efffects: </span><span class="p">[</span> <span class="p">[</span><span class="ss">:intercept</span><span class="p">,</span> <span class="ss">:attitude</span><span class="p">],</span> <span class="p">[</span><span class="ss">:intercept</span><span class="p">,</span> <span class="ss">:attitude</span><span class="p">]</span> <span class="p">],</span>
                                  <span class="ss">grouping: </span><span class="p">[</span><span class="ss">:subject</span><span class="p">,</span> <span class="ss">:scenario</span><span class="p">],</span>
@@ -188,13 +188,13 @@ Politeness\subscript{ijk} &=& Intercept + SubjectIntercept\subscript{j} + Scenar
 
 <p>In R, lme4:</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">modfit</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lmer</span><span class="p">(</span><span class="n">z</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">I</span><span class="p">(</span><span class="n">x</span><span class="o">^</span><span class="m">2</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">u</span><span class="p">))</span><span class="w">
-</span></code></pre>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">modfit</span> <span class="o">&lt;-</span> <span class="n">lmer</span><span class="p">(</span><span class="n">z</span> <span class="o">~</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="n">I</span><span class="p">(</span><span class="n">x</span><span class="o">^</span><span class="m">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">u</span><span class="p">))</span>
+</code></pre>
 </div>
 
 <p>In Ruby, MixedModels: By hand, generate new columns to the <code class="highlighter-rouge">daru</code> data frame. Namely, a column containing the squares of $x$ and a column containing the products $xy$. Then call <code class="highlighter-rouge">LMM#from_daru</code> as,</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">modfit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_daru</span><span class="p">(</span><span class="ss">response: :z</span><span class="p">,</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">modfit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_daru</span><span class="p">(</span><span class="ss">response: :z</span><span class="p">,</span>
                        <span class="ss">fixed_effects: </span><span class="p">[</span><span class="ss">:intercept</span><span class="p">,</span> <span class="ss">:x</span><span class="p">,</span> <span class="ss">:x2</span><span class="p">,</span> <span class="ss">:y</span><span class="p">,</span> <span class="ss">:xy</span><span class="p">],</span>
                        <span class="ss">random_effects: :intercept</span><span class="p">,</span>
                        <span class="ss">grouping: :u</span><span class="p">,</span>

@@ -188,7 +188,7 @@ $ bundle exec rake install nmatrix_plugins=lapacke
 
 <p>Consider the SVD of a 100 × 100 matrix:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="mi">10000</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="mi">10000</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
   <span class="n">a</span> <span class="o">=</span> <span class="no">NMatrix</span><span class="p">.</span><span class="nf">random</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span> <span class="ss">dtype: :float64</span><span class="p">)</span>
   <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vt</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="nf">gesvd</span>
 
@@ -215,7 +215,7 @@ $ bundle exec rake install nmatrix_plugins=lapacke
 
 <p>Consider a Cholesky factorization of a 5000 × 5000 matrix:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="mi">10</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<div class="highlighter-rouge"><pre class="highlight"><code><span class="mi">10</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
   <span class="n">a</span> <span class="o">=</span> <span class="no">NMatrix</span><span class="p">.</span><span class="nf">random</span><span class="p">([</span><span class="mi">5000</span><span class="p">,</span><span class="mi">5000</span><span class="p">],</span> <span class="ss">dtype: :float64</span><span class="p">)</span>
   <span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="nf">dot</span> <span class="n">a</span><span class="p">.</span><span class="nf">transpose</span>
   <span class="n">b</span><span class="p">.</span><span class="nf">factorize_cholesky</span>
@@ -241,7 +241,7 @@ $ bundle exec rake install nmatrix_plugins=lapacke
 
 <h3 id="appendix-mkl-link-line-advisorhttpssoftwareintelcomen-usarticlesintel-mkl-link-line-advisor-screen-shots">Appendix: <a href="https://software.intel.com/en-us/articles/intel-mkl-link-line-advisor">MKL link line advisor</a> screen shots</h3>
 
-<p><img src="/images/link-line-1.png?raw=true" alt="SDL link line" />
+<p><img src="/images/link-line-1.png?raw=true" alt="SDL link line" /><br />
 <img src="/images/link-line-2.png?raw=true" alt="Static linking link line" /></p>
 
   </div>
