@@ -132,7 +132,7 @@ formula = 'Adoption~AnimalType+Breed+AgeuponOutcome+Color+SexuponOutcome'
 glm_adoption = Statsample::GLM::Regression.new formula, train_data, :logistic, epsilon: 1e-2
 ```
 
-Finally, we use the obtained GLM to compute predictions on test data (the test data didn't require much preprocessing, apart from the imputation of a couple missing age values):
+Finally, we use the obtained GLM to compute predictions on test data (the test data didn't require much preprocessing, apart from the imputation of a couple missing age values)[^1]:
 
 ```ruby
 test_data = Daru::DataFrame.from_csv 'animal_shelter_test_processed.csv'
@@ -144,3 +144,5 @@ Unfortunately, `statsample-glm` is currently not optimized for computation on me
 ## That's it!
 
 Out of curiosity I have actually submitted the obtained predictions to kaggle. The submission currently ranks 1090 out of 1451, as expected of such an unsophisticated GLM (see [the leaderboard](https://www.kaggle.com/c/shelter-animal-outcomes/leaderboard), submission is under name agisga).  At least I am not last (personal goal achieved :smiley:)! All scripts used for the presented data analysis can be found in [this github repository](https://github.com/agisga/animal_shelter_data). 
+
+   [^1]: Update: After the kaggle competition has ended, I realized that I made the silly mistake of not transforming "Breed" and "Color" in the test data in the same way as I have done it in the training data. :confused:

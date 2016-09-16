@@ -67,7 +67,7 @@ A^{-} :=  \sum_{i=1}^k \frac{1}{\lambda_i} q_i q_i^T.
 
 &lt;h3 id=&quot;but-what-if-a-is-not-symmetric-fearful&quot;&gt;But what if A is not symmetric? :fearful:&lt;/h3&gt;
 
-&lt;p&gt;Well, then $A$ is not diagonalizable, but instead we can use the singular value decomposition&lt;/p&gt;
+&lt;p&gt;Well, then $A$ is not diagonalizable (in general), but instead we can use the singular value decomposition&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;A = U \Sigma V^T = \sum_{i = 1}^k \sigma_i u_i v_i^T,&lt;/script&gt;
 
@@ -217,7 +217,7 @@ Ohio, USA: Institute of Mathematical Statistics, 2007.&lt;/li&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 
-&lt;p&gt;Finally, we use the obtained GLM to compute predictions on test data (the test data didn’t require much preprocessing, apart from the imputation of a couple missing age values):&lt;/p&gt;
+&lt;p&gt;Finally, we use the obtained GLM to compute predictions on test data (the test data didn’t require much preprocessing, apart from the imputation of a couple missing age values)&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;test_data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Daru&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;DataFrame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;from_csv&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;&#39;animal_shelter_test_processed.csv&#39;&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;adoption_pred&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;glm_adoption&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;predict&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;test_data&lt;/span&gt; 
@@ -229,6 +229,14 @@ Ohio, USA: Institute of Mathematical Statistics, 2007.&lt;/li&gt;
 &lt;h2 id=&quot;thats-it&quot;&gt;That’s it!&lt;/h2&gt;
 
 &lt;p&gt;Out of curiosity I have actually submitted the obtained predictions to kaggle. The submission currently ranks 1090 out of 1451, as expected of such an unsophisticated GLM (see &lt;a href=&quot;https://www.kaggle.com/c/shelter-animal-outcomes/leaderboard&quot;&gt;the leaderboard&lt;/a&gt;, submission is under name agisga).  At least I am not last (personal goal achieved :smiley:)! All scripts used for the presented data analysis can be found in &lt;a href=&quot;https://github.com/agisga/animal_shelter_data&quot;&gt;this github repository&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot;&gt;
+      &lt;p&gt;Update: After the kaggle competition has ended, I realized that I made the silly mistake of not transforming “Breed” and “Color” in the test data in the same way as I have done it in the training data. :confused: &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
 </description>
           <pubDate>2016-07-23T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com//categorical_data_glm_in_ruby/</link>

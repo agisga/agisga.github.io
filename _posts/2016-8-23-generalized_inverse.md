@@ -68,7 +68,7 @@ $$
 
 ### But what if A is not symmetric? :fearful:
 
-Well, then $A$ is not diagonalizable, but instead we can use the singular value decomposition
+Well, then $A$ is not diagonalizable (in general), but instead we can use the singular value decomposition
 
 $$A = U \Sigma V^T = \sum_{i = 1}^k \sigma_i u_i v_i^T,$$
 
