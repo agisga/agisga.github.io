@@ -4,6 +4,10 @@ title: Publications
 permalink: /publications/
 ---
 
+## Preprints
+
+{% bibliography --file preprint --prefix P %}
+
 ## Journal Publications
 
 {% bibliography --file journal --prefix J %}

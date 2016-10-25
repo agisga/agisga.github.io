@@ -1,6 +1,9 @@
 ---
 ---
 {{reference}}
+{% if entry.arxiv %}
+<a href="http://arxiv.org/abs/{{ entry.arxiv }}">arXiv:{{ entry.arxiv }}</a> [<a href="http://arxiv.org/pdf/{{ entry.arxiv }}">pdf</a>], 
+{% endif %}
 {% if entry.doi %}
 DOI: <a href="http://dx.doi.org/{{entry.doi}}">{{entry.doi}}</a>.
 {% endif %}
