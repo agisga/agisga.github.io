@@ -7,6 +7,35 @@
     
       
         <item>
+          <title>Tired of doing real math 1 &amp;mdash; some visualizations of Hillary Clinton and Donald Trump tweets</title>
+          <description>&lt;p&gt;&lt;img src=&quot;/images/clinton_trump_tweets/trump_clinton_tweets_word_cloud.png?raw=true&quot; alt=&quot;Word cloud from Trump and Clinton tweets&quot; title=&quot;Word cloud from Trump and Clinton tweets&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As a grad student working primarily on statistical methodology, I regularly experience phases of total disillusionment with math/stats.  Recently I realized that when I don’t feel like doing “real” math for prolonged periods of time, I instead can work on data analyses, which are mathematically unsophisticated (and possibly of low mathematical quality), but rather focus on simple techniques and/or visualizations of interesting data.&lt;br /&gt;
+&lt;a href=&quot;https://www.kaggle.com/benhamner/clinton-trump-tweets&quot;&gt;Somebody at kaggle.com conveniently provides tweet data of these year’s two major presidential candidates.&lt;/a&gt; Here, I very briefly visually investigate this dataset.&lt;/p&gt;
+
+&lt;!--The goal, I guess, is to understand what messages the candidates convey with their tweets. But I won&#39;t go deep into interpretation of the results or political discussion. I first take a look at the top ten most popular tweets of either candidate, where tweet popularity is defined as the sum of the number of retweets and the number of favorites that a tweet has received. After some minimal data preprocessing, I plot a bar graph of retweet and favorite count for the top ten tweets, and overlay the tweet text on top of the bars in the graph. This results in the following visualizations.--&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/clinton_trump_tweets/trump_top_10.png?raw=true&quot; alt=&quot;Visualization of Trump&#39;s top ten tweets&quot; title=&quot;Visualization of Trump&#39;s top ten tweets&quot; /&gt;&lt;br /&gt;
+&lt;a href=&quot;/images/clinton_trump_tweets/trump_top_10.png&quot;&gt;(Larger image)&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/clinton_trump_tweets/clinton_top_10.png?raw=true&quot; alt=&quot;Visualization of Clinton&#39;s top ten tweets&quot; title=&quot;Visualization of Clinton&#39;s top ten tweets&quot; /&gt;&lt;br /&gt;
+&lt;a href=&quot;/images/clinton_trump_tweets/clinton_top_10.png&quot;&gt;(Larger image)&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;code&quot;&gt;Code&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.kaggle.com/agisga/d/benhamner/clinton-trump-tweets/word-clouds&quot;&gt;I have uploaded a script producing very similar word clouds as the above ones to kaggle.com.&lt;/a&gt; Arguably a word cloud is far from being a good statistical tool, but it’s fun. Besides, it gave me an opportunity to improve my regex skills, and to learn about palettes and fonts in R (&lt;a href=&quot;http://colorbrewer2.org&quot;&gt;http://colorbrewer2.org&lt;/a&gt; is awesome!).&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://www.kaggle.com/agisga/d/benhamner/clinton-trump-tweets/top-10-tweets&quot;&gt;I have also written a script producing the above visualizations of the top ten tweets of either presidential candidate&lt;/a&gt;, learning more about ggplot2 in the process.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+          <pubDate>2016-10-25T00:00:00-05:00</pubDate>
+          <link>http://www.alexejgossmann.com//clinton_trump_tweets/</link>
+          <guid isPermaLink="true">http://www.alexejgossmann.com//clinton_trump_tweets/</guid>
+        </item>
+      
+    
+      
+        <item>
           <title>Generalized inverse of a symmetric matrix</title>
           <description>&lt;p&gt;I have always found the common definition of the &lt;a href=&quot;https://en.wikipedia.org/wiki/Generalized_inverse&quot;&gt;generalized inverse&lt;/a&gt; of a matrix quite unsatisfactory, because it is usually defined by a mere property, $A A^{-} A = A$, which does not really give intuition on when such a matrix exists or on how it can be constructed, etc… But recently, I came across a much more satisfactory definition for the case of symmetric (or more general, &lt;a href=&quot;https://en.wikipedia.org/wiki/Normal_matrix&quot;&gt;normal&lt;/a&gt;) matrices. :smiley:&lt;/p&gt;
 

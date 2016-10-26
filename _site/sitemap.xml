@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.alexejgossmann.com//clinton_trump_tweets/</loc>
+<lastmod>2016-10-25T00:00:00-05:00</lastmod>
+</url>
+<url>
 <loc>http://www.alexejgossmann.com//generalized_inverse/</loc>
 <lastmod>2016-08-23T00:00:00-05:00</lastmod>
 </url>
@@ -155,5 +159,11 @@
 </url>
 <url>
 <loc>http://www.alexejgossmann.com//tag/kaggle/</loc>
+</url>
+<url>
+<loc>http://www.alexejgossmann.com//tag/tired%2520of%2520doing%2520real%2520math/</loc>
+</url>
+<url>
+<loc>http://www.alexejgossmann.com//tag/visualization/</loc>
 </url>
 </urlset>

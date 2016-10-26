@@ -1,0 +1,13 @@
+<p>As a grad student working primarily on statistical methodology, I regularly experience phases of total disillusionment with math/stats.  Recently I realized that when I don’t feel like doing “real” math for prolonged periods of time, I instead can work on data analyses, which are mathematically unsophisticated (and possibly of low mathematical quality), but rather focus on simple techniques and visualizations of interesting data.</p>
+
+<p><a href="https://www.kaggle.com/benhamner/clinton-trump-tweets">Somebody at kaggle.com conveniently provides tweet data of these year’s two major presidential candidates.</a> I investigate this dataset below.</p>
+
+<p>The goal, I guess, is to understand what messages the candidates convey with their tweets.  To this end I first take a look at the top ten most popular tweets of either candidate, where tweet popularity is defined as the sum of the number of retweets and the number of favorites that a tweet has received. After some minimal data preprocessing, I plot a bar graph of retweet and favorite count for the top ten tweets, and overlay the tweet text on top of the bars in the graph.<br />
+This results in the following visualizations.</p>
+
+<p><img src="/images/clinton_trump_tweets/trump_top_10.png?raw=true" alt="Visualization of Trump's top ten tweets" title="Visualization of Trump's top ten tweets" /></p>
+
+<p><img src="/images/clinton_trump_tweets/clinton_top_10.png?raw=true" alt="Visualization of Clinton's top ten tweets" title="Visualization of Clinton's top ten tweets" /></p>
+
+<p>Here we essentially look at word frequencies.<br />
+Arguably a word cloud is far from being a good statistical tool, but it’s fun. Besides, it offers me a way to learn about palettes and fonts in R.</p>
