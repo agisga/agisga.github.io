@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.alexejgossmann.com//amahi/</loc>
+<lastmod>2016-11-07T00:00:00-06:00</lastmod>
+</url>
+<url>
 <loc>http://www.alexejgossmann.com//clinton_trump_tweets/</loc>
 <lastmod>2016-10-25T00:00:00-05:00</lastmod>
 </url>
@@ -165,5 +169,8 @@
 </url>
 <url>
 <loc>http://www.alexejgossmann.com//tag/visualization/</loc>
+</url>
+<url>
+<loc>http://www.alexejgossmann.com//tag/technology/</loc>
 </url>
 </urlset>

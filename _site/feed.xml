@@ -7,11 +7,64 @@
     
       
         <item>
+          <title>Turn an old laptop into a home server with remote access over VPN</title>
+          <description>&lt;p&gt;This weekend I have set up an old laptop with a broken screen as an &lt;a href=&quot;https://www.amahi.org/&quot;&gt;Amahi&lt;/a&gt; server in my house, such that I can access the files stored on the server with my other computers from anywhere.&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; I use OpenVPN to establish a connection to the server and its files. As an additional benefit, &lt;a href=&quot;https://www.expressvpn.com/internet-privacy/guides/vpn-security-work/&quot;&gt;connecting over a VPN when on a public network secures the traffic to and from you&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;I have no previous experience with server setup, and it turned out to take longer than I expected. It was quite a frustrating experience I must admit :unamused:. Therefore I decided to document the final setup for future-me or anybody else interested in doing something similar. I’m by no means an expert on any of that (just to make it clear), but everything works to my satisfaction now :satisfied:.&lt;/p&gt;
+
+&lt;h3 id=&quot;here-are-the-steps-to-reproduce-my-setup&quot;&gt;Here are the steps to reproduce my setup&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;
+    &lt;p&gt;Install Amahi. Well, first install &lt;em&gt;the correct version of Fedora&lt;/em&gt; (&lt;em&gt;not&lt;/em&gt; the latest release). I am using &lt;a href=&quot;https://wiki.amahi.org/index.php/Amahi_9_Install&quot;&gt;Amahi 9 on Fedora 23&lt;/a&gt;, which is currently the officially supported setup.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Put the IP of your server into the address bar of a web browser in another machine on the local network (the IP can be determined with &lt;code class=&quot;highlighter-rouge&quot;&gt;hostname -I&lt;/code&gt; in the server console). This will bring you to a login screen of the web interface of your server.&lt;br /&gt;
+Here I experienced some buggy behavior: The web interface would not accept my credentials, until &lt;a href=&quot;https://wiki.amahi.org/index.php/Reset_Amahi_Password&quot;&gt;I reset my Amahi password&lt;/a&gt; over an SSH session.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Use the web interface to create additional &lt;a href=&quot;https://wiki.amahi.org/index.php/Storage_and_file_sharing#Step_2:_Create_Shares&quot;&gt;file shares&lt;/a&gt; and users, and to install apps by point-and-click onto the Amahi server.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Now, &lt;a href=&quot;https://wiki.amahi.org/index.php/Transition_to_Amahi&quot;&gt;the Amahi wiki suggests to turn off your router’s DHCP, in order to use the home server for DNS&lt;/a&gt;. However, in my final setup I skipped that step, since I don’t use any Amahi apps other than the OpenVPN (which does not require this step). But if you decide to do this, then take a look at &lt;a href=&quot;https://wiki.amahi.org/index.php/Network_troubleshooting&quot;&gt;the wiki page on network troubleshooting&lt;/a&gt; first.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;Pay 5$ for the &lt;a href=&quot;https://www.amahi.org/apps/openvpn&quot;&gt;OpenVPN app&lt;/a&gt; (most &lt;a href=&quot;https://www.amahi.org/apps&quot;&gt;Amahi server apps&lt;/a&gt; are offered free of cost, but some require a “convenience fee for one-click installation”).&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://wiki.amahi.org/index.php/OpenVPN&quot;&gt;Install OpenVPN&lt;/a&gt;.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;https://wiki.amahi.org/index.php/OpenVPN_clients&quot;&gt;Get VPN clients for your computers/devices&lt;/a&gt;. I use &lt;a href=&quot;https://wiki.amahi.org/index.php/VPNLinux&quot;&gt;my laptop and my work computer (both Linux machines)&lt;/a&gt; to log into the server remotely.&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;You can access your file shares with an ordinary file browser / finder / file manager (obviously you need to start OpenVPN first, if outside the home network).&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;hr /&gt;
+
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot;&gt;
+      &lt;p&gt;Initially I got the idea for a home server after an email from Dropbox informed me that my promotional 48 GB of storage space expire in a month. Instead of paying one of the numerous cloud storage providers, I decided to host an &lt;a href=&quot;https://owncloud.com/&quot;&gt;ownCloud&lt;/a&gt; at home (after &lt;a href=&quot;http://lifehacker.com/5993596/how-to-set-up-your-own-private-cloud-storage-service-in-five-minutes-with-owncloud&quot;&gt;some&lt;/a&gt; &lt;a href=&quot;http://lifehacker.com/turn-an-old-pc-into-a-nas-vpn-media-streamer-and-mor-1516484110&quot;&gt;guides&lt;/a&gt; online made it sound easier than it actually is…). Unfortunately, ownCloud on an Amahi server turned out to be quite disappointing. I found ownCloud to lack some functionality and to be very inconvenient in certain ways, and &lt;a href=&quot;https://forums.amahi.org/viewtopic.php?t=4956&quot;&gt;it possibly poses a security risk when accessible from outside the local network&lt;/a&gt;. So, I eventually got rid of ownCloud, and retreated to storing my files directly on the server in &lt;a href=&quot;https://wiki.amahi.org/index.php/Storage_and_file_sharing#Step_2:_Create_Shares&quot;&gt;file shares&lt;/a&gt;. &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+</description>
+          <pubDate>2016-11-07T00:00:00-06:00</pubDate>
+          <link>http://www.alexejgossmann.com//amahi/</link>
+          <guid isPermaLink="true">http://www.alexejgossmann.com//amahi/</guid>
+        </item>
+      
+    
+      
+        <item>
           <title>Tired of doing real math 1 &amp;mdash; some visualizations of Hillary Clinton and Donald Trump tweets</title>
           <description>&lt;p&gt;&lt;img src=&quot;/images/clinton_trump_tweets/trump_clinton_tweets_word_cloud.png?raw=true&quot; alt=&quot;Word cloud from Trump and Clinton tweets&quot; title=&quot;Word cloud from Trump and Clinton tweets&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;As a grad student working primarily on statistical methodology, I regularly experience phases of total disillusionment with math/stats.  Recently I realized that when I don’t feel like doing “real” math for prolonged periods of time, I instead can work on data analyses, which are mathematically unsophisticated (and possibly of low mathematical quality), but rather focus on simple techniques and/or visualizations of interesting data.&lt;br /&gt;
-&lt;a href=&quot;https://www.kaggle.com/benhamner/clinton-trump-tweets&quot;&gt;Somebody at kaggle.com conveniently provides tweet data of these year’s two major presidential candidates.&lt;/a&gt; Here, I very briefly visually investigate this dataset.&lt;/p&gt;
+&lt;a href=&quot;https://www.kaggle.com/benhamner/clinton-trump-tweets&quot;&gt;Somebody at kaggle.com conveniently provides tweet data of this year’s two major presidential candidates.&lt;/a&gt; Here, I very briefly visually investigate this dataset.&lt;/p&gt;
 
 &lt;!--The goal, I guess, is to understand what messages the candidates convey with their tweets. But I won&#39;t go deep into interpretation of the results or political discussion. I first take a look at the top ten most popular tweets of either candidate, where tweet popularity is defined as the sum of the number of retweets and the number of favorites that a tweet has received. After some minimal data preprocessing, I plot a bar graph of retweet and favorite count for the top ten tweets, and overlay the tweet text on top of the bars in the graph. This results in the following visualizations.--&gt;
 

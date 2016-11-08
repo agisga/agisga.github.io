@@ -9,6 +9,12 @@
       
         
       
+    
+      
+        
+      
+        
+      
         
           
             <item>
@@ -16,7 +22,7 @@
               <description>&lt;p&gt;&lt;img src=&quot;/images/clinton_trump_tweets/trump_clinton_tweets_word_cloud.png?raw=true&quot; alt=&quot;Word cloud from Trump and Clinton tweets&quot; title=&quot;Word cloud from Trump and Clinton tweets&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;As a grad student working primarily on statistical methodology, I regularly experience phases of total disillusionment with math/stats.  Recently I realized that when I don’t feel like doing “real” math for prolonged periods of time, I instead can work on data analyses, which are mathematically unsophisticated (and possibly of low mathematical quality), but rather focus on simple techniques and/or visualizations of interesting data.&lt;br /&gt;
-&lt;a href=&quot;https://www.kaggle.com/benhamner/clinton-trump-tweets&quot;&gt;Somebody at kaggle.com conveniently provides tweet data of these year’s two major presidential candidates.&lt;/a&gt; Here, I very briefly visually investigate this dataset.&lt;/p&gt;
+&lt;a href=&quot;https://www.kaggle.com/benhamner/clinton-trump-tweets&quot;&gt;Somebody at kaggle.com conveniently provides tweet data of this year’s two major presidential candidates.&lt;/a&gt; Here, I very briefly visually investigate this dataset.&lt;/p&gt;
 
 &lt;!--The goal, I guess, is to understand what messages the candidates convey with their tweets. But I won&#39;t go deep into interpretation of the results or political discussion. I first take a look at the top ten most popular tweets of either candidate, where tweet popularity is defined as the sum of the number of retweets and the number of favorites that a tweet has received. After some minimal data preprocessing, I plot a bar graph of retweet and favorite count for the top ten tweets, and overlay the tweet text on top of the bars in the graph. This results in the following visualizations.--&gt;
 
