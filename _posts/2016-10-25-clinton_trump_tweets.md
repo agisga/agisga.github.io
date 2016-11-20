@@ -14,10 +14,10 @@ As a grad student working primarily on statistical methodology, I regularly expe
 
 <!--The goal, I guess, is to understand what messages the candidates convey with their tweets. But I won't go deep into interpretation of the results or political discussion. I first take a look at the top ten most popular tweets of either candidate, where tweet popularity is defined as the sum of the number of retweets and the number of favorites that a tweet has received. After some minimal data preprocessing, I plot a bar graph of retweet and favorite count for the top ten tweets, and overlay the tweet text on top of the bars in the graph. This results in the following visualizations.-->
 
-![Visualization of Trump's top ten tweets](/images/clinton_trump_tweets/trump_top_10.png?raw=true "Visualization of Trump's top ten tweets")
+![Visualization of Trump's top ten tweets](/images/clinton_trump_tweets/trump_top_10_small.png?raw=true "Visualization of Trump's top ten tweets")
 [(Larger image)]( {{ site.baseurl }}/images/clinton_trump_tweets/trump_top_10.png)
 
-![Visualization of Clinton's top ten tweets](/images/clinton_trump_tweets/clinton_top_10.png?raw=true "Visualization of Clinton's top ten tweets")
+![Visualization of Clinton's top ten tweets](/images/clinton_trump_tweets/clinton_top_10_small.png?raw=true "Visualization of Clinton's top ten tweets")
 [(Larger image)]( {{ site.baseurl }}/images/clinton_trump_tweets/clinton_top_10.png)
 
 ### Code

@@ -1,7 +1,8 @@
 ---
 layout: post
 title: dplyr basics
-tags: [r]
+tags:
+- r
 ---
 
 ![Pliers](/images/pliers.jpg?raw=true "Lots of pliers")
