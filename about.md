@@ -10,3 +10,10 @@ I am a PhD student in the Department of Mathematics at Tulane University in New 
 
 * I am part of [the Multiscale Bioimaging and Bioinformatics Laboratory](http://www.tulane.edu/~wyp/).
 * You can read my [CV]({{ site.baseurl }}/pdfs/Alexej_Gossmann-CV.pdf).
+
+### Links
+
+* [Multiscale Bioimaging and Bioinformatics Laboratory, Tulane University](http://www.tulane.edu/~wyp/)
+* [R-bloggers](https://www.r-bloggers.com/)
+* [Roseanna Gossmann](http://math.tulane.edu/~rpealate/)
+* [SciRuby](http://sciruby.com/)
