@@ -10,7 +10,7 @@
           <title>Turn an old laptop into a home server with remote access over VPN</title>
           <description>&lt;p&gt;This weekend I have set up an old laptop with a broken screen as an &lt;a href=&quot;https://www.amahi.org/&quot;&gt;Amahi&lt;/a&gt; server in my house, such that I can access the files stored on the server with my other computers from anywhere.&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; I use OpenVPN to establish a connection to the server and its files. As an additional benefit, &lt;a href=&quot;https://www.expressvpn.com/internet-privacy/guides/vpn-security-work/&quot;&gt;connecting over a VPN when on a public network secures the traffic to and from you&lt;/a&gt;.&lt;/p&gt;
 
-&lt;p&gt;I have no previous experience with server setup, and it turned out to take longer than I expected. It was quite a frustrating experience I must admit :unamused:. Therefore I decided to document the final setup for future-me or anybody else interested in doing something similar. I’m by no means an expert on any of that (just to make it clear), but everything works to my satisfaction now :satisfied:.&lt;/p&gt;
+&lt;p&gt;I have no previous experience with server setup, and it turned out to take longer than I expected. It was quite a frustrating experience, I must admit :unamused:. Therefore I decided to document the final setup for future-me or anybody else interested in doing something similar. I’m by no means an expert on any of that (just to make it clear), but everything works to my satisfaction now :satisfied:.&lt;/p&gt;
 
 &lt;h3 id=&quot;here-are-the-steps-to-reproduce-my-setup&quot;&gt;Here are the steps to reproduce my setup&lt;/h3&gt;
 
@@ -19,7 +19,7 @@
     &lt;p&gt;Install Amahi. Well, first install &lt;em&gt;the correct version of Fedora&lt;/em&gt; (&lt;em&gt;not&lt;/em&gt; the latest release). I am using &lt;a href=&quot;https://wiki.amahi.org/index.php/Amahi_9_Install&quot;&gt;Amahi 9 on Fedora 23&lt;/a&gt;, which is currently the officially supported setup.&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;Put the IP of your server into the address bar of a web browser in another machine on the local network (the IP can be determined with &lt;code class=&quot;highlighter-rouge&quot;&gt;hostname -I&lt;/code&gt; in the server console). This will bring you to a login screen of the web interface of your server.&lt;br /&gt;
+    &lt;p&gt;Put the IP of your server into the address bar of a web browser in another machine on the local network (the IP can be determined with &lt;code class=&quot;highlighter-rouge&quot;&gt;hostname -I&lt;/code&gt; in the server’s console). This will bring you to a login screen of the web interface of your server.&lt;br /&gt;
 Here I experienced some buggy behavior: The web interface would not accept my credentials, until &lt;a href=&quot;https://wiki.amahi.org/index.php/Reset_Amahi_Password&quot;&gt;I reset my Amahi password&lt;/a&gt; over an SSH session.&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;

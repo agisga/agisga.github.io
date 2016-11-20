@@ -74,7 +74,7 @@
   <div class="entry">
     <p>This weekend I have set up an old laptop with a broken screen as an <a href="https://www.amahi.org/">Amahi</a> server in my house, such that I can access the files stored on the server with my other computers from anywhere.<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup> I use OpenVPN to establish a connection to the server and its files. As an additional benefit, <a href="https://www.expressvpn.com/internet-privacy/guides/vpn-security-work/">connecting over a VPN when on a public network secures the traffic to and from you</a>.</p>
 
-<p>I have no previous experience with server setup, and it turned out to take longer than I expected. It was quite a frustrating experience I must admit <img class="emoji" title=":unamused:" alt=":unamused:" src="https://assets.github.com/images/icons/emoji/unicode/1f612.png" height="20" width="20" align="absmiddle">. Therefore I decided to document the final setup for future-me or anybody else interested in doing something similar. I’m by no means an expert on any of that (just to make it clear), but everything works to my satisfaction now <img class="emoji" title=":satisfied:" alt=":satisfied:" src="https://assets.github.com/images/icons/emoji/unicode/1f606.png" height="20" width="20" align="absmiddle">.</p>
+<p>I have no previous experience with server setup, and it turned out to take longer than I expected. It was quite a frustrating experience, I must admit <img class="emoji" title=":unamused:" alt=":unamused:" src="https://assets.github.com/images/icons/emoji/unicode/1f612.png" height="20" width="20" align="absmiddle">. Therefore I decided to document the final setup for future-me or anybody else interested in doing something similar. I’m by no means an expert on any of that (just to make it clear), but everything works to my satisfaction now <img class="emoji" title=":satisfied:" alt=":satisfied:" src="https://assets.github.com/images/icons/emoji/unicode/1f606.png" height="20" width="20" align="absmiddle">.</p>
 
 <h3 id="here-are-the-steps-to-reproduce-my-setup">Here are the steps to reproduce my setup</h3>
 
@@ -83,7 +83,7 @@
     <p>Install Amahi. Well, first install <em>the correct version of Fedora</em> (<em>not</em> the latest release). I am using <a href="https://wiki.amahi.org/index.php/Amahi_9_Install">Amahi 9 on Fedora 23</a>, which is currently the officially supported setup.</p>
   </li>
   <li>
-    <p>Put the IP of your server into the address bar of a web browser in another machine on the local network (the IP can be determined with <code class="highlighter-rouge">hostname -I</code> in the server console). This will bring you to a login screen of the web interface of your server.<br>
+    <p>Put the IP of your server into the address bar of a web browser in another machine on the local network (the IP can be determined with <code class="highlighter-rouge">hostname -I</code> in the server’s console). This will bring you to a login screen of the web interface of your server.<br>
 Here I experienced some buggy behavior: The web interface would not accept my credentials, until <a href="https://wiki.amahi.org/index.php/Reset_Amahi_Password">I reset my Amahi password</a> over an SSH session.</p>
   </li>
   <li>
@@ -124,8 +124,6 @@ Here I experienced some buggy behavior: The web interface would not accept my cr
 
   <div class="date">
     Tags:
-		
-		<a href="/tag/tired%20of%20doing%20real%20math">#tired of doing real math</a>
 		
 		<a href="/tag/technology">#technology</a>
 		
