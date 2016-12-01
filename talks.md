@@ -4,6 +4,8 @@ title: Presentations
 permalink: /talks/
 ---
 
+* [An overview of network-based penalized regression methods](http://www.alexejgossmann.com/network_based_regression_talk/index.html#/) &mdash; Journal Club, Center for Bioinformatics and Genomics, Tulane University, New Orleans, LA. November 9, 2016.
+
 * [SlopeCCA and gslopeCCA: sorted L1 penalized canonical correlation analysis]({{ site.baseurl }}/pdfs/slopeCCA_gslopeCCA_ASHG2016.pdf) &mdash; Poster/Program #2803W Presented at the 66th Annual Meeting of The American Society of Human Genetics, Vancouver, Canada. October 19, 2016.
 
 * [Understanding Probabilistic Numerics]({{ site.baseurl }}/presentations/ProbabilisticNumericsGradStudColloqTalk.html) &mdash; Student Colloquium, Department of Mathematics, Tulane University, New Orleans, LA. September, 2016.
