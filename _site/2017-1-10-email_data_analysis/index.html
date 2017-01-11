@@ -1,0 +1,65 @@
+<p>How to make a professor reply to email? That’s a question I have asked myself (and my fellow graduate students) too many times since joining the math graduate program at Tulane University.[^1] The problem becomes especially severe, when the unresponsive professor is your PhD advisor.</p>
+
+<p>What’s even more frustrating is that the lack of communication is always regarded as the student’s fault. The unresponsiveness of a professor, which leads to a general lack of communication, and a resulting absence of any meaningful conversation, is usually denied by the professor (and often even by other professors who are extraneous to the situation). In fact, regarding my latest experience with an unresponsive PhD co-advisor (Advisor1 in the analysis below), other committee members suggested that it is <em>me</em> who is not communicating enough, implying that it is <em>my</em> unwillingness to communicate that lies at the root of all possible problems with my PhD progress or the student-advisor relationship. Of course, I disagree. And anyway, as scientists we should trust in data, not opinion. Luckily, my email correspondence is readily available for analysis.</p>
+
+<p>In the following I perform a simple data analysis of my email correspondence with three of my past and present academic advisors at Tulane University. To avoid using real names, in what follows I refer to the three individuals as <em>Advisor1</em>, <em>Advisor2</em>, and <em>Advisor3</em>.</p>
+
+<p>For the case that somebody[^2] who comes across this write-up would like to perform a similar data analysis, I made my entire code available online, and it is linked at each respective step of the analysis (real names, email addresses, and passwords were removed for privacy (obviously)).</p>
+
+<h3 id="number-of-emails-exchanged">Number of emails exchanged</h3>
+
+<p>I started working with Advisor1 and Advisor2 as my co-advisors on 9/11/2014, and the current arrangement was ended on 12/19/2016 ().[^3] Thus, I only consider emails exchanged with them during that time interval. Prior to that, Advisor3 worked with me for about a year, until deciding to quit academia.</p>
+
+<p>The following bar graph shows the number of emails exchanged with Advisor1.</p>
+
+<p><img src="/images/email_analysis/advisor1_received_sent.png?raw=true" alt="Bar graph: number of emails exchanged with Advisor1" title="Bar graph: number of emails exchanged with Advisor1" /></p>
+
+<p>Evidently, I have sent almost three times as many emails to Advisor1, as I have received. Even though, this already shows a great level of unresponsiveness from Advisor1, let’s see how it compares to the other two advisors.</p>
+
+<p><img src="/images/email_analysis/advisor2_and3_received_sent.png?raw=true" alt="Bar graph: number of emails exchanged with Advisor2 and Advisor3" title="Bar graph: number of emails exchanged with Advisor2 and Advisor3" /></p>
+
+<p>The exchange with Advisor3 is approximately even. However, Advisor2 has sent many more emails to me than I have sent back. This is explained by the fact that Advisor2 sends out current research papers to the entire research group almost weekly, which I highly appreciate.</p>
+
+<h3 id="estimated-reply-probability">Estimated reply probability</h3>
+
+<p>In principle, the probability to receive a reply email can be easily estimated as a sample proportion from given email data. The problem is that people are not very organized about email, they don’t use it in the way they are “supposed to”. For example, instead of writing a <em>new</em> email, I often reply to an old email addressed to the same people, because I’m either too lazy to type in the email addresses again, or because I simply don’t remember their email addresses. Another example would be a situation, when in a chain of emails somebody wants to reply to the initial email, but instead they reply to somebody else’s reply to the original message (or to a reply to a reply to a reply to the original message). Many such “improper” uses of email can be thought of especially when multiple people are included in the TO, CC, and BCC. Thus, it becomes very difficult to distinguish, when a reply email is a legitimate reply, or which message in a chain of emails it is actually replying to. Moreover, it is not clear, which emails warrant a response in the first place (without reading them). I would be deeply grateful for any pointers on how to properly address these problems.</p>
+
+<p>Due to the issues just mentioned, I use a rather crude estimate: If $R$ is the number of emails from Advisor$k$ ($k = 1,2,3$), which are marked as replies to <em>any</em> email (not even necessarily an email from me), and $N$ is the total number of emails that I sent to Advisor$k$, then I estimate<br />
+<script type="math/tex">P(\mathrm{Advisor}k \,\mathrm{replies}) = \frac{R}{N}.</script><br />
+I think that this generally will give an overestimate.[^3]</p>
+
+<p>After categorizing the emails in replies and new emails, I obtain the following sample proportions:</p>
+
+<ul>
+  <li>P(Adviser1 replies) = 0.3562.</li>
+  <li>P(Adviser2 replies) = 1.</li>
+  <li>P(Adviser3 replies) = 0.6786.</li>
+</ul>
+
+<p>I never had any problems in communication with Advisor2 and Advisor3, which I also see confirmed in these numbers.<br />
+As I already knew, the reply rate of Advisor1 is pretty low, which discourages any conversation. Interestingly, after categorizing the emails into replies and new emails, it turns out that in the considered time interval there was only exactly one message from Advisor1, which was not a reply email. That email is the one in which Advisor1 informed me their resignation from my graduate committee. All other conversations with Advisor1 were initiated by me.</p>
+
+<h3 id="some-other-exploratory-visualizations-for-fun">Some other exploratory visualizations for fun</h3>
+
+<p><img src="/images/email_analysis/wday.png?raw=true" alt="Emails from PhD advisors by weekday" title="Emails from PhD advisors by weekday" /></p>
+
+<p><img src="/images/email_analysis/wday.png?raw=true" alt="Emails from PhD advisors by time of day" title="Emails from PhD advisors by time of day" /></p>
+
+<h3 id="a-note-on-email-data-extraction">A note on email data extraction</h3>
+
+<p>The above data analysis was performed in R. However, I could not find a way to access my email from within R. Therefore, the data extraction step was done in the Ruby language, which provides excellent libraries and resources for such a task:</p>
+
+<ul>
+  <li>I use the <a href="https://github.com/mikel/mail">Really Ruby Mail Library <em>mail</em></a> to retrieve all emails from the Inbox and Sent folders of my Tulane Office 365 email account.</li>
+  <li>Subsequently, I retrieve the relevant emails (those from and to my three PhD advisors), and organize the relevant information (such as “to”, “from”, “cc”, “subject”, “date”, etc.), into <a href="https://github.com/SciRuby/daru">Daru</a> data frames, which I save as CSV files.</li>
+  <li>The resulting CSV files are loaded into R for analysis.</li>
+  <li><a href="">The Ruby code is available as a github gist.</a></li>
+</ul>
+
+<hr />
+
+<p>[^1] Interestingly, I had never encountered an academic who does not reply to email at my undergraduate institution, Technische Universitaet Darmstadt. So, I was quite surprised by what I consider a lack of professionalism.<br />
+  [^2] For example another frustrated PhD student.<br />
+  [^3] During this winter break, I suddenly have received an email from Advisor1, informing me of Advisor1’s resignation from my PhD committee, which quite possibly puts an end to my academic career. Not only was the resignation never discussed (with me, or with the other co-advisor Advisor2), but it also came at a time (beginning of the winter holidays), when nobody is available to help me sort things out. Additionally, it came after the application deadline for most graduate programs was already over, so that transferring to a different university was out of the question.<br />
+  [^4] An overestimate, because implicitly I count multiple replies to the same email as replies to different emails from me, and I count replies to emails from other people as replies to me if I’m in the CC. Of course, some emails don’t need a reply, but filtering those out would require to read each individual email, which would be boring and also too much of a time commitment for a little blog post. It can be argued that this last observation makes the sample proportion an underestimate rather than an overestimate. But considering my communication style and the factors mentioned before, I still expect that the resulting sample proportions are overestimates of the true reply probabilities. I will try to find some time to do the calculation properly, which would require a programmatic representation of chains of emails, and decisions about when factors like “Reply-all”, “CC”/”BCC”, mailing lists, etc. signify that a reply email is still targeting me specifically (even when my email is for example far down in the chain).</p>
+
