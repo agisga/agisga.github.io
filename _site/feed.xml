@@ -7,6 +7,129 @@
     
       
         <item>
+          <title>Visualization of MRI data in R</title>
+          <description>&lt;p&gt;Lately I was getting a little bored with genomic data (and then TCGA2STAT started to give me a segfault on my university’s high performance computing facility too :stuck_out_tongue:). So I decided to analyze some brain imaging data that I had lying around instead. The first step is to do some visual data exploration. In this blog post I present some functions which I was able to find for MRI visualization in R, and which I found to be very useful. All functions presented below presuppose an image in the &lt;a href=&quot;https://nifti.nimh.nih.gov/nifti-1/&quot;&gt;NIfTI data format&lt;/a&gt; as input, and are very user-friendly.&lt;/p&gt;
+
+&lt;h3 id=&quot;example-mri-data&quot;&gt;Example MRI data&lt;/h3&gt;
+
+&lt;p&gt;A T1 image obtained from &lt;a href=&quot;http://www.jannin.org/mritemplate/&quot;&gt;http://www.jannin.org/mritemplate/&lt;/a&gt; (&lt;a href=&quot;http://www.jannin.org/mritemplate/data/Template-T1-U8-RALPFH-BR.nii.gz&quot;&gt;this one&lt;/a&gt; to be precise) is used for example purposes in what follows. We can read it into R using the library &lt;code class=&quot;highlighter-rouge&quot;&gt;oro.nifti&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;oro.nifti&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;readNIfTI&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;Template-T1-U8-RALPFH-BR.nii.gz&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;reorient&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;FALSE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;class&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;## [1] &quot;nifti&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;oro.nifti&quot;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;## [1] 182 512 512
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;visualize-brain-slices-with-image&quot;&gt;Visualize brain slices with &lt;em&gt;image&lt;/em&gt;&lt;/h3&gt;
+
+&lt;p&gt;The library &lt;code class=&quot;highlighter-rouge&quot;&gt;oro.nifti&lt;/code&gt; provides a version of the generic function &lt;code class=&quot;highlighter-rouge&quot;&gt;image&lt;/code&gt;. It allows to plot slices of the brain. The following plots the 225th axial slice of &lt;code class=&quot;highlighter-rouge&quot;&gt;img&lt;/code&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;z&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;225&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plot.type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;single&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/MRI_viz/image-1.png&quot; alt=&quot;plot of chunk image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It can also be used to draw all available slices in a single plot next to each other (but that turns out not very helpful in this case).&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/MRI_viz/image_all-1.png&quot; alt=&quot;plot of chunk image_all&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;display-an-orthographic-projection-with-orthographic&quot;&gt;Display an orthographic projection with &lt;em&gt;orthographic&lt;/em&gt;&lt;/h3&gt;
+
+&lt;p&gt;The function &lt;code class=&quot;highlighter-rouge&quot;&gt;orthographic&lt;/code&gt;, also from the library &lt;code class=&quot;highlighter-rouge&quot;&gt;oro.nifti&lt;/code&gt;, gives an excellent overview of the 3D structure of the brain in two dimensions.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;orthographic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/MRI_viz/orthographic-1.png&quot; alt=&quot;plot of chunk orthographic&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In order to indicate or emphasize a certain region of the brain, &lt;code class=&quot;highlighter-rouge&quot;&gt;orthographic&lt;/code&gt; can be used to display a mask on top of the original image. For example, the following code chunk removes the skull from the MRI data (you need the &lt;a href=&quot;https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/&quot;&gt;FSL&lt;/a&gt; software and the &lt;a href=&quot;https://github.com/muschellij2/fslr&quot;&gt;fslr&lt;/a&gt; R package for this), and then plots the extracted brain as a mask on top of the original image.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# skull stripping using FSL&#39;s Brain Extraction Tool (BET)
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fslr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;img_bet&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;fslbet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;infile&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;retimg&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;TRUE&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# plotting extracted brain as a mask on top of original data
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mask&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;in_mask&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img_bet&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;mask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;in_mask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;mask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;in_mask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NA&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;orthographic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;col.y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;lightblue&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/MRI_viz/orthographic_mask-1.png&quot; alt=&quot;plot of chunk orthographic_mask&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;(Notice that the extracted brain does not fit the original image quite perfectly, but I will not pursue further improvements to the skull stripping at this point, in order to concentrate on visualization alone.)&lt;/p&gt;
+
+&lt;h3 id=&quot;polish-orthographic-displays-with-ortho2&quot;&gt;Polish orthographic displays with &lt;em&gt;ortho2&lt;/em&gt;&lt;/h3&gt;
+
+&lt;p&gt;The R package &lt;code class=&quot;highlighter-rouge&quot;&gt;neurobase&lt;/code&gt; provides the function &lt;code class=&quot;highlighter-rouge&quot;&gt;ortho2&lt;/code&gt; as an improved version of &lt;code class=&quot;highlighter-rouge&quot;&gt;orthographic&lt;/code&gt;. Here we use it to overlay the brain as a semi-transparent layer on top of the original image.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scales&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ortho2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;col.y&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;alpha&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;red&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;0.3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/MRI_viz/ortho2-1.png&quot; alt=&quot;plot of chunk ortho2&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;show-two-orthographic-displays-side-by-side-with-doubleortho&quot;&gt;Show two orthographic displays side by side with &lt;em&gt;double_ortho&lt;/em&gt;&lt;/h3&gt;
+
+&lt;p&gt;The function &lt;code class=&quot;highlighter-rouge&quot;&gt;double_ortho&lt;/code&gt; can be used to display two orthographic brain images of the same dimensions next to each other. As a quick demonstration we can look at the original image and the extracted brain side by side.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;brain&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;brain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;in_mask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;NA&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;double_ortho&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;brain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/MRI_viz/double_ortho-1.png&quot; alt=&quot;plot of chunk double_ortho&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;beyond-mri&quot;&gt;Beyond MRI&lt;/h3&gt;
+
+&lt;p&gt;Of course the same functions can be repurposed for other types of imaging data. For example I can look at CT images of the lung, where the data is taken from &lt;a href=&quot;https://www.kaggle.com/c/data-science-bowl-2017&quot;&gt;a current kaggle.com competition&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;oro.dicom&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;# generate a NIfTI image from a collection of DICOMs
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;all_slices&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;readDICOM&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;./00cba091fa4ad62cc3200a657aeb957e/&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;nii&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dicom2nifti&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;all_slices&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;An &lt;code class=&quot;highlighter-rouge&quot;&gt;oro.nifti::image&lt;/code&gt; plot of the lung:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nii&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;z&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;plot.type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;single&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/MRI_viz/lung_image-1.png&quot; alt=&quot;plot of chunk lung_image&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;An &lt;code class=&quot;highlighter-rouge&quot;&gt;oro.nifti::orthographic&lt;/code&gt; plot of the lung:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;orthographic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;nii&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;xyz&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;220&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/MRI_viz/lung_orthographic-1.png&quot; alt=&quot;plot of chunk lung_orthographic&quot; /&gt;&lt;/p&gt;
+</description>
+          <pubDate>2017-01-24T00:00:00-06:00</pubDate>
+          <link>http://www.alexejgossmann.com//MRI_viz/</link>
+          <guid isPermaLink="true">http://www.alexejgossmann.com//MRI_viz/</guid>
+        </item>
+      
+    
+      
+        <item>
           <title>Turn an old laptop into a home server with remote access over VPN</title>
           <description>&lt;p&gt;This weekend I have set up an old laptop with a broken screen as an &lt;a href=&quot;https://www.amahi.org/&quot;&gt;Amahi&lt;/a&gt; server in my house, such that I can access the files stored on the server with my other computers from anywhere.&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; I use OpenVPN to establish a connection to the server and its files. As an additional benefit, &lt;a href=&quot;https://www.expressvpn.com/internet-privacy/guides/vpn-security-work/&quot;&gt;connecting over a VPN when on a public network secures the traffic to and from you&lt;/a&gt;.&lt;/p&gt;
 
