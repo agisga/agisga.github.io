@@ -79,7 +79,7 @@
 
 <p>I have simulated realistic SNP data with the simulation software <a href="http://seqsimla.sourceforge.net/">SeqSIMLA</a>, using the software <a href="http://www.broadinstitute.org/~sfs/cosi/">cosi</a> to generate a reference sequence, as advised in the SeqSIMLA <a href="http://seqsimla.sourceforge.net/tutorial.html">tutorial</a>.</p>
 
-<p>The response variable is a quantitative trait with mean 10 and variance 1. In total there are 130 SNPs in the data set, and SNPs 1, 3, 5 and 11 are selected to be causal, explaining 10%, 20%, 20% and 10% of the variance in the quantitative trait. Additionally, 35% of the variance is explained by shared environmental effects, and the remaining 5% by individual environmental effects. The correlation coefficient between spouses for the shared environmental effects is set to 0.8, and the respective correlation coefficients between parent and offspring as well as siblings is set to be 0.5. The data is available for ten families of twelve individuals each (i.e. 1200 subjects total). All families have identical pedigrees, which look like this:<br />
+<p>The response variable is a quantitative trait with mean 10 and variance 1. In total there are 130 SNPs in the data set, and SNPs 1, 3, 5 and 11 are selected to be causal, explaining 10%, 20%, 20% and 10% of the variance in the quantitative trait. Additionally, 35% of the variance is explained by shared environmental effects, and the remaining 5% by individual environmental effects. The correlation coefficient between spouses for the shared environmental effects is set to 0.8, and the respective correlation coefficients between parent and offspring as well as siblings is set to be 0.5. The data is available for ten families of twelve individuals each (i.e. 1200 subjects total). All families have identical pedigrees, which look like this:
 <img src="/images/pedigree.jpeg?raw=true" alt="Image of pedigree" /></p>
 
 <p>The exact parameters provided to the SeqSIMLA software can be found in a <a href="https://github.com/agisga/mixed_models/blob/master/examples/genetics/data/data_generation_and_preprocessing/SeqSIMLA_Call.txt">text file in the repository</a>. Additionally, I have preprocessed the SeqSIMLA output slightly and extracted the <a href="https://en.wikipedia.org/wiki/Kinship">kinship</a> matrix, both using a short <a href="https://github.com/agisga/mixed_models/blob/master/examples/genetics/data/data_generation_and_preprocessing/preprocessing.R">R script</a>.</p>
@@ -104,7 +104,7 @@
 
 <p>First, we need to load the generated design matrix $X$, the response vector $y$, and the kinship matrix $K$.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">read_csv_into_array</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="k">def</span> <span class="nf">read_csv_into_array</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
   <span class="n">f</span> <span class="o">=</span> <span class="no">File</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
   <span class="n">lines_array</span> <span class="o">=</span> <span class="no">Array</span><span class="p">.</span><span class="nf">new</span>
   <span class="n">f</span><span class="p">.</span><span class="nf">each_line</span> <span class="p">{</span> <span class="o">|</span><span class="n">line</span><span class="o">|</span> <span class="n">lines_array</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="n">line</span><span class="p">)</span> <span class="p">}</span>
@@ -141,7 +141,7 @@
 
 <p>Before we call <code class="highlighter-rouge">LMM.new</code>, we also need to define the random effects model matrix $Z$ (which is the identity matrix in this case), find the Cholesky factor $\Lambda$ of the kinship matrix $K$, and specify the column names for the SNP matrix $X$. These steps and the model fit are performed by the following Ruby code.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'mixed_models'</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'mixed_models'</span>
 
 <span class="n">z</span> <span class="o">=</span> <span class="no">NMatrix</span><span class="p">.</span><span class="nf">identity</span><span class="p">([</span><span class="n">n</span><span class="p">,</span><span class="n">n</span><span class="p">],</span> <span class="ss">dtype: :float64</span><span class="p">)</span>
 
@@ -166,7 +166,7 @@
 
 <p>We can start by looking at some parameters describing the model fit:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"Optimal theta: </span><span class="se">\t</span><span class="si">#{</span><span class="n">model_fit</span><span class="p">.</span><span class="nf">theta</span><span class="si">}</span><span class="s2">"</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"Optimal theta: </span><span class="se">\t</span><span class="si">#{</span><span class="n">model_fit</span><span class="p">.</span><span class="nf">theta</span><span class="si">}</span><span class="s2">"</span>
 <span class="nb">puts</span> <span class="s2">"REML criterion: </span><span class="se">\t</span><span class="si">#{</span><span class="n">model_fit</span><span class="p">.</span><span class="nf">deviance</span><span class="si">}</span><span class="s2">"</span>
 </code></pre>
 </div>
@@ -182,7 +182,7 @@ REML criterion: 	3919.756682815396
 
 <p>Now, we might be interested to see which of the SNPs explain the variation in the quantitative trait best. To this end, we print those SNPs to the screen, which have a Wald p-value less than 0.05 (<a href="http://agisga.github.io/MixedModels_p_values_and_CI/">I have written before about Wald Z tests not being adequate</a>, also see <strong>update</strong> below).</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">p_vals</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_p</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">p_vals</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_p</span>
 <span class="n">p_signif</span> <span class="o">=</span> <span class="no">Array</span><span class="p">.</span><span class="nf">new</span>
 <span class="n">p_vals</span><span class="p">.</span><span class="nf">each_key</span> <span class="p">{</span> <span class="o">|</span><span class="n">k</span><span class="o">|</span> <span class="n">p_signif</span><span class="p">.</span><span class="nf">push</span><span class="p">(</span><span class="n">k</span><span class="p">)</span> <span class="k">if</span> <span class="n">p_vals</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="o">.</span><span class="mo">05</span> <span class="p">}</span>
 <span class="nb">puts</span> <span class="s2">"Fixed effects with Wald p-values &lt;0.05:"</span>
@@ -210,7 +210,7 @@ SNP96, SNP100, SNP102, SNP106, SNP107, SNP125, SNP127
 
 <script type="math/tex; mode=display">\sigma\subscript{b}^2 = \theta^2 / 2.</script>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"Variance due to family relatedness: </span><span class="se">\t</span><span class="si">#{</span><span class="n">model_fit</span><span class="p">.</span><span class="nf">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="o">/</span> <span class="mi">2</span><span class="si">}</span><span class="s2">"</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"Variance due to family relatedness: </span><span class="se">\t</span><span class="si">#{</span><span class="n">model_fit</span><span class="p">.</span><span class="nf">theta</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="o">/</span> <span class="mi">2</span><span class="si">}</span><span class="s2">"</span>
 <span class="nb">puts</span> <span class="s2">"Residual variance: </span><span class="se">\t</span><span class="si">#{</span><span class="n">model_fit</span><span class="p">.</span><span class="nf">sigma2</span><span class="si">}</span><span class="s2">"</span>
 </code></pre>
 </div>
@@ -228,13 +228,13 @@ Residual variance: 	0.3189292035466212
 
 <p>As an alternative to the Wald Z tests performed above we can make use of the equivalence of confidence intervals and significance tests. That is, if the 95% confidence interval of a fixed effect does not include zero, then the fixed effect coefficient in question differs from zero with a p-value of 0.05. I have summarized different types of bootstrap confidence intervals available in <code class="highlighter-rouge">mixed_models</code> in a <a href="http://agisga.github.io/bootstap_confidence_intervals/">blog post</a>. We can compute studentized bootstrap confidence intervals with 95% coverage using the following code.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :bootstrap</span><span class="p">,</span> <span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :bootstrap</span><span class="p">,</span> <span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
 </code></pre>
 </div>
 
 <p>Due to the size of the data (1200 observations of 130 variables) the 1000 performed bootstrap simulations ran for more then 10 hours on my laptop (Intel Core i5 processor of fifth generation). Instead of examining all confidence intervals, I only print those which do not contain zero, using the following code.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">ci_signif</span> <span class="o">=</span> <span class="no">Hash</span><span class="p">.</span><span class="nf">new</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">ci_signif</span> <span class="o">=</span> <span class="no">Hash</span><span class="p">.</span><span class="nf">new</span>
 <span class="n">ci_bootstrap</span><span class="p">.</span><span class="nf">each_key</span> <span class="k">do</span> <span class="o">|</span><span class="n">key</span><span class="o">|</span>
   <span class="c1"># check if the CI contains 0</span>
   <span class="k">if</span> <span class="p">(</span><span class="n">ci_bootstrap</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">ci_bootstrap</span><span class="p">[</span><span class="n">key</span><span class="p">][</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">then</span>
@@ -280,7 +280,7 @@ Residual variance: 	0.3189292035466212
 
 <p>Another question that we may want to answer is how similar the results of the studentized bootstrap method are to those of the Wald Z tests. To answer that question we look at the intersection of the two sets of selected SNPs. The code</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"SNPs that have Wald p-values &lt;.05 and studentized bootstrap confidence intervals not containing zero:"</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"SNPs that have Wald p-values &lt;.05 and studentized bootstrap confidence intervals not containing zero:"</span>
 <span class="nb">puts</span> <span class="p">(</span><span class="n">ci_signif</span><span class="p">.</span><span class="nf">keys</span> <span class="o">&amp;</span> <span class="n">p_signif</span><span class="p">)</span>
 </code></pre>
 </div>

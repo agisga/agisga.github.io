@@ -81,7 +81,7 @@
 
 <p>The data is supplied to the model fitting method <code class="highlighter-rouge">LMM#from_formula</code> as a <code class="highlighter-rouge">Daru::DataFrame</code> (from the excellent Ruby gem <a href="https://github.com/v0dro/daru.git">daru</a>). In order to test <code class="highlighter-rouge">LMM#from_formula</code>, I have generated a data set of the following form:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">alien_species</span><span class="p">.</span><span class="nf">head</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">alien_species</span><span class="p">.</span><span class="nf">head</span>
 <span class="o">=&gt;</span> 
 <span class="c1">#&lt;Daru::DataFrame:70197332524760 @name = 1cd9d732-526b-49ae-8cb1-35cd69541c87 @size = 10&gt;</span>
                   <span class="no">Age</span> <span class="no">Aggression</span>   <span class="no">Location</span>    <span class="no">Species</span> 
@@ -112,7 +112,7 @@
 
 <p>We fit this model in Ruby using <code class="highlighter-rouge">MixedModels</code> with:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_formula</span><span class="p">(</span><span class="ss">formula: </span><span class="s2">"Aggression ~ Age + Species + (Age | Location)"</span><span class="p">,</span> 
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_formula</span><span class="p">(</span><span class="ss">formula: </span><span class="s2">"Aggression ~ Age + Species + (Age | Location)"</span><span class="p">,</span> 
                              <span class="ss">data: </span><span class="n">alien_species</span><span class="p">)</span>
 </code></pre>
 </div>
@@ -121,7 +121,7 @@
 
 <p>We print some of the results that we have obtained:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"REML criterion: </span><span class="se">\t</span><span class="si">#{</span><span class="n">model_fit</span><span class="p">.</span><span class="nf">dev_optimal</span><span class="si">}</span><span class="s2">"</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"REML criterion: </span><span class="se">\t</span><span class="si">#{</span><span class="n">model_fit</span><span class="p">.</span><span class="nf">dev_optimal</span><span class="si">}</span><span class="s2">"</span>
 <span class="nb">puts</span> <span class="s2">"Fixed effects:"</span>
 <span class="nb">puts</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef</span>
 <span class="nb">puts</span> <span class="s2">"Standard deviation: </span><span class="se">\t</span><span class="si">#{</span><span class="no">Math</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">model_fit</span><span class="p">.</span><span class="nf">sigma2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
@@ -143,17 +143,17 @@ Standard deviation: 	0.9745169802141329
 
 <p>We fit the same model in R using the package <code class="highlighter-rouge">lme4</code>, and print out the estimates for the same quantities as previously:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">mod</span> <span class="o">&lt;-</span> <span class="n">lmer</span><span class="p">(</span><span class="n">Aggression</span> <span class="o">~</span> <span class="n">Age</span> <span class="o">+</span> <span class="n">Species</span> <span class="o">+</span> <span class="p">(</span><span class="n">Age</span> <span class="o">|</span> <span class="n">Location</span><span class="p">),</span> <span class="n">data</span> <span class="o">=</span> <span class="n">alien.species</span><span class="p">)</span>
-<span class="o">&gt;</span> <span class="n">REMLcrit</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
-<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">333.7155</span>
-<span class="o">&gt;</span> <span class="n">fixef</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
-        <span class="p">(</span><span class="n">Intercept</span><span class="p">)</span>                 <span class="n">Age</span>        <span class="n">SpeciesHuman</span>          <span class="n">SpeciesOod</span> 
-      <span class="m">1016.28672021</span>         <span class="m">-0.06531615</span>       <span class="m">-499.69369521</span>       <span class="m">-899.56932076</span> 
-<span class="n">SpeciesWeepingAngel</span> 
-      <span class="m">-199.58895813</span> 
-<span class="o">&gt;</span> <span class="n">sigma</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span>
-<span class="p">[</span><span class="m">1</span><span class="p">]</span> <span class="m">0.9745324</span>
-</code></pre>
+<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lmer</span><span class="p">(</span><span class="n">Aggression</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">Age</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Species</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">Age</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Location</span><span class="p">),</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alien.species</span><span class="p">)</span><span class="w">
+</span><span class="o">&gt;</span><span class="w"> </span><span class="n">REMLcrit</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span><span class="w">
+</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="m">333.7155</span><span class="w">
+</span><span class="o">&gt;</span><span class="w"> </span><span class="n">fixef</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span><span class="w">
+        </span><span class="p">(</span><span class="n">Intercept</span><span class="p">)</span><span class="w">                 </span><span class="n">Age</span><span class="w">        </span><span class="n">SpeciesHuman</span><span class="w">          </span><span class="n">SpeciesOod</span><span class="w"> 
+      </span><span class="m">1016.28672021</span><span class="w">         </span><span class="m">-0.06531615</span><span class="w">       </span><span class="m">-499.69369521</span><span class="w">       </span><span class="m">-899.56932076</span><span class="w"> 
+</span><span class="n">SpeciesWeepingAngel</span><span class="w"> 
+      </span><span class="m">-199.58895813</span><span class="w"> 
+</span><span class="o">&gt;</span><span class="w"> </span><span class="n">sigma</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span><span class="w">
+</span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="m">0.9745324</span><span class="w">
+</span></code></pre>
 </div>
 
 <p>We observe that the parameter estimates from Ruby and R agree up to at least four digits behind the floating point.</p>
@@ -166,7 +166,7 @@ Standard deviation: 	0.9745169802141329
 
 <p>In the current implementation of <code class="highlighter-rouge">MixedModels</code> this is handled by the method <code class="highlighter-rouge">Daru::DataFrame::create_indicator_vectors_for_categorical_vectors!</code> (defined <a href="https://github.com/agisga/MixedModels/blob/master/lib/MixedModels/daru_methods.rb#L90">here</a>). It adds a set of 0-1-valued vectors for each non-numeric vector in the <code class="highlighter-rouge">Daru::DataFrame</code>:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">new</span><span class="p">([(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">7</span><span class="p">).</span><span class="nf">to_a</span><span class="p">,</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'b'</span><span class="p">,</span><span class="s1">'b'</span><span class="p">,</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'c'</span><span class="p">,</span><span class="s1">'d'</span><span class="p">,</span><span class="s1">'c'</span><span class="p">]],</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">new</span><span class="p">([(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">7</span><span class="p">).</span><span class="nf">to_a</span><span class="p">,</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'b'</span><span class="p">,</span><span class="s1">'b'</span><span class="p">,</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'c'</span><span class="p">,</span><span class="s1">'d'</span><span class="p">,</span><span class="s1">'c'</span><span class="p">]],</span>
                            <span class="ss">order: </span><span class="p">[</span><span class="s1">'int'</span><span class="p">,</span><span class="s1">'char'</span><span class="p">])</span> 
 <span class="o">&gt;</span> <span class="n">df</span><span class="p">.</span><span class="nf">create_indicator_vectors_for_categorical_vectors!</span>
   <span class="c1"># =&gt; &lt;Daru::DataFrame:70212314363900 @name = 1a2a49d9-35d3-4adf-a993-5266d7d79442 @size = 7&gt;</span>
@@ -191,13 +191,13 @@ Standard deviation: 	0.9745169802141329
 
 <p><code class="highlighter-rouge">LMM#from_formula</code> takes in a <code class="highlighter-rouge">String</code> containing a formula specifying the model, for example</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="s2">"z ~ x + y + x:y + (x | u)"</span><span class="o">.</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="s2">"z ~ x + y + x:y + (x | u)"</span><span class="o">.</span>
 </code></pre>
 </div>
 
 <p>It transforms this formula into another <code class="highlighter-rouge">String</code>, for the above example:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="s2">"lmm_formula(:intercept) + lmm_variable(:x) + lmm_variable(:y) + lmm_variable(:x) * lmm_variable(:y) + (lmm_variable(:intercept) + lmm_variable(:x) | lmm_variable(:u)))"</span><span class="p">,</span>
+<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="s2">"lmm_formula(:intercept) + lmm_variable(:x) + lmm_variable(:y) + lmm_variable(:x) * lmm_variable(:y) + (lmm_variable(:intercept) + lmm_variable(:x) | lmm_variable(:u)))"</span><span class="p">,</span>
 </code></pre>
 </div>
 

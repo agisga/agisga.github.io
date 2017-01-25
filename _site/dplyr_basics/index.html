@@ -76,14 +76,14 @@
 
 <p>This blog post demonstrates the usage of the R package <a href="https://cran.r-project.org/web/packages/dplyr/index.html">dplyr</a>. It turns out that dplyr is intuitive to the point where I probably won’t ever need to look back at this summary. A nice and very concise <a href="http://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf">dplyr and tidyr cheat sheet</a> is available from RStudio.</p>
 
-<p>The following was compiled in <a href="http://rmarkdown.rstudio.com/">rmarkdown</a> [<a href="/public_files/dplyr_basics.Rmd"><img class="emoji" title=":page_facing_up:" alt=":page_facing_up:" src="https://assets.github.com/images/icons/emoji/unicode/1f4c4.png" height="20" width="20" align="absmiddle"> download .Rmd file</a>].</p>
+<p>The following was compiled in <a href="http://rmarkdown.rstudio.com/">rmarkdown</a> [<a href="/public_files/dplyr_basics.Rmd"><img class="emoji" title=":page_facing_up:" alt=":page_facing_up:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f4c4.png" height="20" width="20" align="absmiddle"> download .Rmd file</a>].</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span>
-<span class="n">library</span><span class="p">(</span><span class="n">gapminder</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span><span class="w">
+</span><span class="n">library</span><span class="p">(</span><span class="n">gapminder</span><span class="p">)</span></code></pre></figure>
 
 <p>The <a href="http://www.gapminder.org/data/">gapminder</a> data will be used for demonstration purposes.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">class</span><span class="p">(</span><span class="n">gapminder</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="nf">class</span><span class="p">(</span><span class="n">gapminder</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## [1] "tbl_df"     "tbl"        "data.frame"</code></pre></figure>
 
@@ -111,7 +111,7 @@
 <code class="highlighter-rouge">sample_frac</code> – sample a given percentage of rows</li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">sample_frac</span><span class="p">(</span><span class="n">gapminder</span><span class="p">,</span> <span class="m">0.5</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">sample_frac</span><span class="p">(</span><span class="n">gapminder</span><span class="p">,</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## # A tibble: 852 × 6
 ##        country continent  year lifeExp      pop gdpPercap
@@ -133,9 +133,9 @@
 <code class="highlighter-rouge">sample_n</code> – sample n rows</li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">set.seed</span><span class="p">(</span><span class="m">2016</span><span class="p">)</span>
-<span class="n">tiny</span> <span class="o">&lt;-</span> <span class="n">sample_n</span><span class="p">(</span><span class="n">gapminder</span><span class="p">,</span> <span class="m">3</span><span class="p">)</span>
-<span class="n">tiny</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">set.seed</span><span class="p">(</span><span class="m">2016</span><span class="p">)</span><span class="w">
+</span><span class="n">tiny</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">sample_n</span><span class="p">(</span><span class="n">gapminder</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">)</span><span class="w">
+</span><span class="n">tiny</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## # A tibble: 3 × 6
 ##     country continent  year lifeExp      pop gdpPercap
@@ -149,7 +149,7 @@
 <code class="highlighter-rouge">rename</code> – rename columns</li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">rename</span><span class="p">(</span><span class="n">tiny</span><span class="p">,</span> <span class="n">GDP</span> <span class="o">=</span> <span class="n">gdpPercap</span><span class="p">,</span> <span class="n">population</span> <span class="o">=</span> <span class="n">pop</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">rename</span><span class="p">(</span><span class="n">tiny</span><span class="p">,</span><span class="w"> </span><span class="n">GDP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gdpPercap</span><span class="p">,</span><span class="w"> </span><span class="n">population</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pop</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## # A tibble: 3 × 6
 ##     country continent  year lifeExp population       GDP
@@ -163,7 +163,7 @@
 <code class="highlighter-rouge">select</code> – select columns from the data frame</li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">select</span><span class="p">(</span><span class="n">tiny</span><span class="p">,</span> <span class="n">starts_with</span><span class="p">(</span><span class="s2">"y"</span><span class="p">),</span> <span class="n">pop</span><span class="p">,</span> <span class="n">matches</span><span class="p">(</span><span class="s2">"^co.*"</span><span class="p">))</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">select</span><span class="p">(</span><span class="n">tiny</span><span class="p">,</span><span class="w"> </span><span class="n">starts_with</span><span class="p">(</span><span class="s2">"y"</span><span class="p">),</span><span class="w"> </span><span class="n">pop</span><span class="p">,</span><span class="w"> </span><span class="n">matches</span><span class="p">(</span><span class="s2">"^co.*"</span><span class="p">))</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## # A tibble: 3 × 4
 ##    year      pop   country continent
@@ -179,7 +179,7 @@
 
 <figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># filter(tiny, lifeExp &gt; 60 &amp; year &lt; 1980)
 # or equivalent:
-</span><span class="n">filter</span><span class="p">(</span><span class="n">tiny</span><span class="p">,</span> <span class="n">lifeExp</span> <span class="o">&gt;</span> <span class="m">60</span><span class="p">,</span> <span class="n">year</span> <span class="o">&lt;</span> <span class="m">1980</span><span class="p">)</span></code></pre></figure>
+</span><span class="n">filter</span><span class="p">(</span><span class="n">tiny</span><span class="p">,</span><span class="w"> </span><span class="n">lifeExp</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">60</span><span class="p">,</span><span class="w"> </span><span class="n">year</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">1980</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## # A tibble: 2 × 6
 ##     country continent  year lifeExp      pop gdpPercap
@@ -192,7 +192,7 @@
 <code class="highlighter-rouge">slice</code> – select rows from data frame by index, producing a subset</li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">slice</span><span class="p">(</span><span class="n">gapminder</span><span class="p">,</span> <span class="m">300</span><span class="o">:</span><span class="m">303</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">slice</span><span class="p">(</span><span class="n">gapminder</span><span class="p">,</span><span class="w"> </span><span class="m">300</span><span class="o">:</span><span class="m">303</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## # A tibble: 4 × 6
 ##    country continent  year lifeExp        pop gdpPercap
@@ -207,7 +207,7 @@
 <code class="highlighter-rouge">mutate</code> – add new columns that can be functions of existing columns</li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">mutate</span><span class="p">(</span><span class="n">tiny</span><span class="p">,</span> <span class="n">newVar</span> <span class="o">=</span> <span class="p">(</span><span class="n">lifeExp</span> <span class="o">/</span> <span class="n">gdpPercap</span><span class="p">),</span> <span class="n">newcol</span> <span class="o">=</span> <span class="m">3</span><span class="o">:</span><span class="m">1</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">mutate</span><span class="p">(</span><span class="n">tiny</span><span class="p">,</span><span class="w"> </span><span class="n">newVar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">lifeExp</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gdpPercap</span><span class="p">),</span><span class="w"> </span><span class="n">newcol</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="o">:</span><span class="m">1</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## # A tibble: 3 × 8
 ##     country continent  year lifeExp      pop gdpPercap      newVar
@@ -217,8 +217,8 @@
 ## 3 Sri Lanka      Asia  1972  65.042 13016733  1213.396 0.053603296
 ## # ... with 1 more variables: newcol &lt;int&gt;</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">tiny</span> <span class="o">&lt;-</span> <span class="n">mutate</span><span class="p">(</span><span class="n">tiny</span><span class="p">,</span> <span class="n">newVar</span> <span class="o">=</span> <span class="p">(</span><span class="n">lifeExp</span> <span class="o">/</span> <span class="n">gdpPercap</span><span class="p">),</span> <span class="n">newVar2</span> <span class="o">=</span> <span class="n">newVar</span><span class="o">^</span><span class="m">2</span><span class="p">)</span>
-<span class="n">glimpse</span><span class="p">(</span><span class="n">tiny</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">tiny</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">mutate</span><span class="p">(</span><span class="n">tiny</span><span class="p">,</span><span class="w"> </span><span class="n">newVar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">lifeExp</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">gdpPercap</span><span class="p">),</span><span class="w"> </span><span class="n">newVar2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">newVar</span><span class="o">^</span><span class="m">2</span><span class="p">)</span><span class="w">
+</span><span class="n">glimpse</span><span class="p">(</span><span class="n">tiny</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## Observations: 3
 ## Variables: 8
@@ -236,9 +236,9 @@
 <code class="highlighter-rouge">transmute</code> – add new columns that can be functions of the existing columns, and drop the existing columns</li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">tiny</span> <span class="o">&lt;-</span> <span class="n">transmute</span><span class="p">(</span><span class="n">tiny</span><span class="p">,</span> <span class="n">id</span> <span class="o">=</span> <span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span> <span class="n">country</span><span class="p">,</span> <span class="n">continent</span><span class="p">,</span>
-                  <span class="n">newVarSqrt</span> <span class="o">=</span> <span class="n">sqrt</span><span class="p">(</span><span class="n">newVar</span><span class="p">),</span> <span class="n">pop</span><span class="p">)</span>
-<span class="n">tiny</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">tiny</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">transmute</span><span class="p">(</span><span class="n">tiny</span><span class="p">,</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="n">country</span><span class="p">,</span><span class="w"> </span><span class="n">continent</span><span class="p">,</span><span class="w">
+                  </span><span class="n">newVarSqrt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">sqrt</span><span class="p">(</span><span class="n">newVar</span><span class="p">),</span><span class="w"> </span><span class="n">pop</span><span class="p">)</span><span class="w">
+</span><span class="n">tiny</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## # A tibble: 3 × 5
 ##      id   country continent newVarSqrt      pop
@@ -252,7 +252,7 @@
 <code class="highlighter-rouge">arrange</code> – reorder rows</li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">arrange</span><span class="p">(</span><span class="n">tiny</span><span class="p">,</span> <span class="n">pop</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">arrange</span><span class="p">(</span><span class="n">tiny</span><span class="p">,</span><span class="w"> </span><span class="n">pop</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## # A tibble: 3 × 5
 ##      id   country continent newVarSqrt      pop
@@ -261,7 +261,7 @@
 ## 2     2    Canada  Americas 0.06698245 20819767
 ## 3     1  Colombia  Americas 0.12311279 27764644</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">arrange</span><span class="p">(</span><span class="n">gapminder</span><span class="p">,</span> <span class="n">desc</span><span class="p">(</span><span class="n">year</span><span class="p">),</span> <span class="n">lifeExp</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">arrange</span><span class="p">(</span><span class="n">gapminder</span><span class="p">,</span><span class="w"> </span><span class="n">desc</span><span class="p">(</span><span class="n">year</span><span class="p">),</span><span class="w"> </span><span class="n">lifeExp</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## # A tibble: 1,704 × 6
 ##                     country continent  year lifeExp      pop
@@ -283,7 +283,7 @@
 <code class="highlighter-rouge">summarize</code> – create collapsed summaries of a data frame by applying functions to columns</li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">summarize</span><span class="p">(</span><span class="n">gapminder</span><span class="p">,</span> <span class="n">aveLife</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">lifeExp</span><span class="p">))</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">summarize</span><span class="p">(</span><span class="n">gapminder</span><span class="p">,</span><span class="w"> </span><span class="n">aveLife</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="n">lifeExp</span><span class="p">))</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## # A tibble: 1 × 1
 ##    aveLife
@@ -295,8 +295,8 @@
 <code class="highlighter-rouge">distinct</code> – find distinct rows, for repetitive data</li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">tiny2</span> <span class="o">&lt;-</span> <span class="n">tiny</span><span class="p">[</span><span class="n">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">),</span> <span class="p">]</span>
-<span class="n">dim</span><span class="p">(</span><span class="n">tiny2</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">tiny2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tiny</span><span class="p">[</span><span class="nf">c</span><span class="p">(</span><span class="m">1</span><span class="p">,</span><span class="m">1</span><span class="p">,</span><span class="m">2</span><span class="p">,</span><span class="m">2</span><span class="p">),</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="nf">dim</span><span class="p">(</span><span class="n">tiny2</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## [1] 4 5</code></pre></figure>
 
@@ -316,8 +316,8 @@
 
 <h4 id="base-r-style">Base-R-style</h4>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">set.seed</span><span class="p">(</span><span class="m">2016</span><span class="p">)</span>
-<span class="n">sample_n</span><span class="p">(</span><span class="n">filter</span><span class="p">(</span><span class="n">gapminder</span><span class="p">,</span> <span class="n">continent</span> <span class="o">==</span> <span class="s2">"Asia"</span> <span class="o">&amp;</span> <span class="n">lifeExp</span> <span class="o">&lt;</span> <span class="m">65</span><span class="p">),</span> <span class="m">2</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">set.seed</span><span class="p">(</span><span class="m">2016</span><span class="p">)</span><span class="w">
+</span><span class="n">sample_n</span><span class="p">(</span><span class="n">filter</span><span class="p">(</span><span class="n">gapminder</span><span class="p">,</span><span class="w"> </span><span class="n">continent</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"Asia"</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">lifeExp</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">65</span><span class="p">),</span><span class="w"> </span><span class="m">2</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## # A tibble: 2 × 6
 ##    country continent  year  lifeExp       pop gdpPercap
@@ -327,8 +327,8 @@
 
 <h4 id="using-pipes">Using pipes</h4>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">set.seed</span><span class="p">(</span><span class="m">2016</span><span class="p">)</span>
-<span class="n">gapminder</span> <span class="o">%&gt;%</span> <span class="n">filter</span><span class="p">(</span><span class="n">continent</span> <span class="o">==</span> <span class="s2">"Asia"</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">filter</span><span class="p">(</span><span class="n">lifeExp</span> <span class="o">&lt;</span> <span class="m">65</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">sample_n</span><span class="p">(</span><span class="m">2</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">set.seed</span><span class="p">(</span><span class="m">2016</span><span class="p">)</span><span class="w">
+</span><span class="n">gapminder</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">continent</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"Asia"</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">lifeExp</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">65</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">sample_n</span><span class="p">(</span><span class="m">2</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## # A tibble: 2 × 6
 ##    country continent  year  lifeExp       pop gdpPercap
@@ -343,9 +343,9 @@
 <code class="highlighter-rouge">group_by</code> – convert the data frame into a grouped data frame, where the operations are performed by group</li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">gapminder</span> <span class="o">%&gt;%</span> <span class="n">group_by</span><span class="p">(</span><span class="n">continent</span><span class="p">)</span> <span class="o">%&gt;%</span>
-  <span class="n">summarize</span><span class="p">(</span><span class="n">aveLife</span> <span class="o">=</span> <span class="n">mean</span><span class="p">(</span><span class="n">lifeExp</span><span class="p">),</span> <span class="n">count</span> <span class="o">=</span> <span class="n">n</span><span class="p">(),</span>
-            <span class="n">countries</span> <span class="o">=</span> <span class="n">n_distinct</span><span class="p">(</span><span class="n">country</span><span class="p">))</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">gapminder</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">group_by</span><span class="p">(</span><span class="n">continent</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+  </span><span class="n">summarize</span><span class="p">(</span><span class="n">aveLife</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mean</span><span class="p">(</span><span class="n">lifeExp</span><span class="p">),</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n</span><span class="p">(),</span><span class="w">
+            </span><span class="n">countries</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n_distinct</span><span class="p">(</span><span class="n">country</span><span class="p">))</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## # A tibble: 5 × 4
 ##   continent  aveLife count countries
@@ -356,7 +356,7 @@
 ## 4    Europe 71.90369   360        30
 ## 5   Oceania 74.32621    24         2</code></pre></figure>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">gapminder</span> <span class="o">%&gt;%</span> <span class="n">group_by</span><span class="p">(</span><span class="n">continent</span><span class="p">)</span> <span class="o">%&gt;%</span> <span class="n">tally</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">gapminder</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">group_by</span><span class="p">(</span><span class="n">continent</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">tally</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## # A tibble: 5 × 2
 ##   continent     n
@@ -371,20 +371,20 @@
 
 <p>Example originally from <a href="http://stat545.com/bit001_dplyr-cheatsheet.html">http://stat545.com/bit001_dplyr-cheatsheet.html</a></p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">superheroes</span> <span class="o">&lt;-</span> <span class="n">c</span><span class="p">(</span><span class="s2">"name, alignment, gender, publisher"</span><span class="p">,</span>
-                 <span class="s2">"Magneto, bad, male, Marvel"</span><span class="p">,</span>
-                 <span class="s2">"Storm, good, female, Marvel"</span><span class="p">,</span>
-                 <span class="s2">"Mystique, bad, female, Marvel"</span><span class="p">,</span>
-                 <span class="s2">"Batman, good, male, DC"</span><span class="p">,</span>
-                 <span class="s2">"Joker, bad, male, DC"</span><span class="p">,</span>
-                 <span class="s2">"Catwoman, bad, female, DC"</span><span class="p">,</span>
-                 <span class="s2">"Hellboy, good, male, Dark Horse Comics"</span><span class="p">)</span>
-<span class="n">superheroes</span> <span class="o">&lt;-</span> <span class="n">read.csv</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="n">superheroes</span><span class="p">,</span> <span class="n">strip.white</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">as.is</span><span class="o">=</span><span class="n">TRUE</span><span class="p">)</span>
-<span class="n">publishers</span> <span class="o">&lt;-</span> <span class="n">c</span><span class="p">(</span><span class="s2">"publisher, yr_founded"</span><span class="p">,</span>
-                <span class="s2">"       DC, 1934"</span><span class="p">,</span>
-                <span class="s2">"   Marvel, 1939"</span><span class="p">,</span>
-                <span class="s2">"    Image, 1992"</span><span class="p">)</span>
-<span class="n">publishers</span> <span class="o">&lt;-</span> <span class="n">read.csv</span><span class="p">(</span><span class="n">text</span> <span class="o">=</span> <span class="n">publishers</span><span class="p">,</span> <span class="n">strip.white</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">,</span> <span class="n">as.is</span><span class="o">=</span><span class="n">TRUE</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">superheroes</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"name, alignment, gender, publisher"</span><span class="p">,</span><span class="w">
+                 </span><span class="s2">"Magneto, bad, male, Marvel"</span><span class="p">,</span><span class="w">
+                 </span><span class="s2">"Storm, good, female, Marvel"</span><span class="p">,</span><span class="w">
+                 </span><span class="s2">"Mystique, bad, female, Marvel"</span><span class="p">,</span><span class="w">
+                 </span><span class="s2">"Batman, good, male, DC"</span><span class="p">,</span><span class="w">
+                 </span><span class="s2">"Joker, bad, male, DC"</span><span class="p">,</span><span class="w">
+                 </span><span class="s2">"Catwoman, bad, female, DC"</span><span class="p">,</span><span class="w">
+                 </span><span class="s2">"Hellboy, good, male, Dark Horse Comics"</span><span class="p">)</span><span class="w">
+</span><span class="n">superheroes</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">read.csv</span><span class="p">(</span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">superheroes</span><span class="p">,</span><span class="w"> </span><span class="n">strip.white</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w"> </span><span class="n">as.is</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span><span class="w">
+</span><span class="n">publishers</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"publisher, yr_founded"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"       DC, 1934"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"   Marvel, 1939"</span><span class="p">,</span><span class="w">
+                </span><span class="s2">"    Image, 1992"</span><span class="p">)</span><span class="w">
+</span><span class="n">publishers</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">read.csv</span><span class="p">(</span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">publishers</span><span class="p">,</span><span class="w"> </span><span class="n">strip.white</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">,</span><span class="w"> </span><span class="n">as.is</span><span class="o">=</span><span class="kc">TRUE</span><span class="p">)</span></code></pre></figure>
 
 <h4 id="inner-vs-left-vs-full-join">Inner vs left vs full join</h4>
 
@@ -392,7 +392,7 @@
   <li><code class="highlighter-rouge">inner_join</code></li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">inner_join</span><span class="p">(</span><span class="n">superheroes</span><span class="p">,</span> <span class="n">publishers</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">inner_join</span><span class="p">(</span><span class="n">superheroes</span><span class="p">,</span><span class="w"> </span><span class="n">publishers</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## Joining, by = "publisher"</code></pre></figure>
 
@@ -408,7 +408,7 @@
   <li><code class="highlighter-rouge">left_join</code></li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">left_join</span><span class="p">(</span><span class="n">superheroes</span><span class="p">,</span> <span class="n">publishers</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">left_join</span><span class="p">(</span><span class="n">superheroes</span><span class="p">,</span><span class="w"> </span><span class="n">publishers</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## Joining, by = "publisher"</code></pre></figure>
 
@@ -425,7 +425,7 @@
   <li><code class="highlighter-rouge">full_join</code></li>
 </ul>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">full_join</span><span class="p">(</span><span class="n">superheroes</span><span class="p">,</span> <span class="n">publishers</span><span class="p">)</span></code></pre></figure>
+<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">full_join</span><span class="p">(</span><span class="n">superheroes</span><span class="p">,</span><span class="w"> </span><span class="n">publishers</span><span class="p">)</span></code></pre></figure>
 
 <figure class="highlight"><pre><code class="language-text" data-lang="text">## Joining, by = "publisher"</code></pre></figure>
 

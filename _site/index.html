@@ -69,7 +69,7 @@
       <h1><a href="/MRI_viz/">Visualization of MRI data in R</a></h1>
 
       <div class="entry">
-        <p>Lately I was getting a little bored with genomic data (and then TCGA2STAT started to give me a segfault on my university’s high performance computing facility too <img class="emoji" title=":stuck_out_tongue:" alt=":stuck_out_tongue:" src="https://assets.github.com/images/icons/emoji/unicode/1f61b.png" height="20" width="20" align="absmiddle">). So I decided to analyze some brain imaging data that I had lying around instead. The first step is to do some visual data exploration. In this blog post I present some functions which I was able to find for MRI visualization in R, and which I found to be very useful. All functions presented below presuppose an image in the <a href="https://nifti.nimh.nih.gov/nifti-1/">NIfTI data format</a> as input, and are very user-friendly.</p>
+        <p>Lately I was getting a little bored with genomic data (and then TCGA2STAT started to give me a segfault on my university’s high performance computing facility too <img class="emoji" title=":stuck_out_tongue:" alt=":stuck_out_tongue:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f61b.png" height="20" width="20" align="absmiddle">). So I decided to analyze some brain imaging data that I had lying around instead. The first step is to do some visual data exploration. In this blog post I present some functions which I was able to find for MRI visualization in R, and which I found to be very useful. All functions presented below presuppose an image in the <a href="https://nifti.nimh.nih.gov/nifti-1/">NIfTI data format</a> as input, and are very user-friendly.</p>
 
 
       </div>
@@ -82,8 +82,15 @@
       <h1><a href="/amahi/">Turn an old laptop into a home server with remote access over VPN</a></h1>
 
       <div class="entry">
-        <p>This weekend I have set up an old laptop with a broken screen as an <a href="https://www.amahi.org/">Amahi</a> server in my house, such that I can access the files stored on the server with my other computers from anywhere.[^1] I use OpenVPN to establish a connection to the server and its files. As an additional benefit, <a href="https://www.expressvpn.com/internet-privacy/guides/vpn-security-work/">connecting over a VPN when on a public network secures the traffic to and from you</a>.</p>
+        <p>This weekend I have set up an old laptop with a broken screen as an <a href="https://www.amahi.org/">Amahi</a> server in my house, such that I can access the files stored on the server with my other computers from anywhere.<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup> I use OpenVPN to establish a connection to the server and its files. As an additional benefit, <a href="https://www.expressvpn.com/internet-privacy/guides/vpn-security-work/">connecting over a VPN when on a public network secures the traffic to and from you</a>.</p>
 
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>Initially I got the idea for a home server after an email from Dropbox informed me that my promotional 48 GB of storage space expire in a month. Instead of paying one of the numerous cloud storage providers, I decided to host an <a href="https://owncloud.com/">ownCloud</a> at home (after <a href="http://lifehacker.com/5993596/how-to-set-up-your-own-private-cloud-storage-service-in-five-minutes-with-owncloud">some</a> <a href="http://lifehacker.com/turn-an-old-pc-into-a-nas-vpn-media-streamer-and-mor-1516484110">guides</a> online made it sound easier than it actually is…). Unfortunately, ownCloud on an Amahi server turned out to be quite disappointing. I found ownCloud to lack some functionality and to be very inconvenient in certain ways, and <a href="https://forums.amahi.org/viewtopic.php?t=4956">it possibly poses a security risk when accessible from outside the local network</a>. So, I eventually got rid of ownCloud, and retreated to storing my files directly on the server in <a href="https://wiki.amahi.org/index.php/Storage_and_file_sharing#Step_2:_Create_Shares">file shares</a>. <a href="#fnref:1" class="reversefootnote">↩</a></p>
+    </li>
+  </ol>
+</div>
 
       </div>
 
@@ -108,7 +115,7 @@
       <h1><a href="/generalized_inverse/">Generalized inverse of a symmetric matrix</a></h1>
 
       <div class="entry">
-        <p>I have always found the common definition of the <a href="https://en.wikipedia.org/wiki/Generalized_inverse">generalized inverse</a> of a matrix quite unsatisfactory, because it is usually defined by a mere property, $A A^{-} A = A$, which does not really give intuition on when such a matrix exists or on how it can be constructed, etc… But recently, I came across a much more satisfactory definition for the case of symmetric (or more general, <a href="https://en.wikipedia.org/wiki/Normal_matrix">normal</a>) matrices. <img class="emoji" title=":smiley:" alt=":smiley:" src="https://assets.github.com/images/icons/emoji/unicode/1f603.png" height="20" width="20" align="absmiddle"></p>
+        <p>I have always found the common definition of the <a href="https://en.wikipedia.org/wiki/Generalized_inverse">generalized inverse</a> of a matrix quite unsatisfactory, because it is usually defined by a mere property, $A A^{-} A = A$, which does not really give intuition on when such a matrix exists or on how it can be constructed, etc… But recently, I came across a much more satisfactory definition for the case of symmetric (or more general, <a href="https://en.wikipedia.org/wiki/Normal_matrix">normal</a>) matrices. <img class="emoji" title=":smiley:" alt=":smiley:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f603.png" height="20" width="20" align="absmiddle"></p>
 
 
       </div>
@@ -149,8 +156,15 @@
       <h1><a href="/amahi/">Turn an old laptop into a home server with remote access over VPN</a></h1>
 
       <div class="entry">
-        <p>This weekend I have set up an old laptop with a broken screen as an <a href="https://www.amahi.org/">Amahi</a> server in my house, such that I can access the files stored on the server with my other computers from anywhere.[^1] I use OpenVPN to establish a connection to the server and its files. As an additional benefit, <a href="https://www.expressvpn.com/internet-privacy/guides/vpn-security-work/">connecting over a VPN when on a public network secures the traffic to and from you</a>.</p>
+        <p>This weekend I have set up an old laptop with a broken screen as an <a href="https://www.amahi.org/">Amahi</a> server in my house, such that I can access the files stored on the server with my other computers from anywhere.<sup id="fnref:1"><a href="#fn:1" class="footnote">1</a></sup> I use OpenVPN to establish a connection to the server and its files. As an additional benefit, <a href="https://www.expressvpn.com/internet-privacy/guides/vpn-security-work/">connecting over a VPN when on a public network secures the traffic to and from you</a>.</p>
 
+<div class="footnotes">
+  <ol>
+    <li id="fn:1">
+      <p>Initially I got the idea for a home server after an email from Dropbox informed me that my promotional 48 GB of storage space expire in a month. Instead of paying one of the numerous cloud storage providers, I decided to host an <a href="https://owncloud.com/">ownCloud</a> at home (after <a href="http://lifehacker.com/5993596/how-to-set-up-your-own-private-cloud-storage-service-in-five-minutes-with-owncloud">some</a> <a href="http://lifehacker.com/turn-an-old-pc-into-a-nas-vpn-media-streamer-and-mor-1516484110">guides</a> online made it sound easier than it actually is…). Unfortunately, ownCloud on an Amahi server turned out to be quite disappointing. I found ownCloud to lack some functionality and to be very inconvenient in certain ways, and <a href="https://forums.amahi.org/viewtopic.php?t=4956">it possibly poses a security risk when accessible from outside the local network</a>. So, I eventually got rid of ownCloud, and retreated to storing my files directly on the server in <a href="https://wiki.amahi.org/index.php/Storage_and_file_sharing#Step_2:_Create_Shares">file shares</a>. <a href="#fnref:1" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
 
       </div>
 
@@ -331,7 +345,7 @@
       <h1><a href="/First-linear-mixed-model-fit/">A rudimentary first linear mixed model fit</a></h1>
 
       <div class="entry">
-        <p>During the last two weeks I made some progress on my <a href="https://github.com/agisga/MixedModels">Google Summer of Code project</a>.<br />
+        <p>During the last two weeks I made some progress on my <a href="https://github.com/agisga/MixedModels">Google Summer of Code project</a>.
 The Ruby gem is now capable of fitting linear mixed models. In this short blog post I want to give an example, and compare the results I get in Ruby to those obtained by <code class="highlighter-rouge">lme4</code> in R.</p>
 
 

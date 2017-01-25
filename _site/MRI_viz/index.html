@@ -72,21 +72,21 @@
   <h1>Visualization of MRI data in R</h1>
 
   <div class="entry">
-    <p>Lately I was getting a little bored with genomic data (and then TCGA2STAT started to give me a segfault on my university’s high performance computing facility too <img class="emoji" title=":stuck_out_tongue:" alt=":stuck_out_tongue:" src="https://assets.github.com/images/icons/emoji/unicode/1f61b.png" height="20" width="20" align="absmiddle">). So I decided to analyze some brain imaging data that I had lying around instead. The first step is to do some visual data exploration. In this blog post I present some functions which I was able to find for MRI visualization in R, and which I found to be very useful. All functions presented below presuppose an image in the <a href="https://nifti.nimh.nih.gov/nifti-1/">NIfTI data format</a> as input, and are very user-friendly.</p>
+    <p>Lately I was getting a little bored with genomic data (and then TCGA2STAT started to give me a segfault on my university’s high performance computing facility too <img class="emoji" title=":stuck_out_tongue:" alt=":stuck_out_tongue:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f61b.png" height="20" width="20" align="absmiddle">). So I decided to analyze some brain imaging data that I had lying around instead. The first step is to do some visual data exploration. In this blog post I present some functions which I was able to find for MRI visualization in R, and which I found to be very useful. All functions presented below presuppose an image in the <a href="https://nifti.nimh.nih.gov/nifti-1/">NIfTI data format</a> as input, and are very user-friendly.</p>
 
 <h3 id="example-mri-data">Example MRI data</h3>
 
 <p>A T1 image obtained from <a href="http://www.jannin.org/mritemplate/">http://www.jannin.org/mritemplate/</a> (<a href="http://www.jannin.org/mritemplate/data/Template-T1-U8-RALPFH-BR.nii.gz">this one</a> to be precise) is used for example purposes in what follows. We can read it into R using the library <code class="highlighter-rouge">oro.nifti</code>.</p>
 
-<div class="highlighter-rouge">
-<pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">oro.nifti</span><span class="p">)</span>
-<span class="n">img</span> <span class="o">&lt;-</span> <span class="n">readNIfTI</span><span class="p">(</span><span class="s2">"Template-T1-U8-RALPFH-BR.nii.gz"</span><span class="p">,</span> <span class="n">reorient</span> <span class="o">=</span> <span class="n">FALSE</span><span class="p">)</span>
-<span class="n">class</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-<span class="c1">## [1] "nifti"
+<div class="language-r highlighter-rouge">
+<pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">oro.nifti</span><span class="p">)</span><span class="w">
+</span><span class="n">img</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">readNIfTI</span><span class="p">(</span><span class="s2">"Template-T1-U8-RALPFH-BR.nii.gz"</span><span class="p">,</span><span class="w"> </span><span class="n">reorient</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span><span class="w">
+</span><span class="nf">class</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="w">
+</span><span class="c1">## [1] "nifti"
 ## attr(,"package")
 ## [1] "oro.nifti"
-</span><span class="n">dim</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-<span class="c1">## [1] 182 512 512
+</span><span class="nf">dim</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="w">
+</span><span class="c1">## [1] 182 512 512
 </span></code></pre>
 </div>
 
@@ -95,18 +95,18 @@
 
 <p>The library <code class="highlighter-rouge">oro.nifti</code> provides a version of the generic function <code class="highlighter-rouge">image</code>. It allows to plot slices of the brain. The following plots the 225th axial slice of <code class="highlighter-rouge">img</code>.</p>
 
-<div class="highlighter-rouge">
-<pre class="highlight"><code><span class="n">image</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="m">225</span><span class="p">,</span> <span class="n">plot.type</span> <span class="o">=</span> <span class="s2">"single"</span><span class="p">)</span>
-</code></pre>
+<div class="language-r highlighter-rouge">
+<pre class="highlight"><code><span class="n">image</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">225</span><span class="p">,</span><span class="w"> </span><span class="n">plot.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"single"</span><span class="p">)</span><span class="w">
+</span></code></pre>
 </div>
 
 <p><img src="../images/MRI_viz/image-1.png" alt="plot of chunk image"></p>
 
 <p>It can also be used to draw all available slices in a single plot next to each other (but that turns out not very helpful in this case).</p>
 
-<div class="highlighter-rouge">
-<pre class="highlight"><code><span class="n">image</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-</code></pre>
+<div class="language-r highlighter-rouge">
+<pre class="highlight"><code><span class="n">image</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="w">
+</span></code></pre>
 </div>
 
 <p><img src="../images/MRI_viz/image_all-1.png" alt="plot of chunk image_all"></p>
@@ -116,27 +116,27 @@
 
 <p>The function <code class="highlighter-rouge">orthographic</code>, also from the library <code class="highlighter-rouge">oro.nifti</code>, gives an excellent overview of the 3D structure of the brain in two dimensions.</p>
 
-<div class="highlighter-rouge">
-<pre class="highlight"><code><span class="n">orthographic</span><span class="p">(</span><span class="n">img</span><span class="p">)</span>
-</code></pre>
+<div class="language-r highlighter-rouge">
+<pre class="highlight"><code><span class="n">orthographic</span><span class="p">(</span><span class="n">img</span><span class="p">)</span><span class="w">
+</span></code></pre>
 </div>
 
 <p><img src="../images/MRI_viz/orthographic-1.png" alt="plot of chunk orthographic"></p>
 
 <p>In order to indicate or emphasize a certain region of the brain, <code class="highlighter-rouge">orthographic</code> can be used to display a mask on top of the original image. For example, the following code chunk removes the skull from the MRI data (you need the <a href="https://fsl.fmrib.ox.ac.uk/fsl/fslwiki/">FSL</a> software and the <a href="https://github.com/muschellij2/fslr">fslr</a> R package for this), and then plots the extracted brain as a mask on top of the original image.</p>
 
-<div class="highlighter-rouge">
+<div class="language-r highlighter-rouge">
 <pre class="highlight"><code><span class="c1"># skull stripping using FSL's Brain Extraction Tool (BET)
-</span><span class="n">library</span><span class="p">(</span><span class="n">fslr</span><span class="p">)</span>
-<span class="n">img_bet</span> <span class="o">&lt;-</span> <span class="n">fslbet</span><span class="p">(</span><span class="n">infile</span> <span class="o">=</span> <span class="n">img</span><span class="p">,</span> <span class="n">retimg</span> <span class="o">=</span> <span class="n">TRUE</span><span class="p">)</span>
+</span><span class="n">library</span><span class="p">(</span><span class="n">fslr</span><span class="p">)</span><span class="w">
+</span><span class="n">img_bet</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">fslbet</span><span class="p">(</span><span class="n">infile</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">retimg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">TRUE</span><span class="p">)</span><span class="w">
 
-<span class="c1"># plotting extracted brain as a mask on top of original data
-</span><span class="n">mask</span> <span class="o">&lt;-</span> <span class="n">img</span>
-<span class="n">in_mask</span> <span class="o">&lt;-</span> <span class="n">img_bet</span> <span class="o">&gt;</span> <span class="m">0</span>
-<span class="n">mask</span><span class="p">[</span><span class="n">in_mask</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="m">1</span>
-<span class="n">mask</span><span class="p">[</span><span class="o">!</span><span class="n">in_mask</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="n">NA</span>
-<span class="n">orthographic</span><span class="p">(</span><span class="n">x</span> <span class="o">=</span> <span class="n">img</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">mask</span><span class="p">,</span> <span class="n">col.y</span> <span class="o">=</span> <span class="s2">"lightblue"</span><span class="p">)</span>
-</code></pre>
+</span><span class="c1"># plotting extracted brain as a mask on top of original data
+</span><span class="n">mask</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">img</span><span class="w">
+</span><span class="n">in_mask</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">img_bet</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span><span class="n">mask</span><span class="p">[</span><span class="n">in_mask</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">1</span><span class="w">
+</span><span class="n">mask</span><span class="p">[</span><span class="o">!</span><span class="n">in_mask</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kc">NA</span><span class="w">
+</span><span class="n">orthographic</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mask</span><span class="p">,</span><span class="w"> </span><span class="n">col.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"lightblue"</span><span class="p">)</span><span class="w">
+</span></code></pre>
 </div>
 
 <p><img src="../images/MRI_viz/orthographic_mask-1.png" alt="plot of chunk orthographic_mask"></p>
@@ -148,10 +148,10 @@
 
 <p>The R package <code class="highlighter-rouge">neurobase</code> provides the function <code class="highlighter-rouge">ortho2</code> as an improved version of <code class="highlighter-rouge">orthographic</code>. Here we use it to overlay the brain as a semi-transparent layer on top of the original image.</p>
 
-<div class="highlighter-rouge">
-<pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">scales</span><span class="p">)</span>
-<span class="n">ortho2</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">mask</span><span class="p">,</span> <span class="n">col.y</span> <span class="o">=</span> <span class="n">alpha</span><span class="p">(</span><span class="s2">"red"</span><span class="p">,</span> <span class="m">0.3</span><span class="p">))</span>
-</code></pre>
+<div class="language-r highlighter-rouge">
+<pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">scales</span><span class="p">)</span><span class="w">
+</span><span class="n">ortho2</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">mask</span><span class="p">,</span><span class="w"> </span><span class="n">col.y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alpha</span><span class="p">(</span><span class="s2">"red"</span><span class="p">,</span><span class="w"> </span><span class="m">0.3</span><span class="p">))</span><span class="w">
+</span></code></pre>
 </div>
 
 <p><img src="../images/MRI_viz/ortho2-1.png" alt="plot of chunk ortho2"></p>
@@ -161,11 +161,11 @@
 
 <p>The function <code class="highlighter-rouge">double_ortho</code> can be used to display two orthographic brain images of the same dimensions next to each other. As a quick demonstration we can look at the original image and the extracted brain side by side.</p>
 
-<div class="highlighter-rouge">
-<pre class="highlight"><code><span class="n">brain</span> <span class="o">&lt;-</span> <span class="n">img</span>
-<span class="n">brain</span><span class="p">[</span><span class="o">!</span><span class="n">in_mask</span><span class="p">]</span> <span class="o">&lt;-</span> <span class="n">NA</span>
-<span class="n">double_ortho</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">brain</span><span class="p">)</span>
-</code></pre>
+<div class="language-r highlighter-rouge">
+<pre class="highlight"><code><span class="n">brain</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">img</span><span class="w">
+</span><span class="n">brain</span><span class="p">[</span><span class="o">!</span><span class="n">in_mask</span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kc">NA</span><span class="w">
+</span><span class="n">double_ortho</span><span class="p">(</span><span class="n">img</span><span class="p">,</span><span class="w"> </span><span class="n">brain</span><span class="p">)</span><span class="w">
+</span></code></pre>
 </div>
 
 <p><img src="../images/MRI_viz/double_ortho-1.png" alt="plot of chunk double_ortho"></p>
@@ -174,28 +174,28 @@
 
 <p>Of course the same functions can be repurposed for other types of imaging data. For example I can look at CT images of the lung, where the data is taken from <a href="https://www.kaggle.com/c/data-science-bowl-2017">a current kaggle.com competition</a>.</p>
 
-<div class="highlighter-rouge">
-<pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">oro.dicom</span><span class="p">)</span>
-<span class="c1"># generate a NIfTI image from a collection of DICOMs
-</span><span class="n">all_slices</span> <span class="o">&lt;-</span> <span class="n">readDICOM</span><span class="p">(</span><span class="s2">"./00cba091fa4ad62cc3200a657aeb957e/"</span><span class="p">)</span>
-<span class="n">nii</span> <span class="o">&lt;-</span> <span class="n">dicom2nifti</span><span class="p">(</span><span class="n">all_slices</span><span class="p">)</span>
-</code></pre>
+<div class="language-r highlighter-rouge">
+<pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">oro.dicom</span><span class="p">)</span><span class="w">
+</span><span class="c1"># generate a NIfTI image from a collection of DICOMs
+</span><span class="n">all_slices</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">readDICOM</span><span class="p">(</span><span class="s2">"./00cba091fa4ad62cc3200a657aeb957e/"</span><span class="p">)</span><span class="w">
+</span><span class="n">nii</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">dicom2nifti</span><span class="p">(</span><span class="n">all_slices</span><span class="p">)</span><span class="w">
+</span></code></pre>
 </div>
 
 <p>An <code class="highlighter-rouge">oro.nifti::image</code> plot of the lung:</p>
 
-<div class="highlighter-rouge">
-<pre class="highlight"><code><span class="n">image</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="m">100</span><span class="p">,</span> <span class="n">plot.type</span> <span class="o">=</span> <span class="s2">"single"</span><span class="p">)</span>
-</code></pre>
+<div class="language-r highlighter-rouge">
+<pre class="highlight"><code><span class="n">image</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span><span class="w"> </span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="n">plot.type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"single"</span><span class="p">)</span><span class="w">
+</span></code></pre>
 </div>
 
 <p><img src="../images/MRI_viz/lung_image-1.png" alt="plot of chunk lung_image"></p>
 
 <p>An <code class="highlighter-rouge">oro.nifti::orthographic</code> plot of the lung:</p>
 
-<div class="highlighter-rouge">
-<pre class="highlight"><code><span class="n">orthographic</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span> <span class="n">xyz</span> <span class="o">=</span> <span class="n">c</span><span class="p">(</span><span class="m">200</span><span class="p">,</span> <span class="m">220</span><span class="p">,</span> <span class="m">100</span><span class="p">))</span>
-</code></pre>
+<div class="language-r highlighter-rouge">
+<pre class="highlight"><code><span class="n">orthographic</span><span class="p">(</span><span class="n">nii</span><span class="p">,</span><span class="w"> </span><span class="n">xyz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">200</span><span class="p">,</span><span class="w"> </span><span class="m">220</span><span class="p">,</span><span class="w"> </span><span class="m">100</span><span class="p">))</span><span class="w">
+</span></code></pre>
 </div>
 
 <p><img src="../images/MRI_viz/lung_orthographic-1.png" alt="plot of chunk lung_orthographic"></p>
@@ -203,7 +203,7 @@
   </div>
 
   <div class="date">
-    Written on January 24, 2017
+    Written on January 25, 2017
   </div>
 
   <div class="date">
