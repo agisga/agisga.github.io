@@ -2,7 +2,7 @@
   <channel>
     <title>Alexej's blog</title>
     <description>Articles with tag "r"</description>
-    <link>http://localhost:4000</link>
+    <link>http://www.alexejgossmann.com/</link>
     
       
         
@@ -123,9 +123,9 @@
 
 &lt;p&gt;&lt;img src=&quot;../images/MRI_viz/lung_orthographic-1.png&quot; alt=&quot;plot of chunk lung_orthographic&quot; /&gt;&lt;/p&gt;
 </description>
-              <pubdate>2017-01-25T15:03:15-06:00</pubdate>
-              <link>http://localhost:4000/MRI_viz/</link>
-              <guid ispermalink="true">http://localhost:4000/MRI_viz/</guid>
+              <pubdate>2017-01-27T10:30:15-06:00</pubdate>
+              <link>http://www.alexejgossmann.com//MRI_viz/</link>
+              <guid ispermalink="true">http://www.alexejgossmann.com//MRI_viz/</guid>
             </item>
           
         
@@ -167,8 +167,8 @@
 &lt;/ul&gt;
 </description>
               <pubdate>2016-10-25T00:00:00-05:00</pubdate>
-              <link>http://localhost:4000/clinton_trump_tweets/</link>
-              <guid ispermalink="true">http://localhost:4000/clinton_trump_tweets/</guid>
+              <link>http://www.alexejgossmann.com//clinton_trump_tweets/</link>
+              <guid ispermalink="true">http://www.alexejgossmann.com//clinton_trump_tweets/</guid>
             </item>
           
         
@@ -552,8 +552,8 @@
 
 </description>
               <pubdate>2016-07-19T00:00:00-05:00</pubdate>
-              <link>http://localhost:4000/dplyr_basics/</link>
-              <guid ispermalink="true">http://localhost:4000/dplyr_basics/</guid>
+              <link>http://www.alexejgossmann.com//dplyr_basics/</link>
+              <guid ispermalink="true">http://www.alexejgossmann.com//dplyr_basics/</guid>
             </item>
           
         
@@ -626,8 +626,8 @@
 &lt;p&gt;Of course, the method does not perform this good under all circumstances — the interested reader can learn more from the papers referred to in the &lt;a href=&quot;https://github.com/agisga/grpSLOPE/blob/master/README.md&quot;&gt;grpSLOPE README on github&lt;/a&gt; (unfortunately, the “real” journal publication is still under preparation, and another related journal publication is currently under review, so, not publicly available yet either).&lt;/p&gt;
 </description>
               <pubdate>2016-05-12T00:00:00-05:00</pubdate>
-              <link>http://localhost:4000/grpSLOPE_on_CRAN/</link>
-              <guid ispermalink="true">http://localhost:4000/grpSLOPE_on_CRAN/</guid>
+              <link>http://www.alexejgossmann.com//grpSLOPE_on_CRAN/</link>
+              <guid ispermalink="true">http://www.alexejgossmann.com//grpSLOPE_on_CRAN/</guid>
             </item>
           
         
