@@ -1,6 +1,7 @@
 ---
 layout: post
 title: Tired of doing real math 2 &mdash; grad school and coffee consumption
+date: 2017-02-15 02:35:00 -06:00
 tags:
 - tired of doing real math
 - visualization
