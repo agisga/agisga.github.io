@@ -2,7 +2,59 @@
   <channel>
     <title>Alexej's blog</title>
     <description>Articles with tag "r"</description>
-    <link>http://www.alexejgossmann.com</link>
+    <link>http://localhost:4000</link>
+    
+      
+        
+      
+        
+      
+        
+          
+            <item>
+              <title>Tired of doing real math 2 &amp;mdash; grad school and coffee consumption</title>
+              <description>&lt;p&gt;Lately I notice a sharp increase in my coffee consumption (reading &lt;a href=&quot;https://www.amazon.com/Pour-Your-Heart-Into-Starbucks/dp/0786883561/ref=sr_1_3?ie=UTF8&amp;amp;qid=1487141175&amp;amp;sr=8-3&amp;amp;keywords=howard+schultz&quot;&gt;Howard Schultz’s Starbucks book&lt;/a&gt;, which is actually quite good by the way, does not help either :grimacing:). Having recently transitioned into a new PhD program I started wondering whether my increased coffee consumption has something to do with my higher stress levels in the last few weeks, and how that conjecture generalizes to the rest of my grad school experience. To answer that question I decided to take a look at how much money I have spent at coffee houses over the last few years. …Also, I’m right now over-caffeinated at 1:40am and I have nothing better to do anyway. :smile:&lt;/p&gt;
+
+&lt;p&gt;Luckily, &lt;a href=&quot;https://www.chase.com/&quot;&gt;chase.com&lt;/a&gt; allows me to download the transaction history of my account as a CSV file (though it’s limited to at most the past two years for some reason). Also luckily, light regex skills in R and the &lt;a href=&quot;https://blog.rstudio.org/2016/09/15/tidyverse-1-0-0&quot;&gt;tidyverse&lt;/a&gt; packages is all that’s needed to make sense of these data!&lt;/p&gt;
+
+&lt;h3 id=&quot;number-of-transactions-per-month&quot;&gt;Number of transactions per month&lt;/h3&gt;
+
+&lt;p&gt;First I take a look at the number of transactions performed with my debit card at New Orleans’ coffee houses between 2/13/2015 and 2/13/2017. On the time axis I mark some major occurrences in my academic life.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/grad_school_coffee/Coffees_per_month.png?raw=true&quot; alt=&quot;Number of transactions performed with my debit card at New Orleans' coffee houses per month&quot; title=&quot;Coffees per month&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Indeed it seems that I frequent coffee places more often at times when I am more stressed, such as those preceding a paper submission or a qualifying exam (or when my wife is out of town for a month :grimacing:); and I appreciate some variety with respect to the places where I get coffee or tea.&lt;/p&gt;
+
+&lt;h3 id=&quot;yearly-statistics&quot;&gt;Yearly statistics&lt;/h3&gt;
+
+&lt;p&gt;There seems to be a clear increasing trend in the above bar graph. The trend becomes especially clear when I look at how much money I left at coffee places last year compared to the year 2015. There might be a progressing addiction here :sweat_smile:…&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/grad_school_coffee/Yearly_total_spent.png?raw=true&quot; alt=&quot;Amount spent at coffee places per year&quot; title=&quot;Yearly $$$ spent at coffee places&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;time-series-of-daily-spending&quot;&gt;Time series of daily spending&lt;/h3&gt;
+
+&lt;p&gt;The preceding comparison of the yearly amounts does not reveal anything regarding the relationship of my coffee / tea consumption with my stress levels and events in my academic life. Therefore I generated a time series containing my daily coffee house spendings for the considered two-year period. Below is a visualization of this time series smoothed with a simple moving average of order seven (using the &lt;a href=&quot;https://cran.r-project.org/package=TTR&quot;&gt;R package TTR&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/grad_school_coffee/SMA.png?raw=true&quot; alt=&quot;Time series of daily amounts spent at coffee places&quot; title=&quot;Daily spending at coffee places&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The finer representation of the data allows some further conclusions:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;It shows a lower coffee consumption during parts of the summer and winter breaks.&lt;/li&gt;
+  &lt;li&gt;Once again there seems to be a clear association between stressful academic events and an increased coffee (or tea) consumption preceding them.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;thats-it-time-to-go-to-bed&quot;&gt;That’s it. Time to go to bed.&lt;/h3&gt;
+
+&lt;p&gt;Because I know from &lt;a href=&quot;http://www.phdcomics.com/comics/archive.php?comicid=1415&quot;&gt;a phdcomics cartoon&lt;/a&gt; that caffeine combined with a lack of sleep will turn me into a robot rather than into somebody who might eventually finish graduate school…&lt;/p&gt;
+</description>
+              <pubdate>2017-02-15T00:00:00-06:00</pubdate>
+              <link>http://localhost:4000/grad-school-and-coffee/</link>
+              <guid ispermalink="true">http://localhost:4000/grad-school-and-coffee/</guid>
+            </item>
+          
+        
+      
     
       
         
@@ -124,8 +176,8 @@
 &lt;p&gt;&lt;img src=&quot;../images/MRI_viz/lung_orthographic-1.png&quot; alt=&quot;plot of chunk lung_orthographic&quot; /&gt;&lt;/p&gt;
 </description>
               <pubdate>2017-01-27T10:30:15-06:00</pubdate>
-              <link>http://www.alexejgossmann.com/MRI_viz/</link>
-              <guid ispermalink="true">http://www.alexejgossmann.com/MRI_viz/</guid>
+              <link>http://localhost:4000/MRI_viz/</link>
+              <guid ispermalink="true">http://localhost:4000/MRI_viz/</guid>
             </item>
           
         
@@ -167,8 +219,8 @@
 &lt;/ul&gt;
 </description>
               <pubdate>2016-10-25T00:00:00-05:00</pubdate>
-              <link>http://www.alexejgossmann.com/clinton_trump_tweets/</link>
-              <guid ispermalink="true">http://www.alexejgossmann.com/clinton_trump_tweets/</guid>
+              <link>http://localhost:4000/clinton_trump_tweets/</link>
+              <guid ispermalink="true">http://localhost:4000/clinton_trump_tweets/</guid>
             </item>
           
         
@@ -552,8 +604,8 @@
 
 </description>
               <pubdate>2016-07-19T00:00:00-05:00</pubdate>
-              <link>http://www.alexejgossmann.com/dplyr_basics/</link>
-              <guid ispermalink="true">http://www.alexejgossmann.com/dplyr_basics/</guid>
+              <link>http://localhost:4000/dplyr_basics/</link>
+              <guid ispermalink="true">http://localhost:4000/dplyr_basics/</guid>
             </item>
           
         
@@ -626,8 +678,8 @@
 &lt;p&gt;Of course, the method does not perform this good under all circumstances — the interested reader can learn more from the papers referred to in the &lt;a href=&quot;https://github.com/agisga/grpSLOPE/blob/master/README.md&quot;&gt;grpSLOPE README on github&lt;/a&gt; (unfortunately, the “real” journal publication is still under preparation, and another related journal publication is currently under review, so, not publicly available yet either).&lt;/p&gt;
 </description>
               <pubdate>2016-05-12T00:00:00-05:00</pubdate>
-              <link>http://www.alexejgossmann.com/grpSLOPE_on_CRAN/</link>
-              <guid ispermalink="true">http://www.alexejgossmann.com/grpSLOPE_on_CRAN/</guid>
+              <link>http://localhost:4000/grpSLOPE_on_CRAN/</link>
+              <guid ispermalink="true">http://localhost:4000/grpSLOPE_on_CRAN/</guid>
             </item>
           
         
