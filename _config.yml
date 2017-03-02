@@ -3,12 +3,12 @@
 #
 
 # Name of your site (displayed in the header)
-name: Alexej Gossmann 
+name: Alexej Gossmann
 
 # Short bio or description (displayed in the header)
 description: Proper noun | [ɐlʲɪkˈsʲej ˈɡɔsman] | PhD student at Tulane University
 # description: I am interested in math, stats, coding, genetics, ...
-# description: 10^18+3 is my favorite prime 
+# description: 10^18+3 is my favorite prime
 
 # URL of your avatar or profile pic (you could use your GitHub profile pic)
 avatar: https://avatars0.githubusercontent.com/u/11449372?v=3&s=460
@@ -95,8 +95,8 @@ scholar:
   style: apa-5th-edition #ieee-with-url
   locale: en
 
-  sort_by: year 
-  order: descending 
+  sort_by: year
+  order: descending
   bibliography_list_tag: ul
 
   source: ./_bibliography
