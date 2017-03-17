@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Statistical linear mixed models in Ruby with mixed_models (GSoC2015) – Alexej Gossmann – Proper noun | [ɐlʲɪkˈsʲej ˈɡɔsman] | PhD student at Tulane University</title>
+    <title>Statistical linear mixed models in Ruby with mixed_models (GSoC2015) – Alexej Gossmann – New Orleans 😎</title>
 
         <meta charset="utf-8" />
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
@@ -28,7 +28,7 @@
     <![endif]-->
 
     <link rel="stylesheet" type="text/css" href="/style.css" />
-    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - Proper noun | [ɐlʲɪkˈsʲej ˈɡɔsman] | PhD student at Tulane University" href="/feed.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - New Orleans 😎" href="/feed.xml" />
 
     <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
  
@@ -55,7 +55,7 @@
 
         <div class="site-info">
           <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
-          <p class="site-description">Proper noun | [ɐlʲɪkˈsʲej ˈɡɔsman] | PhD student at Tulane University</p>
+          <p class="site-description">New Orleans 😎</p>
         </div>
 
         <nav>
@@ -259,7 +259,7 @@ boot_basic [-0.9676586601496888, 2.486799230544233]    [4.30540212917657, 5.0287
 
 <p>We get a p-value of 9.99e-4, suggesting that we probably should keep the term <code class="highlighter-rouge">(1|a:b)</code> in the model formula.</p>
 
-<h3 id="a-third-example-mdash-a-less-conventional-model-fit">A third example — a less conventional model fit</h3>
+<h3 id="a-third-example--a-less-conventional-model-fit">A third example — a less conventional model fit</h3>
 
 <p>Another advantage of <code class="highlighter-rouge">mixed_models</code> against comparable tools is the ease of fitting models with arbitrary covariance structures of the random effects, which are not covered by the formula interface of <code class="highlighter-rouge">lme4</code>. This can be done in a user-friendly manner by providing a block or a <code class="highlighter-rouge">Proc</code> to the <code class="highlighter-rouge">LMM</code> constructor. This unique feature of the Ruby language makes the implementation and usage of the method incredibly convenient. A danger of allowing for arbitrary covariance structures is, of course, that such a flexibility gives the user the freedom to specify degenerate and computationally unstable  models.</p>
 

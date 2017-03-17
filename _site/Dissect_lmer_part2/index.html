@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Dissecting lme4's lmer function. Part 2. – Alexej Gossmann – Proper noun | [ɐlʲɪkˈsʲej ˈɡɔsman] | PhD student at Tulane University</title>
+    <title>Dissecting lme4's lmer function. Part 2. – Alexej Gossmann – New Orleans 😎</title>
 
         <meta charset="utf-8" />
     <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
@@ -28,7 +28,7 @@
     <![endif]-->
 
     <link rel="stylesheet" type="text/css" href="/style.css" />
-    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - Proper noun | [ɐlʲɪkˈsʲej ˈɡɔsman] | PhD student at Tulane University" href="/feed.xml" />
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - New Orleans 😎" href="/feed.xml" />
 
     <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
  
@@ -55,7 +55,7 @@
 
         <div class="site-info">
           <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
-          <p class="site-description">Proper noun | [ɐlʲɪkˈsʲej ˈɡɔsman] | PhD student at Tulane University</p>
+          <p class="site-description">New Orleans 😎</p>
         </div>
 
         <nav>
@@ -115,7 +115,7 @@
 
 <p>Finally, <code class="highlighter-rouge">devfun</code> is returned, which should also pass the <code class="highlighter-rouge">rho</code> environment implicitly.</p>
 
-<h3 id="lmerdeviance"><code class="highlighter-rouge">lmer_Deviance</code></h3>
+<h3 id="lmer_deviance"><code class="highlighter-rouge">lmer_Deviance</code></h3>
 
 <p>This function is defined as <code class="highlighter-rouge">SEXP lmer_Deviance(SEXP pptr_, SEXP rptr_, SEXP theta_)</code> in <code class="highlighter-rouge">external.cpp</code>.
 Using the <code class="highlighter-rouge">Rcpp:::Xptr</code> template, it creates two external pointers to instances of the C++ classes <code class="highlighter-rouge">lmerResp</code> and <code class="highlighter-rouge">merPredD</code>, thus exposing all methods of the respective C++ objects to the use from R.</p>

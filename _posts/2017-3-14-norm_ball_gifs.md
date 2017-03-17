@@ -1,6 +1,6 @@
 ---
 layout: post
-title: 2D "norm-balls" for commonly used penalty functions as GIF images
+title: 2D contours of several penalty functions in statistics as GIF images
 tags:
 - r
 - math
@@ -23,21 +23,21 @@ $$
 \end{eqnarray}
 $$
 
-where $f$ is some type of *loss function*, $\mathbf{X}$ denotes the data, and $g$ is a *penalty* (also referred to by other names, such as "regularization term"; problems (1) and (2) are often equivalent by the way). Of course both, $f$ and $g$, may depend on further parameters.
+where $f$ is some type of *loss function*, $\mathbf{X}$ denotes the data, and $g$ is a *penalty*, also referred to by other names, such as "regularization term" (problems (1) and (2-3) are often equivalent by the way). Of course both, $f$ and $g$, may depend on further parameters.
 
 There are multiple reasons why it can be helpful to check out the contours of such penalty functions $g$:
 
-* When $\boldsymbol{\beta}$ is two-dimensional, the solution of problem (2) can be found by simply taking a look at the contours of $f$ and $g$.
-* That builds intuition for what happens in more than two dimensions.
-* From a Bayesian point of view, problem (1) can often be interpreted as an [MAP](https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation) estimator, in which case the contours of $g$ are also contours of the prior distribution of $\boldsymbol{\beta}$.
+1. When $\boldsymbol{\beta}$ is two-dimensional, the solution of problem (2-3) can be found by simply taking a look at the contours of $f$ and $g$.
+2. That builds intuition for what happens in more than two dimensions, and in other more general cases.
+3. From a Bayesian point of view, problem (1) can often be interpreted as an [MAP](https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation) estimator, in which case the contours of $g$ are also contours of the prior distribution of $\boldsymbol{\beta}$.
 
-Therefore, it is meaningful to visualize the unit-"norm"-ball arising from $g$. Here I put "norm" in quotation marks, because such functions $g$ need not be proper norms (though they often are). Thus, by saying unit-"norm"-ball I simply refer to the set
+Therefore, it is meaningful to visualize the set of points that $g$ maps onto the unit ball in $\mathbb{R}^2$, i.e., the set
 
-$$\{ \mathbf{x}\in\mathbb{R}^2 : g(\mathbf{x}) \leq 1 \}.$$
+$$B\subscript{g} := \{ \mathbf{x}\in\mathbb{R}^2 : g(\mathbf{x}) \leq 1 \}.$$
 
-Below you see GIF images of unit-"norm"-balls for various penalty functions $g$ in 2D, capturing the effect of parameter changes in $g$. The covered penalty functions include the family of $p$-norms, the elastic net penalty, the fused penalty, and the sorted $\ell_1$ norm. The GIFs capture the changes in the shape of the "norm"-balls as we vary certain parameters.
+Below you see GIF images of such sets $B\subscript{g}$ for various penalty functions $g$ in 2D, capturing the effect of varying certain parameters in $g$. The covered penalty functions include the family of $p$-norms, the elastic net penalty, the fused penalty, and the sorted $\ell_1$ norm.
 
-:white_check_mark: The R code to generate the GIFs is provided at the end of this write-up.
+:white_check_mark: R code to reproduce the GIFs is provided.
 
 ## p-norms in 2D
 
@@ -47,7 +47,7 @@ $$
 g\subscript{p}(\boldsymbol{\beta}) = \lVert\boldsymbol{\beta}\rVert\subscript{p}^{p} = \lvert\beta\subscript{1}\rvert^p + \lvert\beta\subscript{2}\rvert^p,
 $$
 
-with a varying parameter $p \in (0, \infty]$. Many statistical methods, such as LASSO and Ridge Regression, employ $p$-norm penalties. To find all $\boldsymbol{\beta}$ on the boundary of the 2D unit norm ball, given $\beta_1$ (the first entry of $\boldsymbol{\beta}$), $\beta_2$ is easily obtained as
+with a varying parameter $p \in (0, \infty]$ (which actually isn't a proper [norm](https://en.wikipedia.org/wiki/Norm_(mathematics)) for $p < 1$). Many statistical methods, such as *LASSO* and *Ridge Regression*, employ $p$-norm penalties. To find all $\boldsymbol{\beta}$ on the boundary of the 2D unit $p$-norm ball, given $\beta_1$ (the first entry of $\boldsymbol{\beta}$), $\beta_2$ is easily obtained as
 
 $$\beta_2 = \pm (1-|\beta_1|^p)^{1/p}, \quad \forall\beta_1\in[-1, 1].$$
 
@@ -67,7 +67,7 @@ $$
 g\subscript{\alpha}(\boldsymbol{\beta}) = \alpha \lVert \boldsymbol{\beta} \rVert\subscript{1} + (1 - \alpha) \lVert \boldsymbol{\beta} \rVert\subscript{2}^{2},
 $$
 
-for $\alpha\in(0,1)$. It is quite popular with a variety of regression-based methods (such as Elastic Net obviously). We obtain the corresponding 2D unit ball, by calculating $\beta\subscript{2}$ from a given $\beta\subscript{1}\in[-1,1]$ as
+for $\alpha\in(0,1)$. It is quite popular with a variety of regression-based methods (such as the *Elastic Net*, of course). We obtain the corresponding 2D unit "ball", by calculating $\beta\subscript{2}$ from a given $\beta\subscript{1}\in[-1,1]$ as
 
 $$\beta\subscript{2} = \pm \frac{-\alpha + \sqrt{\alpha^2 - 4 (1 - \alpha) ((1 - \alpha) \beta\subscript{1}^2 + \alpha \beta\subscript{1} - 1)}}{2 - 2 \alpha}.$$
 
@@ -81,7 +81,7 @@ $$
 g\subscript{\alpha}(\boldsymbol{\beta}) = \alpha \lVert \boldsymbol{\beta} \rVert\subscript{1} + (1 - \alpha) \sum\subscript{i = 2}^m \lvert \beta\subscript{i} - \beta\subscript{i-1} \rvert.
 $$
 
-It encourages neighboring coefficients $\beta\subscript{i}$ to have similar values, and is utilized in the fused LASSO and similar methods.
+It encourages neighboring coefficients $\beta\subscript{i}$ to have similar values, and is utilized by the *fused LASSO* and similar methods.
 
 <img src="/images/norm_balls/fused_penalty_balls.gif" alt="Loading..." title="fused penalty">
 
@@ -89,7 +89,7 @@ It encourages neighboring coefficients $\beta\subscript{i}$ to have similar valu
 
 ## Sorted L1 penalty in 2D
 
-The Sorted $\ell\subscript{1}$ penalty is used in a number of regression-based methods, such as SLOPE and OSCAR. It has the form
+The Sorted $\ell\subscript{1}$ penalty is used in a number of regression-based methods, such as *SLOPE* and *OSCAR*. It has the form
 
 $$g\subscript{\boldsymbol{\lambda}}(\boldsymbol{\beta}) = \sum\subscript{i = 1}^m \lambda\subscript{i} \lvert \beta \rvert\subscript{(i)},$$
 
@@ -101,162 +101,17 @@ $$g\subscript{\boldsymbol{\lambda}}(\boldsymbol{\beta}) = \lambda\subscript{1} \
 
 # Code
 
-I use the libraries
+The R code uses the libraries `dplyr` for data manipulation, `ggplot2` for generation of figures, and `magick` to combine the individual images into a GIF.
 
-```R
-library(dplyr)
-```
+Here are the R scripts that can be used to reproduce the above GIFs:
 
-for data manipulation,
+1. [p-norms in 2D](https://github.com/agisga/2D_norm_balls/blob/master/p-norm.R)
+2. [Elastic net penalty in 2D](https://github.com/agisga/2D_norm_balls/blob/master/elastic_net.R)
+3. [Fused penalty in 2D](https://github.com/agisga/2D_norm_balls/blob/master/fused.R)
+4. [Sorted L1 penalty in 2D](https://github.com/agisga/2D_norm_balls/blob/master/sorted_L1.R)
 
-```R
-library(ggplot2)
-```
+Should I come across other interesting penalty functions that make sense in 2D, then I will add corresponding further visualizations to the same Github repository.
 
-for generation of figures, and
-
-```R
-library(magick)
-```
-
-to combine the figures into a GIF.
-
-## p-norms in 2D
-
-```R
-x1 <- seq(-1, 1, by = 0.01)
-p <- c(seq(0.1, 1, by = 0.1), seq(1.5, 4, by = 0.5), Inf)
-for(i in 1:length(p)) {
-  x2 <- sapply(x1, function(x) abs((1-abs(x)^p[i])^(1/p[i])) )
-  data_frame(x_1 = c(x1, rev(x1), x1[1]), x_2 = c(x2, -rev(x2), x2[1])) %>%
-    ggplot(aes(x_1, x_2)) + geom_path() +
-    annotate("text", x = 0, y = 0, parse = TRUE, size = 6,
-             color = "blue", label = paste0("p == ", p[i])) +
-    xlab(expression(beta[1])) + ylab(expression(beta[2])) +
-    ggtitle(expression(group("|", beta[1], "|")^p+group("|", beta[2], "|")^p==1)) +
-    theme_minimal()
-  ggsave(paste0("./p-norm_img/", sprintf("%03.0f", i), ".jpeg"),
-         width = 8, height = 8, units = "cm")
-}
-
-# make a GIF
-images <- paste0("./p-norm_img/", list.files(path = "./p-norm_img/", pattern = "jpeg"))
-frames <- c()
-for (i in length(images):1) {
-  x <- images[i] %>% image_read() %>% image_scale("400")
-  frames <- c(x, frames)
-}
-animation <- image_animate(frames, fps = 2)
-image_write(animation, "p-norm_balls.gif")
-```
-
-## Elastic net penalty in 2D
-
-```R
-x1 <- seq(-1, 1, by = 0.01)
-a <- seq(0, 0.9, by = 0.1)
-for(i in 1:length(a)) {
-  x2 <- sapply(x1, function(x) {
-                 x <- abs(x)
-                 (-a[i] + sqrt(a[i]^2 - 4 * (1 - a[i]) * ((1 - a[i]) * x^2 + a[i] * x - 1))) / (2 - 2 * a[i])
-})
-  data_frame(x_1 = c(x1, rev(x1), x1[1]), x_2 = c(x2, -rev(x2), x2[1])) %>%
-    ggplot(aes(x_1, x_2)) + geom_path() +
-    annotate("text", x = 0, y = 0, parse = TRUE, size = 6,
-             color = "blue", label = paste0("alpha == ", a[i])) +
-    xlab(expression(beta[1])) + ylab(expression(beta[2])) +
-    ggtitle(expression(alpha*(group("|", beta[1], "|")+group("|", beta[2], "|"))+(1-alpha)*(beta[1]^2+beta[2]^2)==1)) +
-    theme_minimal()
-  ggsave(paste0("./elastic_net_img/", sprintf("%03.0f", i), ".jpeg"),
-         width = 9, height = 9, units = "cm")
-}
-
-# make a GIF
-images <- paste0("./elastic_net_img/", list.files(path = "./elastic_net_img/", pattern = "jpeg"))
-frames <- c()
-for (i in length(images):1) {
-  x <- images[i] %>% image_read() %>% image_scale("400")
-  frames <- c(x, frames)
-}
-animation <- image_animate(frames, fps = 2)
-image_write(animation, "elastic_net_balls.gif")
-```
-
-## Fused penalty in 2D
-
-```R
-# generate an equidistant grid in the X-Y-plane
-u <- seq(-2, 2, by = 0.01)
-m  <- length(u)
-xy <- matrix(c(rep(u, each = m), rep(u, m)), ncol = 2)
-colnames(xy) <- c("x", "y")
-xy <- as_data_frame(xy)
-
-# evaluate the fused penalty on the grid, draw points with value <=1 only, and save a figure for each value of `a`
-a <- c(0, seq(0.3, 0.8, by = 0.1), 1)
-for(i in 1:length(a)) {
-  xy %>%
-    mutate(Value = a[i] * (abs(x) + abs(y)) + (1 - a[i]) * abs(x - y)) %>%
-    filter(abs(Value) <= 1) %>%
-    ggplot(aes(x, y, color = Value)) + geom_point(pch = ".") +
-    annotate("text", x = -1.5, y = 1.5, parse = TRUE, size = 6,
-             color = "blue", label = paste0("alpha == ", a[i])) +
-    xlab(expression(beta[1])) + ylab(expression(beta[2])) +
-    ggtitle(expression(alpha*(group("|", beta[1], "|")+group("|", beta[2], "|"))+(1-alpha)*group("|", beta[1] - beta[2], "|")<=1)) +
-    xlim(-2, 2) + ylim(-2, 2) +
-    theme_minimal()
-  ggsave(paste0("./fused_img/", sprintf("%03.0f", i), ".jpeg"),
-         width = 10, height = 8, units = "cm")
-}
-
-# make a GIF
-images <- paste0("./fused_img/", list.files(path = "./fused_img/", pattern = "jpeg"))
-frames <- c()
-for (i in length(images):1) {
-  x <- images[i] %>% image_read() %>% image_scale("500")
-  frames <- c(x, frames)
-}
-animation <- image_animate(frames, fps = 2)
-image_write(animation, "fused_penalty_balls.gif")
-```
-
-## Sorted L1 penalty in 2D
-
-```R
-lambda1 <- 1
-lambda2 <- c(seq(0, 1, by = 0.2), seq(1, 2, by = 0.2))
-x1 <- seq(-1, 1, by = 0.01)
-
-get_x2_of_sorted_L1 <- function(x, lambda1, lambda2) {
-  if (abs(x) <= 1 / (lambda1 + lambda2)) {
-    y <- (1 - lambda2 * abs(x)) / lambda1
-  } else {
-    y <- (1 - lambda1 * abs(x)) / lambda2
-  }
-  return(y)
-}
-
-for(i in 1:length(lambda2)) {
-  x2 <- sapply(x1, function(x) get_x2_of_sorted_L1(x, lambda1, lambda2[i]))
-  data_frame(x_1 = c(x1, rev(x1), x1[1]), x_2 = c(x2, -rev(x2), x2[1])) %>%
-    ggplot(aes(x_1, x_2)) + geom_path() +
-    annotate("text", x = 0, y = 0, parse = TRUE, size = 6, color = "blue",
-             label = paste0("list(lambda[1] == ", lambda1,
-                            ", lambda[2] == ", lambda2[i], ")")) +
-    xlab(expression(beta[1])) + ylab(expression(beta[2])) +
-    ggtitle(expression(list(lambda[1]*group("|", beta, "|")[(1)]+lambda[2]*group("|", beta, "|")[(2)]==1, group("|", beta, "|")[(1)] >= group("|", beta, "|")[(2)]))) +
-    theme_minimal()
-  ggsave(paste0("./sorted_L1_img/", sprintf("%03.0f", i), ".jpeg"),
-         width = 8.5, height = 8.5, units = "cm")
-}
-
-# make a GIF
-images <- paste0("./sorted_L1_img/", list.files(path = "./sorted_L1_img/", pattern = "jpeg"))
-frames <- c()
-for (i in length(images):1) {
-  x <- images[i] %>% image_read() %>% image_scale("400")
-  frames <- c(x, frames)
-}
-animation <- image_animate(frames, fps = 2)
-image_write(animation, "sorted_L1_balls.gif")
-```
+<font size="3">
+<a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/80x15.png" /></a><br />This work is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.
+</font>

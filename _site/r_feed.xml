@@ -6,6 +6,126 @@
     
       
         
+          
+            <item>
+              <title>2D contours of several penalty functions in statistics as GIF images</title>
+              <description>&lt;p&gt;Many statistical modeling problems reduce to a minimization problem of the general form:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\begin{equation}
+\mathrm{minimize}\subscript{\boldsymbol{\beta}\in\mathbb{R}^m}\quad f(\mathbf{X}, \boldsymbol{\beta}) + \lambda g(\boldsymbol{\beta}),
+\end{equation}&lt;/script&gt;
+
+&lt;p&gt;or&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{eqnarray}
+&amp;\mathrm{minimize}\subscript{\boldsymbol{\beta}\in\mathbb{R}^m}\quad f(\mathbf{X}, \boldsymbol{\beta}),\\
+&amp;\mathrm{subject\,to}\quad g(\boldsymbol{\beta}) \leq t,
+\end{eqnarray} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;where $f$ is some type of &lt;em&gt;loss function&lt;/em&gt;, $\mathbf{X}$ denotes the data, and $g$ is a &lt;em&gt;penalty&lt;/em&gt;, also referred to by other names, such as “regularization term” (problems (1) and (2-3) are often equivalent by the way). Of course both, $f$ and $g$, may depend on further parameters.&lt;/p&gt;
+
+&lt;p&gt;There are multiple reasons why it can be helpful to check out the contours of such penalty functions $g$:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;When $\boldsymbol{\beta}$ is two-dimensional, the solution of problem (2-3) can be found by simply taking a look at the contours of $f$ and $g$.&lt;/li&gt;
+  &lt;li&gt;That builds intuition for what happens in more than two dimensions, and in other more general cases.&lt;/li&gt;
+  &lt;li&gt;From a Bayesian point of view, problem (1) can often be interpreted as an &lt;a href=&quot;https://en.wikipedia.org/wiki/Maximum_a_posteriori_estimation&quot;&gt;MAP&lt;/a&gt; estimator, in which case the contours of $g$ are also contours of the prior distribution of $\boldsymbol{\beta}$.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Therefore, it is meaningful to visualize the set of points that $g$ maps onto the unit ball in $\mathbb{R}^2$, i.e., the set&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;B\subscript{g} := \{ \mathbf{x}\in\mathbb{R}^2 : g(\mathbf{x}) \leq 1 \}.&lt;/script&gt;
+
+&lt;p&gt;Below you see GIF images of such sets $B\subscript{g}$ for various penalty functions $g$ in 2D, capturing the effect of varying certain parameters in $g$. The covered penalty functions include the family of $p$-norms, the elastic net penalty, the fused penalty, and the sorted $\ell_1$ norm.&lt;/p&gt;
+
+&lt;p&gt;:white_check_mark: R code to reproduce the GIFs is provided.&lt;/p&gt;
+
+&lt;h2 id=&quot;p-norms-in-2d&quot;&gt;p-norms in 2D&lt;/h2&gt;
+
+&lt;p&gt;First we consider the $p$-norm,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;g\subscript{p}(\boldsymbol{\beta}) = \lVert\boldsymbol{\beta}\rVert\subscript{p}^{p} = \lvert\beta\subscript{1}\rvert^p + \lvert\beta\subscript{2}\rvert^p,&lt;/script&gt;
+
+&lt;p&gt;with a varying parameter $p \in (0, \infty]$ (which actually isn’t a proper &lt;a href=&quot;https://en.wikipedia.org/wiki/Norm_(mathematics)&quot;&gt;norm&lt;/a&gt; for $p &amp;lt; 1$). Many statistical methods, such as &lt;em&gt;LASSO&lt;/em&gt; and &lt;em&gt;Ridge Regression&lt;/em&gt;, employ $p$-norm penalties. To find all $\boldsymbol{\beta}$ on the boundary of the 2D unit $p$-norm ball, given $\beta_1$ (the first entry of $\boldsymbol{\beta}$), $\beta_2$ is easily obtained as&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\beta_2 = \pm (1-|\beta_1|^p)^{1/p}, \quad \forall\beta_1\in[-1, 1].&lt;/script&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/norm_balls/p-norm_balls.gif&quot; alt=&quot;Loading...&quot; title=&quot;p-norm balls&quot; /&gt;&lt;/p&gt;
+
+&lt;!-- When the loss function $f$ is the mean squared error, its contours are ellipses centered at the least squares solution. The solution to the constrained minimization problem in this case lies at the point, at which the contours of $f$ and the $t$-&quot;norm&quot;-ball of $g$ meet for the first time, as shown in the following GIF image.
+
+TODO: GIF
+
+We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equal to zero, i.e., the solution is *sparse*. --&gt;
+
+&lt;h2 id=&quot;elastic-net-penalty-in-2d&quot;&gt;Elastic net penalty in 2D&lt;/h2&gt;
+
+&lt;p&gt;The elastic net penalty can be written in the form&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;g\subscript{\alpha}(\boldsymbol{\beta}) = \alpha \lVert \boldsymbol{\beta} \rVert\subscript{1} + (1 - \alpha) \lVert \boldsymbol{\beta} \rVert\subscript{2}^{2},&lt;/script&gt;
+
+&lt;p&gt;for $\alpha\in(0,1)$. It is quite popular with a variety of regression-based methods (such as the &lt;em&gt;Elastic Net&lt;/em&gt;, of course). We obtain the corresponding 2D unit “ball”, by calculating $\beta\subscript{2}$ from a given $\beta\subscript{1}\in[-1,1]$ as&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\beta\subscript{2} = \pm \frac{-\alpha + \sqrt{\alpha^2 - 4 (1 - \alpha) ((1 - \alpha) \beta\subscript{1}^2 + \alpha \beta\subscript{1} - 1)}}{2 - 2 \alpha}.&lt;/script&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/norm_balls/elastic_net_balls.gif&quot; alt=&quot;Loading...&quot; title=&quot;elastic net balls&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;fused-penalty-in-2d&quot;&gt;Fused penalty in 2D&lt;/h2&gt;
+
+&lt;p&gt;The &lt;em&gt;fused&lt;/em&gt; penalty can be written in the form&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;g\subscript{\alpha}(\boldsymbol{\beta}) = \alpha \lVert \boldsymbol{\beta} \rVert\subscript{1} + (1 - \alpha) \sum\subscript{i = 2}^m \lvert \beta\subscript{i} - \beta\subscript{i-1} \rvert.&lt;/script&gt;
+
+&lt;p&gt;It encourages neighboring coefficients $\beta\subscript{i}$ to have similar values, and is utilized by the &lt;em&gt;fused LASSO&lt;/em&gt; and similar methods.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/norm_balls/fused_penalty_balls.gif&quot; alt=&quot;Loading...&quot; title=&quot;fused penalty&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;(Here I have simply evaluated the fused penalty function on a grid of points in $[-2,2]^2$, because figuring out equations in parametric form for the above polygons was too painful for my taste… :stuck_out_tongue:)&lt;/p&gt;
+
+&lt;h2 id=&quot;sorted-l1-penalty-in-2d&quot;&gt;Sorted L1 penalty in 2D&lt;/h2&gt;
+
+&lt;p&gt;The Sorted $\ell\subscript{1}$ penalty is used in a number of regression-based methods, such as &lt;em&gt;SLOPE&lt;/em&gt; and &lt;em&gt;OSCAR&lt;/em&gt;. It has the form&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;g\subscript{\boldsymbol{\lambda}}(\boldsymbol{\beta}) = \sum\subscript{i = 1}^m \lambda\subscript{i} \lvert \beta \rvert\subscript{(i)},&lt;/script&gt;
+
+&lt;p&gt;where $\lvert \beta \rvert\subscript{(1)} \geq \lvert \beta \rvert\subscript{(2)} \geq \ldots \geq \lvert \beta \rvert\subscript{(m)}$ are the absolute values of the entries of $\boldsymbol{\beta}$ arranged in a decreasing order. In 2D this reduces to&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;g\subscript{\boldsymbol{\lambda}}(\boldsymbol{\beta}) = \lambda\subscript{1} \max\{|\beta\subscript{1}|, |\beta\subscript{2}|\} + \lambda\subscript{2} \min\{|\beta\subscript{1}|, |\beta\subscript{2}|\}.&lt;/script&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/norm_balls/sorted_L1_balls.gif&quot; alt=&quot;Loading...&quot; title=&quot;sorted L1 norm balls&quot; /&gt;&lt;/p&gt;
+
+&lt;h1 id=&quot;code&quot;&gt;Code&lt;/h1&gt;
+
+&lt;p&gt;The R code uses the libraries &lt;code class=&quot;highlighter-rouge&quot;&gt;dplyr&lt;/code&gt; for data manipulation, &lt;code class=&quot;highlighter-rouge&quot;&gt;ggplot2&lt;/code&gt; for generation of figures, and &lt;code class=&quot;highlighter-rouge&quot;&gt;magick&lt;/code&gt; to combine the individual images into a GIF.&lt;/p&gt;
+
+&lt;p&gt;Here are the R scripts that can be used to reproduce the above GIFs:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/agisga/2D_norm_balls/blob/master/p-norm.R&quot;&gt;p-norms in 2D&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/agisga/2D_norm_balls/blob/master/elastic_net.R&quot;&gt;Elastic net penalty in 2D&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/agisga/2D_norm_balls/blob/master/fused.R&quot;&gt;Fused penalty in 2D&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/agisga/2D_norm_balls/blob/master/sorted_L1.R&quot;&gt;Sorted L1 penalty in 2D&lt;/a&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Should I come across other interesting penalty functions that make sense in 2D, then I will add corresponding further visualizations to the same Github repository.&lt;/p&gt;
+
+&lt;font size=&quot;3&quot;&gt;
+&lt;a rel=&quot;license&quot; href=&quot;http://creativecommons.org/licenses/by/4.0/&quot;&gt;&lt;img alt=&quot;Creative Commons License&quot; style=&quot;border-width:0&quot; src=&quot;https://i.creativecommons.org/l/by/4.0/80x15.png&quot; /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel=&quot;license&quot; href=&quot;http://creativecommons.org/licenses/by/4.0/&quot;&gt;Creative Commons Attribution 4.0 International License&lt;/a&gt;.
+&lt;/font&gt;
+</description>
+              <pubdate>2017-03-14T00:00:00-05:00</pubdate>
+              <link>http://www.alexejgossmann.com/norm_ball_gifs/</link>
+              <guid ispermalink="true">http://www.alexejgossmann.com/norm_ball_gifs/</guid>
+            </item>
+          
+        
+      
+        
+      
+    
+      
+        
       
         
       
@@ -136,7 +256,7 @@
 
 &lt;p&gt;&lt;img src=&quot;../images/MRI_viz/ortho2-1.png&quot; alt=&quot;plot of chunk ortho2&quot; /&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;show-two-orthographic-displays-side-by-side-with-doubleortho&quot;&gt;Show two orthographic displays side by side with &lt;em&gt;double_ortho&lt;/em&gt;&lt;/h3&gt;
+&lt;h3 id=&quot;show-two-orthographic-displays-side-by-side-with-double_ortho&quot;&gt;Show two orthographic displays side by side with &lt;em&gt;double_ortho&lt;/em&gt;&lt;/h3&gt;
 
 &lt;p&gt;The function &lt;code class=&quot;highlighter-rouge&quot;&gt;double_ortho&lt;/code&gt; can be used to display two orthographic brain images of the same dimensions next to each other. As a quick demonstration we can look at the original image and the extracted brain side by side.&lt;/p&gt;
 
