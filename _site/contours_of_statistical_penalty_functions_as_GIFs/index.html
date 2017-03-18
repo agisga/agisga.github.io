@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>2D contours of several penalty functions in statistics as GIF images – Alexej Gossmann – New Orleans 😎</title>
+    <title>Contours of statistical penalty functions as GIF images – Alexej Gossmann – New Orleans 😎</title>
 
         <meta charset="utf-8">
     <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
@@ -19,8 +19,8 @@
     <meta name="author" content="Alexej Gossmann">
 
     
-    <meta property="og:title" content="2D contours of several penalty functions in statistics as GIF images">
-    <meta property="twitter:title" content="2D contours of several penalty functions in statistics as GIF images">
+    <meta property="og:title" content="Contours of statistical penalty functions as GIF images">
+    <meta property="twitter:title" content="Contours of statistical penalty functions as GIF images">
     
 
     <!--[if lt IE 9]>
@@ -69,7 +69,7 @@
 
     <div id="main" role="main" class="container">
       <article class="post">
-  <h1>2D contours of several penalty functions in statistics as GIF images</h1>
+  <h1>Contours of statistical penalty functions as GIF images</h1>
 
   <div class="entry">
     <p>Many statistical modeling problems reduce to a minimization problem of the general form:</p>
@@ -114,7 +114,7 @@
 
 <script type="math/tex; mode=display">\beta_2 = \pm (1-|\beta_1|^p)^{1/p}, \quad \forall\beta_1\in[-1, 1].</script>
 
-<p><img src="/images/norm_balls/p-norm_balls.gif" alt="Loading..." title="p-norm balls"></p>
+<p><img src="/images/penalty_function_contours/p-norm_balls.gif" alt="Loading..." title="p-norm balls"></p>
 
 <!-- When the loss function $f$ is the mean squared error, its contours are ellipses centered at the least squares solution. The solution to the constrained minimization problem in this case lies at the point, at which the contours of $f$ and the $t$-"norm"-ball of $g$ meet for the first time, as shown in the following GIF image.
 
@@ -132,7 +132,7 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 
 <script type="math/tex; mode=display">\beta\subscript{2} = \pm \frac{-\alpha + \sqrt{\alpha^2 - 4 (1 - \alpha) ((1 - \alpha) \beta\subscript{1}^2 + \alpha \beta\subscript{1} - 1)}}{2 - 2 \alpha}.</script>
 
-<p><img src="/images/norm_balls/elastic_net_balls.gif" alt="Loading..." title="elastic net balls"></p>
+<p><img src="/images/penalty_function_contours/elastic_net_balls.gif" alt="Loading..." title="elastic net balls"></p>
 
 <h2 id="fused-penalty-in-2d">Fused penalty in 2D</h2>
 
@@ -142,7 +142,7 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 
 <p>It encourages neighboring coefficients $\beta\subscript{i}$ to have similar values, and is utilized by the <em>fused LASSO</em> and similar methods.</p>
 
-<p><img src="/images/norm_balls/fused_penalty_balls.gif" alt="Loading..." title="fused penalty"></p>
+<p><img src="/images/penalty_function_contours/fused_penalty_balls.gif" alt="Loading..." title="fused penalty"></p>
 
 <p>(Here I have simply evaluated the fused penalty function on a grid of points in $[-2,2]^2$, because figuring out equations in parametric form for the above polygons was too painful for my taste… <img class="emoji" title=":stuck_out_tongue:" alt=":stuck_out_tongue:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f61b.png" height="20" width="20" align="absmiddle">)</p>
 
@@ -156,7 +156,33 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 
 <script type="math/tex; mode=display">g\subscript{\boldsymbol{\lambda}}(\boldsymbol{\beta}) = \lambda\subscript{1} \max\{|\beta\subscript{1}|, |\beta\subscript{2}|\} + \lambda\subscript{2} \min\{|\beta\subscript{1}|, |\beta\subscript{2}|\}.</script>
 
-<p><img src="/images/norm_balls/sorted_L1_balls.gif" alt="Loading..." title="sorted L1 norm balls"></p>
+<p><img src="/images/penalty_function_contours/sorted_L1_balls.gif" alt="Loading..." title="sorted L1 norm balls"></p>
+
+<h2 id="difference-of-p-norms">Difference of p-norms</h2>
+
+<p>It holds that</p>
+
+<script type="math/tex; mode=display">\lVert \boldsymbol{\beta} \rVert\subscript{1} \geq \lVert \boldsymbol{\beta} \rVert\subscript{2},</script>
+
+<p>or more generally, for all $p$-norms it holds that</p>
+
+<script type="math/tex; mode=display">(\forall p \leq q) : \lVert \boldsymbol{\beta} \rVert\subscript{p} \geq \lVert \boldsymbol{\beta} \rVert\subscript{q}.</script>
+
+<p>Thus, it is meaningful to define a penalty function of the form</p>
+
+<script type="math/tex; mode=display">g\subscript{\alpha}(\boldsymbol{\beta}) = \lVert \boldsymbol{\beta} \rVert\subscript{1} - \alpha \lVert \boldsymbol{\beta} \rVert\subscript{2},</script>
+
+<p>for $\alpha\in[0,1]$, which results in the following.</p>
+
+<p><img src="/images/penalty_function_contours/l1-l2_balls.gif" alt="Loading..." title="l1 norm minus l2 norm balls"></p>
+
+<p>We visualize the same for varying $p \geq 1$ fixing $\alpha = 0.6$, i.e., we define</p>
+
+<script type="math/tex; mode=display">g\subscript{\alpha}(\boldsymbol{\beta}) = \lVert \boldsymbol{\beta} \rVert\subscript{1} - 0.6 \lVert \boldsymbol{\beta} \rVert\subscript{p},</script>
+
+<p>and we obtain the following GIF.</p>
+
+<p><img src="/images/penalty_function_contours/l1-lp_balls.gif" alt="Loading..." title="l1 norm minus lp norm balls"></p>
 
 <h1 id="code">Code</h1>
 
@@ -165,10 +191,12 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 <p>Here are the R scripts that can be used to reproduce the above GIFs:</p>
 
 <ol>
-  <li><a href="https://github.com/agisga/2D_norm_balls/blob/master/p-norm.R">p-norms in 2D</a></li>
-  <li><a href="https://github.com/agisga/2D_norm_balls/blob/master/elastic_net.R">Elastic net penalty in 2D</a></li>
-  <li><a href="https://github.com/agisga/2D_norm_balls/blob/master/fused.R">Fused penalty in 2D</a></li>
-  <li><a href="https://github.com/agisga/2D_norm_balls/blob/master/sorted_L1.R">Sorted L1 penalty in 2D</a></li>
+  <li><a href="https://github.com/agisga/2D_norm_balls/blob/master/R/p-norm.R">p-norms in 2D</a></li>
+  <li><a href="https://github.com/agisga/2D_norm_balls/blob/master/R/elastic_net.R">Elastic net penalty in 2D</a></li>
+  <li><a href="https://github.com/agisga/2D_norm_balls/blob/master/R/fused.R">Fused penalty in 2D</a></li>
+  <li><a href="https://github.com/agisga/2D_norm_balls/blob/master/R/sorted_L1.R">Sorted L1 penalty in 2D</a></li>
+  <li><a href="https://github.com/agisga/2D_norm_balls/blob/master/R/l1-l2.R">Difference of $p$-norms: $\ell\subscript{1} - \ell\subscript{2}$ in 2D</a></li>
+  <li><a href="https://github.com/agisga/2D_norm_balls/blob/master/R/l1-lp.R">Difference of $p$-norms: $\ell\subscript{1} - \ell\subscript{p}$ in 2D</a></li>
 </ol>
 
 <p>Should I come across other interesting penalty functions that make sense in 2D, then I will add corresponding further visualizations to the same Github repository.</p>
@@ -180,7 +208,7 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
   </div>
 
   <div class="date">
-    Written on March 14, 2017
+    Written on March 18, 2017
   </div>
 
   <div class="date">
