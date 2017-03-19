@@ -35,7 +35,7 @@ Therefore, it is meaningful to visualize the set of points that $g$ maps onto th
 
 $$B\subscript{g} := \{ \mathbf{x}\in\mathbb{R}^2 : g(\mathbf{x}) \leq 1 \}.$$
 
-Below you see GIF images of such sets $B\subscript{g}$ for various penalty functions $g$ in 2D, capturing the effect of varying certain parameters in $g$. The covered penalty functions include the family of $p$-norms, the elastic net penalty, the fused penalty, and the sorted $\ell_1$ norm.
+Below you see GIF images of such sets $B\subscript{g}$ for various penalty functions $g$ in 2D, capturing the effect of varying certain parameters in $g$. The covered penalty functions include the family of $p$-norms, the elastic net penalty, the fused penalty, the sorted $\ell_1$ norm, and several others.
 
 :white_check_mark: R code to reproduce the GIFs is provided.
 
