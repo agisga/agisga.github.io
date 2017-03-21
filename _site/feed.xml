@@ -36,7 +36,7 @@
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;B\subscript{g} := \{ \mathbf{x}\in\mathbb{R}^2 : g(\mathbf{x}) \leq 1 \}.&lt;/script&gt;
 
-&lt;p&gt;Below you see GIF images of such sets $B\subscript{g}$ for various penalty functions $g$ in 2D, capturing the effect of varying certain parameters in $g$. The covered penalty functions include the family of $p$-norms, the elastic net penalty, the fused penalty, and the sorted $\ell_1$ norm.&lt;/p&gt;
+&lt;p&gt;Below you see GIF images of such sets $B\subscript{g}$ for various penalty functions $g$ in 2D, capturing the effect of varying certain parameters in $g$. The covered penalty functions include the family of $p$-norms, the elastic net penalty, the fused penalty, the sorted $\ell_1$ norm, and several others.&lt;/p&gt;
 
 &lt;p&gt;:white_check_mark: R code to reproduce the GIFs is provided.&lt;/p&gt;
 
@@ -46,7 +46,7 @@
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;g\subscript{p}(\boldsymbol{\beta}) = \lVert\boldsymbol{\beta}\rVert\subscript{p}^{p} = \lvert\beta\subscript{1}\rvert^p + \lvert\beta\subscript{2}\rvert^p,&lt;/script&gt;
 
-&lt;p&gt;with a varying parameter $p \in (0, \infty]$ (which actually isn’t a proper &lt;a href=&quot;https://en.wikipedia.org/wiki/Norm_(mathematics)&quot;&gt;norm&lt;/a&gt; for $p &amp;lt; 1$). Many statistical methods, such as &lt;em&gt;LASSO&lt;/em&gt; and &lt;em&gt;Ridge Regression&lt;/em&gt;, employ $p$-norm penalties. To find all $\boldsymbol{\beta}$ on the boundary of the 2D unit $p$-norm ball, given $\beta_1$ (the first entry of $\boldsymbol{\beta}$), $\beta_2$ is easily obtained as&lt;/p&gt;
+&lt;p&gt;with a varying parameter $p \in (0, \infty]$ (which actually isn’t a proper &lt;a href=&quot;https://en.wikipedia.org/wiki/Norm_(mathematics)&quot;&gt;norm&lt;/a&gt; for $p &amp;lt; 1$). Many statistical methods, such as &lt;em&gt;LASSO&lt;/em&gt; (Tibshirani 1996) and &lt;em&gt;Ridge Regression&lt;/em&gt; (Hoerl and Kennard 1970), employ $p$-norm penalties. To find all $\boldsymbol{\beta}$ on the boundary of the 2D unit $p$-norm ball, given $\beta_1$ (the first entry of $\boldsymbol{\beta}$), $\beta_2$ is easily obtained as&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;\beta_2 = \pm (1-|\beta_1|^p)^{1/p}, \quad \forall\beta_1\in[-1, 1].&lt;/script&gt;
 
@@ -76,7 +76,7 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;g\subscript{\alpha}(\boldsymbol{\beta}) = \alpha \lVert \boldsymbol{\beta} \rVert\subscript{1} + (1 - \alpha) \sum\subscript{i = 2}^m \lvert \beta\subscript{i} - \beta\subscript{i-1} \rvert.&lt;/script&gt;
 
-&lt;p&gt;It encourages neighboring coefficients $\beta\subscript{i}$ to have similar values, and is utilized by the &lt;em&gt;fused LASSO&lt;/em&gt; and similar methods.&lt;/p&gt;
+&lt;p&gt;It encourages neighboring coefficients $\beta\subscript{i}$ to have similar values, and is utilized by the &lt;em&gt;fused LASSO&lt;/em&gt; (Tibshirani et. al. 2005) and similar methods.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/penalty_function_contours/fused_penalty_balls.gif&quot; alt=&quot;Loading...&quot; title=&quot;fused penalty&quot; /&gt;&lt;/p&gt;
 
@@ -84,7 +84,7 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 
 &lt;h2 id=&quot;sorted-l1-penalty-in-2d&quot;&gt;Sorted L1 penalty in 2D&lt;/h2&gt;
 
-&lt;p&gt;The Sorted $\ell\subscript{1}$ penalty is used in a number of regression-based methods, such as &lt;em&gt;SLOPE&lt;/em&gt; and &lt;em&gt;OSCAR&lt;/em&gt;. It has the form&lt;/p&gt;
+&lt;p&gt;The Sorted $\ell\subscript{1}$ penalty is used in a number of regression-based methods, such as &lt;em&gt;SLOPE&lt;/em&gt; (Bogdan et. al. 2015) and &lt;em&gt;OSCAR&lt;/em&gt; (Bondell and Reich 2008). It has the form&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;g\subscript{\boldsymbol{\lambda}}(\boldsymbol{\beta}) = \sum\subscript{i = 1}^m \lambda\subscript{i} \lvert \beta \rvert\subscript{(i)},&lt;/script&gt;
 

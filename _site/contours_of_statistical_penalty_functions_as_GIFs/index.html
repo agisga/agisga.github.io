@@ -100,7 +100,7 @@
 
 <script type="math/tex; mode=display">B\subscript{g} := \{ \mathbf{x}\in\mathbb{R}^2 : g(\mathbf{x}) \leq 1 \}.</script>
 
-<p>Below you see GIF images of such sets $B\subscript{g}$ for various penalty functions $g$ in 2D, capturing the effect of varying certain parameters in $g$. The covered penalty functions include the family of $p$-norms, the elastic net penalty, the fused penalty, and the sorted $\ell_1$ norm.</p>
+<p>Below you see GIF images of such sets $B\subscript{g}$ for various penalty functions $g$ in 2D, capturing the effect of varying certain parameters in $g$. The covered penalty functions include the family of $p$-norms, the elastic net penalty, the fused penalty, the sorted $\ell_1$ norm, and several others.</p>
 
 <p><img class="emoji" title=":white_check_mark:" alt=":white_check_mark:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/2705.png" height="20" width="20" align="absmiddle"> R code to reproduce the GIFs is provided.</p>
 
@@ -110,7 +110,7 @@
 
 <script type="math/tex; mode=display">g\subscript{p}(\boldsymbol{\beta}) = \lVert\boldsymbol{\beta}\rVert\subscript{p}^{p} = \lvert\beta\subscript{1}\rvert^p + \lvert\beta\subscript{2}\rvert^p,</script>
 
-<p>with a varying parameter $p \in (0, \infty]$ (which actually isn’t a proper <a href="https://en.wikipedia.org/wiki/Norm_(mathematics)">norm</a> for $p &lt; 1$). Many statistical methods, such as <em>LASSO</em> and <em>Ridge Regression</em>, employ $p$-norm penalties. To find all $\boldsymbol{\beta}$ on the boundary of the 2D unit $p$-norm ball, given $\beta_1$ (the first entry of $\boldsymbol{\beta}$), $\beta_2$ is easily obtained as</p>
+<p>with a varying parameter $p \in (0, \infty]$ (which actually isn’t a proper <a href="https://en.wikipedia.org/wiki/Norm_(mathematics)">norm</a> for $p &lt; 1$). Many statistical methods, such as <em>LASSO</em> (Tibshirani 1996) and <em>Ridge Regression</em> (Hoerl and Kennard 1970), employ $p$-norm penalties. To find all $\boldsymbol{\beta}$ on the boundary of the 2D unit $p$-norm ball, given $\beta_1$ (the first entry of $\boldsymbol{\beta}$), $\beta_2$ is easily obtained as</p>
 
 <script type="math/tex; mode=display">\beta_2 = \pm (1-|\beta_1|^p)^{1/p}, \quad \forall\beta_1\in[-1, 1].</script>
 
@@ -140,7 +140,7 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 
 <script type="math/tex; mode=display">g\subscript{\alpha}(\boldsymbol{\beta}) = \alpha \lVert \boldsymbol{\beta} \rVert\subscript{1} + (1 - \alpha) \sum\subscript{i = 2}^m \lvert \beta\subscript{i} - \beta\subscript{i-1} \rvert.</script>
 
-<p>It encourages neighboring coefficients $\beta\subscript{i}$ to have similar values, and is utilized by the <em>fused LASSO</em> and similar methods.</p>
+<p>It encourages neighboring coefficients $\beta\subscript{i}$ to have similar values, and is utilized by the <em>fused LASSO</em> (Tibshirani et. al. 2005) and similar methods.</p>
 
 <p><img src="/images/penalty_function_contours/fused_penalty_balls.gif" alt="Loading..." title="fused penalty"></p>
 
@@ -148,7 +148,7 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 
 <h2 id="sorted-l1-penalty-in-2d">Sorted L1 penalty in 2D</h2>
 
-<p>The Sorted $\ell\subscript{1}$ penalty is used in a number of regression-based methods, such as <em>SLOPE</em> and <em>OSCAR</em>. It has the form</p>
+<p>The Sorted $\ell\subscript{1}$ penalty is used in a number of regression-based methods, such as <em>SLOPE</em> (Bogdan et. al. 2015) and <em>OSCAR</em> (Bondell and Reich 2008). It has the form</p>
 
 <script type="math/tex; mode=display">g\subscript{\boldsymbol{\lambda}}(\boldsymbol{\beta}) = \sum\subscript{i = 1}^m \lambda\subscript{i} \lvert \beta \rvert\subscript{(i)},</script>
 
@@ -263,6 +263,21 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
     </div>
 
     
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-94080131-1', 'auto');
+		ga('send', 'pageview', {
+		  'page': '/contours_of_statistical_penalty_functions_as_GIFs/',
+		  'title': 'Contours of statistical penalty functions as GIF images'
+		});
+	</script>
+	<!-- End Google Analytics -->
+
 
   </body>
 </html>

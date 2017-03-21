@@ -47,7 +47,7 @@ $$
 g\subscript{p}(\boldsymbol{\beta}) = \lVert\boldsymbol{\beta}\rVert\subscript{p}^{p} = \lvert\beta\subscript{1}\rvert^p + \lvert\beta\subscript{2}\rvert^p,
 $$
 
-with a varying parameter $p \in (0, \infty]$ (which actually isn't a proper [norm](https://en.wikipedia.org/wiki/Norm_(mathematics)) for $p < 1$). Many statistical methods, such as *LASSO* and *Ridge Regression*, employ $p$-norm penalties. To find all $\boldsymbol{\beta}$ on the boundary of the 2D unit $p$-norm ball, given $\beta_1$ (the first entry of $\boldsymbol{\beta}$), $\beta_2$ is easily obtained as
+with a varying parameter $p \in (0, \infty]$ (which actually isn't a proper [norm](https://en.wikipedia.org/wiki/Norm_(mathematics)) for $p < 1$). Many statistical methods, such as *LASSO* (Tibshirani 1996) and *Ridge Regression* (Hoerl and Kennard 1970), employ $p$-norm penalties. To find all $\boldsymbol{\beta}$ on the boundary of the 2D unit $p$-norm ball, given $\beta_1$ (the first entry of $\boldsymbol{\beta}$), $\beta_2$ is easily obtained as
 
 $$\beta_2 = \pm (1-|\beta_1|^p)^{1/p}, \quad \forall\beta_1\in[-1, 1].$$
 
@@ -81,7 +81,7 @@ $$
 g\subscript{\alpha}(\boldsymbol{\beta}) = \alpha \lVert \boldsymbol{\beta} \rVert\subscript{1} + (1 - \alpha) \sum\subscript{i = 2}^m \lvert \beta\subscript{i} - \beta\subscript{i-1} \rvert.
 $$
 
-It encourages neighboring coefficients $\beta\subscript{i}$ to have similar values, and is utilized by the *fused LASSO* and similar methods.
+It encourages neighboring coefficients $\beta\subscript{i}$ to have similar values, and is utilized by the *fused LASSO* (Tibshirani et. al. 2005) and similar methods.
 
 <img src="/images/penalty_function_contours/fused_penalty_balls.gif" alt="Loading..." title="fused penalty">
 
@@ -89,7 +89,7 @@ It encourages neighboring coefficients $\beta\subscript{i}$ to have similar valu
 
 ## Sorted L1 penalty in 2D
 
-The Sorted $\ell\subscript{1}$ penalty is used in a number of regression-based methods, such as *SLOPE* and *OSCAR*. It has the form
+The Sorted $\ell\subscript{1}$ penalty is used in a number of regression-based methods, such as *SLOPE* (Bogdan et. al. 2015) and *OSCAR* (Bondell and Reich 2008). It has the form
 
 $$g\subscript{\boldsymbol{\lambda}}(\boldsymbol{\beta}) = \sum\subscript{i = 1}^m \lambda\subscript{i} \lvert \beta \rvert\subscript{(i)},$$
 
