@@ -184,6 +184,16 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 
 <p><img src="/images/penalty_function_contours/l1-lp_balls.gif" alt="Loading..." title="l1 norm minus lp norm balls"></p>
 
+<h2 id="hyperbolic-tangent-penalty-in-2d">Hyperbolic tangent penalty in 2D</h2>
+
+<p>The hyperbolic tangent penalty, which is for example used in the method of variable selection via subtle uprooting (Su, 2015), has the form</p>
+
+<script type="math/tex; mode=display">g\subscript{a}(\boldsymbol{\beta}) = \sum\subscript{i = 1}^p \tanh(a \beta\subscript{i}^2), \quad a>0.</script>
+
+<p>Contrary to all of the previously shown penalty functions, for any fixed $a$ the hyperbolic tangent penalty has round contours (for small values of $g\subscript{a}$) as well as contours with sharp corners (for larger values of $g\subscript{a}$).</p>
+
+<p><img src="/images/penalty_function_contours/hyperbolic_tangent_penalty.gif" alt="Loading..." title="Contours of the hyperbolic tangent penalty"></p>
+
 <h1 id="code">Code</h1>
 
 <p>The R code uses the libraries <code class="highlighter-rouge">dplyr</code> for data manipulation, <code class="highlighter-rouge">ggplot2</code> for generation of figures, and <code class="highlighter-rouge">magick</code> to combine the individual images into a GIF.</p>
@@ -197,6 +207,7 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
   <li><a href="https://github.com/agisga/2D_norm_balls/blob/master/R/sorted_L1.R">Sorted L1 penalty in 2D</a></li>
   <li><a href="https://github.com/agisga/2D_norm_balls/blob/master/R/l1-l2.R">Difference of $p$-norms: $\ell\subscript{1} - \ell\subscript{2}$ in 2D</a></li>
   <li><a href="https://github.com/agisga/2D_norm_balls/blob/master/R/l1-lp.R">Difference of $p$-norms: $\ell\subscript{1} - \ell\subscript{p}$ in 2D</a></li>
+  <li><a href="https://github.com/agisga/2D_norm_balls/blob/master/R/hyperbolic_tangent_penalty.R">Hyperbolic tangent penalty</a></li>
 </ol>
 
 <p>Should I come across other interesting penalty functions that make sense in 2D, then I will add corresponding further visualizations to the same Github repository.</p>

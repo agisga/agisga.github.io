@@ -2,7 +2,7 @@
   <channel>
     <title>Alexej's blog</title>
     <description>Articles with tag "r"</description>
-    <link>http://www.alexejgossmann.com</link>
+    <link>http://localhost:4000</link>
     
       
         
@@ -121,6 +121,16 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 
 &lt;p&gt;&lt;img src=&quot;/images/penalty_function_contours/l1-lp_balls.gif&quot; alt=&quot;Loading...&quot; title=&quot;l1 norm minus lp norm balls&quot; /&gt;&lt;/p&gt;
 
+&lt;h2 id=&quot;hyperbolic-tangent-penalty-in-2d&quot;&gt;Hyperbolic tangent penalty in 2D&lt;/h2&gt;
+
+&lt;p&gt;The hyperbolic tangent penalty, which is for example used in the method of variable selection via subtle uprooting (Su, 2015), has the form&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;g\subscript{a}(\boldsymbol{\beta}) = \sum\subscript{i = 1}^p \tanh(a \beta\subscript{i}^2), \quad a&gt;0.&lt;/script&gt;
+
+&lt;p&gt;Contrary to all of the previously shown penalty functions, for any fixed $a$ the hyperbolic tangent penalty has round contours (for small values of $g\subscript{a}$) as well as contours with sharp corners (for larger values of $g\subscript{a}$).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/penalty_function_contours/hyperbolic_tangent_penalty.gif&quot; alt=&quot;Loading...&quot; title=&quot;Contours of the hyperbolic tangent penalty&quot; /&gt;&lt;/p&gt;
+
 &lt;h1 id=&quot;code&quot;&gt;Code&lt;/h1&gt;
 
 &lt;p&gt;The R code uses the libraries &lt;code class=&quot;highlighter-rouge&quot;&gt;dplyr&lt;/code&gt; for data manipulation, &lt;code class=&quot;highlighter-rouge&quot;&gt;ggplot2&lt;/code&gt; for generation of figures, and &lt;code class=&quot;highlighter-rouge&quot;&gt;magick&lt;/code&gt; to combine the individual images into a GIF.&lt;/p&gt;
@@ -134,6 +144,7 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
   &lt;li&gt;&lt;a href=&quot;https://github.com/agisga/2D_norm_balls/blob/master/R/sorted_L1.R&quot;&gt;Sorted L1 penalty in 2D&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/agisga/2D_norm_balls/blob/master/R/l1-l2.R&quot;&gt;Difference of $p$-norms: $\ell\subscript{1} - \ell\subscript{2}$ in 2D&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/agisga/2D_norm_balls/blob/master/R/l1-lp.R&quot;&gt;Difference of $p$-norms: $\ell\subscript{1} - \ell\subscript{p}$ in 2D&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/agisga/2D_norm_balls/blob/master/R/hyperbolic_tangent_penalty.R&quot;&gt;Hyperbolic tangent penalty&lt;/a&gt;&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;Should I come across other interesting penalty functions that make sense in 2D, then I will add corresponding further visualizations to the same Github repository.&lt;/p&gt;
@@ -143,8 +154,8 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 &lt;/font&gt;
 </description>
               <pubdate>2017-03-18T00:00:00-05:00</pubdate>
-              <link>http://www.alexejgossmann.com/contours_of_statistical_penalty_functions_as_GIFs/</link>
-              <guid ispermalink="true">http://www.alexejgossmann.com/contours_of_statistical_penalty_functions_as_GIFs/</guid>
+              <link>http://localhost:4000/contours_of_statistical_penalty_functions_as_GIFs/</link>
+              <guid ispermalink="true">http://localhost:4000/contours_of_statistical_penalty_functions_as_GIFs/</guid>
             </item>
           
         
@@ -197,8 +208,8 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 &lt;p&gt;Because I know from &lt;a href=&quot;http://www.phdcomics.com/comics/archive.php?comicid=1415&quot;&gt;a phdcomics cartoon&lt;/a&gt; that caffeine combined with a lack of sleep will turn me into a robot rather than into somebody who might eventually finish graduate school…&lt;/p&gt;
 </description>
               <pubdate>2017-02-15T02:35:00-06:00</pubdate>
-              <link>http://www.alexejgossmann.com/grad-school-and-coffee/</link>
-              <guid ispermalink="true">http://www.alexejgossmann.com/grad-school-and-coffee/</guid>
+              <link>http://localhost:4000/grad-school-and-coffee/</link>
+              <guid ispermalink="true">http://localhost:4000/grad-school-and-coffee/</guid>
             </item>
           
         
@@ -324,8 +335,8 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 &lt;p&gt;&lt;img src=&quot;../images/MRI_viz/lung_orthographic-1.png&quot; alt=&quot;plot of chunk lung_orthographic&quot; /&gt;&lt;/p&gt;
 </description>
               <pubdate>2017-01-27T10:30:15-06:00</pubdate>
-              <link>http://www.alexejgossmann.com/MRI_viz/</link>
-              <guid ispermalink="true">http://www.alexejgossmann.com/MRI_viz/</guid>
+              <link>http://localhost:4000/MRI_viz/</link>
+              <guid ispermalink="true">http://localhost:4000/MRI_viz/</guid>
             </item>
           
         
@@ -367,8 +378,8 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 &lt;/ul&gt;
 </description>
               <pubdate>2016-10-25T00:00:00-05:00</pubdate>
-              <link>http://www.alexejgossmann.com/clinton_trump_tweets/</link>
-              <guid ispermalink="true">http://www.alexejgossmann.com/clinton_trump_tweets/</guid>
+              <link>http://localhost:4000/clinton_trump_tweets/</link>
+              <guid ispermalink="true">http://localhost:4000/clinton_trump_tweets/</guid>
             </item>
           
         
@@ -752,8 +763,8 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 
 </description>
               <pubdate>2016-07-19T00:00:00-05:00</pubdate>
-              <link>http://www.alexejgossmann.com/dplyr_basics/</link>
-              <guid ispermalink="true">http://www.alexejgossmann.com/dplyr_basics/</guid>
+              <link>http://localhost:4000/dplyr_basics/</link>
+              <guid ispermalink="true">http://localhost:4000/dplyr_basics/</guid>
             </item>
           
         
@@ -826,8 +837,8 @@ We observe that for $p \leq 1$ one of the $\beta\subscript{i}$s tends to be equa
 &lt;p&gt;Of course, the method does not perform this good under all circumstances — the interested reader can learn more from the papers referred to in the &lt;a href=&quot;https://github.com/agisga/grpSLOPE/blob/master/README.md&quot;&gt;grpSLOPE README on github&lt;/a&gt; (unfortunately, the “real” journal publication is still under preparation, and another related journal publication is currently under review, so, not publicly available yet either).&lt;/p&gt;
 </description>
               <pubdate>2016-05-12T00:00:00-05:00</pubdate>
-              <link>http://www.alexejgossmann.com/grpSLOPE_on_CRAN/</link>
-              <guid ispermalink="true">http://www.alexejgossmann.com/grpSLOPE_on_CRAN/</guid>
+              <link>http://localhost:4000/grpSLOPE_on_CRAN/</link>
+              <guid ispermalink="true">http://localhost:4000/grpSLOPE_on_CRAN/</guid>
             </item>
           
         

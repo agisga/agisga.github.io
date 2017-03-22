@@ -129,6 +129,18 @@ and we obtain the following GIF.
 
 <img src="/images/penalty_function_contours/l1-lp_balls.gif" alt="Loading..." title="l1 norm minus lp norm balls">
 
+## Hyperbolic tangent penalty in 2D
+
+The hyperbolic tangent penalty, which is for example used in the method of variable selection via subtle uprooting (Su, 2015), has the form
+
+$$
+g\subscript{a}(\boldsymbol{\beta}) = \sum\subscript{i = 1}^p \tanh(a \beta\subscript{i}^2), \quad a>0.
+$$
+
+Contrary to all of the previously shown penalty functions, for any fixed $a$ the hyperbolic tangent penalty has round contours (for small values of $g\subscript{a}$) as well as contours with sharp corners (for larger values of $g\subscript{a}$).
+
+<img src="/images/penalty_function_contours/hyperbolic_tangent_penalty.gif" alt="Loading..." title="Contours of the hyperbolic tangent penalty">
+
 # Code
 
 The R code uses the libraries `dplyr` for data manipulation, `ggplot2` for generation of figures, and `magick` to combine the individual images into a GIF.
@@ -141,6 +153,7 @@ Here are the R scripts that can be used to reproduce the above GIFs:
 4. [Sorted L1 penalty in 2D](https://github.com/agisga/2D_norm_balls/blob/master/R/sorted_L1.R)
 5. [Difference of $p$-norms: $\ell\subscript{1} - \ell\subscript{2}$ in 2D](https://github.com/agisga/2D_norm_balls/blob/master/R/l1-l2.R)
 6. [Difference of $p$-norms: $\ell\subscript{1} - \ell\subscript{p}$ in 2D](https://github.com/agisga/2D_norm_balls/blob/master/R/l1-lp.R)
+7. [Hyperbolic tangent penalty](https://github.com/agisga/2D_norm_balls/blob/master/R/hyperbolic_tangent_penalty.R)
 
 Should I come across other interesting penalty functions that make sense in 2D, then I will add corresponding further visualizations to the same Github repository.
 
