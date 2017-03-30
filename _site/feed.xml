@@ -7,6 +7,826 @@
     
       
         <item>
+          <title>A comprehensive Linux command cheat sheet</title>
+          <description>&lt;p&gt;I think that it doesn’t matter what operating system you use — as long as you know your OS of choice well!:bowtie:
+This is a Linux command cheat sheet covering a wide range of topics. I cannot guarantee that the information is fully up-to-date or even correct. Use at own risk :stuck_out_tongue:. It is intended primarily as a reference for myself in the future. I have learned most of the material covered below a couple of years ago in &lt;a href=&quot;https://courses.edx.org/courses/LinuxFoundationX/LFS101x/2T2014/info&quot;&gt;the LinuxFoundationX’s Introduction to Linux course offered through edx.org&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;table-of-contents&quot;&gt;Table of contents&lt;/h2&gt;
+
+&lt;ul id=&quot;markdown-toc&quot;&gt;
+  &lt;li&gt;&lt;a href=&quot;#table-of-contents&quot; id=&quot;markdown-toc-table-of-contents&quot;&gt;Table of contents&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#the-most-basic-operations&quot; id=&quot;markdown-toc-the-most-basic-operations&quot;&gt;The most basic operations&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#create-files-directories-and-links&quot; id=&quot;markdown-toc-create-files-directories-and-links&quot;&gt;Create files, directories, and links&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#io-redirection&quot; id=&quot;markdown-toc-io-redirection&quot;&gt;I/O redirection&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#search&quot; id=&quot;markdown-toc-search&quot;&gt;Search&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#viewing-text-files&quot; id=&quot;markdown-toc-viewing-text-files&quot;&gt;Viewing text files&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#create-and-fill-text-files&quot; id=&quot;markdown-toc-create-and-fill-text-files&quot;&gt;Create and fill text files&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#more-text-utilities&quot; id=&quot;markdown-toc-more-text-utilities&quot;&gt;More text utilities&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#comparing-and-patching-files&quot; id=&quot;markdown-toc-comparing-and-patching-files&quot;&gt;Comparing and patching files&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#postscript-and-pdf-files&quot; id=&quot;markdown-toc-postscript-and-pdf-files&quot;&gt;Postscript and PDF files&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#viewing-linux-documentation&quot; id=&quot;markdown-toc-viewing-linux-documentation&quot;&gt;Viewing linux documentation&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#file-ownership-and-permissions&quot; id=&quot;markdown-toc-file-ownership-and-permissions&quot;&gt;File ownership and permissions&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#user-accounts-and-groups&quot; id=&quot;markdown-toc-user-accounts-and-groups&quot;&gt;User accounts and groups&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#environment-variables-and-aliases&quot; id=&quot;markdown-toc-environment-variables-and-aliases&quot;&gt;Environment variables and aliases&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#filesystems&quot; id=&quot;markdown-toc-filesystems&quot;&gt;Filesystems&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#processes&quot; id=&quot;markdown-toc-processes&quot;&gt;Processes&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#backing-up-data&quot; id=&quot;markdown-toc-backing-up-data&quot;&gt;Backing up data&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#compressed-data-and-archives&quot; id=&quot;markdown-toc-compressed-data-and-archives&quot;&gt;Compressed data and archives&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#network-operations&quot; id=&quot;markdown-toc-network-operations&quot;&gt;Network operations&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#transferring-files-over-the-network&quot; id=&quot;markdown-toc-transferring-files-over-the-network&quot;&gt;Transferring files over the network&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;#cool-links&quot; id=&quot;markdown-toc-cool-links&quot;&gt;Cool links&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;the-most-basic-operations&quot;&gt;The most basic operations&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Power off / reboot: &lt;code class=&quot;highlighter-rouge&quot;&gt;shutdown -h now&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;halt&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;poweroff&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;reboot&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;shutdown -r now&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Most basic navigation: &lt;code class=&quot;highlighter-rouge&quot;&gt;pwd&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;cd&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;cd ~&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;cd ..&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;cd -&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;ls&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;ls -a&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;ls -li&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;tree&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Most basic file management: &lt;code class=&quot;highlighter-rouge&quot;&gt;mv&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;cp&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;rm -f&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;rm -i&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;rm -r&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;rmdir &amp;lt;empty_dir&amp;gt;&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Date and time: &lt;code class=&quot;highlighter-rouge&quot;&gt;date&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;cal&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;cal -y&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;create-files-directories-and-links&quot;&gt;Create files, directories, and links&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Create files and directories:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;touch &amp;lt;file&amp;gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;touch -t 1703270159 &amp;lt;file&amp;gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mkdir &amp;lt;path/dir&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Create a hard / soft (symbolic) link: &lt;code class=&quot;highlighter-rouge&quot;&gt;ln&lt;/code&gt; / &lt;code class=&quot;highlighter-rouge&quot;&gt;ln -s&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Create a temporary file or directory:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TEMP&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;mktemp /tmp/tempfile.XXXXXXXX&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;TEMPDIR&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;$(&lt;/span&gt;mktemp -d /tmp/tempdir.XXXXXXXX&lt;span class=&quot;k&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;io-redirection&quot;&gt;I/O redirection&lt;/h2&gt;
+
+&lt;p&gt;Assume that &lt;code class=&quot;highlighter-rouge&quot;&gt;do_something&lt;/code&gt; reads from &lt;code class=&quot;highlighter-rouge&quot;&gt;stdin&lt;/code&gt; and writes to &lt;code class=&quot;highlighter-rouge&quot;&gt;stdout&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;stderr&lt;/code&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Get the input from a file using &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Send the output to a new file using &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+  &lt;li&gt;Append to an existing file using &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&amp;gt;&lt;/code&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Example:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;do_something &amp;lt; input-file
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;do_something &amp;gt; output-file
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;do_something 2&amp;gt; error-file
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;do_something &amp;gt; all-output-file 2&amp;gt;&amp;amp;1
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;do_something &amp;gt;&amp;amp; all-output-file
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Pipe the output of one command or program into another as its input:&lt;/p&gt;
+
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;command1 | command2 | command3
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;search&quot;&gt;Search&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Locate applications: &lt;code class=&quot;highlighter-rouge&quot;&gt;which&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;whereis&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Update database, and search for a character string in the database with &lt;code class=&quot;highlighter-rouge&quot;&gt;updatedb&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;locate&lt;/code&gt;. E.g., to list all files and directories with both “zip” and “bin” in their name:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;updatedb
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;locate zip | grep bin
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Locate files recursively from a given directory: &lt;code class=&quot;highlighter-rouge&quot;&gt;find&lt;/code&gt;
+    &lt;ul&gt;
+      &lt;li&gt;E.g., searching only for regular files named “test1” in &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr&lt;/code&gt;:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;find /usr -type f -name test1
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;E.g., search based on file size or time stamp:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;find / -size +10M
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;find / -ctime 3
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;find&lt;/code&gt; uses wildcards such as &lt;code class=&quot;highlighter-rouge&quot;&gt;?&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;[set]&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;[!set]&lt;/code&gt; (where “set” is a set of letters).&lt;/li&gt;
+      &lt;li&gt;Run commands on the found files with the &lt;code class=&quot;highlighter-rouge&quot;&gt;-exec&lt;/code&gt; option.&lt;/li&gt;
+      &lt;li&gt;E.g., to find and remove all files that end with &lt;code class=&quot;highlighter-rouge&quot;&gt;.swp&lt;/code&gt; in current directory:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;find -name &lt;span class=&quot;s2&quot;&gt;&quot;*.swp&quot;&lt;/span&gt; -exec rm &lt;span class=&quot;o&quot;&gt;{}&lt;/span&gt; ’;’
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Use &lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt; to search for a pattern in a file and print all matching lines. Examples:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;grep &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;pattern] &amp;lt;filename&amp;gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;grep -C 3 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;pattern] &amp;lt;filename&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;viewing-text-files&quot;&gt;Viewing text files&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cat&lt;/code&gt; for short files, no scroll-back.&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tac&lt;/code&gt; to look at a file backwards.&lt;/li&gt;
+  &lt;li&gt;Concatenate multiple files and display the output:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cat &amp;lt;file1&amp;gt; &amp;lt;file2&amp;gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;tac &amp;lt;file1&amp;gt; &amp;lt;file2&amp;gt; &amp;lt;file3&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;less&lt;/code&gt; for larger files; use &lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;?&lt;/code&gt; for forward and backward search.&lt;/li&gt;
+  &lt;li&gt;Print the first &lt;code class=&quot;highlighter-rouge&quot;&gt;n&lt;/code&gt; or the last &lt;code class=&quot;highlighter-rouge&quot;&gt;n&lt;/code&gt; lines of a file:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;head -n
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;tail -n
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Monitor new output in a growing file:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;tail -f
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;create-and-fill-text-files&quot;&gt;Create and fill text files&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Create a file and fill it with content:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;line one &amp;gt; myfile
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;line two &amp;gt;&amp;gt; myfile
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;line three &amp;gt;&amp;gt; myfile
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+    &lt;p&gt;or&lt;/p&gt;
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cat &lt;span class=&quot;sh&quot;&gt;&amp;lt;&amp;lt; EOF &amp;gt; myfile
+&amp;gt; line one
+&amp;gt; line two
+&amp;gt; line three
+&amp;gt; EOF
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;From existing text files:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cat file1 file2 &amp;gt; newfile
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cat file &amp;gt;&amp;gt; existingfile
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;more-text-utilities&quot;&gt;More text utilities&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Sort the lines in file alphabetically:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sort &amp;lt;filename&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Remove consecutive duplicate lines from file:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;uniq &amp;lt;filename&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Split a file into 1000-line segments:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;split &amp;lt;infile&amp;gt; &amp;lt;prefix&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Count lines, words, and characters in a file:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;wc &amp;lt;filename&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Print or join files by column (field): &lt;code class=&quot;highlighter-rouge&quot;&gt;awk&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;paste&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;join&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;cut&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Miscellaneous text utilities: &lt;code class=&quot;highlighter-rouge&quot;&gt;sed&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;tr&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;tee&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;strings&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;comparing-and-patching-files&quot;&gt;Comparing and patching files&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Show the file type of a file:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;file &amp;lt;filename&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Compare two files:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;diff &amp;lt;filename1&amp;gt; &amp;lt;filename2&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Compare two files to a common file:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;diff3 &amp;lt;filename1&amp;gt; &amp;lt;commonfile&amp;gt; &amp;lt;filename2&amp;gt; 
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Produce a patch file:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;diff -Nur oldfile newfile &amp;gt; patchfile
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Apply a patch file:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;patch -p0 &amp;lt; patchfile
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+    &lt;p&gt;or&lt;/p&gt;
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;patch file patchfile
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;postscript-and-pdf-files&quot;&gt;Postscript and PDF files&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Convert &lt;code class=&quot;highlighter-rouge&quot;&gt;bar.txt&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;foo.ps&lt;/code&gt;:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;enscript -p foo.ps bar.txt
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;View the details of a PDF file:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;pdfinfo &amp;lt;filename&amp;gt;.pdf
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Converting between PostScript and PDF:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ps2pdf &amp;lt;filename&amp;gt;.pdf
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;pdf2ps &amp;lt;filename&amp;gt;.ps
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;epstopdf &amp;lt;filename&amp;gt;.eps &amp;lt;filename&amp;gt;.pdf
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;pdftk&lt;/code&gt; is the Swiss Army knife of PDF tools. Usage examples:
+    &lt;ul&gt;
+      &lt;li&gt;Merge &lt;code class=&quot;highlighter-rouge&quot;&gt;1.pdf&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;2.pdf&lt;/code&gt;, and save as &lt;code class=&quot;highlighter-rouge&quot;&gt;12.pdf&lt;/code&gt;:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;pdftk 1.pdf 2.pdf cat output 12.pdf
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Save pages 1 and 2 of &lt;code class=&quot;highlighter-rouge&quot;&gt;1.pdf&lt;/code&gt; to &lt;code class=&quot;highlighter-rouge&quot;&gt;new.pdf&lt;/code&gt;:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;pdftk &lt;span class=&quot;nv&quot;&gt;A&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1.pdf cat A1-2 output new.pdf
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Rotate all pages of &lt;code class=&quot;highlighter-rouge&quot;&gt;in.pdf&lt;/code&gt; 90 deg. clockwise, and save as &lt;code class=&quot;highlighter-rouge&quot;&gt;out.pdf&lt;/code&gt;:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;pdftk &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;.pdf cat 1-endeast output out.pdf
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Encrypt a PDF file:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;pdftk public.pdf output private.pdf user_pw PROMPT
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;viewing-linux-documentation&quot;&gt;Viewing linux documentation&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;man&lt;/code&gt; to search, format, and displays the manual pages. Examples:
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;man -f&lt;/code&gt; displays a one-line manual pages descriptions:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;man -f &lt;span class=&quot;nb&quot;&gt;printf
+printf&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; - format and print data
+&lt;span class=&quot;nb&quot;&gt;printf&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; - formatted output conversion
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+        &lt;p&gt;or equivalently,&lt;/p&gt;
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;whatis &lt;span class=&quot;nb&quot;&gt;printf
+printf&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; - format and print data
+&lt;span class=&quot;nb&quot;&gt;printf&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; - formatted output conversion
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;The section number can be supplied:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;man 3 &lt;span class=&quot;nb&quot;&gt;printf&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;man -k&lt;/code&gt; shows all man pages that discuss a specified subject:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;man -k ruby
+erb &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    - Ruby Templating
+erb2.3 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; - Ruby Templating
+gem &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    - frontend to RubyGems, the Ruby package manager
+&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;...&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;GNU Info System:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;info
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;info &amp;lt;topic name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Every command has a &lt;code class=&quot;highlighter-rouge&quot;&gt;--help&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;-h&lt;/code&gt; option.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;file-ownership-and-permissions&quot;&gt;File ownership and permissions&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Change user ownership:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;chown &amp;lt;owner&amp;gt; &amp;lt;filename&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Change group ownership:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;chgrp &amp;lt;group&amp;gt; &amp;lt;filename&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Change the permissions on a file:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;chmod &amp;lt;permissions&amp;gt; &amp;lt;file&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;user-accounts-and-groups&quot;&gt;User accounts and groups&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Identify currently logged-on users:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;who
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;who -a
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;whoami
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Add / Remove a user: &lt;code class=&quot;highlighter-rouge&quot;&gt;useradd&lt;/code&gt; / &lt;code class=&quot;highlighter-rouge&quot;&gt;userdel&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Set the initial password for a new user:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;passwd &amp;lt;username&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Display information about a user:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;id &amp;lt;user&amp;gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;groups &amp;lt;user&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Add / Remove a group: &lt;code class=&quot;highlighter-rouge&quot;&gt;groupadd&lt;/code&gt; / &lt;code class=&quot;highlighter-rouge&quot;&gt;groupdel&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Add a user to a group:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;groupmod -G &amp;lt;group&amp;gt; &amp;lt;user&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Grant root privileges to user temporarily:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;su
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo &amp;lt;&lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt;&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Show last time each user has logged into the system:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;last
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;environment-variables-and-aliases&quot;&gt;Environment variables and aliases&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;View the values of currently set environment variables:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;env
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Show the value of a specific variable:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$VARIABLE&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Export a new variable value:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;VARIABLE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;value
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;E.g., to prefix a private bin directory to your path:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$HOME&lt;/span&gt;/bin:&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;List currently defined aliases:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;alias&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Create an alias, e.g.:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;alias &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;vi&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'vim'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;filesystems&quot;&gt;Filesystems&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Attach a filesystem:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mount &amp;lt;device node&amp;gt; &amp;lt;mount point&amp;gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mount /dev/sda5 /home
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Display information about mounted filesystems:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;df -Th
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mount
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;fdisk -l
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;NFS (Network Filesystem)
+    &lt;ol&gt;
+      &lt;li&gt;On the Server:
+        &lt;ul&gt;
+          &lt;li&gt;Start the NFS:
+            &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo service nfs start
+&lt;/code&gt;&lt;/pre&gt;
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;Modify &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/exports&lt;/code&gt;. Example entry:
+            &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/projects &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;.example.com&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;rw&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;After modifying the &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/exports&lt;/code&gt; file run:
+            &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;exportfs -av
+&lt;/code&gt;&lt;/pre&gt;
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+      &lt;li&gt;On the client:
+        &lt;ul&gt;
+          &lt;li&gt;Mount the remote filesystem:
+            &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;mount servername:/projects /mnt/nfs/projects
+&lt;/code&gt;&lt;/pre&gt;
+            &lt;/div&gt;
+          &lt;/li&gt;
+          &lt;li&gt;Or modify &lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/fstab&lt;/code&gt;. Example entry:
+            &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;servername:/projects /mnt/nfs/projects nfs default 0 0&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+            &lt;/div&gt;
+          &lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ol&gt;
+  &lt;/li&gt;
+  &lt;li&gt;The &lt;code class=&quot;highlighter-rouge&quot;&gt;proc&lt;/code&gt; Filesystem
+    &lt;ul&gt;
+      &lt;li&gt;Some important files in &lt;code class=&quot;highlighter-rouge&quot;&gt;/proc&lt;/code&gt; are: &lt;code class=&quot;highlighter-rouge&quot;&gt;/proc/cpuinfo&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;/proc/interrupts&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;/proc/meminfo&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;/proc/mounts&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;/proc/partitions&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;/proc/version&lt;/code&gt;.&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/proc&lt;/code&gt; also has subdirectories, such as &lt;code class=&quot;highlighter-rouge&quot;&gt;/proc/&amp;lt;Process-ID-#&amp;gt;&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;/proc/sys&lt;/code&gt;.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;processes&quot;&gt;Processes&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;All processes / all processes and all threads / all processes for all users:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ps -ef
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ps -eLf
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ps aux
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Process tree:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;pstree
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Proc list with updates in real time:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;top
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;htop
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;(press &lt;code class=&quot;highlighter-rouge&quot;&gt;A&lt;/code&gt; to sort when using &lt;code class=&quot;highlighter-rouge&quot;&gt;top&lt;/code&gt;)&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Terminate a process:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;kill&lt;/span&gt; -SIGKILL &amp;lt;pid&amp;gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;kill&lt;/span&gt; -9 &amp;lt;pid&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;View the background processes in the current terminal:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;jobs&lt;/span&gt; -l
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Suspend a foreground process: &lt;code class=&quot;highlighter-rouge&quot;&gt;CTRL-z&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Cancel a foreground process: &lt;code class=&quot;highlighter-rouge&quot;&gt;CTRL-c&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;Move process to the background / foreground:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;bg&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;fg&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Schedule future non-interactive proc, e.g.:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;at 11 am may 20
+&lt;span class=&quot;gp&quot;&gt;at&amp;gt; &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;Hello! &amp;gt; hello.txt
+&lt;span class=&quot;gp&quot;&gt;at&amp;gt; &lt;/span&gt;&amp;lt;CTRL-D&amp;gt;
+&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;at now + 3 minutes
+&lt;span class=&quot;gp&quot;&gt;at&amp;gt; &lt;/span&gt;mkdir dirfrom3minutesago
+&lt;span class=&quot;gp&quot;&gt;at&amp;gt; &lt;/span&gt;&amp;lt;CTRL-D&amp;gt;
+&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Schedule periodic background work:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;crontab -e
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Suspend execution (suffix = &lt;code class=&quot;highlighter-rouge&quot;&gt;s&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;m&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;h&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;d&lt;/code&gt;):&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sleep &amp;lt;number&amp;gt;&amp;lt;suffix&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h2 id=&quot;backing-up-data&quot;&gt;Backing up data&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Synchronize directory trees with &lt;code class=&quot;highlighter-rouge&quot;&gt;rsync&lt;/code&gt;, which copies only the differences between directories. Examples:&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rsync -avP --delete dir1/ dir2
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;rsync -avPe ssh --delete dir/ user@host:/path/to/dir
+&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Test the &lt;code class=&quot;highlighter-rouge&quot;&gt;rsync&lt;/code&gt; command using the &lt;code class=&quot;highlighter-rouge&quot;&gt;--dry-run&lt;/code&gt; option.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;compressed-data-and-archives&quot;&gt;Compressed data and archives&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Compressing data using &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;bzip2&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;xz&lt;/code&gt;
+    &lt;ul&gt;
+      &lt;li&gt;There is an efficiency vs. speed trade-off. Ranked by space-efficiency:
+        &lt;blockquote&gt;
+          &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xz&lt;/code&gt; &amp;gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;bzip2&lt;/code&gt; &amp;gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip&lt;/code&gt;.&lt;/p&gt;
+        &lt;/blockquote&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Replace each file in the current directory with its compressed version:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;gzip &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;bzip2 &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;xz &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Compress the file &lt;code class=&quot;highlighter-rouge&quot;&gt;foo&lt;/code&gt; into &lt;code class=&quot;highlighter-rouge&quot;&gt;foo.xz&lt;/code&gt; using the default compression level (-6), and remove &lt;code class=&quot;highlighter-rouge&quot;&gt;foo&lt;/code&gt; if compression succeeds:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;xz foo
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;De-compress:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;gunzip foo
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;bunzip2 &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;.bz2
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Decompress &lt;code class=&quot;highlighter-rouge&quot;&gt;bar.xz&lt;/code&gt; into &lt;code class=&quot;highlighter-rouge&quot;&gt;bar&lt;/code&gt; and don’t remove &lt;code class=&quot;highlighter-rouge&quot;&gt;bar.xz&lt;/code&gt; even if decompression is successful:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;xz -dk bar.xz
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Handling Files Using zip
+    &lt;ul&gt;
+      &lt;li&gt;E.g., archive the login directory (&lt;code class=&quot;highlighter-rouge&quot;&gt;~&lt;/code&gt;) and all files and directories under it as &lt;code class=&quot;highlighter-rouge&quot;&gt;backup.zip&lt;/code&gt;:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;zip -r backup.zip ~
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Extracts all files in the file &lt;code class=&quot;highlighter-rouge&quot;&gt;backup.zip&lt;/code&gt;:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;unzip backup.zip
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Archiving and Compressing Data Using &lt;code class=&quot;highlighter-rouge&quot;&gt;tar&lt;/code&gt;
+    &lt;ul&gt;
+      &lt;li&gt;Extract all the files in &lt;code class=&quot;highlighter-rouge&quot;&gt;mydir.tar&lt;/code&gt; into the &lt;code class=&quot;highlighter-rouge&quot;&gt;mydir&lt;/code&gt; directory:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;tar xvf mydir.tar
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Create the archive and compress with &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip&lt;/code&gt;/&lt;code class=&quot;highlighter-rouge&quot;&gt;bz2&lt;/code&gt;/&lt;code class=&quot;highlighter-rouge&quot;&gt;xz&lt;/code&gt;:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;tar zcvf mydir.tar.gz mydir
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;tar jcvf mydir.tar.bz2 mydir
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;tar Jcvf mydir.tar.xz mydir
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Extract all the files in &lt;code class=&quot;highlighter-rouge&quot;&gt;mydir.tar.*&lt;/code&gt; into the &lt;code class=&quot;highlighter-rouge&quot;&gt;mydir&lt;/code&gt; directory:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;tar xvf mydir.tar.gz
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Working with compressed data
+    &lt;ul&gt;
+      &lt;li&gt;For &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip&lt;/code&gt;‘ed files: &lt;code class=&quot;highlighter-rouge&quot;&gt;zcat&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;zless&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;zgrep&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;zdiff&lt;/code&gt;.&lt;/li&gt;
+      &lt;li&gt;For &lt;code class=&quot;highlighter-rouge&quot;&gt;bzip2&lt;/code&gt;‘ed files: &lt;code class=&quot;highlighter-rouge&quot;&gt;bzcat&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;bzless&lt;/code&gt;.&lt;/li&gt;
+      &lt;li&gt;For &lt;code class=&quot;highlighter-rouge&quot;&gt;xz&lt;/code&gt;‘ed files: &lt;code class=&quot;highlighter-rouge&quot;&gt;xzcat&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;xzless&lt;/code&gt;.&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;network-operations&quot;&gt;Network operations&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Using Domain Name System (DNS) and Name Resolution Tools
+    &lt;ul&gt;
+      &lt;li&gt;View IP and domain information about your system:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;hostname
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cat /etc/hosts
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;cat /etc/resolv.conf
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;View IP and domain information about linux.com:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;host linux.com
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;nslookup linux.com
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;dig linux.com
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;dig +trace linux.com
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;dig @8.8.8.8 linux.com
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+        &lt;p&gt;(&lt;code class=&quot;highlighter-rouge&quot;&gt;8.8.8.8&lt;/code&gt; is Google’s recursive DNS server)&lt;/p&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Network Interfaces and Configuration
+    &lt;ul&gt;
+      &lt;li&gt;List all currently active network interfaces:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ifconfig
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Show IP address of active network device:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ip addr show
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Show routing info of active network device:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ip route show
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Check the status of the remote host:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ping &amp;lt;hostname&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Routing Tables / Routes
+    &lt;ul&gt;
+      &lt;li&gt;Show current IP routing table:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;route -n
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Add/delete static route:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;route add -net address
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;route del -net address
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Print the route taken by the packet to reach the network host at &lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;lt;domain&amp;gt;&lt;/code&gt;:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;traceroute &amp;lt;domain&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Display all active connections and routing tables:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;netstat -r
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Dump network traffic for analysis:
+    &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;tcpdump
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;sudo tcpdump host google.com
+&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Interaction with webpages
+    &lt;ul&gt;
+      &lt;li&gt;Download a webpage:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;wget &amp;lt;url&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Read or save the source code and other info of a URL:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;curl &amp;lt;url&amp;gt;
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;curl -o saved.html http://www.mysite.com
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;transferring-files-over-the-network&quot;&gt;Transferring files over the network&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;FTP (File Transfer Protocol)
+    &lt;ul&gt;
+      &lt;li&gt;An example of connecting to the server and downloading a file:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ftp -p some.server.com
+&lt;span class=&quot;gp&quot;&gt;ftp&amp;gt; &lt;/span&gt;ls
+&lt;span class=&quot;gp&quot;&gt;ftp&amp;gt; &lt;/span&gt;get somefile.txt
+&lt;span class=&quot;gp&quot;&gt;ftp&amp;gt; &lt;/span&gt;quit
+&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;SSH (Secure Shell)
+    &lt;ul&gt;
+      &lt;li&gt;Log into &lt;code class=&quot;highlighter-rouge&quot;&gt;remotesystem&lt;/code&gt; with &lt;code class=&quot;highlighter-rouge&quot;&gt;username&lt;/code&gt;:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ssh &amp;lt;username@remotesystem&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Run &lt;code class=&quot;highlighter-rouge&quot;&gt;my_command&lt;/code&gt; on a remote system via SSH:
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;ssh &amp;lt;user@remotesystem&amp;gt; my_command
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+      &lt;li&gt;Copy a local file to a remote system (similarly vice versa):
+        &lt;div class=&quot;language-shell highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;scp &amp;lt;localfile&amp;gt; &amp;lt;user@remotesystem&amp;gt;:/home/user/
+&lt;span class=&quot;gp&quot;&gt;$ &lt;/span&gt;scp &amp;lt;user@remotesystem&amp;gt;:/home/user/somefile /local/dir/
+&lt;/code&gt;&lt;/pre&gt;
+        &lt;/div&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;cool-links&quot;&gt;Cool links&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://explainshell.com&quot;&gt;http://explainshell.com&lt;/a&gt; — see help text that matches each argument of a given command line. &lt;em&gt;Extremely&lt;/em&gt; useful!&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://jvns.ca/zines/&quot;&gt;http://jvns.ca/zines/&lt;/a&gt; — &lt;em&gt;informative&lt;/em&gt; fanzines about some Linux tools.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+          <pubDate>2017-03-25T11:30:15-05:00</pubDate>
+          <link>http://www.alexejgossmann.com/linux-cheat-sheet/</link>
+          <guid isPermaLink="true">http://www.alexejgossmann.com/linux-cheat-sheet/</guid>
+        </item>
+      
+    
+      
+        <item>
           <title>Contours of statistical penalty functions as GIF images</title>
           <description>&lt;p&gt;Many statistical modeling problems reduce to a minimization problem of the general form:&lt;/p&gt;
 

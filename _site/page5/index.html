@@ -66,6 +66,19 @@
   
     <article class="post">
 
+      <h1><a href="/MixedModels_from_formula/">MixedModels Formula Interface and Categorical Variables</a></h1>
+
+      <div class="entry">
+        <p>I made some more progress on my <a href="https://github.com/agisga/MixedModels">Google Summer of Code project MixedModels</a>. The linear mixed models fitting method is now capable of handling non-numeric (i.e., categorical) predictor variables, as well as interaction effects. Moreover, I gave the method a user friendly R-formula-like interface. I will present these new capabilities of the Ruby gem with an example. Then I will briefly describe their implementation.</p>
+
+
+      </div>
+
+      <a href="/MixedModels_from_formula/" class="read-more">Read More</a>
+    </article>
+  
+    <article class="post">
+
       <h1><a href="/LMM-model-specification/">Model specification for linear mixed model</a></h1>
 
       <div class="entry">
@@ -104,19 +117,6 @@ The Ruby gem is now capable of fitting linear mixed models. In this short blog p
       <a href="/Dissect_lmer_part3/" class="read-more">Read More</a>
     </article>
   
-    <article class="post">
-
-      <h1><a href="/Dissect_lmer_part2/">Dissecting lme4's lmer function. Part 2.</a></h1>
-
-      <div class="entry">
-        <p><a href="http://agisga.github.io/Dissect_lmer_part1/">Last time</a> I started to analyze the function <code class="highlighter-rouge">lmer</code> that is used to fit linear mixed models in the R package <code class="highlighter-rouge">lme4</code>. I have delineated the general steps taken by <code class="highlighter-rouge">lmer</code>, and looked at the employed formula module in more detail. The formula module evaluates the provided R model formula to model matrices, vectors and parameters. The next step is to use these to define the objective function that needs to be minimized, which is the profiled deviance or the profiled REML criterion in this case. The objective function is returned by the function <code class="highlighter-rouge">mkLmerDevfun</code> which is dissected in what follows.</p>
-
-
-      </div>
-
-      <a href="/Dissect_lmer_part2/" class="read-more">Read More</a>
-    </article>
-  
 </div>
 
 <!-- Pagination links -->
@@ -131,6 +131,20 @@ The Ruby gem is now capable of fitting linear mixed models. In this short blog p
 </div>
 
 <!--<div class="posts">
+  
+    <article class="post">
+
+      <h1><a href="/linux-cheat-sheet/">A comprehensive Linux command cheat sheet</a></h1>
+
+      <div class="entry">
+        <p>I think that it doesn’t matter what operating system you use — as long as you know your OS of choice well!:bowtie:
+This is a Linux command cheat sheet covering a wide range of topics. I cannot guarantee that the information is fully up-to-date or even correct. Use at own risk :stuck_out_tongue:. It is intended primarily as a reference for myself in the future. I have learned most of the material covered below a couple of years ago in <a href="https://courses.edx.org/courses/LinuxFoundationX/LFS101x/2T2014/info">the LinuxFoundationX’s Introduction to Linux course offered through edx.org</a>.</p>
+
+
+      </div>
+
+      <a href="/linux-cheat-sheet/" class="read-more">Read More</a>
+    </article>
   
     <article class="post">
 

@@ -1,0 +1,1079 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>A comprehensive Linux command cheat sheet – Alexej Gossmann – New Orleans 😎</title>
+
+        <meta charset="utf-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    
+    <meta name="description" content="I think that it doesn’t matter what operating system you use — as long as you know your OS of choice well!:bowtie:
+This is a Linux command cheat sheet covering a wide range of topics. I cannot guarantee that the information is fully up-to-date or even correct. Use at own risk :stuck_out_tongue:. It is intended primarily as a reference for myself in the future. I have learned most of the material covered below a couple of years ago in the LinuxFoundationX’s Introduction to Linux course offered through edx.org.
+
+">
+    <meta property="og:description" content="I think that it doesn’t matter what operating system you use — as long as you know your OS of choice well!:bowtie:
+This is a Linux command cheat sheet covering a wide range of topics. I cannot guarantee that the information is fully up-to-date or even correct. Use at own risk :stuck_out_tongue:. It is intended primarily as a reference for myself in the future. I have learned most of the material covered below a couple of years ago in the LinuxFoundationX’s Introduction to Linux course offered through edx.org.
+
+">
+    
+    <meta name="author" content="Alexej Gossmann">
+
+    
+    <meta property="og:title" content="A comprehensive Linux command cheat sheet">
+    <meta property="twitter:title" content="A comprehensive Linux command cheat sheet">
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - New Orleans 😎" href="/feed.xml">
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+ 
+    <!-- MathJax interation-->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}});
+      MathJax.Hub.Config({TeX: {Macros:{subscript:['_{#1}',1],superscript:['^{#1}',1]}}});
+    </script> 
+    <!-- Turn on equation numbering -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+    </script>
+    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
+ </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <header class="masthead clearfix">
+        <a href="/" class="site-avatar"><img src="https://avatars0.githubusercontent.com/u/11449372?v=3&amp;s=460"></a>
+
+        <div class="site-info">
+          <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
+          <p class="site-description">New Orleans 😎</p>
+        </div>
+
+        <nav>
+          <a href="/about" class="blue">About</a>
+          <a href="/" class="yellow">Blog</a>
+          <a href="/talks" class="green">Presentations</a>
+          <a href="/publications" class="magenta">Publications</a>
+          <a href="/software" class="cyan">Software</a>
+        </nav>
+      </header>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>A comprehensive Linux command cheat sheet</h1>
+
+  <div class="entry">
+    <p>I think that it doesn’t matter what operating system you use — as long as you know your OS of choice well!<img class="emoji" title=":bowtie:" alt=":bowtie:" src="https://assets-cdn.github.com/images/icons/emoji/bowtie.png" height="20" width="20" align="absmiddle">
+This is a Linux command cheat sheet covering a wide range of topics. I cannot guarantee that the information is fully up-to-date or even correct. Use at own risk <img class="emoji" title=":stuck_out_tongue:" alt=":stuck_out_tongue:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f61b.png" height="20" width="20" align="absmiddle">. It is intended primarily as a reference for myself in the future. I have learned most of the material covered below a couple of years ago in <a href="https://courses.edx.org/courses/LinuxFoundationX/LFS101x/2T2014/info">the LinuxFoundationX’s Introduction to Linux course offered through edx.org</a>.</p>
+
+<h2 id="table-of-contents">Table of contents</h2>
+
+<ul id="markdown-toc">
+  <li><a href="#table-of-contents" id="markdown-toc-table-of-contents">Table of contents</a></li>
+  <li><a href="#the-most-basic-operations" id="markdown-toc-the-most-basic-operations">The most basic operations</a></li>
+  <li><a href="#create-files-directories-and-links" id="markdown-toc-create-files-directories-and-links">Create files, directories, and links</a></li>
+  <li><a href="#io-redirection" id="markdown-toc-io-redirection">I/O redirection</a></li>
+  <li><a href="#search" id="markdown-toc-search">Search</a></li>
+  <li><a href="#viewing-text-files" id="markdown-toc-viewing-text-files">Viewing text files</a></li>
+  <li><a href="#create-and-fill-text-files" id="markdown-toc-create-and-fill-text-files">Create and fill text files</a></li>
+  <li><a href="#more-text-utilities" id="markdown-toc-more-text-utilities">More text utilities</a></li>
+  <li><a href="#comparing-and-patching-files" id="markdown-toc-comparing-and-patching-files">Comparing and patching files</a></li>
+  <li><a href="#postscript-and-pdf-files" id="markdown-toc-postscript-and-pdf-files">Postscript and PDF files</a></li>
+  <li><a href="#viewing-linux-documentation" id="markdown-toc-viewing-linux-documentation">Viewing linux documentation</a></li>
+  <li><a href="#file-ownership-and-permissions" id="markdown-toc-file-ownership-and-permissions">File ownership and permissions</a></li>
+  <li><a href="#user-accounts-and-groups" id="markdown-toc-user-accounts-and-groups">User accounts and groups</a></li>
+  <li><a href="#environment-variables-and-aliases" id="markdown-toc-environment-variables-and-aliases">Environment variables and aliases</a></li>
+  <li><a href="#filesystems" id="markdown-toc-filesystems">Filesystems</a></li>
+  <li><a href="#processes" id="markdown-toc-processes">Processes</a></li>
+  <li><a href="#backing-up-data" id="markdown-toc-backing-up-data">Backing up data</a></li>
+  <li><a href="#compressed-data-and-archives" id="markdown-toc-compressed-data-and-archives">Compressed data and archives</a></li>
+  <li><a href="#network-operations" id="markdown-toc-network-operations">Network operations</a></li>
+  <li><a href="#transferring-files-over-the-network" id="markdown-toc-transferring-files-over-the-network">Transferring files over the network</a></li>
+  <li><a href="#cool-links" id="markdown-toc-cool-links">Cool links</a></li>
+</ul>
+
+<h2 id="the-most-basic-operations">The most basic operations</h2>
+
+<ul>
+  <li>Power off / reboot: <code class="highlighter-rouge">shutdown -h now</code>, <code class="highlighter-rouge">halt</code>, <code class="highlighter-rouge">poweroff</code>, <code class="highlighter-rouge">reboot</code>, <code class="highlighter-rouge">shutdown -r now</code>
+</li>
+  <li>Most basic navigation: <code class="highlighter-rouge">pwd</code>, <code class="highlighter-rouge">cd</code>, <code class="highlighter-rouge">cd ~</code>, <code class="highlighter-rouge">cd ..</code>, <code class="highlighter-rouge">cd -</code>, <code class="highlighter-rouge">ls</code>, <code class="highlighter-rouge">ls -a</code>, <code class="highlighter-rouge">ls -li</code>, <code class="highlighter-rouge">tree</code>
+</li>
+  <li>Most basic file management: <code class="highlighter-rouge">mv</code>, <code class="highlighter-rouge">cp</code>, <code class="highlighter-rouge">rm -f</code>, <code class="highlighter-rouge">rm -i</code>, <code class="highlighter-rouge">rm -r</code>, <code class="highlighter-rouge">rmdir &lt;empty_dir&gt;</code>
+</li>
+  <li>Date and time: <code class="highlighter-rouge">date</code>, <code class="highlighter-rouge">cal</code>, <code class="highlighter-rouge">cal -y</code>
+</li>
+</ul>
+
+<h2 id="create-files-directories-and-links">Create files, directories, and links</h2>
+
+<ul>
+  <li>Create files and directories:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>touch &lt;file&gt;
+<span class="gp">$ </span>touch -t 1703270159 &lt;file&gt;
+<span class="gp">$ </span>mkdir &lt;path/dir&gt;
+</code></pre>
+</div>
+
+<ul>
+  <li>Create a hard / soft (symbolic) link: <code class="highlighter-rouge">ln</code> / <code class="highlighter-rouge">ln -s</code>
+</li>
+  <li>Create a temporary file or directory:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span><span class="nv">TEMP</span><span class="o">=</span><span class="k">$(</span>mktemp /tmp/tempfile.XXXXXXXX<span class="k">)</span>
+<span class="gp">$ </span><span class="nv">TEMPDIR</span><span class="o">=</span><span class="k">$(</span>mktemp -d /tmp/tempdir.XXXXXXXX<span class="k">)</span>
+</code></pre>
+</div>
+
+<h2 id="io-redirection">I/O redirection</h2>
+
+<p>Assume that <code class="highlighter-rouge">do_something</code> reads from <code class="highlighter-rouge">stdin</code> and writes to <code class="highlighter-rouge">stdout</code> and <code class="highlighter-rouge">stderr</code>.</p>
+
+<ul>
+  <li>Get the input from a file using <code class="highlighter-rouge">&lt;</code>.</li>
+  <li>Send the output to a new file using <code class="highlighter-rouge">&gt;</code>.</li>
+  <li>Append to an existing file using <code class="highlighter-rouge">&gt;&gt;</code>.</li>
+</ul>
+
+<p>Example:</p>
+
+<div class="language-bash highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>do_something &lt; input-file
+<span class="gp">$ </span>do_something &gt; output-file
+<span class="gp">$ </span>do_something 2&gt; error-file
+<span class="gp">$ </span>do_something &gt; all-output-file 2&gt;&amp;1
+<span class="gp">$ </span>do_something &gt;&amp; all-output-file
+</code></pre>
+</div>
+
+<p>Pipe the output of one command or program into another as its input:</p>
+
+<div class="language-bash highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>command1 | command2 | command3
+</code></pre>
+</div>
+
+<h2 id="search">Search</h2>
+
+<ul>
+  <li>Locate applications: <code class="highlighter-rouge">which</code>, <code class="highlighter-rouge">whereis</code>
+</li>
+  <li>Update database, and search for a character string in the database with <code class="highlighter-rouge">updatedb</code> and <code class="highlighter-rouge">locate</code>. E.g., to list all files and directories with both “zip” and “bin” in their name:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>updatedb
+<span class="gp">$ </span>locate zip | grep bin
+</code></pre>
+    </div>
+  </li>
+  <li>Locate files recursively from a given directory: <code class="highlighter-rouge">find</code>
+    <ul>
+      <li>E.g., searching only for regular files named “test1” in <code class="highlighter-rouge">/usr</code>:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>find /usr -type f -name test1
+</code></pre>
+        </div>
+      </li>
+      <li>E.g., search based on file size or time stamp:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>find / -size +10M
+<span class="gp">$ </span>find / -ctime 3
+</code></pre>
+        </div>
+      </li>
+      <li>
+<code class="highlighter-rouge">find</code> uses wildcards such as <code class="highlighter-rouge">?</code>, <code class="highlighter-rouge">*</code>, <code class="highlighter-rouge">[set]</code>, <code class="highlighter-rouge">[!set]</code> (where “set” is a set of letters).</li>
+      <li>Run commands on the found files with the <code class="highlighter-rouge">-exec</code> option.</li>
+      <li>E.g., to find and remove all files that end with <code class="highlighter-rouge">.swp</code> in current directory:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>find -name <span class="s2">"*.swp"</span> -exec rm <span class="o">{}</span> ’;’
+</code></pre>
+        </div>
+      </li>
+    </ul>
+  </li>
+  <li>Use <code class="highlighter-rouge">grep</code> to search for a pattern in a file and print all matching lines. Examples:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>grep <span class="o">[</span>pattern] &lt;filename&gt;
+<span class="gp">$ </span>grep -C 3 <span class="o">[</span>pattern] &lt;filename&gt;
+</code></pre>
+    </div>
+  </li>
+</ul>
+
+<h2 id="viewing-text-files">Viewing text files</h2>
+
+<ul>
+  <li>
+<code class="highlighter-rouge">cat</code> for short files, no scroll-back.</li>
+  <li>
+<code class="highlighter-rouge">tac</code> to look at a file backwards.</li>
+  <li>Concatenate multiple files and display the output:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>cat &lt;file1&gt; &lt;file2&gt;
+<span class="gp">$ </span>tac &lt;file1&gt; &lt;file2&gt; &lt;file3&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>
+<code class="highlighter-rouge">less</code> for larger files; use <code class="highlighter-rouge">/</code> and <code class="highlighter-rouge">?</code> for forward and backward search.</li>
+  <li>Print the first <code class="highlighter-rouge">n</code> or the last <code class="highlighter-rouge">n</code> lines of a file:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>head -n
+<span class="gp">$ </span>tail -n
+</code></pre>
+    </div>
+  </li>
+  <li>Monitor new output in a growing file:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>tail -f
+</code></pre>
+    </div>
+  </li>
+</ul>
+
+<h2 id="create-and-fill-text-files">Create and fill text files</h2>
+
+<ul>
+  <li>Create a file and fill it with content:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span><span class="nb">echo </span>line one &gt; myfile
+<span class="gp">$ </span><span class="nb">echo </span>line two &gt;&gt; myfile
+<span class="gp">$ </span><span class="nb">echo </span>line three &gt;&gt; myfile
+</code></pre>
+    </div>
+    <p>or</p>
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>cat <span class="sh">&lt;&lt; EOF &gt; myfile
+&gt; line one
+&gt; line two
+&gt; line three
+&gt; EOF
+</span></code></pre>
+    </div>
+  </li>
+  <li>From existing text files:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>cat file1 file2 &gt; newfile
+<span class="gp">$ </span>cat file &gt;&gt; existingfile
+</code></pre>
+    </div>
+  </li>
+</ul>
+
+<h2 id="more-text-utilities">More text utilities</h2>
+
+<ul>
+  <li>Sort the lines in file alphabetically:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>sort &lt;filename&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>Remove consecutive duplicate lines from file:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>uniq &lt;filename&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>Split a file into 1000-line segments:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>split &lt;infile&gt; &lt;prefix&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>Count lines, words, and characters in a file:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>wc &lt;filename&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>Print or join files by column (field): <code class="highlighter-rouge">awk</code>, <code class="highlighter-rouge">paste</code>, <code class="highlighter-rouge">join</code>, <code class="highlighter-rouge">cut</code>
+</li>
+  <li>Miscellaneous text utilities: <code class="highlighter-rouge">sed</code>, <code class="highlighter-rouge">tr</code>, <code class="highlighter-rouge">tee</code>, <code class="highlighter-rouge">strings</code>
+</li>
+</ul>
+
+<h2 id="comparing-and-patching-files">Comparing and patching files</h2>
+
+<ul>
+  <li>Show the file type of a file:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>file &lt;filename&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>Compare two files:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>diff &lt;filename1&gt; &lt;filename2&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>Compare two files to a common file:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>diff3 &lt;filename1&gt; &lt;commonfile&gt; &lt;filename2&gt; 
+</code></pre>
+    </div>
+  </li>
+  <li>Produce a patch file:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>diff -Nur oldfile newfile &gt; patchfile
+</code></pre>
+    </div>
+  </li>
+  <li>Apply a patch file:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>patch -p0 &lt; patchfile
+</code></pre>
+    </div>
+    <p>or</p>
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>patch file patchfile
+</code></pre>
+    </div>
+  </li>
+</ul>
+
+<h2 id="postscript-and-pdf-files">Postscript and PDF files</h2>
+
+<ul>
+  <li>Convert <code class="highlighter-rouge">bar.txt</code> to <code class="highlighter-rouge">foo.ps</code>:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>enscript -p foo.ps bar.txt
+</code></pre>
+    </div>
+  </li>
+  <li>View the details of a PDF file:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>pdfinfo &lt;filename&gt;.pdf
+</code></pre>
+    </div>
+  </li>
+  <li>Converting between PostScript and PDF:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>ps2pdf &lt;filename&gt;.pdf
+<span class="gp">$ </span>pdf2ps &lt;filename&gt;.ps
+<span class="gp">$ </span>epstopdf &lt;filename&gt;.eps &lt;filename&gt;.pdf
+</code></pre>
+    </div>
+  </li>
+  <li>
+<code class="highlighter-rouge">pdftk</code> is the Swiss Army knife of PDF tools. Usage examples:
+    <ul>
+      <li>Merge <code class="highlighter-rouge">1.pdf</code> and <code class="highlighter-rouge">2.pdf</code>, and save as <code class="highlighter-rouge">12.pdf</code>:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>pdftk 1.pdf 2.pdf cat output 12.pdf
+</code></pre>
+        </div>
+      </li>
+      <li>Save pages 1 and 2 of <code class="highlighter-rouge">1.pdf</code> to <code class="highlighter-rouge">new.pdf</code>:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>pdftk <span class="nv">A</span><span class="o">=</span>1.pdf cat A1-2 output new.pdf
+</code></pre>
+        </div>
+      </li>
+      <li>Rotate all pages of <code class="highlighter-rouge">in.pdf</code> 90 deg. clockwise, and save as <code class="highlighter-rouge">out.pdf</code>:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>pdftk <span class="k">in</span>.pdf cat 1-endeast output out.pdf
+</code></pre>
+        </div>
+      </li>
+      <li>Encrypt a PDF file:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>pdftk public.pdf output private.pdf user_pw PROMPT
+</code></pre>
+        </div>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="viewing-linux-documentation">Viewing linux documentation</h2>
+
+<ol>
+  <li>
+<code class="highlighter-rouge">man</code> to search, format, and displays the manual pages. Examples:
+    <ul>
+      <li>
+<code class="highlighter-rouge">man -f</code> displays a one-line manual pages descriptions:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>man -f <span class="nb">printf
+printf</span> <span class="o">(</span>1<span class="o">)</span> - format and print data
+<span class="nb">printf</span> <span class="o">(</span>3<span class="o">)</span> - formatted output conversion
+</code></pre>
+        </div>
+        <p>or equivalently,</p>
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>whatis <span class="nb">printf
+printf</span> <span class="o">(</span>1<span class="o">)</span> - format and print data
+<span class="nb">printf</span> <span class="o">(</span>3<span class="o">)</span> - formatted output conversion
+</code></pre>
+        </div>
+      </li>
+      <li>The section number can be supplied:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>man 3 <span class="nb">printf</span>
+</code></pre>
+        </div>
+      </li>
+      <li>
+<code class="highlighter-rouge">man -k</code> shows all man pages that discuss a specified subject:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>man -k ruby
+erb <span class="o">(</span>1<span class="o">)</span>    - Ruby Templating
+erb2.3 <span class="o">(</span>1<span class="o">)</span> - Ruby Templating
+gem <span class="o">(</span>1<span class="o">)</span>    - frontend to RubyGems, the Ruby package manager
+<span class="o">(</span>...<span class="o">)</span>
+</code></pre>
+        </div>
+      </li>
+    </ul>
+  </li>
+  <li>GNU Info System:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>info
+<span class="gp">$ </span>info &lt;topic name&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>Every command has a <code class="highlighter-rouge">--help</code> or <code class="highlighter-rouge">-h</code> option.</li>
+</ol>
+
+<h2 id="file-ownership-and-permissions">File ownership and permissions</h2>
+
+<ul>
+  <li>Change user ownership:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>chown &lt;owner&gt; &lt;filename&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>Change group ownership:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>chgrp &lt;group&gt; &lt;filename&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>Change the permissions on a file:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>chmod &lt;permissions&gt; &lt;file&gt;
+</code></pre>
+    </div>
+  </li>
+</ul>
+
+<h2 id="user-accounts-and-groups">User accounts and groups</h2>
+
+<ul>
+  <li>Identify currently logged-on users:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>who
+<span class="gp">$ </span>who -a
+<span class="gp">$ </span>whoami
+</code></pre>
+    </div>
+  </li>
+  <li>Add / Remove a user: <code class="highlighter-rouge">useradd</code> / <code class="highlighter-rouge">userdel</code>
+</li>
+  <li>Set the initial password for a new user:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>passwd &lt;username&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>Display information about a user:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>id &lt;user&gt;
+<span class="gp">$ </span>groups &lt;user&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>Add / Remove a group: <code class="highlighter-rouge">groupadd</code> / <code class="highlighter-rouge">groupdel</code>
+</li>
+  <li>Add a user to a group:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>groupmod -G &lt;group&gt; &lt;user&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>Grant root privileges to user temporarily:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>su
+<span class="gp">$ </span>sudo &lt;<span class="nb">command</span>&gt;
+</code></pre>
+    </div>
+  </li>
+  <li>Show last time each user has logged into the system:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>last
+</code></pre>
+    </div>
+  </li>
+</ul>
+
+<h2 id="environment-variables-and-aliases">Environment variables and aliases</h2>
+
+<ul>
+  <li>View the values of currently set environment variables:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span><span class="nb">set</span>
+<span class="gp">$ </span>env
+<span class="gp">$ </span><span class="nb">export</span>
+</code></pre>
+    </div>
+  </li>
+  <li>Show the value of a specific variable:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span><span class="nb">echo</span> <span class="nv">$VARIABLE</span>
+</code></pre>
+    </div>
+  </li>
+  <li>Export a new variable value:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span><span class="nb">export </span><span class="nv">VARIABLE</span><span class="o">=</span>value
+</code></pre>
+    </div>
+  </li>
+  <li>E.g., to prefix a private bin directory to your path:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$HOME</span>/bin:<span class="nv">$PATH</span>
+</code></pre>
+    </div>
+  </li>
+  <li>List currently defined aliases:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span><span class="nb">alias</span>
+</code></pre>
+    </div>
+  </li>
+  <li>Create an alias, e.g.:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span><span class="nb">alias </span><span class="nv">vi</span><span class="o">=</span><span class="s1">'vim'</span>
+</code></pre>
+    </div>
+  </li>
+</ul>
+
+<h2 id="filesystems">Filesystems</h2>
+
+<ul>
+  <li>Attach a filesystem:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>mount &lt;device node&gt; &lt;mount point&gt;
+<span class="gp">$ </span>mount /dev/sda5 /home
+</code></pre>
+    </div>
+  </li>
+  <li>Display information about mounted filesystems:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>df -Th
+<span class="gp">$ </span>mount
+<span class="gp">$ </span>fdisk -l
+</code></pre>
+    </div>
+  </li>
+  <li>NFS (Network Filesystem)
+    <ol>
+      <li>On the Server:
+        <ul>
+          <li>Start the NFS:
+            <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>sudo service nfs start
+</code></pre>
+            </div>
+          </li>
+          <li>Modify <code class="highlighter-rouge">/etc/exports</code>. Example entry:
+            <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code>/projects <span class="k">*</span>.example.com<span class="o">(</span>rw<span class="o">)</span><span class="sb">`</span>
+</code></pre>
+            </div>
+          </li>
+          <li>After modifying the <code class="highlighter-rouge">/etc/exports</code> file run:
+            <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>exportfs -av
+</code></pre>
+            </div>
+          </li>
+        </ul>
+      </li>
+      <li>On the client:
+        <ul>
+          <li>Mount the remote filesystem:
+            <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>mount servername:/projects /mnt/nfs/projects
+</code></pre>
+            </div>
+          </li>
+          <li>Or modify <code class="highlighter-rouge">/etc/fstab</code>. Example entry:
+            <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code>servername:/projects /mnt/nfs/projects nfs default 0 0<span class="sb">`</span>
+</code></pre>
+            </div>
+          </li>
+        </ul>
+      </li>
+    </ol>
+  </li>
+  <li>The <code class="highlighter-rouge">proc</code> Filesystem
+    <ul>
+      <li>Some important files in <code class="highlighter-rouge">/proc</code> are: <code class="highlighter-rouge">/proc/cpuinfo</code>, <code class="highlighter-rouge">/proc/interrupts</code>, <code class="highlighter-rouge">/proc/meminfo</code>, <code class="highlighter-rouge">/proc/mounts</code>, <code class="highlighter-rouge">/proc/partitions</code>, <code class="highlighter-rouge">/proc/version</code>.</li>
+      <li>
+<code class="highlighter-rouge">/proc</code> also has subdirectories, such as <code class="highlighter-rouge">/proc/&lt;Process-ID-#&gt;</code> and <code class="highlighter-rouge">/proc/sys</code>.</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="processes">Processes</h2>
+
+<ul>
+  <li>All processes / all processes and all threads / all processes for all users:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>ps -ef
+<span class="gp">$ </span>ps -eLf
+<span class="gp">$ </span>ps aux
+</code></pre>
+</div>
+
+<ul>
+  <li>Process tree:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>pstree
+</code></pre>
+</div>
+
+<ul>
+  <li>Proc list with updates in real time:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>top
+<span class="gp">$ </span>htop
+</code></pre>
+</div>
+
+<p>(press <code class="highlighter-rouge">A</code> to sort when using <code class="highlighter-rouge">top</code>)</p>
+
+<ul>
+  <li>Terminate a process:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span><span class="nb">kill</span> -SIGKILL &lt;pid&gt;
+<span class="gp">$ </span><span class="nb">kill</span> -9 &lt;pid&gt;
+</code></pre>
+</div>
+
+<ul>
+  <li>View the background processes in the current terminal:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span><span class="nb">jobs</span> -l
+</code></pre>
+</div>
+
+<ul>
+  <li>Suspend a foreground process: <code class="highlighter-rouge">CTRL-z</code>
+</li>
+  <li>Cancel a foreground process: <code class="highlighter-rouge">CTRL-c</code>
+</li>
+  <li>Move process to the background / foreground:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span><span class="nb">bg</span>
+<span class="gp">$ </span><span class="nb">fg</span>
+</code></pre>
+</div>
+
+<ul>
+  <li>Schedule future non-interactive proc, e.g.:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>at 11 am may 20
+<span class="gp">at&gt; </span><span class="nb">echo </span>Hello! &gt; hello.txt
+<span class="gp">at&gt; </span>&lt;CTRL-D&gt;
+<span class="err">$</span>
+<span class="gp">$ </span>at now + 3 minutes
+<span class="gp">at&gt; </span>mkdir dirfrom3minutesago
+<span class="gp">at&gt; </span>&lt;CTRL-D&gt;
+<span class="err">$</span>
+</code></pre>
+</div>
+
+<ul>
+  <li>Schedule periodic background work:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>crontab -e
+</code></pre>
+</div>
+
+<ul>
+  <li>Suspend execution (suffix = <code class="highlighter-rouge">s</code>, <code class="highlighter-rouge">m</code>, <code class="highlighter-rouge">h</code>, <code class="highlighter-rouge">d</code>):</li>
+</ul>
+
+<div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>sleep &lt;number&gt;&lt;suffix&gt;
+</code></pre>
+</div>
+
+<h2 id="backing-up-data">Backing up data</h2>
+
+<ul>
+  <li>Synchronize directory trees with <code class="highlighter-rouge">rsync</code>, which copies only the differences between directories. Examples:</li>
+</ul>
+
+<div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>rsync -avP --delete dir1/ dir2
+<span class="gp">$ </span>rsync -avPe ssh --delete dir/ user@host:/path/to/dir
+</code></pre>
+</div>
+
+<ul>
+  <li>Test the <code class="highlighter-rouge">rsync</code> command using the <code class="highlighter-rouge">--dry-run</code> option.</li>
+</ul>
+
+<h2 id="compressed-data-and-archives">Compressed data and archives</h2>
+
+<ol>
+  <li>Compressing data using <code class="highlighter-rouge">gzip</code>, <code class="highlighter-rouge">bzip2</code> and <code class="highlighter-rouge">xz</code>
+    <ul>
+      <li>There is an efficiency vs. speed trade-off. Ranked by space-efficiency:
+        <blockquote>
+          <p><code class="highlighter-rouge">xz</code> &gt; <code class="highlighter-rouge">bzip2</code> &gt; <code class="highlighter-rouge">gzip</code>.</p>
+        </blockquote>
+      </li>
+      <li>Replace each file in the current directory with its compressed version:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>gzip <span class="k">*</span>
+<span class="gp">$ </span>bzip2 <span class="k">*</span>
+<span class="gp">$ </span>xz <span class="k">*</span>
+</code></pre>
+        </div>
+      </li>
+      <li>Compress the file <code class="highlighter-rouge">foo</code> into <code class="highlighter-rouge">foo.xz</code> using the default compression level (-6), and remove <code class="highlighter-rouge">foo</code> if compression succeeds:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>xz foo
+</code></pre>
+        </div>
+      </li>
+      <li>De-compress:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>gunzip foo
+<span class="gp">$ </span>bunzip2 <span class="k">*</span>.bz2
+</code></pre>
+        </div>
+      </li>
+      <li>Decompress <code class="highlighter-rouge">bar.xz</code> into <code class="highlighter-rouge">bar</code> and don’t remove <code class="highlighter-rouge">bar.xz</code> even if decompression is successful:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>xz -dk bar.xz
+</code></pre>
+        </div>
+      </li>
+    </ul>
+  </li>
+  <li>Handling Files Using zip
+    <ul>
+      <li>E.g., archive the login directory (<code class="highlighter-rouge">~</code>) and all files and directories under it as <code class="highlighter-rouge">backup.zip</code>:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>zip -r backup.zip ~
+</code></pre>
+        </div>
+      </li>
+      <li>Extracts all files in the file <code class="highlighter-rouge">backup.zip</code>:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>unzip backup.zip
+</code></pre>
+        </div>
+      </li>
+    </ul>
+  </li>
+  <li>Archiving and Compressing Data Using <code class="highlighter-rouge">tar</code>
+    <ul>
+      <li>Extract all the files in <code class="highlighter-rouge">mydir.tar</code> into the <code class="highlighter-rouge">mydir</code> directory:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>tar xvf mydir.tar
+</code></pre>
+        </div>
+      </li>
+      <li>Create the archive and compress with <code class="highlighter-rouge">gzip</code>/<code class="highlighter-rouge">bz2</code>/<code class="highlighter-rouge">xz</code>:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>tar zcvf mydir.tar.gz mydir
+<span class="gp">$ </span>tar jcvf mydir.tar.bz2 mydir
+<span class="gp">$ </span>tar Jcvf mydir.tar.xz mydir
+</code></pre>
+        </div>
+      </li>
+      <li>Extract all the files in <code class="highlighter-rouge">mydir.tar.*</code> into the <code class="highlighter-rouge">mydir</code> directory:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>tar xvf mydir.tar.gz
+</code></pre>
+        </div>
+      </li>
+    </ul>
+  </li>
+  <li>Working with compressed data
+    <ul>
+      <li>For <code class="highlighter-rouge">gzip</code>‘ed files: <code class="highlighter-rouge">zcat</code>, <code class="highlighter-rouge">zless</code>, <code class="highlighter-rouge">zgrep</code>, <code class="highlighter-rouge">zdiff</code>.</li>
+      <li>For <code class="highlighter-rouge">bzip2</code>‘ed files: <code class="highlighter-rouge">bzcat</code>, <code class="highlighter-rouge">bzless</code>.</li>
+      <li>For <code class="highlighter-rouge">xz</code>‘ed files: <code class="highlighter-rouge">xzcat</code>, <code class="highlighter-rouge">xzless</code>.</li>
+    </ul>
+  </li>
+</ol>
+
+<h2 id="network-operations">Network operations</h2>
+
+<ul>
+  <li>Using Domain Name System (DNS) and Name Resolution Tools
+    <ul>
+      <li>View IP and domain information about your system:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>hostname
+<span class="gp">$ </span>cat /etc/hosts
+<span class="gp">$ </span>cat /etc/resolv.conf
+</code></pre>
+        </div>
+      </li>
+      <li>View IP and domain information about linux.com:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>host linux.com
+<span class="gp">$ </span>nslookup linux.com
+<span class="gp">$ </span>dig linux.com
+<span class="gp">$ </span>dig +trace linux.com
+<span class="gp">$ </span>dig @8.8.8.8 linux.com
+</code></pre>
+        </div>
+        <p>(<code class="highlighter-rouge">8.8.8.8</code> is Google’s recursive DNS server)</p>
+      </li>
+    </ul>
+  </li>
+  <li>Network Interfaces and Configuration
+    <ul>
+      <li>List all currently active network interfaces:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>ifconfig
+</code></pre>
+        </div>
+      </li>
+      <li>Show IP address of active network device:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>ip addr show
+</code></pre>
+        </div>
+      </li>
+      <li>Show routing info of active network device:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>ip route show
+</code></pre>
+        </div>
+      </li>
+      <li>Check the status of the remote host:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>ping &lt;hostname&gt;
+</code></pre>
+        </div>
+      </li>
+    </ul>
+  </li>
+  <li>Routing Tables / Routes
+    <ul>
+      <li>Show current IP routing table:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>route -n
+</code></pre>
+        </div>
+      </li>
+      <li>Add/delete static route:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>route add -net address
+<span class="gp">$ </span>route del -net address
+</code></pre>
+        </div>
+      </li>
+      <li>Print the route taken by the packet to reach the network host at <code class="highlighter-rouge">&lt;domain&gt;</code>:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>traceroute &lt;domain&gt;
+</code></pre>
+        </div>
+      </li>
+      <li>Display all active connections and routing tables:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>netstat -r
+</code></pre>
+        </div>
+      </li>
+    </ul>
+  </li>
+  <li>Dump network traffic for analysis:
+    <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>tcpdump
+<span class="gp">$ </span>sudo tcpdump host google.com
+</code></pre>
+    </div>
+  </li>
+  <li>Interaction with webpages
+    <ul>
+      <li>Download a webpage:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>wget &lt;url&gt;
+</code></pre>
+        </div>
+      </li>
+      <li>Read or save the source code and other info of a URL:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>curl &lt;url&gt;
+<span class="gp">$ </span>curl -o saved.html http://www.mysite.com
+</code></pre>
+        </div>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="transferring-files-over-the-network">Transferring files over the network</h2>
+
+<ul>
+  <li>FTP (File Transfer Protocol)
+    <ul>
+      <li>An example of connecting to the server and downloading a file:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>ftp -p some.server.com
+<span class="gp">ftp&gt; </span>ls
+<span class="gp">ftp&gt; </span>get somefile.txt
+<span class="gp">ftp&gt; </span>quit
+<span class="err">$</span>
+</code></pre>
+        </div>
+      </li>
+    </ul>
+  </li>
+  <li>SSH (Secure Shell)
+    <ul>
+      <li>Log into <code class="highlighter-rouge">remotesystem</code> with <code class="highlighter-rouge">username</code>:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>ssh &lt;username@remotesystem&gt;
+</code></pre>
+        </div>
+      </li>
+      <li>Run <code class="highlighter-rouge">my_command</code> on a remote system via SSH:
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>ssh &lt;user@remotesystem&gt; my_command
+</code></pre>
+        </div>
+      </li>
+      <li>Copy a local file to a remote system (similarly vice versa):
+        <div class="language-shell highlighter-rouge">
+<pre class="highlight"><code><span class="gp">$ </span>scp &lt;localfile&gt; &lt;user@remotesystem&gt;:/home/user/
+<span class="gp">$ </span>scp &lt;user@remotesystem&gt;:/home/user/somefile /local/dir/
+</code></pre>
+        </div>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="cool-links">Cool links</h2>
+
+<ul>
+  <li>
+<a href="http://explainshell.com">http://explainshell.com</a> — see help text that matches each argument of a given command line. <em>Extremely</em> useful!</li>
+  <li>
+<a href="http://jvns.ca/zines/">http://jvns.ca/zines/</a> — <em>informative</em> fanzines about some Linux tools.</li>
+</ul>
+
+  </div>
+
+  <div class="date">
+    Written on March 25, 2017
+  </div>
+
+  <div class="date">
+    Tags:
+		
+		<a href="/tag/linux">#linux</a>
+		
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'agisga';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+<a href="mailto:alexej.go@gmail.com"><i class="svg-icon email"></i></a>
+<a href="https://www.facebook.com/alexej.yexela"><i class="svg-icon facebook"></i></a>
+
+<a href="https://github.com/agisga"><i class="svg-icon github"></i></a>
+
+<a href="https://www.linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
+
+<a href="/feed.xml"><i class="svg-icon rss"></i></a>
+<a href="https://www.twitter.com/agisga"><i class="svg-icon twitter"></i></a>
+
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-94080131-1', 'auto');
+		ga('send', 'pageview', {
+		  'page': '/linux-cheat-sheet/',
+		  'title': 'A comprehensive Linux command cheat sheet'
+		});
+	</script>
+	<!-- End Google Analytics -->
+
+
+  </body>
+</html>
