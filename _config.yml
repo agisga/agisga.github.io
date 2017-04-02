@@ -15,7 +15,7 @@ description: New Orleans 😎
 avatar: https://avatars0.githubusercontent.com/u/11449372?v=3&s=460
 
 # specifies how many items should be displayed per page
-paginate: 4
+paginate: 10
 
 #
 # Flags below are optional

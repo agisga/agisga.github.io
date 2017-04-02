@@ -66,54 +66,105 @@
   
     <article class="post">
 
-      <h1><a href="/categorical_data_glm_in_ruby/">Logistic regression with categorical data in Ruby</a></h1>
+      <h1><a href="/Dissect_lmer_part3/">Dissecting lme4's lmer function. Part 3.</a></h1>
 
       <div class="entry">
-        <p>I had some fun analysing the <a href="https://www.kaggle.com/c/shelter-animal-outcomes">shelter animal data</a> from <a href="https://www.kaggle.com/competitions">kaggle</a> using the Ruby gems <code class="highlighter-rouge">daru</code> for data wrangling and <code class="highlighter-rouge">statsample-glm</code> for model fitting. In this blog post, I want to demonstrate that data wrangling and statistical modeling is not an area of absolute predominance of Python and R, but that it is possible in Ruby too (though, currently to a much lesser extent).</p>
+        <p>This is the final part of my analysis of the function <code class="highlighter-rouge">lmer</code>, which is used to fit linear mixed models in the R package <code class="highlighter-rouge">lme4</code>. In two previous blog posts, we have seen the general layout of the function <code class="highlighter-rouge">lmer</code>, the dealings with the R model formula, and the setting up of the objective function for the optimization (see <a href="http://agisga.github.io/Dissect_lmer_part1/">part 1</a> and <a href="http://agisga.github.io/Dissect_lmer_part2/">part 2</a>).</p>
 
 
       </div>
 
-      <a href="/categorical_data_glm_in_ruby/" class="read-more">Read More</a>
+      <a href="/Dissect_lmer_part3/" class="read-more">Read More</a>
     </article>
   
     <article class="post">
 
-      <h1><a href="/dplyr_basics/">dplyr basics</a></h1>
+      <h1><a href="/Dissect_lmer_part2/">Dissecting lme4's lmer function. Part 2.</a></h1>
 
       <div class="entry">
-        <p><img src="/images/pliers.jpg?raw=true" alt="Pliers" title="Lots of pliers"></p>
+        <p><a href="http://agisga.github.io/Dissect_lmer_part1/">Last time</a> I started to analyze the function <code class="highlighter-rouge">lmer</code> that is used to fit linear mixed models in the R package <code class="highlighter-rouge">lme4</code>. I have delineated the general steps taken by <code class="highlighter-rouge">lmer</code>, and looked at the employed formula module in more detail. The formula module evaluates the provided R model formula to model matrices, vectors and parameters. The next step is to use these to define the objective function that needs to be minimized, which is the profiled deviance or the profiled REML criterion in this case. The objective function is returned by the function <code class="highlighter-rouge">mkLmerDevfun</code> which is dissected in what follows.</p>
 
 
       </div>
 
-      <a href="/dplyr_basics/" class="read-more">Read More</a>
+      <a href="/Dissect_lmer_part2/" class="read-more">Read More</a>
     </article>
   
     <article class="post">
 
-      <h1><a href="/grpSLOPE_on_CRAN/">My first R package on CRAN</a></h1>
+      <h1><a href="/Dissect_lmer_part1/">Dissecting lme4's lmer function. Part 1.</a></h1>
 
       <div class="entry">
-        <p>A couple of weeks ago I have released my first R package on CRAN. For me it turned out to be a far less painful process than many people on the internet portray it to be (even though the package uses quite a lot of C++ code via Rcpp and RcppEigen, and even though R CMD check returns two NOTEs). Some of the most helpful resources for publishing the package were:</p>
+        <p>This blog posts marks the start of my <a href="https://www.google-melange.com/gsoc/homepage/google/gsoc2015">Google Summer of Code</a> project with the <a href="http://sciruby.com">Ruby Science Foundation</a>, where I will develop mixed linear models software for Ruby. As a preparation for my GSoC project, I will dedicate a couple of blog posts to a meticulous analysis of <a href="https://github.com/lme4/lme4.git"><code class="highlighter-rouge">lme4</code></a> code (so that I can steal all the ideas from it!).</p>
 
 
       </div>
 
-      <a href="/grpSLOPE_on_CRAN/" class="read-more">Read More</a>
+      <a href="/Dissect_lmer_part1/" class="read-more">Read More</a>
     </article>
   
     <article class="post">
 
-      <h1><a href="/TSH_and_TPE_observations/">"Testing Statistical Hypotheses" and "Theory of Point Estimation" impressions</a></h1>
+      <h1><a href="/BVP/">Solve two-point boundary value problems in Ruby with spitzy</a></h1>
 
       <div class="entry">
-        <p>I spent much of the last two months reading Lehmann &amp; Romano “Testing Statistical Hypotheses” (3rd ed.) and Lehmann &amp; Casella “Theory of Point Estimation” (2nd ed.), abbr. TSH and TPE. The following is a collection of <del>random facts</del> observations I made while reading TSH and TPE. The choice of topics is biased towards application in regression models.</p>
+        <p>A few days ago I programmed a numerical method for the solution for two-point boundary value problems, and today I discovered that I can use <a href="https://www.mathjax.org/">MathJax</a> to display mathematical formulas in here (although there are some inconveniences related to the use of underscores). So, here goes another blog post!</p>
 
 
       </div>
 
-      <a href="/TSH_and_TPE_observations/" class="read-more">Read More</a>
+      <a href="/BVP/" class="read-more">Read More</a>
+    </article>
+  
+    <article class="post">
+
+      <h1><a href="/ODE/">Solve ODEs in Ruby with spitzy</a></h1>
+
+      <div class="entry">
+        <p>Over the weekend I have written a couple of numerical solvers for one-dimensional <a href="http://en.wikipedia.org/wiki/Initial_value_problem">initial value problems</a> in Ruby, and added them to my project <a href="https://github.com/agisga/spitzy">spitzy</a>.</p>
+
+
+      </div>
+
+      <a href="/ODE/" class="read-more">Read More</a>
+    </article>
+  
+    <article class="post">
+
+      <h1><a href="/Advection-Equation/">Solve an advection equation in Ruby with spitzy</a></h1>
+
+      <div class="entry">
+        <p>A couple of days ago I started working on a collection of numerical methods for differential equations, wirtten in pure Ruby (I have conviced the professor of my numerical DE class that that`s a good idea for my final project in said class).</p>
+
+
+      </div>
+
+      <a href="/Advection-Equation/" class="read-more">Read More</a>
+    </article>
+  
+    <article class="post">
+
+      <h1><a href="/Permute-Columns-Of-An-NMatrix/">NMatrix column permutations</a></h1>
+
+      <div class="entry">
+        <p>Recently I got surprised by the behaviour of <code class="highlighter-rouge">#permute_columns</code> in the <em>Ruby</em> gem <em>NMatrix</em>.</p>
+
+
+      </div>
+
+      <a href="/Permute-Columns-Of-An-NMatrix/" class="read-more">Read More</a>
+    </article>
+  
+    <article class="post">
+
+      <h1><a href="/Hello-World/">Hello World!</a></h1>
+
+      <div class="entry">
+        <p>Hello World!</p>
+
+      </div>
+
+      <a href="/Hello-World/" class="read-more">Read More</a>
     </article>
   
 </div>
@@ -123,9 +174,9 @@
   
     <a href="/page2" class="previous">Previous</a>
   
-  <span class="page_number ">Page: 3 of 7</span>
+  <span class="page_number ">Page: 3 of 3</span>
   
-    <a href="/page4" class="next">Next</a>
+    <span class="next ">Next</span>
   
 </div>
 
