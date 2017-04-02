@@ -7,6 +7,212 @@
     
       
         <item>
+          <title>Understanding the CANDECOMP/PARAFAC Tensor Decomposition, aka CP; with R code</title>
+          <description>&lt;p&gt;A tensor is essentially a multi-dimensional array:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;a tensor of order one is a vector, which simply is a column of numbers,&lt;/li&gt;
+  &lt;li&gt;a tensor of order two is a matrix, which is basically numbers arranged in a rectangle,&lt;/li&gt;
+  &lt;li&gt;a tensor of order three looks like numbers arranged in rectangular box (or a cube, if all modes have the same dimension),&lt;/li&gt;
+  &lt;li&gt;an &lt;em&gt;n&lt;/em&gt;th order (or &lt;em&gt;n&lt;/em&gt;-way) tensor looks like numbers arranged in… an $n$-hyperrectangle or something like that… you get the idea…&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In many applications, data naturally form an &lt;em&gt;n&lt;/em&gt;-way tensor with &lt;em&gt;n &amp;gt; 2&lt;/em&gt;, rather than a “tidy” table.&lt;/p&gt;
+
+&lt;p&gt;So, what’s a tensor decomposition?&lt;/p&gt;
+
+&lt;p&gt;Well, there are several types of tensor decomposition, but in this blog post I will introduce only the CANDECOMP/PARAFAC decomposition. Following &lt;a href=&quot;http://epubs.siam.org/doi/abs/10.1137/07070111X?journalCode=siread&amp;amp;&quot;&gt;Kolda &amp;amp; Bader (2009)&lt;/a&gt; I will refer to it as &lt;em&gt;CP decomposition&lt;/em&gt;. But before spelling it out in mathematical terms, let’s start with a simple toy example using the R language.&lt;/p&gt;
+
+&lt;h2 id=&quot;rank-1-approximation-to-a-3-way-tensor-toy-example&quot;&gt;Rank-1 approximation to a 3-way tensor (toy example)&lt;/h2&gt;
+
+&lt;p&gt;Assume that we observe spatio-temporal&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; data that, apart from random noise, correspond to the following three classes:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/CP_tensor_decomposition/cases_for_rank-1_approx.png&quot; alt=&quot;Three classes for rank-1 tensor approximation toy example&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As you can see from the above figures, the essential difference between the three cases is that they behave differently with respect to time. The spatial component is just a Gaussian curve, while the temporal component is piecewise constant with a sudden jump at time 50, which differs in magnitude and in direction between the three classes.&lt;/p&gt;
+
+&lt;p&gt;Now assume we have collected samples that correspond to the three classes above (with some added noise). &lt;em&gt;But we don’t know which sample falls in what class, how many classes there are, and how they differ&lt;/em&gt; :confused:. In an unsupervised fashion we want to learn the different classes and their differences with respect to time and space.&lt;/p&gt;
+
+&lt;p&gt;We can arrange the samples in a 3-way tensor, &lt;em&gt;sample-by-space-by-time&lt;/em&gt;. For simplicity, however, assume that the samples are already grouped according to their class within the tensor (but the algorithm doesn’t know that!), so that the resulting tensor looks like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/CP_tensor_decomposition/3-modal_tensor.png&quot; alt=&quot;3-way tensor&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In R the above tensor (let’s call it &lt;code class=&quot;highlighter-rouge&quot;&gt;X&lt;/code&gt;) can be generated with the following lines of code:&lt;/p&gt;
+
+&lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;space_index&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;-1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;l&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bell_curve&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;  &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dnorm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;space_index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mean&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;case1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;rep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bell_curve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;case2&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;rep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bell_curve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;case3&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;rep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bell_curve&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;case2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;51&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;case2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;51&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;case3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;51&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;case3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;51&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kc&quot;&gt;NA&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dim&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;90&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;    &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;case1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rnorm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;+30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;case2&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rnorm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;+60&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;case3&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rnorm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;10000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sd&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Using the excellent R package &lt;a href=&quot;https://cran.r-project.org/package=rTensor&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rTensor&lt;/code&gt;&lt;/a&gt; we obtain the CP decomposition with one component per mode of the tensor:&lt;/p&gt;
+
+&lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rTensor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cp_decomp&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;as.tensor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;num_components&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cp_decomp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;U&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# List of 3
+#  $ : num [1:90, 1] 0.0111 0.0111 0.0111 0.0111 0.0112 ...
+#  $ : num [1:100, 1] -0.00233 -0.00251 -0.00271 -0.00292 -0.00314 ...
+#  $ : num [1:100, 1] -0.00996 -0.00994 -0.00996 -0.00993 -0.00997 ...
+# NULL
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Visualizing the three components, we get the following figures:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/CP_tensor_decomposition/rank-1_approx.png&quot; alt=&quot;components of a rank-1 approximation to a 3-way tensor&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;We can clearly see that&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;The sample-specific component has correctly separated the samples into three groups (in fact, &lt;code class=&quot;highlighter-rouge&quot;&gt;1:30&lt;/code&gt; correspond to case 1, &lt;code class=&quot;highlighter-rouge&quot;&gt;31:60&lt;/code&gt; correspond to case 2, &lt;code class=&quot;highlighter-rouge&quot;&gt;61:90&lt;/code&gt; correspond to case 3).&lt;/li&gt;
+  &lt;li&gt;The spatial component is bell-shaped, just as the input data with respect to the spatial dimension.&lt;/li&gt;
+  &lt;li&gt;The temporal component has correctly picked up a change at time 50, which is where the three classes differ.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;So, what did just happen? :astonished:&lt;/p&gt;
+
+&lt;h2 id=&quot;cp-decomposition-quick-summary-of-the-math-behind-it&quot;&gt;CP decomposition (quick summary of the math behind it)&lt;/h2&gt;
+
+&lt;p&gt;The CP decomposition factorizes a tensor into a sum of outer products of vectors. For example, for a 3-way tensor $X$, the CP decomposition can be written as&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;X \approx \sum\subscript{r = 1}^R u\subscript{r} \circ v\subscript{r} \circ w\subscript{r} =: \widehat{X},&lt;/script&gt;
+
+&lt;p&gt;where $R&amp;gt;0$ and $u\subscript{r}$, $v\subscript{r}$, $w\subscript{r}$ are vectors of appropriate dimensions, and where the notation “$\circ$” denotes the outer product for tensors, i.e.,&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;x\subscript{ijk} \approx \hat{x}\subscript{ijk} = \sum\subscript{r = 1}^R u\subscript{ri} v\subscript{rj} w\subscript{rk}.&lt;/script&gt;
+
+&lt;p&gt;In case of the previous toy example we have that $R = 1$. Thus, the corresponding CP decomposition has the following form:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/CP_tensor_decomposition/rank-1_decomposition_cartoon.png&quot; alt=&quot;Rank-1 CP decomposition cartoon&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;I hope that explains, why the components &lt;code class=&quot;highlighter-rouge&quot;&gt;u&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;v&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;w&lt;/code&gt; in the toy example look the way they do! :bowtie:&lt;/p&gt;
+
+&lt;p&gt;Now, how do you solve for the components $u\subscript{r}$, $v\subscript{r}$, $w\subscript{r}$ ($r = 1, 2, \ldots, R$)? You need to solve the following optimization problem:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\min\subscript{\widehat{X}} \lVert X - \widehat{X} \rVert \quad\mathrm{with}\, \widehat{X} = \sum\subscript{r = 1}^R \lambda\subscript{r} u\subscript{r} \circ v\subscript{r} \circ w\subscript{r},&lt;/script&gt;
+
+&lt;p&gt;where $\lVert \cdot \rVert$ is the Frobenius norm.&lt;/p&gt;
+
+&lt;p&gt;The simplest way to do it is via an alternating least squares approach, where we would regard certain components as fixed while solving for others, and then iterate while alternating the components regarded as fixed… For much more rigour and detail see &lt;a href=&quot;http://epubs.siam.org/doi/abs/10.1137/07070111X?journalCode=siread&amp;amp;&quot;&gt;Kolda &amp;amp; Bader (2009) &lt;em&gt;Tensor Decompositions and Applications&lt;/em&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&quot;a-higher-rank-approximation-via-cp-toy-example-cont&quot;&gt;A higher-rank approximation via CP (toy example cont.)&lt;/h2&gt;
+
+&lt;p&gt;Since in the previous toy example, there are no differentiating features between the three classes, apart from a jump in the temporal component, it makes perfect sense to set $R = 1$ in CP. In order to try out CP with more than one component per mode, I generated data with a more complex structure, and with further differentiation between the three groups with respect to their temporal and spatial makeup:&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;The three classes still have a bell-shaped component in the spatial mode, but now each class has a different mean.&lt;/li&gt;
+  &lt;li&gt;In the temporal mode the data is shaped like a sine wave, with different scaling per class.&lt;/li&gt;
+  &lt;li&gt;As before, there is a sudden jump in the temporal mode at time 50.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The three classes in the resulting dataset have the following means.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/CP_tensor_decomposition/cases_for_rank-3_approx.png&quot; alt=&quot;Three classes for rank-3 tensor approximation toy example&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;As before, we generate a tensor &lt;code class=&quot;highlighter-rouge&quot;&gt;X&lt;/code&gt; of dimensions 90 × 100 × 100, with 30 samples per class obscured with random noise.&lt;/p&gt;
+
+&lt;!---
+```R
+# bell-shaped spatial component with different means
+space_index &lt;- seq(-1, 1, l = 100)
+case1 &lt;- matrix(rep(dnorm(space_index, mean = 0, sd = 0.3), 10), 100, 100)
+case2 &lt;- matrix(rep(dnorm(space_index, mean = 0.5, sd = 0.3), 10), 100, 100)
+case3 &lt;- matrix(rep(dnorm(space_index, mean = -0.5, sd = 0.3), 10), 100, 100)
+# sine-shaped temporal component
+sine_wave &lt;- sin(seq(-4*pi, 4*pi, l = 100))
+sine_mat  &lt;- matrix(rep(sine_wave, each = 100), 100, 100)
+case1 &lt;- case1 + 0.3 * sine_mat
+case2 &lt;- case2 + 0.6 * sine_mat
+case3 &lt;- case3 + 0.9 * sine_mat
+# suddent drops in the temporal component
+case2[ , 51:100] &lt;- case2[ , 51:100] + 0.1
+case3[ , 51:100] &lt;- case3[ , 51:100] - 0.1
+
+X &lt;- array(NA, dim = c(90, 100, 100))
+for(i in 1:30) {
+  X[i, , ] &lt;- case1 + matrix(rnorm(10000, sd = 0.1), 100, 100)
+  X[i+30, , ] &lt;- case2 + matrix(rnorm(10000, sd = 0.1), 100, 100)
+  X[i+60, , ] &lt;- case3 + matrix(rnorm(10000, sd = 0.1), 100, 100)
+}
+```
+---&gt;
+
+&lt;p&gt;We use a CP decomposition in order to obtain a rank-3 approximation to that tensor:&lt;/p&gt;
+
+&lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cp_decomp&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;as.tensor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;num_components&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max_iter&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Here, we increase &lt;code class=&quot;highlighter-rouge&quot;&gt;max_iter&lt;/code&gt; to 100, in order to ensure convergence, as can be checked with the &lt;code class=&quot;highlighter-rouge&quot;&gt;conv&lt;/code&gt; attribute:&lt;/p&gt;
+
+&lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cp_decomp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;conv&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# [1] TRUE
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Since we set &lt;code class=&quot;highlighter-rouge&quot;&gt;num_components = 3&lt;/code&gt;, the solution now has three components per mode, organized in a three-column matrix for each mode:&lt;/p&gt;
+
+&lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cp_decomp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;U&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# List of 3
+#  $ : num [1:90, 1:3] 0.00131 0.00137 0.00141 0.0014 0.00135 ...
+#  $ : num [1:100, 1:3] 0.000926 0.001345 0.001799 0.002228 0.002755 ...
+#  $ : num [1:100, 1:3] 0.00969 0.0097 0.00974 0.0097 0.00971 ...
+# NULL
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;And we can even check the percentage of the Frobenius norm of $X$ explained by the rank-3 approximation $\widehat{X}$:&lt;/p&gt;
+
+&lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cp_decomp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;norm_percent&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# [1] 83.13865
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;83% isn’t too bad!&lt;/p&gt;
+
+&lt;p&gt;:grinning: Let’s look at a visualization of the obtained components!&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/CP_tensor_decomposition/rank-3_approx.png&quot; alt=&quot;components of a rank-3 approximation to a 3-way tensor&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Indeed, we observe that,&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;the sample-specific components $u\subscript{r}$ clearly distinguish between the three groups of samples (&lt;code class=&quot;highlighter-rouge&quot;&gt;1:30&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;31:60&lt;/code&gt;, and &lt;code class=&quot;highlighter-rouge&quot;&gt;61:90&lt;/code&gt;),&lt;/li&gt;
+  &lt;li&gt;the spatial components $v\subscript{r}$ clearly picks up the Gaussian shapes with the three different means (at -0.5, 0, and 0.5),&lt;/li&gt;
+  &lt;li&gt;the temporal components $w\subscript{r}$ clearly show the sudden jump at time 50, as well as a sine wave.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;That’s it for now. In the next couple of weeks I am planning to write a couple blog posts on other types of tensor decompositions and tensor regression methods, as I am learning about them.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot;&gt;
+      &lt;p&gt;The two data modes can correspond to many types of measurements, other than space and time. Here, I use space and time for example purposes only because those are very familiar concepts. I am neither suggesting that specifically spatio-temporal data should be analyzed in this way, nor that tensor decomposition is generally a good approach for spatio-temporal data (I actually have no idea).&amp;nbsp;&lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+</description>
+          <pubDate>2017-04-02T14:30:00-05:00</pubDate>
+          <link>http://www.alexejgossmann.com/tensor_decomposition_CP/</link>
+          <guid isPermaLink="true">http://www.alexejgossmann.com/tensor_decomposition_CP/</guid>
+        </item>
+      
+    
+      
+        <item>
           <title>A comprehensive Linux command cheat sheet</title>
           <description>&lt;p&gt;I think that it doesn’t matter what operating system you use — as long as you know your OS of choice well!:bowtie:
 This is a Linux command cheat sheet covering a wide range of topics. I cannot guarantee that the information is fully up-to-date or even correct. Use at own risk :stuck_out_tongue:. It is intended primarily as a reference for myself in the future. I have learned most of the material covered below a couple of years ago in &lt;a href=&quot;https://courses.edx.org/courses/LinuxFoundationX/LFS101x/2T2014/info&quot;&gt;the LinuxFoundationX’s Introduction to Linux course offered through edx.org&lt;/a&gt;.&lt;/p&gt;
