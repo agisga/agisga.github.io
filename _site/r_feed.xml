@@ -8,6 +8,269 @@
         
           
             <item>
+              <title>Understanding the Tucker decomposition, and compressing tensor-valued data (with R code)</title>
+              <description>&lt;p&gt;In many applications, data naturally form an &lt;em&gt;n&lt;/em&gt;-way tensor with &lt;em&gt;n &amp;gt; 2&lt;/em&gt;, rather than a “tidy” table.
+As mentioned in the beginning of &lt;a href=&quot;http://www.alexejgossmann.com/tensor_decomposition_CP/&quot;&gt;my last blog post&lt;/a&gt;, a tensor is essentially a multi-dimensional array:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;a tensor of order one is a vector, which simply is a column of numbers,&lt;/li&gt;
+  &lt;li&gt;a tensor of order two is a matrix, which is basically numbers arranged in a rectangle,&lt;/li&gt;
+  &lt;li&gt;a tensor of order three looks like numbers arranged in rectangular box (or a cube, if all modes have the same dimension),&lt;/li&gt;
+  &lt;li&gt;an &lt;em&gt;n&lt;/em&gt;th order (or &lt;em&gt;n&lt;/em&gt;-way) tensor looks like numbers arranged in an &lt;em&gt;n&lt;/em&gt;-hyperrectangle… you get the idea…&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In this post I introduce the Tucker decomposition (&lt;a href=&quot;https://link.springer.com/article/10.1007%2FBF02289464&quot;&gt;Tucker (1966) “Some mathematical notes on three-mode factor analysis”&lt;/a&gt;). The Tucker decomposition family includes methods such as&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;the &lt;em&gt;higher-order SVD&lt;/em&gt;, or HOSVD, which is a generalization of the matrix SVD to tensors (&lt;a href=&quot;http://www.sandia.gov/~tgkolda/tdw2004/ldl-94-31.pdf&quot;&gt;De Lathauwer, De Moor, and Vanderwalle (2000) “A multilinear singular value decomposition”&lt;/a&gt;),&lt;/li&gt;
+  &lt;li&gt;the &lt;em&gt;higher order orthogonal iteration&lt;/em&gt;, or HOOI, which delivers the best approximation to a given tensor by another tensor with prescribed mode-1 rank, mode-2 rank, etc. (&lt;a href=&quot;http://epubs.siam.org/doi/abs/10.1137/S0895479898346995?journalCode=sjmael&quot;&gt;De Lathauwer, De Moor, and Vanderwalle (2000) “On the Best Rank-1 and Rank-(R1,R2,…,RN) Approximation of Higher-Order Tensors”&lt;/a&gt;).&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;I introduce both approaches, and in order to demonstrate the usefulness of these concepts, I present a simple data compression example using &lt;a href=&quot;http://data.worldbank.org/data-catalog/world-development-indicators&quot;&gt;The World Bank’s World Development Indicators dataset&lt;/a&gt; (though I use the &lt;a href=&quot;https://www.kaggle.com/worldbank/world-development-indicators&quot;&gt;version available on Kaggle&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;However, before we can get started with the decompositions, we need to look at and understand the &lt;em&gt;k&lt;/em&gt;-mode tensor product.&lt;/p&gt;
+
+&lt;p&gt;Throughout this post, I will also introduce the R functions from the package &lt;a href=&quot;https://cran.r-project.org/package=rTensor&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rTensor&lt;/code&gt;&lt;/a&gt;, which can be used to perform all of the presented computations.&lt;/p&gt;
+
+&lt;h2 id=&quot;tensor-times-matrix-the-k-mode-product&quot;&gt;Tensor times matrix: the &lt;em&gt;k&lt;/em&gt;-mode product&lt;/h2&gt;
+
+&lt;p&gt;The $k$-mode product of a tensor $X \in \mathbb{R}^{I\subscript{1} \times I\subscript{2} \times \ldots \times I\subscript{N}}$ with a matrix $A \in \mathbb{R}^{J \times I\subscript{k}}$ is written as&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;Y = X \times\subscript{k} A.&lt;/script&gt;
+
+&lt;p&gt;The resulting tensor $A$ is of size $I\subscript{1} \times \ldots \times I\subscript{k-1} \times J \times I\subscript{k+1} \times \ldots \times I\subscript{N}$, and contains the elements&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;y\subscript{i\subscript{1}  \cdots  i\subscript{k-1}  j  i\subscript{k+1}  \cdots  i\subscript{N}} = \sum\subscript{i\subscript{k} = 1}^{I\subscript{k}} x\subscript{i\subscript{1}  i\subscript{2}  \cdots  i\subscript{N}} a\subscript{ji\subscript{k}}.&lt;/script&gt;
+
+&lt;p&gt;It can be hard, at first, to understand what that definition really means, or to visualize it in your mind. I find that it becomes easier once you realize that the &lt;em&gt;k&lt;/em&gt;-mode product amounts to multiplying each mode-&lt;em&gt;k&lt;/em&gt; fiber of $X$ by the matrix $A$.&lt;/p&gt;
+
+&lt;p&gt;We can demonstrate that in R:&lt;/p&gt;
+
+&lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rTensor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tnsr&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;as.tensor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dim&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mat&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# 1-mode product performed via the function ttm in rTensor
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tnsr_times_mat&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ttm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tnsr&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tnsr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mat&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;m&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now, for example, the first slice of &lt;code class=&quot;highlighter-rouge&quot;&gt;tnsr_times_mat&lt;/code&gt; is the same as the matrix product of &lt;code class=&quot;highlighter-rouge&quot;&gt;mat&lt;/code&gt; with the first slice of &lt;code class=&quot;highlighter-rouge&quot;&gt;tnsr&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;tnsr_times_mat&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;#      [,1] [,2]
+# [1,]    9   19
+# [2,]   12   26
+# [3,]   15   33
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;mat&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;%*%&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;as.matrix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tnsr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;#      [,1] [,2]
+# [1,]    9   19
+# [2,]   12   26
+# [3,]   15   33
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;You might want to play around some more with the function &lt;code class=&quot;highlighter-rouge&quot;&gt;ttm&lt;/code&gt; in R to get a better understanding of the &lt;em&gt;k&lt;/em&gt;-mode product.&lt;/p&gt;
+
+&lt;p&gt;A few important facts about the &lt;em&gt;k&lt;/em&gt;-mode product:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;$X \times\subscript{m} A \times\subscript{n} B = X \times\subscript{n} B \times\subscript{m} A$ if $n \neq m$,&lt;/li&gt;
+  &lt;li&gt;but $X \times\subscript{n} A \times\subscript{n} B = X \times\subscript{n} (BA)$ (in general $\neq X \times\subscript{n} B \times\subscript{n} A$).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;tucker-decomposition&quot;&gt;Tucker decomposition&lt;/h2&gt;
+
+&lt;p&gt;The Tucker decomposition (&lt;a href=&quot;https://link.springer.com/article/10.1007%2FBF02289464&quot;&gt;Tucker (1966)&lt;/a&gt;) decomposes a tensor into a core tensor multiplied by a matrix along each mode (i.e., transformed via a $k$-mode product for every $k = 1, 2, \ldots, N$):&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;X = G \times\subscript{1} A^{(1)} \times\subscript{2} A^{(2)} \times\subscript{3} \ldots \times\subscript{N} A^{(N)}.&lt;/script&gt;
+
+&lt;p&gt;Note that $G$ might be much smaller than the original tensor $X$ if we accept an approximation instead of an exact equality.&lt;/p&gt;
+
+&lt;p&gt;In case of three-way tensors, we can hold on to the following mental image:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/Tucker_decomposition/3-modal_Tucker_decomposition.jpg&quot; alt=&quot;Figure showing a Tucker decomposition of a 3-way tensor&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It is interesting to note that the CP decomposition, that I introduced in &lt;a href=&quot;http://www.alexejgossmann.com/tensor_decomposition_CP/&quot;&gt;a previous blog post&lt;/a&gt;, is a special case of the Tucker decomposition, where the core tensor $G$ is constrained to be superdiagonal.&lt;/p&gt;
+
+&lt;h3 id=&quot;higher-order-svd-hosvd&quot;&gt;Higher-order SVD (HOSVD)&lt;/h3&gt;
+
+&lt;p&gt;So, how do you compute the Tucker decomposition?&lt;/p&gt;
+
+&lt;p&gt;Many algorithms rely on the following fundamental equivalence:&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{eqnarray}
+Y &amp;=&amp; X \times\subscript{1} A^{(1)} \times\subscript{2} A^{(2)} \times\subscript{3} \ldots \times\subscript{N} A^{(N)} \nonumber\\
+\Leftrightarrow\quad Y\subscript{(k)} &amp;=&amp; A^{(k)} X\subscript{(k)} \left(A^{(N)} \otimes \cdots \otimes A^{(k+1)} \otimes A^{(k-1)} \otimes \cdots A^{(1)} \right)^T. \nonumber
+\end{eqnarray} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;The above equation uses some notation that was not introduced yet:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;$\otimes$ denotes the &lt;a href=&quot;https://en.wikipedia.org/wiki/Kronecker_product&quot;&gt;Kronecker product&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;$X\subscript{(k)}$ is the mode-$k$ unfolding (or mode-$k$ matricization) of the tensor $X$. The mode-$k$ unfolding arranges the mode-$k$ fibers (a &lt;em&gt;fiber&lt;/em&gt; is a generalization of &lt;em&gt;column&lt;/em&gt; to tensors) of $X$ as columns into a matrix. The concept may be easiest to understand by looking at an example. The following R code shows a 3-way tensor and all three of its mode-$k$ unfoldings (using the &lt;code class=&quot;highlighter-rouge&quot;&gt;k_unfold&lt;/code&gt; function from the &lt;code class=&quot;highlighter-rouge&quot;&gt;rTensor&lt;/code&gt; package):&lt;/p&gt;
+
+    &lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;tnsr&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;as.tensor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dim&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tnsr&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# , , 1
+#
+#      [,1] [,2] [,3]
+# [1,]    1    3    5
+# [2,]    2    4    6
+#
+# , , 2
+#
+#      [,1] [,2] [,3]
+# [1,]    7    9   11
+# [2,]    8   10   12
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# mode-1 unfolding:
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k_unfold&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tnsr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;#      [,1] [,2] [,3] [,4] [,5] [,6]
+# [1,]    1    3    5    7    9   11
+# [2,]    2    4    6    8   10   12
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# mode-2 unfolding:
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k_unfold&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tnsr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;#      [,1] [,2] [,3] [,4]
+# [1,]    1    2    7    8
+# [2,]    3    4    9   10
+# [3,]    5    6   11   12
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# mode-3 unfolding:
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;k_unfold&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tnsr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;#      [,1] [,2] [,3] [,4] [,5] [,6]
+# [1,]    1    2    3    4    5    6
+# [2,]    7    8    9   10   11   12
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+    &lt;/div&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;A straightforward approach to solve the Tucker decomposition would be to solve each mode-$k$ matricized form of the Tucker decomposition (shown in the equivalence above) for $A^{(k)}$. This approach is known as &lt;em&gt;higher order SVD&lt;/em&gt;, or HOSVD. It can be regarded as a generalization of the matrix SVD, because the matrices $A^{(k)}$ are orthogonal, while the tensor $G$ is “ordered” and “all-orthogonal” (see &lt;a href=&quot;http://www.sandia.gov/~tgkolda/tdw2004/ldl-94-31.pdf&quot;&gt;De Lathauwer et. al. (2000)&lt;/a&gt; for detail). The resulting algorithm is shown below.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{eqnarray}
+&amp;\,&amp;\mathrm{for}\, k = 1, 2, ..., N \,\mathrm{do} \nonumber\\
+&amp;\,&amp;\quad A^{(k)} \leftarrow \,\mathrm{left\,orthogonal\,matrix\,of\,SVD\,of}\,X\subscript{(k)} \nonumber\\
+&amp;\,&amp;\mathrm{end\,for} \nonumber\\
+&amp;\,&amp;G \leftarrow X \times\subscript{1} (A^{(1)})^T \times\subscript{2} (A^{(2)})^T \times\subscript{3} \cdots \times\subscript{N} (A^{(N)})^T  \nonumber
+\end{eqnarray} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;In R we can perform HOSVD using the function &lt;code class=&quot;highlighter-rouge&quot;&gt;hosvd&lt;/code&gt; from &lt;code class=&quot;highlighter-rouge&quot;&gt;rTensor&lt;/code&gt;:&lt;/p&gt;
+
+&lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;tnsr&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rand_tensor&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;modes&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;30&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;40&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;50&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hosv_decomp&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hosvd&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tnsr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now &lt;code class=&quot;highlighter-rouge&quot;&gt;hosv_decomp$Z&lt;/code&gt; is our matrix $G$, and &lt;code class=&quot;highlighter-rouge&quot;&gt;hosv_decomp$U&lt;/code&gt; is a list containing all the matrices $A^{(k)}$. We can use the function &lt;code class=&quot;highlighter-rouge&quot;&gt;ttl&lt;/code&gt;, which performs multiple &lt;em&gt;k&lt;/em&gt;-mode products on multiple modes successively given a tensor and a list of matrices, to check that up to numerical error the equation
+$X = G \times\subscript{1} A^{(1)} \times\subscript{2} A^{(2)} \times\subscript{3} \ldots \times\subscript{N} A^{(N)}$
+is satisfied:&lt;/p&gt;
+
+&lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;HOSVD_prod&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hosv_decomp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Z&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;hosv_decomp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;U&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tnsr&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;HOSVD_prod&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;abs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1e-12&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;#
+#  TRUE
+# 60000
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;h3 id=&quot;higher-order-orthogonal-iteration-hooi&quot;&gt;Higher order orthogonal iteration (HOOI)&lt;/h3&gt;
+
+&lt;p&gt;Note that we can also use HOSVD to compress $X$ by truncating the matrices $A^{(k)}$. The truncated HOSVD, however, is known to not give the best fit, as measured by the norm of the difference&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;\lVert X - G \times\subscript{1} A^{(1)} \times\subscript{2} A^{(2)} \times\subscript{3} \ldots \times\subscript{N} A^{(N)} \rVert.&lt;/script&gt;
+
+&lt;p&gt;The &lt;em&gt;higher order orthogonal iteration&lt;/em&gt;, or HOOI, algorithm finds the optimal approximation $\widehat{X}$ (with respect to the Frobenius norm loss) by, essentially, iterating the alternating truncation and SVD until convergence. If we truncate $A^{(k)}$ to have $r\subscript{k}$ columns, then the HOOI solution can be obtained by the following algorithm.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{eqnarray}
+&amp;\,&amp;\mathrm{initialize\,via\,HOSVD} \nonumber\\
+&amp;\,&amp;\mathrm{while\,not\,converged\,do} \nonumber\\
+&amp;\,&amp;\quad \mathrm{for}\, k = 1, 2, ..., N \nonumber\\
+&amp;\,&amp;\quad\quad Y \leftarrow X \times\subscript{1} (A^{(1)})^T \times\subscript{2} \cdots \times\subscript{k-1} (A^{(k-1)})^T \times\subscript{k+1} (A^{(k+1)})^T \times\subscript{k+2} \cdots \times\subscript{N} (A^{(N)})^T  \nonumber\\
+&amp;\,&amp;\quad\quad A^{(k)} \leftarrow r\subscript{k}\,\mathrm{leading\,left\,singular\,vectors\,of}\,Y\subscript{(k)} \nonumber\\
+&amp;\,&amp;\quad \mathrm{end\,for} \nonumber\\
+&amp;\,&amp;\mathrm{end\,while} \nonumber\\
+&amp;\,&amp;G \leftarrow X \times\subscript{1} (A^{(1)})^T \times\subscript{2} (A^{(2)})^T \times\subscript{3} \cdots \times\subscript{N} (A^{(N)})^T  \nonumber\\
+\end{eqnarray} %]]&gt;&lt;/script&gt;
+
+&lt;h3 id=&quot;application-of-hooi-to-data-compression&quot;&gt;Application of HOOI to data compression&lt;/h3&gt;
+
+&lt;p&gt;The example considered below is somewhat silly, given that the tensor I’m compressing isn’t very big, and thus there isn’t much of a point in compressing it. However, I think that the example still shows off very well how the algorithm can be very useful when the data size is much bigger (or the available storage much smaller).&lt;/p&gt;
+
+&lt;p&gt;I have downloaded from Kaggle the World Development Indicators &lt;a href=&quot;https://www.kaggle.com/worldbank/world-development-indicators&quot;&gt;dataset&lt;/a&gt;, originally collected and published by the The World Bank (the original dataset is available &lt;a href=&quot;http://data.worldbank.org/data-catalog/world-development-indicators&quot;&gt;here&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;The data can be arranged into a three-way tensor with the three modes corresponding to &lt;em&gt;country&lt;/em&gt; (&lt;a href=&quot;https://www.kaggle.com/benhamner/d/worldbank/world-development-indicators/countries-in-the-wdi-data&quot;&gt;list of available countries&lt;/a&gt;), &lt;em&gt;indicator&lt;/em&gt; (&lt;a href=&quot;https://www.kaggle.com/benhamner/d/worldbank/world-development-indicators/indicators-in-data&quot;&gt;list of available indicators&lt;/a&gt;), and &lt;em&gt;year&lt;/em&gt; (1960-2014). Since I didn’t have any time to deal with NA values in any creative way, I have kept only three indicators in the dataset. And I have replaced the remaining NAs with a country-wise average value for each particular indicator. Also, I have forgotten to normalize the data :disappointed:. The preprocessing resulted in a tensor of size 247-countries-by-3-indicators-by-55-years, that looks sort of like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;../images/Tucker_decomposition/3-way_tensor_small.png&quot; alt=&quot;Figure: 3-way tensor obtained from the WDI data&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;In particular, large stretches of the data within a given country tend to be nearly constant, or nearly piece-wise constant.&lt;/p&gt;
+
+&lt;p&gt;We use the function &lt;code class=&quot;highlighter-rouge&quot;&gt;tucker&lt;/code&gt; from &lt;code class=&quot;highlighter-rouge&quot;&gt;rTensor&lt;/code&gt; to obtain a Tucker decomposition via HOOI, where we set the ranks to the value 3 at each mode.&lt;/p&gt;
+
+&lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;dim&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wdi_tnsr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# [1] 247   3  55
+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tucker_decomp&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tucker&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wdi_tnsr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ranks&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;str&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tucker_decomp&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# List of 7
+#  $ Z           :Formal class 'Tensor' [package &quot;rTensor&quot;] with 3 slots
+#   .. ..@ num_modes: int 3
+#   .. ..@ modes    : int [1:3] 3 3 3
+#   .. ..@ data     : num [1:3, 1:3, 1:3] -6.60e+10 -1.13e+05 6.24e+05 -7.76e+05 -1.93e+08 ...
+#  $ U           :List of 3
+#   ..$ : num [1:247, 1:3] -0.02577 -0.00065 -0.01146 -0.19637 -0.17317 ...
+#   ..$ : num [1:3, 1:3] -1.00 -6.97e-10 -2.08e-02 2.08e-02 -4.70e-08 ...
+#   ..$ : num [1:55, 1:3] -0.0762 -0.0772 -0.0785 -0.0802 -0.082 ...
+#  $ conv        : logi TRUE
+#  $ est         :Formal class 'Tensor' [package &quot;rTensor&quot;] with 3 slots
+#   .. ..@ num_modes: int 3
+#   .. ..@ modes    : int [1:3] 247 3 55
+#   .. ..@ data     : num [1:247, 1:3, 1:55] 9.83e+07 4.44e+06 8.81e+07 1.05e+09 8.97e+08 ...
+#  $ norm_percent: num 99.4
+#  $ fnorm_resid : num 3.9e+08
+#  $ all_resids  : num [1:2] 3.9e+08 3.9e+08
+# NULL
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;To see how well the tensor decomposition approximates the original tensor, we can look at the relative error&lt;/p&gt;
+
+&lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;wdi_tnsr_approx&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ttl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tucker_decomp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Z&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tucker_decomp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;U&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fnorm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wdi_tnsr&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wdi_tnsr_approx&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fnorm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wdi_tnsr&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# [1] 0.005908934
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;and at the percentage of the norm of the original tensor explained by the Tucker decomposition&lt;/p&gt;
+
+&lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;tucker_decomp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;norm_percent&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# [1] 99.40911
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+
+&lt;p&gt;We, observe that we indeed achieve a recovery with an accuracy of over 99%. For comparison, the original tensor contains &lt;code class=&quot;highlighter-rouge&quot;&gt;247 * 3 * 55 = 40755&lt;/code&gt; entries, while the computed Tucker decomposition consists of only &lt;code class=&quot;highlighter-rouge&quot;&gt;127 * 3 + 3 * 3 + 55 * 3 + 3 * 3 * 3 = 582&lt;/code&gt; numbers. That’s a reduction in size by a factor greater than 70.&lt;/p&gt;
+
+&lt;p&gt;Even though data compression does not make much sense for the size of the dataset considered here, it clearly shows potential to be very useful for purposes of data distribution and data storage, when the data size far exceeds the terabyte range.&lt;/p&gt;
+</description>
+              <pubdate>2017-04-05T00:50:00-05:00</pubdate>
+              <link>http://www.alexejgossmann.com/tensor_decomposition_tucker/</link>
+              <guid ispermalink="true">http://www.alexejgossmann.com/tensor_decomposition_tucker/</guid>
+            </item>
+          
+        
+      
+        
+      
+    
+      
+        
+          
+            <item>
               <title>Understanding the CANDECOMP/PARAFAC Tensor Decomposition, aka CP; with R code</title>
               <description>&lt;p&gt;A tensor is essentially a multi-dimensional array:&lt;/p&gt;
 
