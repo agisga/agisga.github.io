@@ -31,7 +31,7 @@ The $k$-mode product of a tensor $X \in \mathbb{R}^{I\subscript{1} \times I\subs
 
 $$Y = X \times\subscript{k} A.$$
 
-The resulting tensor $A$ is of size $I\subscript{1} \times \ldots \times I\subscript{k-1} \times J \times I\subscript{k+1} \times \ldots \times I\subscript{N}$, and contains the elements
+The resulting tensor $Y$ is of size $I\subscript{1} \times \ldots \times I\subscript{k-1} \times J \times I\subscript{k+1} \times \ldots \times I\subscript{N}$, and contains the elements
 
 $$y\subscript{i\subscript{1}  \cdots  i\subscript{k-1}  j  i\subscript{k+1}  \cdots  i\subscript{N}} = \sum\subscript{i\subscript{k} = 1}^{I\subscript{k}} x\subscript{i\subscript{1}  i\subscript{2}  \cdots  i\subscript{N}} a\subscript{ji\subscript{k}}.$$
 
@@ -192,7 +192,7 @@ $$
 
 The example considered below is somewhat silly, given that the tensor I'm compressing isn't very big, and thus there isn't much of a point in compressing it. However, I think that the example still shows off very well how the algorithm can be very useful when the data size is much bigger (or the available storage much smaller).
 
-I have downloaded from Kaggle the World Development Indicators [dataset](https://www.kaggle.com/worldbank/world-development-indicators), originally collected and published by the The World Bank (the original dataset is available [here](http://data.worldbank.org/data-catalog/world-development-indicators)).
+I have downloaded from Kaggle the World Development Indicators [dataset](https://www.kaggle.com/worldbank/world-development-indicators), originally collected and published by The World Bank (the original dataset is available [here](http://data.worldbank.org/data-catalog/world-development-indicators)).
 
 The data can be arranged into a three-way tensor with the three modes corresponding to *country* ([list of available countries](https://www.kaggle.com/benhamner/d/worldbank/world-development-indicators/countries-in-the-wdi-data)), *indicator* ([list of available indicators](https://www.kaggle.com/benhamner/d/worldbank/world-development-indicators/indicators-in-data)), and *year* (1960-2014). Since I didn't have any time to deal with NA values in any creative way, I have kept only three indicators in the dataset. And I have replaced the remaining NAs with a country-wise average value for each particular indicator. Also, I have forgotten to normalize the data :disappointed:. The preprocessing resulted in a tensor of size 247-countries-by-3-indicators-by-55-years, that looks sort of like this:
 
