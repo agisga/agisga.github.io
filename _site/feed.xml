@@ -36,7 +36,7 @@ As mentioned in the beginning of &lt;a href=&quot;http://www.alexejgossmann.com/
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;Y = X \times\subscript{k} A.&lt;/script&gt;
 
-&lt;p&gt;The resulting tensor $A$ is of size $I\subscript{1} \times \ldots \times I\subscript{k-1} \times J \times I\subscript{k+1} \times \ldots \times I\subscript{N}$, and contains the elements&lt;/p&gt;
+&lt;p&gt;The resulting tensor $Y$ is of size $I\subscript{1} \times \ldots \times I\subscript{k-1} \times J \times I\subscript{k+1} \times \ldots \times I\subscript{N}$, and contains the elements&lt;/p&gt;
 
 &lt;script type=&quot;math/tex; mode=display&quot;&gt;y\subscript{i\subscript{1}  \cdots  i\subscript{k-1}  j  i\subscript{k+1}  \cdots  i\subscript{N}} = \sum\subscript{i\subscript{k} = 1}^{I\subscript{k}} x\subscript{i\subscript{1}  i\subscript{2}  \cdots  i\subscript{N}} a\subscript{ji\subscript{k}}.&lt;/script&gt;
 
@@ -200,7 +200,7 @@ is satisfied:&lt;/p&gt;
 
 &lt;p&gt;The example considered below is somewhat silly, given that the tensor I’m compressing isn’t very big, and thus there isn’t much of a point in compressing it. However, I think that the example still shows off very well how the algorithm can be very useful when the data size is much bigger (or the available storage much smaller).&lt;/p&gt;
 
-&lt;p&gt;I have downloaded from Kaggle the World Development Indicators &lt;a href=&quot;https://www.kaggle.com/worldbank/world-development-indicators&quot;&gt;dataset&lt;/a&gt;, originally collected and published by the The World Bank (the original dataset is available &lt;a href=&quot;http://data.worldbank.org/data-catalog/world-development-indicators&quot;&gt;here&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;I have downloaded from Kaggle the World Development Indicators &lt;a href=&quot;https://www.kaggle.com/worldbank/world-development-indicators&quot;&gt;dataset&lt;/a&gt;, originally collected and published by The World Bank (the original dataset is available &lt;a href=&quot;http://data.worldbank.org/data-catalog/world-development-indicators&quot;&gt;here&lt;/a&gt;).&lt;/p&gt;
 
 &lt;p&gt;The data can be arranged into a three-way tensor with the three modes corresponding to &lt;em&gt;country&lt;/em&gt; (&lt;a href=&quot;https://www.kaggle.com/benhamner/d/worldbank/world-development-indicators/countries-in-the-wdi-data&quot;&gt;list of available countries&lt;/a&gt;), &lt;em&gt;indicator&lt;/em&gt; (&lt;a href=&quot;https://www.kaggle.com/benhamner/d/worldbank/world-development-indicators/indicators-in-data&quot;&gt;list of available indicators&lt;/a&gt;), and &lt;em&gt;year&lt;/em&gt; (1960-2014). Since I didn’t have any time to deal with NA values in any creative way, I have kept only three indicators in the dataset. And I have replaced the remaining NAs with a country-wise average value for each particular indicator. Also, I have forgotten to normalize the data :disappointed:. The preprocessing resulted in a tensor of size 247-countries-by-3-indicators-by-55-years, that looks sort of like this:&lt;/p&gt;
 

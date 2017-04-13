@@ -45,19 +45,19 @@ As mentioned in the beginning of my last blog post, a tensor is essentially a mu
     <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - New Orleans 😎" href="/feed.xml">
 
     <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
- 
+
     <!-- MathJax interation-->
     <script type="text/x-mathjax-config">
       MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}});
       MathJax.Hub.Config({TeX: {Macros:{subscript:['_{#1}',1],superscript:['^{#1}',1]}}});
-    </script> 
+    </script>
     <!-- Turn on equation numbering -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
       TeX: { equationNumbers: { autoNumber: "AMS" } }
     });
     </script>
-    <script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS_HTML-full">
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML-full">
     </script>
  </head>
 
@@ -114,7 +114,7 @@ As mentioned in the beginning of <a href="http://www.alexejgossmann.com/tensor_d
 
 <script type="math/tex; mode=display">Y = X \times\subscript{k} A.</script>
 
-<p>The resulting tensor $A$ is of size $I\subscript{1} \times \ldots \times I\subscript{k-1} \times J \times I\subscript{k+1} \times \ldots \times I\subscript{N}$, and contains the elements</p>
+<p>The resulting tensor $Y$ is of size $I\subscript{1} \times \ldots \times I\subscript{k-1} \times J \times I\subscript{k+1} \times \ldots \times I\subscript{N}$, and contains the elements</p>
 
 <script type="math/tex; mode=display">y\subscript{i\subscript{1}  \cdots  i\subscript{k-1}  j  i\subscript{k+1}  \cdots  i\subscript{N}} = \sum\subscript{i\subscript{k} = 1}^{I\subscript{k}} x\subscript{i\subscript{1}  i\subscript{2}  \cdots  i\subscript{N}} a\subscript{ji\subscript{k}}.</script>
 
@@ -283,7 +283,7 @@ is satisfied:</p>
 
 <p>The example considered below is somewhat silly, given that the tensor I’m compressing isn’t very big, and thus there isn’t much of a point in compressing it. However, I think that the example still shows off very well how the algorithm can be very useful when the data size is much bigger (or the available storage much smaller).</p>
 
-<p>I have downloaded from Kaggle the World Development Indicators <a href="https://www.kaggle.com/worldbank/world-development-indicators">dataset</a>, originally collected and published by the The World Bank (the original dataset is available <a href="http://data.worldbank.org/data-catalog/world-development-indicators">here</a>).</p>
+<p>I have downloaded from Kaggle the World Development Indicators <a href="https://www.kaggle.com/worldbank/world-development-indicators">dataset</a>, originally collected and published by The World Bank (the original dataset is available <a href="http://data.worldbank.org/data-catalog/world-development-indicators">here</a>).</p>
 
 <p>The data can be arranged into a three-way tensor with the three modes corresponding to <em>country</em> (<a href="https://www.kaggle.com/benhamner/d/worldbank/world-development-indicators/countries-in-the-wdi-data">list of available countries</a>), <em>indicator</em> (<a href="https://www.kaggle.com/benhamner/d/worldbank/world-development-indicators/indicators-in-data">list of available indicators</a>), and <em>year</em> (1960-2014). Since I didn’t have any time to deal with NA values in any creative way, I have kept only three indicators in the dataset. And I have replaced the remaining NAs with a country-wise average value for each particular indicator. Also, I have forgotten to normalize the data <img class="emoji" title=":disappointed:" alt=":disappointed:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f61e.png" height="20" width="20" align="absmiddle">. The preprocessing resulted in a tensor of size 247-countries-by-3-indicators-by-55-years, that looks sort of like this:</p>
 
