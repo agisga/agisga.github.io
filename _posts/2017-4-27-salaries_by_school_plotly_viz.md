@@ -72,7 +72,7 @@ The function argument `tooltip` can be used to specify which aesthetic mappings 
 ggplotly(p, tooltip = c("text", "starting"),
          width = 800, height = 500)
 ```
-generates [the following interactive visualization](https://plot.ly/~agisga/13.embed).
+generates [the following interactive visualization](https://plot.ly/~agisga/13).
 <iframe width="800" height="500" frameborder="0" scrolling="no" src="//plot.ly/~agisga/13.embed"></iframe>
 
 Now, if you want to publish a plotly visualization to <https://plot.ly/>, you first need to communicate your account info to the plotly R package:
@@ -88,7 +88,7 @@ plotly_POST(filename = "Starting", sharing = "public")
 ## More visualizations
 
 Finally, based on [the same dataset](http://online.wsj.com/public/resources/documents/info-Salaries_for_Colleges_by_Region-sort.html) I have generated an interactive visualization of the median mid-career salaries by undergraduate alma mater (the R script is almost identical to the one described above).
-[The resulting interactive visualization](https://plot.ly/~agisga/15.embed) is embedded below.
+[The resulting interactive visualization](https://plot.ly/~agisga/15) is embedded below.
 <iframe width="800" height="500" frameborder="0" scrolling="no" src="//plot.ly/~agisga/15.embed"></iframe>
-Additionally, it is quite informative to look at a [visualization of the salary increase from starting to mid-career](https://plot.ly/~agisga/11.embed).
+Additionally, it is quite informative to look at a [visualization of the salary increase from starting to mid-career](https://plot.ly/~agisga/11).
 <iframe width="800" height="500" frameborder="0" scrolling="no" src="//plot.ly/~agisga/11.embed"></iframe>

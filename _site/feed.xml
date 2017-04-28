@@ -80,7 +80,7 @@
          &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;800&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;500&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
-&lt;p&gt;generates &lt;a href=&quot;https://plot.ly/~agisga/13.embed&quot;&gt;the following interactive visualization&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;generates &lt;a href=&quot;https://plot.ly/~agisga/13&quot;&gt;the following interactive visualization&lt;/a&gt;.&lt;/p&gt;
 &lt;iframe width=&quot;800&quot; height=&quot;500&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot; src=&quot;//plot.ly/~agisga/13.embed&quot;&gt;&lt;/iframe&gt;
 
 &lt;p&gt;Now, if you want to publish a plotly visualization to &lt;a href=&quot;https://plot.ly/&quot;&gt;https://plot.ly/&lt;/a&gt;, you first need to communicate your account info to the plotly R package:&lt;/p&gt;
@@ -96,9 +96,9 @@
 &lt;h2 id=&quot;more-visualizations&quot;&gt;More visualizations&lt;/h2&gt;
 
 &lt;p&gt;Finally, based on &lt;a href=&quot;http://online.wsj.com/public/resources/documents/info-Salaries_for_Colleges_by_Region-sort.html&quot;&gt;the same dataset&lt;/a&gt; I have generated an interactive visualization of the median mid-career salaries by undergraduate alma mater (the R script is almost identical to the one described above).
-&lt;a href=&quot;https://plot.ly/~agisga/15.embed&quot;&gt;The resulting interactive visualization&lt;/a&gt; is embedded below.&lt;/p&gt;
+&lt;a href=&quot;https://plot.ly/~agisga/15&quot;&gt;The resulting interactive visualization&lt;/a&gt; is embedded below.&lt;/p&gt;
 &lt;iframe width=&quot;800&quot; height=&quot;500&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot; src=&quot;//plot.ly/~agisga/15.embed&quot;&gt;&lt;/iframe&gt;
-&lt;p&gt;Additionally, it is quite informative to look at a &lt;a href=&quot;https://plot.ly/~agisga/11.embed&quot;&gt;visualization of the salary increase from starting to mid-career&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Additionally, it is quite informative to look at a &lt;a href=&quot;https://plot.ly/~agisga/11&quot;&gt;visualization of the salary increase from starting to mid-career&lt;/a&gt;.&lt;/p&gt;
 &lt;iframe width=&quot;800&quot; height=&quot;500&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot; src=&quot;//plot.ly/~agisga/11.embed&quot;&gt;&lt;/iframe&gt;
 </description>
           <pubDate>2017-04-27T23:08:00-05:00</pubDate>
