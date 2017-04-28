@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Salaries by alma mater - an interactive visualization with R and plotly – Alexej Gossmann – New Orleans 😎</title>
+
+        <meta charset="utf-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    
+    <meta name="description" content="
+
+">
+    <meta property="og:description" content="
+
+">
+    
+    <meta name="author" content="Alexej Gossmann">
+
+    
+    <meta property="og:title" content="Salaries by alma mater - an interactive visualization with R and plotly">
+    <meta property="twitter:title" content="Salaries by alma mater - an interactive visualization with R and plotly">
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - New Orleans 😎" href="/feed.xml">
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+
+    <!-- MathJax interation-->
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}});
+      MathJax.Hub.Config({TeX: {Macros:{subscript:['_{#1}',1],superscript:['^{#1}',1]}}});
+    </script>
+    <!-- Turn on equation numbering -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      TeX: { equationNumbers: { autoNumber: "AMS" } }
+    });
+    </script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
+ </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <header class="masthead clearfix">
+        <a href="/" class="site-avatar"><img src="https://avatars0.githubusercontent.com/u/11449372?v=3&amp;s=460"></a>
+
+        <div class="site-info">
+          <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
+          <p class="site-description">New Orleans 😎</p>
+        </div>
+
+        <nav>
+          <a href="/about" class="blue">About</a>
+          <a href="/" class="yellow">Blog</a>
+          <a href="/talks" class="green">Presentations</a>
+          <a href="/publications" class="magenta">Publications</a>
+          <a href="/software" class="cyan">Software</a>
+        </nav>
+      </header>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Salaries by alma mater - an interactive visualization with R and plotly</h1>
+
+  <div class="entry">
+    <p><img src="../images/salaries_by_college/starting_salary.png" alt="Visualization of starting salaries by college"></p>
+
+<p>Based on <a href="http://online.wsj.com/public/resources/documents/info-Salaries_for_Colleges_by_Region-sort.html">an interesting dataset from the Wall Street Journal</a> I made the above visualization of the median starting salary for US college graduates from different undergraduate institutions (I have also looked at the mid-career salaries, and the salary increase, but more on that later). However, I thought that it would be a lot more informative, if it were <em>interactive</em>. To the very least I wanted to be able to see the school names when hovering over or clicking on the points with the mouse.</p>
+
+<p>Luckily, this kind of interactivity can be easily achieved in R with the library <a href="https://cran.r-project.org/package=plotly"><code class="highlighter-rouge">plotly</code></a>, especially due to its excellent integration with <a href="https://cran.r-project.org/package=ggplot2"><code class="highlighter-rouge">ggplot2</code></a>, which I used to produce the above figure. In the following I describe how exactly this can be done.</p>
+
+<p>Before I show you the interactive visualizations, a few words on the data preprocessing, and on how the map and the points are plotted with <code class="highlighter-rouge">ggplot2</code>:</p>
+<ul>
+  <li>I generally use functions from the <a href="http://tidyverse.org/">tidyverse</a> R packages.</li>
+  <li>I save the data in the data frame <code class="highlighter-rouge">salaries</code>, and transform the given amounts to proper floating point numbers, stripping the dollar signs and extra whitespaces.</li>
+  <li>The data provide school names. However, I need to find out the exact geographical coordinates of each school to put it on the map. This can be done in a very convenient way, by using the <code class="highlighter-rouge">geocode</code> function from the <a href="https://cran.r-project.org/package=ggmap"><code class="highlighter-rouge">ggmap</code></a> R package:
+    <div class="language-R highlighter-rouge">
+<pre class="highlight"><code><span class="n">school_longlat</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">geocode</span><span class="p">(</span><span class="n">salaries</span><span class="o">$</span><span class="n">school</span><span class="p">)</span><span class="w">
+</span><span class="n">school_longlat</span><span class="o">$</span><span class="n">school</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">salaries</span><span class="o">$</span><span class="n">school</span><span class="w">
+</span><span class="n">salaries</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">left_join</span><span class="p">(</span><span class="n">salaries</span><span class="p">,</span><span class="w"> </span><span class="n">school_longlat</span><span class="p">)</span><span class="w">
+</span></code></pre>
+    </div>
+  </li>
+  <li>For the visualization I want to disregard the colleges in Alaska and Hawaii to avoid shrinking the rest of the map. The respective rows of <code class="highlighter-rouge">salaries</code> can be easily determined with a <code class="highlighter-rouge">grep</code> search:
+    <div class="language-R highlighter-rouge">
+<pre class="highlight"><code><span class="n">grep</span><span class="p">(</span><span class="s2">"alaska"</span><span class="p">,</span><span class="w"> </span><span class="n">salaries</span><span class="o">$</span><span class="n">school</span><span class="p">,</span><span class="w"> </span><span class="n">ignore.case</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w">
+</span><span class="c1"># [1] 206
+</span><span class="n">grep</span><span class="p">(</span><span class="s2">"hawaii"</span><span class="p">,</span><span class="w"> </span><span class="n">salaries</span><span class="o">$</span><span class="n">school</span><span class="p">,</span><span class="w"> </span><span class="n">ignore.case</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w">
+</span><span class="c1"># [1] 226
+</span></code></pre>
+    </div>
+  </li>
+  <li>A data frame containing geographical data that can be used to plot the outline of all US states can be loaded using the function <code class="highlighter-rouge">map_data</code> from the <code class="highlighter-rouge">ggplot2</code> package:
+    <div class="language-R highlighter-rouge">
+<pre class="highlight"><code><span class="n">states</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">map_data</span><span class="p">(</span><span class="s2">"state"</span><span class="p">)</span><span class="w">
+</span></code></pre>
+    </div>
+  </li>
+  <li>And I load a yellow-orange-red palette with the function <code class="highlighter-rouge">brewer.pal</code> from the <a href="http://colorbrewer2.org"><code class="highlighter-rouge">RColorBrewer</code> library</a>, to use as a scale for the salary amounts:
+    <div class="language-R highlighter-rouge">
+<pre class="highlight"><code><span class="n">yor_col</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">brewer.pal</span><span class="p">(</span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="s2">"YlOrRd"</span><span class="p">)</span><span class="w">
+</span></code></pre>
+    </div>
+  </li>
+  <li>Finally the (yet non-interactive) visualization is created with <code class="highlighter-rouge">ggplot2</code>:
+    <div class="language-R highlighter-rouge">
+<pre class="highlight"><code><span class="n">p</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ggplot</span><span class="p">(</span><span class="n">salaries</span><span class="p">[</span><span class="o">-</span><span class="nf">c</span><span class="p">(</span><span class="m">206</span><span class="p">,</span><span class="w"> </span><span class="m">226</span><span class="p">),</span><span class="w"> </span><span class="p">])</span><span class="w"> </span><span class="o">+</span><span class="w">
+    </span><span class="n">geom_polygon</span><span class="p">(</span><span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">long</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lat</span><span class="p">,</span><span class="w"> </span><span class="n">group</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">group</span><span class="p">),</span><span class="w">
+                 </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">states</span><span class="p">,</span><span class="w"> </span><span class="n">fill</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"black"</span><span class="p">,</span><span class="w">
+                 </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"white"</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+    </span><span class="n">geom_point</span><span class="p">(</span><span class="n">aes</span><span class="p">(</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lon</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lat</span><span class="p">,</span><span class="w">
+                   </span><span class="n">color</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">starting</span><span class="p">,</span><span class="w"> </span><span class="n">text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">school</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
+    </span><span class="n">coord_fixed</span><span class="p">(</span><span class="m">1.3</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+    </span><span class="n">scale_color_gradientn</span><span class="p">(</span><span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Starting\nSalary"</span><span class="p">,</span><span class="w">
+                          </span><span class="n">colors</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">rev</span><span class="p">(</span><span class="n">yor_col</span><span class="p">),</span><span class="w">
+                          </span><span class="n">labels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">comma</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+    </span><span class="n">guides</span><span class="p">(</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">FALSE</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
+    </span><span class="n">theme_bw</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w">
+    </span><span class="n">theme</span><span class="p">(</span><span class="n">axis.text</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">element_blank</span><span class="p">(),</span><span class="w">
+          </span><span class="n">axis.line</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">element_blank</span><span class="p">(),</span><span class="w">
+          </span><span class="n">axis.ticks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">element_blank</span><span class="p">(),</span><span class="w">
+          </span><span class="n">panel.border</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">element_blank</span><span class="p">(),</span><span class="w">
+          </span><span class="n">panel.grid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">element_blank</span><span class="p">(),</span><span class="w">
+          </span><span class="n">axis.title</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">element_blank</span><span class="p">())</span><span class="w">
+</span></code></pre>
+    </div>
+  </li>
+</ul>
+
+<p>Now, entering <code class="highlighter-rouge">p</code> into the R console will generate the figure shown at the top of this post.</p>
+
+<p>However, we want to…</p>
+
+<h2 id="make-it-interactive">…make it interactive</h2>
+
+<p>The function <code class="highlighter-rouge">ggplotly</code> immediately generates a <a href="https://plot.ly/">plotly</a> interactive visualization from a <code class="highlighter-rouge">ggplot</code> object. It’s that simple! <img class="emoji" title=":smiley:" alt=":smiley:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f603.png" height="20" width="20" align="absmiddle"> (Though I must admit that, more often than I would be okay with, some elements of the ggplot visualization disappear or don’t look as expected. <img class="emoji" title=":fearful:" alt=":fearful:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f628.png" height="20" width="20" align="absmiddle">)</p>
+
+<p>The function argument <code class="highlighter-rouge">tooltip</code> can be used to specify which aesthetic mappings from the <code class="highlighter-rouge">ggplot</code> call should be shown in the tooltip. So, the code</p>
+<div class="language-R highlighter-rouge">
+<pre class="highlight"><code><span class="n">ggplotly</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="w"> </span><span class="n">tooltip</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"text"</span><span class="p">,</span><span class="w"> </span><span class="s2">"starting"</span><span class="p">),</span><span class="w">
+         </span><span class="n">width</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">800</span><span class="p">,</span><span class="w"> </span><span class="n">height</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">500</span><span class="p">)</span><span class="w">
+</span></code></pre>
+</div>
+<p>generates <a href="https://plot.ly/~agisga/13.embed">the following interactive visualization</a>.</p>
+<iframe width="800" height="500" frameborder="0" scrolling="no" src="//plot.ly/~agisga/13.embed"></iframe>
+
+<p>Now, if you want to publish a plotly visualization to <a href="https://plot.ly/">https://plot.ly/</a>, you first need to communicate your account info to the plotly R package:</p>
+<div class="language-R highlighter-rouge">
+<pre class="highlight"><code><span class="n">Sys.setenv</span><span class="p">(</span><span class="s2">"plotly_username"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"??????"</span><span class="p">)</span><span class="w">
+</span><span class="n">Sys.setenv</span><span class="p">(</span><span class="s2">"plotly_api_key"</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"????????????"</span><span class="p">)</span><span class="w">
+</span></code></pre>
+</div>
+<p>and after that, posting the visualization to your account at <a href="https://plot.ly/">https://plot.ly/</a> is as simple as:</p>
+<div class="language-R highlighter-rouge">
+<pre class="highlight"><code><span class="n">plotly_POST</span><span class="p">(</span><span class="n">filename</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"Starting"</span><span class="p">,</span><span class="w"> </span><span class="n">sharing</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"public"</span><span class="p">)</span><span class="w">
+</span></code></pre>
+</div>
+
+<h2 id="more-visualizations">More visualizations</h2>
+
+<p>Finally, based on <a href="http://online.wsj.com/public/resources/documents/info-Salaries_for_Colleges_by_Region-sort.html">the same dataset</a> I have generated an interactive visualization of the median mid-career salaries by undergraduate alma mater (the R script is almost identical to the one described above).
+<a href="https://plot.ly/~agisga/15.embed">The resulting interactive visualization</a> is embedded below.</p>
+<iframe width="800" height="500" frameborder="0" scrolling="no" src="//plot.ly/~agisga/15.embed"></iframe>
+<p>Additionally, it is quite informative to look at a <a href="https://plot.ly/~agisga/11.embed">visualization of the salary increase from starting to mid-career</a>.</p>
+<iframe width="800" height="500" frameborder="0" scrolling="no" src="//plot.ly/~agisga/11.embed"></iframe>
+
+  </div>
+
+  <div class="date">
+    Written on April 27, 2017
+  </div>
+
+  <div class="date">
+    Tags:
+		
+		<a href="/tag/r">#r</a>
+		
+		<a href="/tag/visualization">#visualization</a>
+		
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'agisga';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+<a href="mailto:alexej.go@gmail.com"><i class="svg-icon email"></i></a>
+<a href="https://www.facebook.com/alexej.yexela"><i class="svg-icon facebook"></i></a>
+
+<a href="https://github.com/agisga"><i class="svg-icon github"></i></a>
+
+<a href="https://www.linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
+
+<a href="/feed.xml"><i class="svg-icon rss"></i></a>
+<a href="https://www.twitter.com/agisga"><i class="svg-icon twitter"></i></a>
+
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-94080131-1', 'auto');
+		ga('send', 'pageview', {
+		  'page': '/salaries_by_school_plotly_viz/',
+		  'title': 'Salaries by alma mater - an interactive visualization with R and plotly'
+		});
+	</script>
+	<!-- End Google Analytics -->
+
+
+  </body>
+</html>
