@@ -1,14 +1,14 @@
 ---
 layout: post
 title: The Lean PhD Student &mdash; Can The Lean Startup principles be applied to personal productivity in graduate school?
-date: 2017-05-06 00:50:00 -05:00
-published: true
+date: 2017-05-09 20:40:00 -05:00
 tags:
 - entrepreneurship
 - academia
+- productivity
 ---
 
-The lean startup methodology consists of a set of principles that were proposed and popularized by Eric Ries in the book *The Lean Startup* (and elsewhere). He believes that startup success can be engineered by following the lean startup methodology. Eric Ries defines a startup as "a human institution designed to deliver a new product or service under conditions of extreme uncertainty". If we replace "product or service" by "research result", that sounds awfully similar to what a PhD student has to do. Indeed, the similarities between being a junior researcher, such as a PhD student, and running a startup have been often pointed out (for example: [[1]](http://pgbovine.net/research-and-startup.htm), [[2]](http://www.bench2business.com/5-ways-start-up-life-is-similar-to-academia/), [[3]](https://pragmaticstartup.wordpress.com/2011/02/21/similarities-between-an-entrepreneur-and-an-academic/)). In the light of this, I was wondering if *the lean startup methodology* can also be applied to academic pursuits of a PhD student. Below, I try to adapt some of the most important lean startup concepts for application to a junior researcher's personal productivity and academic success.[^nonexperimental]
+The lean startup methodology consists of a set of principles that were proposed and popularized by Eric Ries in the book *The Lean Startup* (and elsewhere). He believes that startup success can be engineered by following the lean startup methodology. Eric Ries defines a startup as "a human institution designed to deliver a new product or service under conditions of extreme uncertainty". If we replace "product or service" by "research result", that sounds awfully similar to what a PhD student has to do. Indeed, the similarities between being a junior researcher, such as a PhD student, and running a startup have been often pointed out (for example: [[1]](http://pgbovine.net/research-and-startup.htm), [[2]](http://www.bench2business.com/5-ways-start-up-life-is-similar-to-academia/), [[3]](https://pragmaticstartup.wordpress.com/2011/02/21/similarities-between-an-entrepreneur-and-an-academic/)). In light of this, I propose that *the lean startup methodology* can also be applied to academic pursuits of a PhD student. Below, I adapt some of the most important lean startup concepts for application to a junior researcher's personal productivity and academic success.[^nonexperimental]
 
 <iframe style="width:120px;height:240px;float:left;margin-right:10px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//ws-na.amazon-adsystem.com/widgets/q?ServiceVersion=20070822&OneJS=1&Operation=GetAdHtml&MarketPlace=US&source=ac&ref=qf_sp_asin_til&ad_type=product_link&tracking_id=alexejgossman-20&marketplace=amazon&region=US&placement=0307887898&asins=0307887898&linkId=8ed352099c68679af49e9321333495aa&show_border=false&link_opens_in_new_window=false&price_color=333333&title_color=0066C0&bg_color=FFFFFF">
 </iframe>
@@ -31,15 +31,15 @@ The concept of a *minimum viable product* (or MVP) is especially important durin
 In this step it is important to use so-called *actionable metrics*, as opposed to *vanity metrics*. Actionable metrics accurately reflect the key success factors of the project, while vanity metrics are measurements that give "the rosiest picture possible". With regard to academic research actionable metrics may be (not an exhaustive list):
 
 * Direct feedback from researchers who you trust.
-* The fact that others are applying your work to their own research.
+* Others applying your work to their own research.
 * Major contributions to peer-reviewed publications.
 
-And I think that (academic) vanity metrics may include:
+And (academic) vanity metrics may include:
 
 * Co-authorships on other people's papers, while having only slightly more contribution than none.
 * Association or acquaintance with a "big name" scientist.
-* Number of views of a researchers homepage, or paper views on some online platforms.
-* Appearance in main stream media.
+* Number of views of a researcher's homepage, or paper view count on some online platform.
+* Appearance in mainstream media.
 
 Measuring the right metrics is a big part of what Eric Ries calls *innovation accounting*.
 
@@ -47,15 +47,15 @@ Measuring the right metrics is a big part of what Eric Ries calls *innovation ac
 
 :bulb: Learn how valuable your audience actually considers your idea to be based on the received feedback and your actionable metrics of choice. Utilize that new knowledge to improve the initial idea in order to make it more valuable to a targeted scientific audience, and adjust your assumptions about what your audience needs.
 
-In *The Lean Startup* this type of a modification process on your initial idea is called a *pivot*, or in Eric Ries words: "A pivot is a structured course correction designed to test a new fundamental hypothesis about the product, strategy, and engine of growth." Having obtained the corrected research idea, you would go back to step 1 and reiterate the whole process.
+In *The Lean Startup* this type of a modification process on your initial idea is called a *pivot*, or in Eric Ries' words: "A pivot is a structured course correction designed to test a new fundamental hypothesis about the product, strategy, and engine of growth." Having obtained the corrected research idea, you would go back to step 1 and reiterate the whole process.
 
 ### Conclusion
 
 So, what do we get out of all of this? I think that a clear strategy emerges here.
 
-The strategy consists in striving to push results out fast, in order to receive feedback fast, which (feedback) is evaluated according to a suitable set of actionable metrics that were chosen in advance. That is, one needs to be writing papers fast, initially without worrying about things outside the scope of an MVP, such as the perfect word choice, the optimal formatting, coverage of all corner cases, etc., in order to get and measure the feedback from members of the target scientific audience quickly. Consequently the ideas need to be improved according to what was learned, and the process is iterated. One of the major goals of the PhD student should be to minimize the time required to pass through this loop.
+The strategy consists in striving to push results out fast, in order to receive feedback fast, which (feedback) is evaluated according to a suitable set of actionable metrics that were chosen in advance. That is, one needs to be writing papers fast, initially without worrying about things outside the scope of an MVP, such as the perfect word choice, the optimal formatting, coverage of all corner cases, etc., in order to get and measure the feedback from members of the target scientific audience quickly. Then the ideas need to be improved upon according to what was learned, and the process is reiterated. One of the major goals of the PhD student should be to minimize the time required to pass through this loop.
 
-So, is this a good strategy for a PhD student? Well, I can't say before I try it out :stuck_out_tongue:. One crucial factor I didn't mention yet though is the PhD advisor. In my case I have a lot of freedom to come up with my own projects and pursue my own ideas as long as they are within a specific (but somewhat loosely-defined) area, and I could totally incorporate this lean startup inspired research strategy into my work. On the other extreme, there are professors who micromanage their PhD student's every step, in which case the PhD student will find it much harder to experiment with their research strategy.
+So is this a good strategy for a PhD student? Well, I can't say before I try it out :stuck_out_tongue:. One crucial factor not mentioned here though is the PhD advisor. In my case I have a lot of freedom to come up with my own projects and pursue my own ideas as long as they are within a specific (but somewhat loosely-defined) area, and I could totally incorporate this lean startup inspired research strategy into my work. On the other extreme, there are professors who micromanage their PhD student's every step, in which case the PhD student will find it much harder to experiment with their research strategy.
 
 ----------------------------------
 [^nonexperimental]: Please note that I'm writing from the point of view of mathematical, statistical, and computational sciences, rather than from the viewpoint of experimental sciences.

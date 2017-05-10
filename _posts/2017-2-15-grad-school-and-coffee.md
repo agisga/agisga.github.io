@@ -6,6 +6,7 @@ tags:
 - tired of doing real math
 - visualization
 - r
+- productivity
 ---
 
 Lately I notice a sharp increase in my coffee consumption (reading [Howard Schultz's Starbucks book](https://www.amazon.com/Pour-Your-Heart-Into-Starbucks/dp/0786883561/ref=sr_1_3?ie=UTF8&qid=1487141175&sr=8-3&keywords=howard+schultz), which is actually quite good by the way, does not help either :grimacing:). Having recently transitioned into a new PhD program I started wondering whether my increased coffee consumption has something to do with my higher stress levels in the last few weeks, and how that conjecture generalizes to the rest of my grad school experience. To answer that question I decided to take a look at how much money I have spent at coffee houses over the last few years. ...Also, I'm right now over-caffeinated at 1:40am and I have nothing better to do anyway. :smile:
