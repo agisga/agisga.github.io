@@ -5,6 +5,7 @@ date: 2017-04-27 23:08:00 -05:00
 tags:
 - r
 - visualization
+- academia
 ---
 
 ![Visualization of starting salaries by college](../images/salaries_by_college/starting_salary.png)
