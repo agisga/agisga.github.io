@@ -66,6 +66,19 @@
   
     <article class="post">
 
+      <h1><a href="/mixed_models_applied_to_family_SNP_data/">A (naive) application of linear mixed models to genetics</a></h1>
+
+      <div class="entry">
+        <p>The following shows an application of class <code class="highlighter-rouge">LMM</code> from the Ruby gem <a href="https://github.com/agisga/mixed_models.git"><code class="highlighter-rouge">mixed_models</code></a> to SNP data (<a href="https://en.wikipedia.org/wiki/Single-nucleotide_polymorphism">single-nucleotide polymorphism</a>) with known pedigree structures. The family information is prior knowledge that we can model in the random effects of a linear mixed effects model.</p>
+
+
+      </div>
+
+      <a href="/mixed_models_applied_to_family_SNP_data/" class="read-more">Read More</a>
+    </article>
+  
+    <article class="post">
+
       <h1><a href="/MixedModels_p_values_and_CI/">P-values and confidence intervals</a></h1>
 
       <div class="entry">
@@ -182,19 +195,6 @@ The Ruby gem is now capable of fitting linear mixed models. In this short blog p
       <a href="/ODE/" class="read-more">Read More</a>
     </article>
   
-    <article class="post">
-
-      <h1><a href="/Advection-Equation/">Solve an advection equation in Ruby with spitzy</a></h1>
-
-      <div class="entry">
-        <p>A couple of days ago I started working on a collection of numerical methods for differential equations, wirtten in pure Ruby (I have conviced the professor of my numerical DE class that that`s a good idea for my final project in said class).</p>
-
-
-      </div>
-
-      <a href="/Advection-Equation/" class="read-more">Read More</a>
-    </article>
-  
 </div>
 
 <!-- Pagination links -->
@@ -209,6 +209,19 @@ The Ruby gem is now capable of fitting linear mixed models. In this short blog p
 </div>
 
 <!--<div class="posts">
+  
+    <article class="post">
+
+      <h1><a href="/Freedmans_paradox/">Freedman's paradox</a></h1>
+
+      <div class="entry">
+        <p>Recently I came across the classical 1983 paper <a href="http://www.public.asu.edu/~gasweete/crj604/readings/1983-Freedman%20(Screening%20Regression%20Equations).pdf"><em>A note on screening regression equations</em></a> by <a href="https://en.wikipedia.org/wiki/David_A._Freedman">David Freedman</a>. Freedman shows in an impressive way the dangers of data reuse in statistical analyses. The potentially dangerous scenarios include those where the results of one statistical procedure performed on the data are fed into another procedure performed on the same data. As a concrete example Freedman considers the practice of performing variable selection first, and then fitting another model using only the identified variables on the same data that was used to identify them in the first place. Because of the unexpectedly high severity of the problem this phenomenon became known as <a href="https://en.wikipedia.org/wiki/Freedman%27s_paradox">“Freedman’s paradox”</a>. Moreover, in his paper Freedman derives asymptotic estimates for the resulting errors.</p>
+
+
+      </div>
+
+      <a href="/Freedmans_paradox/" class="read-more">Read More</a>
+    </article>
   
     <article class="post">
 
