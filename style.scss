@@ -153,13 +153,13 @@ img {
 .wrapper-masthead {
   background-color: #1f1f1f;
   margin: 0 auto;
-  max-width: 100%;
-  width: 100%;
+  max-width: 85%;
+  width: 85%;
   margin-bottom: 50px;
 }
 
 .masthead {
-  padding: 20px 30px;
+  padding: 10px 15px;
   border-bottom: 1px solid #402e2e;
 
   @include mobile {
@@ -202,6 +202,11 @@ img {
   font-weight: 300;
   font-size: 28px;
   letter-spacing: 1px;
+  a {
+    &:hover, &:active {
+      color: #d17b49;
+    }
+  }
 }
 
 .site-description {
@@ -231,21 +236,17 @@ nav {
     margin-left: 20px;
     text-align: right;
     font-weight: 300;
-    letter-spacing: 1px; 
+    letter-spacing: 1px;
     color: #c0b18b;
+    &:hover, &:active {
+      color: #d17b49;
+    }
 
     @include mobile {
       margin: 0 10px;
       color: #444b4b;
     }
   }
-
-  a.red { color: #d17b49 }
-  a.green { color: #7b8748 }
-  a.yellow { color: #8f6840 }
-  a.blue { color: #535c5c }
-  a.magenta { color: #775759; }
-  a.cyan { color: #6d715e; }
 }
 
 //

@@ -1,7 +1,7 @@
 ---
 layout: page
-title: Software 
-permalink: /software/
+title: Code
+permalink: /code/
 ---
 
 * [`grpSLOPEMC`](https://github.com/agisga/grpSLOPEMC) &mdash; This is an extension package to the R package [grpSLOPE](https://cran.r-project.org/package=grpSLOPE). It contains Monte Carlo based methods for the estimation of the regularizing sequence. [:octocat: github](https://github.com/agisga/grpSLOPEMC)
