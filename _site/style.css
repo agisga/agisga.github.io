@@ -195,6 +195,12 @@ img {
   width: 85%;
   margin-bottom: 50px;
 }
+@media screen and (max-width: 640px) {
+  .wrapper-masthead {
+    max-width: 100%;
+    width: 100%;
+  }
+}
 
 .masthead {
   padding: 10px 15px;
@@ -285,7 +291,6 @@ nav a:hover, nav a:active {
 @media screen and (max-width: 640px) {
   nav a {
     margin: 0 10px;
-    color: #444b4b;
   }
 }
 

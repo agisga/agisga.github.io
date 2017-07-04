@@ -156,6 +156,11 @@ img {
   max-width: 85%;
   width: 85%;
   margin-bottom: 50px;
+
+  @include mobile {
+    max-width: 100%;
+    width: 100%;
+  }
 }
 
 .masthead {
@@ -244,7 +249,6 @@ nav {
 
     @include mobile {
       margin: 0 10px;
-      color: #444b4b;
     }
   }
 }
