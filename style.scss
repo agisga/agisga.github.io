@@ -18,7 +18,7 @@ html {
 }
 
 body {
-	background: $white;
+  background: $white;
   font: 18px/1.4 $helvetica;
   color: $darkGray;
 }
@@ -71,7 +71,7 @@ p {
 a {
   color: $blue;
   text-decoration: none;
-	cursor: pointer;
+  cursor: pointer;
   &:hover, &:active {
     color: $blue;
   }
@@ -297,6 +297,25 @@ nav {
 footer {
   padding: 20px 0;
   text-align: center;
+}
+
+.pagination {
+  .previous {
+    font-weight: bold;
+    font-size: smaller;
+    margin-right: 5px;
+  }
+
+  .next {
+    font-weight: bold;
+    font-size: smaller;
+    margin-left: 5px;
+  }
+
+  [nothing-left-to-show] {
+    text-decoration: line-through;
+    color: $gray;
+  }
 }
 
 // Settled on moving the import of syntax highlighting to the bottom of the CSS

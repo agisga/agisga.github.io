@@ -332,6 +332,21 @@ footer {
   text-align: center;
 }
 
+.pagination .previous {
+  font-weight: bold;
+  font-size: smaller;
+  margin-right: 5px;
+}
+.pagination .next {
+  font-weight: bold;
+  font-size: smaller;
+  margin-left: 5px;
+}
+.pagination [nothing-left-to-show] {
+  text-decoration: line-through;
+  color: #666;
+}
+
 .highlight {
   background-color: #efefef;
   padding: 7px 7px 7px 10px;
