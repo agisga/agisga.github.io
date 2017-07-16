@@ -25,15 +25,22 @@
 
     <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
 
-    <!-- MathJax interation-->
-    <script type="text/x-mathjax-config">
-      MathJax.Hub.Config({tex2jax: {inlineMath: [["$","$"]]}});
-      MathJax.Hub.Config({TeX: {Macros:{subscript:['_{#1}',1],superscript:['^{#1}',1]}}});
-    </script>
-    <!-- Turn on equation numbering -->
+    <!-- MathJax integration and configuration-->
+    <!-- Use standard LaTeX delimiters and turn on equation numbering -->
     <script type="text/x-mathjax-config">
     MathJax.Hub.Config({
-      TeX: { equationNumbers: { autoNumber: "AMS" } }
+      tex2jax: {
+        inlineMath: [ ["$","$"] ],
+        displayMath: [ ["$$","$$"] ],
+        processEscapes: true
+      },
+      TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        Macros: {
+          subscript: ['_{#1}', 1],
+          superscript: ['^{#1}', 1]
+        }
+      }
     });
     </script>
     <script type="text/javascript" async
