@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mining USPTO full text patent data - Analysis of machine learning and AI related patents granted in 2017 so far - Part 1 – Alexej Gossmann</title>
+
+        <meta charset="utf-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    
+    <meta name="description" content="The United States Patent and Trademark office (USPTO) provides immense amounts of data (the data I used are in the form of XML files). After coming across these datasets, I thought that it would be a good idea to explore where and how my areas of interest fall into the intellectual property space; my areas of interest being machine learning (ML), data science, and  artificial intelligence (AI).
+
+">
+    <meta property="og:description" content="The United States Patent and Trademark office (USPTO) provides immense amounts of data (the data I used are in the form of XML files). After coming across these datasets, I thought that it would be a good idea to explore where and how my areas of interest fall into the intellectual property space; my areas of interest being machine learning (ML), data science, and  artificial intelligence (AI).
+
+">
+    
+    <meta name="author" content="Alexej Gossmann">
+
+    
+    <meta property="og:title" content="Mining USPTO full text patent data - Analysis of machine learning and AI related patents granted in 2017 so far - Part 1">
+    <meta property="twitter:title" content="Mining USPTO full text patent data - Analysis of machine learning and AI related patents granted in 2017 so far - Part 1">
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - PhD student with (severely sleep deprived) focus on statistics, machine learning, and programming" href="/feed.xml">
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+
+    <!-- MathJax integration and configuration-->
+    <!-- Use standard LaTeX delimiters and turn on equation numbering -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ["$","$"] ],
+        displayMath: [ ["$$","$$"] ],
+        processEscapes: true
+      },
+      TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        Macros: {
+          subscript: ['_{#1}', 1],
+          superscript: ['^{#1}', 1]
+        }
+      }
+    });
+    </script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
+ </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <header class="masthead clearfix">
+        <a href="/" class="site-avatar"><img src="/images/avatar.png"></a>
+
+        <div class="site-info">
+          <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
+          <p class="site-description">PhD student with (severely sleep deprived) focus on statistics, machine learning, and programming</p>
+        </div>
+
+        <nav>
+          <a href="/">/blog/</a>
+          <a href="/publications">/publications/</a>
+          <a href="/code">/code/</a>
+          <a href="/about">/about/</a>
+        </nav>
+      </header>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Mining USPTO full text patent data - Analysis of machine learning and AI related patents granted in 2017 so far - Part 1</h1>
+
+  <div class="entry">
+    <p><a href="https://www.uspto.gov">The United States Patent and Trademark office (USPTO)</a> provides <em>immense</em> amounts of data (the data I used are in the form of XML files). After coming across these datasets, I thought that it would be a good idea to explore where and how my areas of interest fall into the intellectual property space; my areas of interest being machine learning (ML), data science, and  artificial intelligence (AI).</p>
+
+<p>I started this exploration by downloading the full text data (excluding images) for all patents that were assigned by the USPTO within the year 2017 up to the time of writing (<a href="https://bulkdata.uspto.gov/data/patent/grant/redbook/fulltext/2017/">Patent Grant Full Text Data/XML for the year 2017 through the week of Sept 12 from the USPTO Bulk Data Storage System</a>).</p>
+
+<p>In this blog post - “Part 1” - I address questions such as: How many ML and AI related patents were granted? Who are the most prolific inventors? The most frequent patent assignees? Where are inventions made? And when? Is the number of ML and AI related patents increasing over time? How long does it take to obtain a patent for a ML or AI related invention? Is the patent examination time shorter for big tech companies? etc.</p>
+
+<p>“Part 2” will be an in depth analysis of the language used in patent titles, descriptions, and claims, and “Part 3” will be on experimentation with with deep neural nets applied to the patents’ title, description, and claims text.</p>
+
+<h2 id="identifying-patents-related-to-machine-learning-and-ai">Identifying patents related to machine learning and AI</h2>
+
+<p>First, I curated a patent full text dataset consisting of “machine learning and AI related” patents.
+I am not just looking for instances where actual machine learning or AI algorithms were patented; I am looking for inventions which are <em>related to ML or AI in any/some capacity</em>. That is, I am interested in patents where machine learning, data mining, predictive modeling, or AI is <em>utilized as a part of the invention in any way whatsoever</em>. The subset of relevant patents was determined by a keyword search as specified by the following definition.</p>
+
+<p><strong>Definition:</strong> For the purposes of this blog post, <em>a machine learning or AI related patent</em> is a patent that contains at least one of the keywords
+<em>“machine learning”, “deep learning”, “neural network”, “artificial intelligence”, “statistical learning”, “data mining”, or “predictive model”</em>
+in its invention title, description, or claims text (while of course accounting for capitalization, pluralization, etc.).<sup id="fnref:keywords"><a href="#fn:keywords" class="footnote">1</a></sup></p>
+
+<p>With this keyword matching approach a total of 6665 patents have been selected. The bar graph below shows how many times each keyword got matched.</p>
+
+<p><img src="/images/2017-9-12-patents_part_1/keyword_match_freq.png" alt="plot of keyword match frequencies"></p>
+
+<p>Interestingly the term “neural network” is even more common than the more general terms “machine learning” and “artificial intelligence”.</p>
+
+<h3 id="some-example-patents">Some example patents</h3>
+
+<p>Here are three (randomly chosen) patents from the resulting dataset. For each printed are the invention title, the patent assignee, as well as one instance of the keyword match within the patent text.</p>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">## $`2867`
+## [1] "Fuselage manufacturing system"
+## [2] "THE BOEING COMPANY"
+## [3] "... using various techniques. For example, at least
+##      one of an artificial intelligence program, a
+##      knowledgebase, an expert ..."
+##
+## $`1618`
+## [1] "Systems and methods for validating wind farm
+##      performance measurements"
+## [2] "General Electric Company"
+## [3] "... present disclosure leverages and fuses
+##      accurate available sensor data using machine
+##      learning algorithms. That is, the more ..."
+##
+## $`5441`
+## [1] "Trigger repeat order notifications"
+## [2] "Accenture Global Services Limited"
+## [3] "... including user data obtained from a user
+##      device; obtaining a predictive model that
+##      estimates a likelihood of ..."</code></pre></figure>
+
+<p>And here are three examples of (randomly picked) patents that contain the relevant keywords directly in their invention title.</p>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">## $`5742`
+## [1] "Adaptive demodulation method and apparatus using an
+##      artificial neural network to improve data recovery
+##      in high speed channels"
+## [2] "Kelquan Holdings Ltd."
+## [3] "... THE INVENTION\nh-0002\n1 The present invention
+##      relates to a neural network based integrated
+##      demodulator that mitigates ..."
+##
+## $`3488`
+## [1] "Cluster-trained machine learning for image processing"
+## [2] "Amazon Technologies, Inc."
+## [3] "... BACKGROUND\nh-0001\n1 Artificial neural networks,
+##      especially deep neural network ..."
+##
+## $`3103`
+## [1] "Methods and apparatus for machine learning based
+##      malware detection"
+## [2] "Invincea, Inc."
+## [3] "... a need exists for methods and apparatus that can
+##      use machine learning techniques to reduce the amount ..."</code></pre></figure>
+
+<h2 id="who-holds-these-patents-inventors-and-assignees">Who holds these patents (inventors and assignees)?</h2>
+
+<p>The first question I would like to address is who files most of the machine learning and AI related patents.</p>
+
+<p>Each patent specifies one or several <em>inventors</em>, i.e., the individuals who made the patented invention, and a patent <em>assignee</em> which is typically the inventors’ employer company that holds the rights to the patent. The following bar graph visualizes the top 20 most prolific inventors and the top 20 most frequent patent assignees among the analyzed ML and AI related patents.</p>
+
+<p><img src="/images/2017-9-12-patents_part_1/unnamed-chunk-5-1.png" alt="plot of chunk unnamed-chunk-5"></p>
+
+<p>It isn’t surprising to see this list of companies. The likes of IBM, Google, Amazon, Microsoft, Samsung, and AT&amp;T rule the machine learning and AI patent space. I have to admit that I don’t recognize any of the inventors’ names (but it might just be me not being familiar enough with the ML and AI community).</p>
+
+<p>There are a number of interesting follow-up questions which for now I leave unanswered (hard to answer without additional data):</p>
+
+<ul>
+  <li>What is the count of ML and AI related patents by industry or type of company (e.g., big tech companies vs. startups vs. reserach universities vs. government)?</li>
+  <li>Who is deriving the most financial benefit by holding ML or AI related patents (either through licensing or by driving out the competition)?</li>
+</ul>
+
+<h2 id="where-do-these-inventions-come-from-geographically">Where do these inventions come from (geographically)?</h2>
+
+<p>Even though the examined patents were filed in the US, some of the inventions may have been made outside of the US.
+In fact, the data includes specific geographic locations for each patent, so I can map in which cities within the US and the world inventors are most active.
+The following figure is based on where the inventors are from, and shows the most active spots. Each point corresponds to the total number of inventions made at that location (though note that the color axis is a log10 scale, and so is the point size).</p>
+
+<p><img src="/images/2017-9-12-patents_part_1/locations.png" alt="plot of chunk unnamed-chunk-16"></p>
+
+<p>The results aren’t that surprising.
+However, we see that most (ML and AI related) inventions patented with the USPTO were made in the US. I wonder if inventors in other countries prefer to file patents in their home countries’ patent offices rather the in the US.</p>
+
+<p>Alternatively, we can also map the number of patents per inventors’ origin countries.</p>
+
+<p><img src="/images/2017-9-12-patents_part_1/countries.png" alt="plot of chunk unnamed-chunk-17"></p>
+
+<p>Sadly, there seem to be entire groups of countries (e.g., almost the entire African continent) which seem to be excluded from the USPTO’s patent game, at least with respect to machine learning and AI related inventions.
+Whether it is a lack of access, infrastructure, education, political treaties or something else is an intriguing question.</p>
+
+<h2 id="patent-application-and-publication-dates-and-duration-of-patent-examination-process">Patent application and publication dates, and duration of patent examination process</h2>
+
+<p>Each patent has a <em>date of filing</em> and an <em>assignment date</em> attached to it. Based on the provided dates one can try to address questions such as:
+When were these patents filed? Is the number of ML and AI related patents increasing over time? How long did it usually take from patent filing to assignment? And so on.</p>
+
+<p>For the set of ML and AI related patents <em>that were granted between Jan 3 and Sept 12 2017</em> the following figure depicts…</p>
+
+<ul>
+  <li>…in the top panel: number of patents (y-axis) per their original <em>month of filing</em> (x-axis),</li>
+  <li>…in the bottom panel: the number of patents (y-axis) that were <em>assigned</em> (approved) per week (x-axis) in 2017 so far.</li>
+</ul>
+
+<p><img src="/images/2017-9-12-patents_part_1/unnamed-chunk-7-1.png" alt="plot of chunk unnamed-chunk-7"></p>
+
+<p>The patent publication dates plot suggests that the number of ML and AI related patents seems to be increasing slightly throughout the year 2017.
+The patent application dates plot suggests that the patent examination phase for the considered patents takes about 2.5 years. In fact the average time from patent filing to approval is 2.83 years with a standard deviation of 1.72 years in this dataset (that is, among the considered ML and AI related patents in 2017). However, the range is quite extensive spanning 0.24-12.57 years.</p>
+
+<p>The distribution of the duration from patent filing date to approval is depicted by following figure.</p>
+
+<p><img src="/images/2017-9-12-patents_part_1/unnamed-chunk-9-1.png" alt="plot of chunk unnamed-chunk-9"></p>
+
+<p>So, what are some of the inventions that took longest to get approved? Here are the five patents with the longest examination periods:</p>
+
+<ul>
+  <li>“Printing and dispensing system for an electronic gaming device that provides an undisplayed outcome” (~12.57 years to approval; assignee: Aim Management, Inc.)</li>
+  <li>“Apparatus for biological sensing and alerting of pharmaco-genomic mutation” (~12.24 years to approval; assignee: NA)</li>
+  <li>“System for tracking a player of gaming devices” (~12.06 years to approval; assignee: Aim Management, Inc.)</li>
+  <li>“Device, method, and computer program product for customizing game functionality using images” (~11.72 years to approval; assignee: NOKIA TECHNOLOGIES OY)</li>
+  <li>“Method for the spectral identification of microorganisms” (~11.57 years to approval; assignee: MCGILL UNIVERSITY, and HEALTH CANADA)</li>
+</ul>
+
+<p>Each of these patents is related to either gaming or biotech. I wonder if that’s a coincidence…</p>
+
+<p>We can also look at the five patents with the shortest approval time:</p>
+
+<ul>
+  <li>“Home device application programming interface” (~91 days to approval; assignee: ESSENTIAL PRODUCTS, INC.)</li>
+  <li>“Avoiding dazzle from lights affixed to an intraoral mirror, and applications thereof” (~104 days to approval; assignee: DENTAL SMARTMIRROR, INC.)</li>
+  <li>“Media processing methods and arrangements” (~106 days to approval; assignee: Digimarc Corporation)</li>
+  <li>“Machine learning classifier that compares price risk score, supplier risk score, and item risk score to a threshold” (~111 days to approval; assignee: ACCENTURE GLOBAL SOLUTIONS LIMITED)</li>
+  <li>“Generating accurate reason codes with complex non-linear modeling and neural networks” (~111 days to approval; assignee: SAS INSTITUTE INC.)</li>
+</ul>
+
+<p>Interstingly the patent approved in the shortest amount of time among all 6665 analysed (ML and AI related) patents is some smart home thingy from <a href="https://en.wikipedia.org/wiki/Andy_Rubin">Andy Rubin’s</a> hyped up company Essential.</p>
+
+<h3 id="do-big-tech-companies-get-their-patents-approved-faster-than-other-companies-eg-startups">Do big tech companies get their patents approved faster than other companies (e.g., startups)?</h3>
+
+<p>The following figure separates the patent approval times according to the respective assignee company, considering several of the most well known tech giants.</p>
+
+<p><img src="/images/2017-9-12-patents_part_1/unnamed-chunk-15-1.png" alt="plot of chunk unnamed-chunk-15"></p>
+
+<p>Indeed some big tech companies, such as AT&amp;T or Samsung, manage to push their patent application though the USPTO process much faster than most other companies. However, there are other tech giants, such as Microsoft, which on average take longer to get their patent applications approved than even the companies in category “Other”. Also noteworthy is the fact that big tech companies tend to have fewer outliers regarding the patent examination process duration than companies in the category “Other”.</p>
+
+<p>Of course it would also be interesting to categorize all patent assignees into categories like “Startup”, “Big Tech”, “University”, or “Government”, and compare the typical duration of the patent examination process between such groups. However, it’s not clear to me how to establish such categories without collecting additional data on each patent assignee, which at this point I don’t have time for <img class="emoji" title=":stuck_out_tongue:" alt=":stuck_out_tongue:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f61b.png" height="20" width="20" align="absmiddle">.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>There is definitely a lot of promise in the USPTO full text patent data.
+Here I have barely scratched the surface, and I hope that I will find the time to play around with these data some more.
+The end goal is, of course, to replace the patent examiner with an AI trained on historical patent data. <img class="emoji" title=":stuck_out_tongue_closed_eyes:" alt=":stuck_out_tongue_closed_eyes:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f61d.png" height="20" width="20" align="absmiddle"></p>
+
+<hr>
+
+<p><a rel="license" href="http://creativecommons.org/licenses/by/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by/4.0/88x31.png"></a><br>This work (blog post and included figures) is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">Creative Commons Attribution 4.0 International License</a>.</p>
+<div class="footnotes">
+  <ol>
+    <li id="fn:keywords">
+      <p>There are two main aspects to my reasoning as to this particular choice of keywords. (1) I wanted to keep the list relatively short in order to have a more specific search, and (2) I tried to avoid keywords which may generate false positives (e.g., the term “AI” would match all sorts of codes present in the patent text, such as “123456789 AI N1”). In no way am I claiming that this is a perfect list of keywords to identify ML and AI related patents, but I think that it’s definitely a good start. <a href="#fnref:keywords" class="reversefootnote">↩</a></p>
+    </li>
+  </ol>
+</div>
+
+  </div>
+
+  <div class="date">
+    Written on September 22, 2017
+  </div>
+
+  <div class="date">
+    Tags:
+    
+    <a href="/tag/r">#r</a>
+    
+    <a href="/tag/visualization">#visualization</a>
+    
+    <a href="/tag/data%20analysis">#data analysis</a>
+    
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'agisga';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+<a href="mailto:alexej.go@gmail.com"><i class="svg-icon email"></i></a>
+<a href="https://www.facebook.com/alexej.yexela"><i class="svg-icon facebook"></i></a>
+
+<a href="https://github.com/agisga"><i class="svg-icon github"></i></a>
+
+<a href="https://www.linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
+
+<a href="/feed.xml"><i class="svg-icon rss"></i></a>
+
+
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-94080131-1', 'auto');
+		ga('send', 'pageview', {
+		  'page': '/patents_part_1/',
+		  'title': 'Mining USPTO full text patent data - Analysis of machine learning and AI related patents granted in 2017 so far - Part 1'
+		});
+	</script>
+	<!-- End Google Analytics -->
+
+
+  </body>
+</html>

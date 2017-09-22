@@ -5,6 +5,7 @@ tags:
 - tired of doing real math
 - visualization
 - r
+- data analysis
 ---
 
 ![Word cloud from Trump and Clinton tweets](/images/clinton_trump_tweets/trump_clinton_tweets_word_cloud.png?raw=true "Word cloud from Trump and Clinton tweets")

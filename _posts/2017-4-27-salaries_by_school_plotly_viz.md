@@ -6,6 +6,7 @@ tags:
 - r
 - visualization
 - academia
+- data analysis
 ---
 
 ![Visualization of starting salaries by college](../images/salaries_by_college/starting_salary.png)

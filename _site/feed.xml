@@ -7,6 +7,195 @@
     
       
         <item>
+          <title>Mining USPTO full text patent data - Analysis of machine learning and AI related patents granted in 2017 so far - Part 1</title>
+          <description>&lt;p&gt;&lt;a href=&quot;https://www.uspto.gov&quot;&gt;The United States Patent and Trademark office (USPTO)&lt;/a&gt; provides &lt;em&gt;immense&lt;/em&gt; amounts of data (the data I used are in the form of XML files). After coming across these datasets, I thought that it would be a good idea to explore where and how my areas of interest fall into the intellectual property space; my areas of interest being machine learning (ML), data science, and  artificial intelligence (AI).&lt;/p&gt;
+
+&lt;p&gt;I started this exploration by downloading the full text data (excluding images) for all patents that were assigned by the USPTO within the year 2017 up to the time of writing (&lt;a href=&quot;https://bulkdata.uspto.gov/data/patent/grant/redbook/fulltext/2017/&quot;&gt;Patent Grant Full Text Data/XML for the year 2017 through the week of Sept 12 from the USPTO Bulk Data Storage System&lt;/a&gt;).&lt;/p&gt;
+
+&lt;p&gt;In this blog post - “Part 1” - I address questions such as: How many ML and AI related patents were granted? Who are the most prolific inventors? The most frequent patent assignees? Where are inventions made? And when? Is the number of ML and AI related patents increasing over time? How long does it take to obtain a patent for a ML or AI related invention? Is the patent examination time shorter for big tech companies? etc.&lt;/p&gt;
+
+&lt;p&gt;“Part 2” will be an in depth analysis of the language used in patent titles, descriptions, and claims, and “Part 3” will be on experimentation with with deep neural nets applied to the patents’ title, description, and claims text.&lt;/p&gt;
+
+&lt;h2 id=&quot;identifying-patents-related-to-machine-learning-and-ai&quot;&gt;Identifying patents related to machine learning and AI&lt;/h2&gt;
+
+&lt;p&gt;First, I curated a patent full text dataset consisting of “machine learning and AI related” patents.
+I am not just looking for instances where actual machine learning or AI algorithms were patented; I am looking for inventions which are &lt;em&gt;related to ML or AI in any/some capacity&lt;/em&gt;. That is, I am interested in patents where machine learning, data mining, predictive modeling, or AI is &lt;em&gt;utilized as a part of the invention in any way whatsoever&lt;/em&gt;. The subset of relevant patents was determined by a keyword search as specified by the following definition.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Definition:&lt;/strong&gt; For the purposes of this blog post, &lt;em&gt;a machine learning or AI related patent&lt;/em&gt; is a patent that contains at least one of the keywords
+&lt;em&gt;“machine learning”, “deep learning”, “neural network”, “artificial intelligence”, “statistical learning”, “data mining”, or “predictive model”&lt;/em&gt;
+in its invention title, description, or claims text (while of course accounting for capitalization, pluralization, etc.).&lt;sup id=&quot;fnref:keywords&quot;&gt;&lt;a href=&quot;#fn:keywords&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;p&gt;With this keyword matching approach a total of 6665 patents have been selected. The bar graph below shows how many times each keyword got matched.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2017-9-12-patents_part_1/keyword_match_freq.png&quot; alt=&quot;plot of keyword match frequencies&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Interestingly the term “neural network” is even more common than the more general terms “machine learning” and “artificial intelligence”.&lt;/p&gt;
+
+&lt;h3 id=&quot;some-example-patents&quot;&gt;Some example patents&lt;/h3&gt;
+
+&lt;p&gt;Here are three (randomly chosen) patents from the resulting dataset. For each printed are the invention title, the patent assignee, as well as one instance of the keyword match within the patent text.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;## $`2867`
+## [1] &quot;Fuselage manufacturing system&quot;
+## [2] &quot;THE BOEING COMPANY&quot;
+## [3] &quot;... using various techniques. For example, at least
+##      one of an artificial intelligence program, a
+##      knowledgebase, an expert ...&quot;
+##
+## $`1618`
+## [1] &quot;Systems and methods for validating wind farm
+##      performance measurements&quot;
+## [2] &quot;General Electric Company&quot;
+## [3] &quot;... present disclosure leverages and fuses
+##      accurate available sensor data using machine
+##      learning algorithms. That is, the more ...&quot;
+##
+## $`5441`
+## [1] &quot;Trigger repeat order notifications&quot;
+## [2] &quot;Accenture Global Services Limited&quot;
+## [3] &quot;... including user data obtained from a user
+##      device; obtaining a predictive model that
+##      estimates a likelihood of ...&quot;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;p&gt;And here are three examples of (randomly picked) patents that contain the relevant keywords directly in their invention title.&lt;/p&gt;
+
+&lt;figure class=&quot;highlight&quot;&gt;&lt;pre&gt;&lt;code class=&quot;language-text&quot; data-lang=&quot;text&quot;&gt;## $`5742`
+## [1] &quot;Adaptive demodulation method and apparatus using an
+##      artificial neural network to improve data recovery
+##      in high speed channels&quot;
+## [2] &quot;Kelquan Holdings Ltd.&quot;
+## [3] &quot;... THE INVENTION\nh-0002\n1 The present invention
+##      relates to a neural network based integrated
+##      demodulator that mitigates ...&quot;
+##
+## $`3488`
+## [1] &quot;Cluster-trained machine learning for image processing&quot;
+## [2] &quot;Amazon Technologies, Inc.&quot;
+## [3] &quot;... BACKGROUND\nh-0001\n1 Artificial neural networks,
+##      especially deep neural network ...&quot;
+##
+## $`3103`
+## [1] &quot;Methods and apparatus for machine learning based
+##      malware detection&quot;
+## [2] &quot;Invincea, Inc.&quot;
+## [3] &quot;... a need exists for methods and apparatus that can
+##      use machine learning techniques to reduce the amount ...&quot;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
+
+&lt;h2 id=&quot;who-holds-these-patents-inventors-and-assignees&quot;&gt;Who holds these patents (inventors and assignees)?&lt;/h2&gt;
+
+&lt;p&gt;The first question I would like to address is who files most of the machine learning and AI related patents.&lt;/p&gt;
+
+&lt;p&gt;Each patent specifies one or several &lt;em&gt;inventors&lt;/em&gt;, i.e., the individuals who made the patented invention, and a patent &lt;em&gt;assignee&lt;/em&gt; which is typically the inventors’ employer company that holds the rights to the patent. The following bar graph visualizes the top 20 most prolific inventors and the top 20 most frequent patent assignees among the analyzed ML and AI related patents.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2017-9-12-patents_part_1/unnamed-chunk-5-1.png&quot; alt=&quot;plot of chunk unnamed-chunk-5&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;It isn’t surprising to see this list of companies. The likes of IBM, Google, Amazon, Microsoft, Samsung, and AT&amp;amp;T rule the machine learning and AI patent space. I have to admit that I don’t recognize any of the inventors’ names (but it might just be me not being familiar enough with the ML and AI community).&lt;/p&gt;
+
+&lt;p&gt;There are a number of interesting follow-up questions which for now I leave unanswered (hard to answer without additional data):&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;What is the count of ML and AI related patents by industry or type of company (e.g., big tech companies vs. startups vs. reserach universities vs. government)?&lt;/li&gt;
+  &lt;li&gt;Who is deriving the most financial benefit by holding ML or AI related patents (either through licensing or by driving out the competition)?&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;where-do-these-inventions-come-from-geographically&quot;&gt;Where do these inventions come from (geographically)?&lt;/h2&gt;
+
+&lt;p&gt;Even though the examined patents were filed in the US, some of the inventions may have been made outside of the US.
+In fact, the data includes specific geographic locations for each patent, so I can map in which cities within the US and the world inventors are most active.
+The following figure is based on where the inventors are from, and shows the most active spots. Each point corresponds to the total number of inventions made at that location (though note that the color axis is a log10 scale, and so is the point size).&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2017-9-12-patents_part_1/locations.png&quot; alt=&quot;plot of chunk unnamed-chunk-16&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The results aren’t that surprising.
+However, we see that most (ML and AI related) inventions patented with the USPTO were made in the US. I wonder if inventors in other countries prefer to file patents in their home countries’ patent offices rather the in the US.&lt;/p&gt;
+
+&lt;p&gt;Alternatively, we can also map the number of patents per inventors’ origin countries.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2017-9-12-patents_part_1/countries.png&quot; alt=&quot;plot of chunk unnamed-chunk-17&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Sadly, there seem to be entire groups of countries (e.g., almost the entire African continent) which seem to be excluded from the USPTO’s patent game, at least with respect to machine learning and AI related inventions.
+Whether it is a lack of access, infrastructure, education, political treaties or something else is an intriguing question.&lt;/p&gt;
+
+&lt;h2 id=&quot;patent-application-and-publication-dates-and-duration-of-patent-examination-process&quot;&gt;Patent application and publication dates, and duration of patent examination process&lt;/h2&gt;
+
+&lt;p&gt;Each patent has a &lt;em&gt;date of filing&lt;/em&gt; and an &lt;em&gt;assignment date&lt;/em&gt; attached to it. Based on the provided dates one can try to address questions such as:
+When were these patents filed? Is the number of ML and AI related patents increasing over time? How long did it usually take from patent filing to assignment? And so on.&lt;/p&gt;
+
+&lt;p&gt;For the set of ML and AI related patents &lt;em&gt;that were granted between Jan 3 and Sept 12 2017&lt;/em&gt; the following figure depicts…&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;…in the top panel: number of patents (y-axis) per their original &lt;em&gt;month of filing&lt;/em&gt; (x-axis),&lt;/li&gt;
+  &lt;li&gt;…in the bottom panel: the number of patents (y-axis) that were &lt;em&gt;assigned&lt;/em&gt; (approved) per week (x-axis) in 2017 so far.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2017-9-12-patents_part_1/unnamed-chunk-7-1.png&quot; alt=&quot;plot of chunk unnamed-chunk-7&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The patent publication dates plot suggests that the number of ML and AI related patents seems to be increasing slightly throughout the year 2017.
+The patent application dates plot suggests that the patent examination phase for the considered patents takes about 2.5 years. In fact the average time from patent filing to approval is 2.83 years with a standard deviation of 1.72 years in this dataset (that is, among the considered ML and AI related patents in 2017). However, the range is quite extensive spanning 0.24-12.57 years.&lt;/p&gt;
+
+&lt;p&gt;The distribution of the duration from patent filing date to approval is depicted by following figure.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2017-9-12-patents_part_1/unnamed-chunk-9-1.png&quot; alt=&quot;plot of chunk unnamed-chunk-9&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;So, what are some of the inventions that took longest to get approved? Here are the five patents with the longest examination periods:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;“Printing and dispensing system for an electronic gaming device that provides an undisplayed outcome” (~12.57 years to approval; assignee: Aim Management, Inc.)&lt;/li&gt;
+  &lt;li&gt;“Apparatus for biological sensing and alerting of pharmaco-genomic mutation” (~12.24 years to approval; assignee: NA)&lt;/li&gt;
+  &lt;li&gt;“System for tracking a player of gaming devices” (~12.06 years to approval; assignee: Aim Management, Inc.)&lt;/li&gt;
+  &lt;li&gt;“Device, method, and computer program product for customizing game functionality using images” (~11.72 years to approval; assignee: NOKIA TECHNOLOGIES OY)&lt;/li&gt;
+  &lt;li&gt;“Method for the spectral identification of microorganisms” (~11.57 years to approval; assignee: MCGILL UNIVERSITY, and HEALTH CANADA)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Each of these patents is related to either gaming or biotech. I wonder if that’s a coincidence…&lt;/p&gt;
+
+&lt;p&gt;We can also look at the five patents with the shortest approval time:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;“Home device application programming interface” (~91 days to approval; assignee: ESSENTIAL PRODUCTS, INC.)&lt;/li&gt;
+  &lt;li&gt;“Avoiding dazzle from lights affixed to an intraoral mirror, and applications thereof” (~104 days to approval; assignee: DENTAL SMARTMIRROR, INC.)&lt;/li&gt;
+  &lt;li&gt;“Media processing methods and arrangements” (~106 days to approval; assignee: Digimarc Corporation)&lt;/li&gt;
+  &lt;li&gt;“Machine learning classifier that compares price risk score, supplier risk score, and item risk score to a threshold” (~111 days to approval; assignee: ACCENTURE GLOBAL SOLUTIONS LIMITED)&lt;/li&gt;
+  &lt;li&gt;“Generating accurate reason codes with complex non-linear modeling and neural networks” (~111 days to approval; assignee: SAS INSTITUTE INC.)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Interstingly the patent approved in the shortest amount of time among all 6665 analysed (ML and AI related) patents is some smart home thingy from &lt;a href=&quot;https://en.wikipedia.org/wiki/Andy_Rubin&quot;&gt;Andy Rubin’s&lt;/a&gt; hyped up company Essential.&lt;/p&gt;
+
+&lt;h3 id=&quot;do-big-tech-companies-get-their-patents-approved-faster-than-other-companies-eg-startups&quot;&gt;Do big tech companies get their patents approved faster than other companies (e.g., startups)?&lt;/h3&gt;
+
+&lt;p&gt;The following figure separates the patent approval times according to the respective assignee company, considering several of the most well known tech giants.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/2017-9-12-patents_part_1/unnamed-chunk-15-1.png&quot; alt=&quot;plot of chunk unnamed-chunk-15&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;Indeed some big tech companies, such as AT&amp;amp;T or Samsung, manage to push their patent application though the USPTO process much faster than most other companies. However, there are other tech giants, such as Microsoft, which on average take longer to get their patent applications approved than even the companies in category “Other”. Also noteworthy is the fact that big tech companies tend to have fewer outliers regarding the patent examination process duration than companies in the category “Other”.&lt;/p&gt;
+
+&lt;p&gt;Of course it would also be interesting to categorize all patent assignees into categories like “Startup”, “Big Tech”, “University”, or “Government”, and compare the typical duration of the patent examination process between such groups. However, it’s not clear to me how to establish such categories without collecting additional data on each patent assignee, which at this point I don’t have time for :stuck_out_tongue:.&lt;/p&gt;
+
+&lt;h2 id=&quot;conclusion&quot;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;There is definitely a lot of promise in the USPTO full text patent data.
+Here I have barely scratched the surface, and I hope that I will find the time to play around with these data some more.
+The end goal is, of course, to replace the patent examiner with an AI trained on historical patent data. :stuck_out_tongue_closed_eyes:&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;a rel=&quot;license&quot; href=&quot;http://creativecommons.org/licenses/by/4.0/&quot;&gt;&lt;img alt=&quot;Creative Commons License&quot; style=&quot;border-width:0&quot; src=&quot;https://i.creativecommons.org/l/by/4.0/88x31.png&quot; /&gt;&lt;/a&gt;&lt;br /&gt;This work (blog post and included figures) is licensed under a &lt;a rel=&quot;license&quot; href=&quot;http://creativecommons.org/licenses/by/4.0/&quot;&gt;Creative Commons Attribution 4.0 International License&lt;/a&gt;.&lt;/p&gt;
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:keywords&quot;&gt;
+      &lt;p&gt;There are two main aspects to my reasoning as to this particular choice of keywords. (1) I wanted to keep the list relatively short in order to have a more specific search, and (2) I tried to avoid keywords which may generate false positives (e.g., the term “AI” would match all sorts of codes present in the patent text, such as “123456789 AI N1”). In no way am I claiming that this is a perfect list of keywords to identify ML and AI related patents, but I think that it’s definitely a good start.&amp;nbsp;&lt;a href=&quot;#fnref:keywords&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+</description>
+          <pubDate>2017-09-22T00:00:00-05:00</pubDate>
+          <link>http://www.alexejgossmann.com/patents_part_1/</link>
+          <guid isPermaLink="true">http://www.alexejgossmann.com/patents_part_1/</guid>
+        </item>
+      
+    
+      
+        <item>
           <title>Freedman's paradox</title>
           <description>&lt;p&gt;Recently I came across the classical 1983 paper &lt;a href=&quot;http://www.public.asu.edu/~gasweete/crj604/readings/1983-Freedman%20(Screening%20Regression%20Equations).pdf&quot;&gt;&lt;em&gt;A note on screening regression equations&lt;/em&gt;&lt;/a&gt; by &lt;a href=&quot;https://en.wikipedia.org/wiki/David_A._Freedman&quot;&gt;David Freedman&lt;/a&gt;. Freedman shows in an impressive way the dangers of data reuse in statistical analyses. The potentially dangerous scenarios include those where the results of one statistical procedure performed on the data are fed into another procedure performed on the same data. As a concrete example Freedman considers the practice of performing variable selection first, and then fitting another model using only the identified variables on the same data that was used to identify them in the first place. Because of the unexpectedly high severity of the problem this phenomenon became known as &lt;a href=&quot;https://en.wikipedia.org/wiki/Freedman%27s_paradox&quot;&gt;“Freedman’s paradox”&lt;/a&gt;. Moreover, in his paper Freedman derives asymptotic estimates for the resulting errors.&lt;/p&gt;
 
@@ -104,7 +293,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
     &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ggtitle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;paste&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_rep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;repetitions of an LM fit with&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;rows,&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;columns&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 </description>
-          <pubDate>2017-06-05T20:00:00-04:00</pubDate>
+          <pubDate>2017-06-05T19:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/Freedmans_paradox/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/Freedmans_paradox/</guid>
         </item>
@@ -324,7 +513,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-          <pubDate>2017-05-28T00:09:00-04:00</pubDate>
+          <pubDate>2017-05-27T23:09:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/benchmarking_r/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/benchmarking_r/</guid>
         </item>
@@ -396,7 +585,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-          <pubDate>2017-05-09T21:40:00-04:00</pubDate>
+          <pubDate>2017-05-09T20:40:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/the-lean-phd-student/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/the-lean-phd-student/</guid>
         </item>
@@ -498,7 +687,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
 &lt;p&gt;Additionally, it is quite informative to look at a &lt;a href=&quot;https://plot.ly/~agisga/11&quot;&gt;visualization of the salary increase from starting to mid-career&lt;/a&gt;.&lt;/p&gt;
 &lt;iframe width=&quot;800&quot; height=&quot;500&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot; src=&quot;//plot.ly/~agisga/11.embed&quot;&gt;&lt;/iframe&gt;
 </description>
-          <pubDate>2017-04-28T00:08:00-04:00</pubDate>
+          <pubDate>2017-04-27T23:08:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/salaries_by_school_plotly_viz/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/salaries_by_school_plotly_viz/</guid>
         </item>
@@ -755,7 +944,7 @@ is satisfied:&lt;/p&gt;
 
 &lt;p&gt;Even though data compression does not make much sense for the size of the dataset considered here, it clearly shows potential to be very useful for purposes of data distribution and data storage, when the data size far exceeds the terabyte range.&lt;/p&gt;
 </description>
-          <pubDate>2017-04-05T01:50:00-04:00</pubDate>
+          <pubDate>2017-04-05T00:50:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/tensor_decomposition_tucker/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/tensor_decomposition_tucker/</guid>
         </item>
@@ -961,7 +1150,7 @@ for(i in 1:30) {
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-          <pubDate>2017-04-02T15:30:00-04:00</pubDate>
+          <pubDate>2017-04-02T14:30:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/tensor_decomposition_CP/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/tensor_decomposition_CP/</guid>
         </item>
@@ -1781,7 +1970,7 @@ gem &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1&lt;span class=&quot;o&quot;&
   &lt;li&gt;&lt;a href=&quot;http://jvns.ca/zines/&quot;&gt;http://jvns.ca/zines/&lt;/a&gt; — &lt;em&gt;informative&lt;/em&gt; fanzines about some Linux tools.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-          <pubDate>2017-03-25T12:30:15-04:00</pubDate>
+          <pubDate>2017-03-25T11:30:15-05:00</pubDate>
           <link>http://www.alexejgossmann.com/linux-cheat-sheet/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/linux-cheat-sheet/</guid>
         </item>
@@ -1934,7 +2123,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 &lt;a rel=&quot;license&quot; href=&quot;http://creativecommons.org/licenses/by/4.0/&quot;&gt;&lt;img alt=&quot;Creative Commons License&quot; style=&quot;border-width:0&quot; src=&quot;https://i.creativecommons.org/l/by/4.0/80x15.png&quot; /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel=&quot;license&quot; href=&quot;http://creativecommons.org/licenses/by/4.0/&quot;&gt;Creative Commons Attribution 4.0 International License&lt;/a&gt;.
 &lt;/font&gt;
 </description>
-          <pubDate>2017-03-18T00:00:00-04:00</pubDate>
+          <pubDate>2017-03-18T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/contours_of_statistical_penalty_functions_as_GIFs/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/contours_of_statistical_penalty_functions_as_GIFs/</guid>
         </item>
@@ -1978,7 +2167,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 
 &lt;p&gt;Because I know from &lt;a href=&quot;http://www.phdcomics.com/comics/archive.php?comicid=1415&quot;&gt;a phdcomics cartoon&lt;/a&gt; that caffeine combined with a lack of sleep will turn me into a robot rather than into somebody who might eventually finish graduate school…&lt;/p&gt;
 </description>
-          <pubDate>2017-02-15T03:35:00-05:00</pubDate>
+          <pubDate>2017-02-15T02:35:00-06:00</pubDate>
           <link>http://www.alexejgossmann.com/grad-school-and-coffee/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/grad-school-and-coffee/</guid>
         </item>
@@ -2101,7 +2290,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 
 &lt;p&gt;&lt;img src=&quot;../images/MRI_viz/lung_orthographic-1.png&quot; alt=&quot;plot of chunk lung_orthographic&quot; /&gt;&lt;/p&gt;
 </description>
-          <pubDate>2017-01-27T11:30:15-05:00</pubDate>
+          <pubDate>2017-01-27T10:30:15-06:00</pubDate>
           <link>http://www.alexejgossmann.com/MRI_viz/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/MRI_viz/</guid>
         </item>
@@ -2154,7 +2343,7 @@ Here I experienced some buggy behavior: The web interface would not accept my cr
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-          <pubDate>2016-11-07T00:00:00-05:00</pubDate>
+          <pubDate>2016-11-07T00:00:00-06:00</pubDate>
           <link>http://www.alexejgossmann.com/amahi/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/amahi/</guid>
         </item>
@@ -2183,7 +2372,7 @@ Here I experienced some buggy behavior: The web interface would not accept my cr
   &lt;li&gt;&lt;a href=&quot;https://www.kaggle.com/agisga/d/benhamner/clinton-trump-tweets/top-10-tweets&quot;&gt;I have also written a script producing the above visualizations of the top ten tweets of either presidential candidate&lt;/a&gt;, learning more about ggplot2 in the process.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-          <pubDate>2016-10-25T00:00:00-04:00</pubDate>
+          <pubDate>2016-10-25T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/clinton_trump_tweets/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/clinton_trump_tweets/</guid>
         </item>
@@ -2270,7 +2459,7 @@ A^{-} :=  \sum_{i=1}^k \frac{1}{\lambda_i} q_i q_i^T.
 Ohio, USA: Institute of Mathematical Statistics, 2007.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-          <pubDate>2016-08-23T00:00:00-04:00</pubDate>
+          <pubDate>2016-08-23T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/generalized_inverse/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/generalized_inverse/</guid>
         </item>
@@ -2422,7 +2611,7 @@ Ohio, USA: Institute of Mathematical Statistics, 2007.&lt;/li&gt;
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-          <pubDate>2016-07-23T00:00:00-04:00</pubDate>
+          <pubDate>2016-07-23T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/categorical_data_glm_in_ruby/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/categorical_data_glm_in_ruby/</guid>
         </item>
@@ -2785,7 +2974,7 @@ Ohio, USA: Institute of Mathematical Statistics, 2007.&lt;/li&gt;
 ## 8     &amp;lt;NA&amp;gt;      &amp;lt;NA&amp;gt;   &amp;lt;NA&amp;gt;             Image       1992&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 </description>
-          <pubDate>2016-07-19T00:00:00-04:00</pubDate>
+          <pubDate>2016-07-19T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/dplyr_basics/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/dplyr_basics/</guid>
         </item>
@@ -2855,7 +3044,7 @@ Ohio, USA: Institute of Mathematical Statistics, 2007.&lt;/li&gt;
 
 &lt;p&gt;Of course, the method does not perform this good under all circumstances — the interested reader can learn more from the papers referred to in the &lt;a href=&quot;https://github.com/agisga/grpSLOPE/blob/master/README.md&quot;&gt;grpSLOPE README on github&lt;/a&gt; (unfortunately, the “real” journal publication is still under preparation, and another related journal publication is currently under review, so, not publicly available yet either).&lt;/p&gt;
 </description>
-          <pubDate>2016-05-12T00:00:00-04:00</pubDate>
+          <pubDate>2016-05-12T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/grpSLOPE_on_CRAN/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/grpSLOPE_on_CRAN/</guid>
         </item>
@@ -2869,7 +3058,7 @@ Ohio, USA: Institute of Mathematical Statistics, 2007.&lt;/li&gt;
 &lt;p&gt;The content of this post has moved to &lt;a href=&quot;http://www.alexejgossmann.com/Lehmanns_TSH_and_TPE/&quot;&gt;http://www.alexejgossmann.com/Lehmanns_TSH_and_TPE/&lt;/a&gt;.&lt;/p&gt;
 
 </description>
-          <pubDate>2015-12-06T00:00:00-05:00</pubDate>
+          <pubDate>2015-12-06T00:00:00-06:00</pubDate>
           <link>http://www.alexejgossmann.com/TSH_and_TPE_observations/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/TSH_and_TPE_observations/</guid>
         </item>
@@ -3047,7 +3236,7 @@ $ bundle exec rake install nmatrix_plugins=lapacke
 &lt;p&gt;&lt;img src=&quot;/images/link-line-1.png?raw=true&quot; alt=&quot;SDL link line&quot; /&gt;
 &lt;img src=&quot;/images/link-line-2.png?raw=true&quot; alt=&quot;Static linking link line&quot; /&gt;&lt;/p&gt;
 </description>
-          <pubDate>2015-10-08T00:00:00-04:00</pubDate>
+          <pubDate>2015-10-08T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/nmatrix-on-my-universities-hpc/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/nmatrix-on-my-universities-hpc/</guid>
         </item>
@@ -3297,7 +3486,7 @@ boot_basic [-0.9676586601496888, 2.486799230544233]    [4.30540212917657, 5.0287
 
 &lt;p&gt;I want to thank Google and the &lt;a href=&quot;sciruby.com&quot;&gt;Ruby Science Foundation&lt;/a&gt; for giving me this excellent opportunity! I especially want to thank &lt;a href=&quot;http://thebird.nl/&quot;&gt;Pjotr Prins&lt;/a&gt; who was my mentor for the project for much helpful advice and suggestions as well as his prompt responses to any of my concerns. I also want to thank my fellow GSoC participants &lt;a href=&quot;https://github.com/wlevine&quot;&gt;Will&lt;/a&gt;, &lt;a href=&quot;https://github.com/dilcom&quot;&gt;Ivan&lt;/a&gt;, and &lt;a href=&quot;https://github.com/v0dro&quot;&gt;Sameer&lt;/a&gt; for their help with certain aspects of my project.&lt;/p&gt;
 </description>
-          <pubDate>2015-08-19T00:00:00-04:00</pubDate>
+          <pubDate>2015-08-19T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/gsoc-2015-mixed_models/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/gsoc-2015-mixed_models/</guid>
         </item>
@@ -3494,7 +3683,7 @@ parallel           16.150000   0.030000 170.980000 ( 55.285422)
 
 &lt;!--The reason is that even though the bootstrap sample is obtained by `LMM#bootstrap` in parallel, the computation of the intervals from the bootstrap sample (like finding percentiles or transformations of the bootstrap sample) is always single-threaded. Better performance can be achieved for example by writing methods specifically adapted to a given data analysis, which would utilize the argument `what_to_collect` in the method `LMM#bootstrap` in a way optimal for the given setting. --&gt;
 </description>
-          <pubDate>2015-08-06T00:00:00-04:00</pubDate>
+          <pubDate>2015-08-06T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/bootstap_confidence_intervals/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/bootstap_confidence_intervals/</guid>
         </item>
@@ -3747,7 +3936,7 @@ SNP127
 
 &lt;p&gt;We see that 24 out of the 25 SNPs detected by the Wald Z tests were also detected by the bootstrap method. In fact, it turns out that the set of SNPs detected by the studentized bootstrap is a subset of the SNP set identified by the Wald Z tests. The reason for this behaviour is probably that the fixed effects coefficient estimates are approximately normally distributed for the given data (which in itself is an interesting discovery).&lt;/p&gt;
 </description>
-          <pubDate>2015-07-07T00:00:00-04:00</pubDate>
+          <pubDate>2015-07-07T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/mixed_models_applied_to_family_SNP_data/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/mixed_models_applied_to_family_SNP_data/</guid>
         </item>
@@ -3909,7 +4098,7 @@ Continuing our example, we have:
 --&gt;
 
 </description>
-          <pubDate>2015-07-03T00:00:00-04:00</pubDate>
+          <pubDate>2015-07-03T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/MixedModels_p_values_and_CI/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/MixedModels_p_values_and_CI/</guid>
         </item>
@@ -4052,7 +4241,7 @@ Standard deviation: 	0.9745169802141329
 
 &lt;p&gt;Finally, &lt;code class=&quot;highlighter-rouge&quot;&gt;LMM#from_daru&lt;/code&gt; constructs the model matrices, vectors and the covariance function &lt;code class=&quot;highlighter-rouge&quot;&gt;Proc&lt;/code&gt;, which are passed on to &lt;code class=&quot;highlighter-rouge&quot;&gt;LMM#initialize&lt;/code&gt; that performs the actual model fit.&lt;/p&gt;
 </description>
-          <pubDate>2015-06-17T00:00:00-04:00</pubDate>
+          <pubDate>2015-06-17T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/MixedModels_from_formula/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/MixedModels_from_formula/</guid>
         </item>
@@ -4205,7 +4394,7 @@ Politeness_{ijk} &amp;=&amp; Intercept + SubjectIntercept_{j} + ScenarioIntercep
 &lt;/ul&gt;
 
 </description>
-          <pubDate>2015-06-12T00:00:00-04:00</pubDate>
+          <pubDate>2015-06-12T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/LMM-model-specification/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/LMM-model-specification/</guid>
         </item>
@@ -4315,7 +4504,7 @@ Additionally, via the Cholesky decomposition we write&lt;/p&gt;
 
 &lt;p&gt;We see that all values agree between Ruby and R up to at least one digit behind the floating point (these values are the REML criterion, fixed effects estimates, random effects standard deviations and correlation, and residual variance and standard deviation, to be more precise). The slight differences are probably due to different optimization routines.&lt;/p&gt;
 </description>
-          <pubDate>2015-06-04T00:00:00-04:00</pubDate>
+          <pubDate>2015-06-04T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/First-linear-mixed-model-fit/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/First-linear-mixed-model-fit/</guid>
         </item>
@@ -4440,7 +4629,7 @@ Additionally, via the Cholesky decomposition we write&lt;/p&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
-          <pubDate>2015-05-17T00:00:00-04:00</pubDate>
+          <pubDate>2015-05-17T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/Dissect_lmer_part3/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/Dissect_lmer_part3/</guid>
         </item>
@@ -4546,7 +4735,7 @@ d_Utr           = d_LamtUt * wtres;
 
 &lt;p&gt;It seems that the implementation in the package &lt;a href=&quot;https://github.com/lme4/lme4pureR&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;lme4pureR&lt;/code&gt;&lt;/a&gt; performs all the same calculations, but is written in a much better readable R code (much fewer lines of code, without external pointers to C++ objects and no C++/C used at all, without passing different R environments from function to function, etc.). I will look at it in detail as soon as I finish dissecting &lt;code class=&quot;highlighter-rouge&quot;&gt;lme4&lt;/code&gt;’s &lt;code class=&quot;highlighter-rouge&quot;&gt;lmer&lt;/code&gt;.&lt;/p&gt;
 </description>
-          <pubDate>2015-05-15T00:00:00-04:00</pubDate>
+          <pubDate>2015-05-15T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/Dissect_lmer_part2/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/Dissect_lmer_part2/</guid>
         </item>
@@ -4626,7 +4815,7 @@ The code is confusing. So, let’s go through it step-by-step.&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 </description>
-          <pubDate>2015-05-10T00:00:00-04:00</pubDate>
+          <pubDate>2015-05-10T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/Dissect_lmer_part1/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/Dissect_lmer_part1/</guid>
         </item>
@@ -4747,7 +4936,7 @@ The code is confusing. So, let’s go through it step-by-step.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/bvp2.png?raw=true&quot; alt=&quot;BVP example 2 plot&quot; title=&quot;BVP example 2 plot&quot; /&gt;&lt;/p&gt;
 </description>
-          <pubDate>2015-05-02T00:00:00-04:00</pubDate>
+          <pubDate>2015-05-02T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/BVP/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/BVP/</guid>
         </item>
@@ -4914,7 +5103,7 @@ We demonstrate it by solving the following differential equation:&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
-          <pubDate>2015-04-26T00:00:00-04:00</pubDate>
+          <pubDate>2015-04-26T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/ODE/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/ODE/</guid>
         </item>
@@ -5028,7 +5217,7 @@ We demonstrate it by solving the following differential equation:&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 </description>
-          <pubDate>2015-04-19T00:00:00-04:00</pubDate>
+          <pubDate>2015-04-19T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/Advection-Equation/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/Advection-Equation/</guid>
         </item>
@@ -5126,7 +5315,7 @@ We demonstrate it by solving the following differential equation:&lt;/p&gt;
 &lt;/div&gt;
 
 </description>
-          <pubDate>2015-03-29T00:00:00-04:00</pubDate>
+          <pubDate>2015-03-29T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/Permute-Columns-Of-An-NMatrix/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/Permute-Columns-Of-An-NMatrix/</guid>
         </item>
@@ -5137,7 +5326,7 @@ We demonstrate it by solving the following differential equation:&lt;/p&gt;
           <title>Hello World!</title>
           <description>&lt;p&gt;Hello World!&lt;/p&gt;
 </description>
-          <pubDate>2015-03-29T00:00:00-04:00</pubDate>
+          <pubDate>2015-03-29T00:00:00-05:00</pubDate>
           <link>http://www.alexejgossmann.com/Hello-World/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/Hello-World/</guid>
         </item>
