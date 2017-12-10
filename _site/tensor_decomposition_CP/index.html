@@ -101,7 +101,7 @@
 
 <p>As you can see from the above figures, the essential difference between the three cases is that they behave differently with respect to time. The spatial component is just a Gaussian curve, while the temporal component is piecewise constant with a sudden jump at time 50, which differs in magnitude and in direction between the three classes.</p>
 
-<p>Now assume we have collected samples that correspond to the three classes above (with some added noise). <em>But we don’t know which sample falls in what class, how many classes there are, and how they differ</em> <img class="emoji" title=":confused:" alt=":confused:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f615.png" height="20" width="20" align="absmiddle">. In an unsupervised fashion we want to learn the different classes and their differences with respect to time and space.</p>
+<p>Now assume we have collected samples that correspond to the three classes above (with some added noise). <em>But we don’t know which sample falls in what class, how many classes there are, and how they differ</em> <img class="emoji" title=":confused:" alt=":confused:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f615.png" height="20" width="20">. In an unsupervised fashion we want to learn the different classes and their differences with respect to time and space.</p>
 
 <p>We can arrange the samples in a 3-way tensor, <em>sample-by-space-by-time</em>. For simplicity, however, assume that the samples are already grouped according to their class within the tensor (but the algorithm doesn’t know that!), so that the resulting tensor looks like this:</p>
 
@@ -109,8 +109,7 @@
 
 <p>In R the above tensor (let’s call it <code class="highlighter-rouge">X</code>) can be generated with the following lines of code:</p>
 
-<div class="language-R highlighter-rouge">
-<pre class="highlight"><code><span class="n">space_index</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">seq</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">)</span><span class="w">
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">space_index</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">seq</span><span class="p">(</span><span class="m">-1</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">l</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">)</span><span class="w">
 </span><span class="n">bell_curve</span><span class="w">  </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">dnorm</span><span class="p">(</span><span class="n">space_index</span><span class="p">,</span><span class="w"> </span><span class="n">mean</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">sd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.5</span><span class="p">)</span><span class="w">
 </span><span class="n">case1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">matrix</span><span class="p">(</span><span class="nf">rep</span><span class="p">(</span><span class="n">bell_curve</span><span class="p">,</span><span class="w"> </span><span class="m">10</span><span class="p">),</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="m">100</span><span class="p">)</span><span class="w">
 </span><span class="n">case2</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">matrix</span><span class="p">(</span><span class="nf">rep</span><span class="p">(</span><span class="n">bell_curve</span><span class="p">,</span><span class="w"> </span><span class="m">10</span><span class="p">),</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="m">100</span><span class="p">)</span><span class="w">
@@ -124,22 +123,19 @@
   </span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="m">+30</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">case2</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">matrix</span><span class="p">(</span><span class="n">rnorm</span><span class="p">(</span><span class="m">10000</span><span class="p">,</span><span class="w"> </span><span class="n">sd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.1</span><span class="p">),</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="m">100</span><span class="p">)</span><span class="w">
   </span><span class="n">X</span><span class="p">[</span><span class="n">i</span><span class="m">+60</span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">case3</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">matrix</span><span class="p">(</span><span class="n">rnorm</span><span class="p">(</span><span class="m">10000</span><span class="p">,</span><span class="w"> </span><span class="n">sd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">0.1</span><span class="p">),</span><span class="w"> </span><span class="m">100</span><span class="p">,</span><span class="w"> </span><span class="m">100</span><span class="p">)</span><span class="w">
 </span><span class="p">}</span><span class="w">
-</span></code></pre>
-</div>
+</span></code></pre></div></div>
 
 <p>Using the excellent R package <a href="https://cran.r-project.org/package=rTensor"><code class="highlighter-rouge">rTensor</code></a> we obtain the CP decomposition with one component per mode of the tensor:</p>
 
-<div class="language-R highlighter-rouge">
-<pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">rTensor</span><span class="p">)</span><span class="w">
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">rTensor</span><span class="p">)</span><span class="w">
 </span><span class="n">cp_decomp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">cp</span><span class="p">(</span><span class="n">as.tensor</span><span class="p">(</span><span class="n">X</span><span class="p">),</span><span class="w"> </span><span class="n">num_components</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w">
 </span><span class="n">str</span><span class="p">(</span><span class="n">cp_decomp</span><span class="o">$</span><span class="n">U</span><span class="p">)</span><span class="w">
-</span><span class="c1"># List of 3
-#  $ : num [1:90, 1] 0.0111 0.0111 0.0111 0.0111 0.0112 ...
-#  $ : num [1:100, 1] -0.00233 -0.00251 -0.00271 -0.00292 -0.00314 ...
-#  $ : num [1:100, 1] -0.00996 -0.00994 -0.00996 -0.00993 -0.00997 ...
-# NULL
-</span></code></pre>
-</div>
+</span><span class="c1"># List of 3</span><span class="w">
+</span><span class="c1">#  $ : num [1:90, 1] 0.0111 0.0111 0.0111 0.0111 0.0112 ...</span><span class="w">
+</span><span class="c1">#  $ : num [1:100, 1] -0.00233 -0.00251 -0.00271 -0.00292 -0.00314 ...</span><span class="w">
+</span><span class="c1">#  $ : num [1:100, 1] -0.00996 -0.00994 -0.00996 -0.00993 -0.00997 ...</span><span class="w">
+</span><span class="c1"># NULL</span><span class="w">
+</span></code></pre></div></div>
 
 <p>Visualizing the three components, we get the following figures:</p>
 
@@ -152,7 +148,7 @@
   <li>The temporal component has correctly picked up a change at time 50, which is where the three classes differ.</li>
 </ol>
 
-<p>So, what did just happen? <img class="emoji" title=":astonished:" alt=":astonished:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f632.png" height="20" width="20" align="absmiddle"></p>
+<p>So, what did just happen? <img class="emoji" title=":astonished:" alt=":astonished:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f632.png" height="20" width="20"></p>
 
 <h2 id="cp-decomposition-quick-summary-of-the-math-behind-it">CP decomposition (quick summary of the math behind it)</h2>
 
@@ -168,7 +164,7 @@
 
 <p><img src="../images/CP_tensor_decomposition/rank-1_decomposition_cartoon.png" alt="Rank-1 CP decomposition cartoon"></p>
 
-<p>I hope that explains, why the components <code class="highlighter-rouge">u</code>, <code class="highlighter-rouge">v</code>, and <code class="highlighter-rouge">w</code> in the toy example look the way they do! <img class="emoji" title=":bowtie:" alt=":bowtie:" src="https://assets-cdn.github.com/images/icons/emoji/bowtie.png" height="20" width="20" align="absmiddle"></p>
+<p>I hope that explains, why the components <code class="highlighter-rouge">u</code>, <code class="highlighter-rouge">v</code>, and <code class="highlighter-rouge">w</code> in the toy example look the way they do! <img class="emoji" title=":bowtie:" alt=":bowtie:" src="https://assets-cdn.github.com/images/icons/emoji/bowtie.png" height="20" width="20"></p>
 
 <p>Now, how do you solve for the components $u\subscript{r}$, $v\subscript{r}$, $w\subscript{r}$ ($r = 1, 2, \ldots, R$)? You need to solve the following optimization problem:</p>
 
@@ -222,42 +218,34 @@ for(i in 1:30) {
 
 <p>We use a CP decomposition in order to obtain a rank-3 approximation to that tensor:</p>
 
-<div class="language-R highlighter-rouge">
-<pre class="highlight"><code><span class="n">cp_decomp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">cp</span><span class="p">(</span><span class="n">as.tensor</span><span class="p">(</span><span class="n">X</span><span class="p">),</span><span class="w"> </span><span class="n">num_components</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="n">max_iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">)</span><span class="w">
-</span></code></pre>
-</div>
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cp_decomp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">cp</span><span class="p">(</span><span class="n">as.tensor</span><span class="p">(</span><span class="n">X</span><span class="p">),</span><span class="w"> </span><span class="n">num_components</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="n">max_iter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
 
 <p>Here, we increase <code class="highlighter-rouge">max_iter</code> to 100, in order to ensure convergence, as can be checked with the <code class="highlighter-rouge">conv</code> attribute:</p>
 
-<div class="language-R highlighter-rouge">
-<pre class="highlight"><code><span class="n">cp_decomp</span><span class="o">$</span><span class="n">conv</span><span class="w">
-</span><span class="c1"># [1] TRUE
-</span></code></pre>
-</div>
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cp_decomp</span><span class="o">$</span><span class="n">conv</span><span class="w">
+</span><span class="c1"># [1] TRUE</span><span class="w">
+</span></code></pre></div></div>
 
 <p>Since we set <code class="highlighter-rouge">num_components = 3</code>, the solution now has three components per mode, organized in a three-column matrix for each mode:</p>
 
-<div class="language-R highlighter-rouge">
-<pre class="highlight"><code><span class="n">str</span><span class="p">(</span><span class="n">cp_decomp</span><span class="o">$</span><span class="n">U</span><span class="p">)</span><span class="w">
-</span><span class="c1"># List of 3
-#  $ : num [1:90, 1:3] 0.00131 0.00137 0.00141 0.0014 0.00135 ...
-#  $ : num [1:100, 1:3] 0.000926 0.001345 0.001799 0.002228 0.002755 ...
-#  $ : num [1:100, 1:3] 0.00969 0.0097 0.00974 0.0097 0.00971 ...
-# NULL
-</span></code></pre>
-</div>
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">str</span><span class="p">(</span><span class="n">cp_decomp</span><span class="o">$</span><span class="n">U</span><span class="p">)</span><span class="w">
+</span><span class="c1"># List of 3</span><span class="w">
+</span><span class="c1">#  $ : num [1:90, 1:3] 0.00131 0.00137 0.00141 0.0014 0.00135 ...</span><span class="w">
+</span><span class="c1">#  $ : num [1:100, 1:3] 0.000926 0.001345 0.001799 0.002228 0.002755 ...</span><span class="w">
+</span><span class="c1">#  $ : num [1:100, 1:3] 0.00969 0.0097 0.00974 0.0097 0.00971 ...</span><span class="w">
+</span><span class="c1"># NULL</span><span class="w">
+</span></code></pre></div></div>
 
 <p>And we can even check the percentage of the Frobenius norm of $X$ explained by the rank-3 approximation $\widehat{X}$:</p>
 
-<div class="language-R highlighter-rouge">
-<pre class="highlight"><code><span class="n">cp_decomp</span><span class="o">$</span><span class="n">norm_percent</span><span class="w">
-</span><span class="c1"># [1] 83.13865
-</span></code></pre>
-</div>
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cp_decomp</span><span class="o">$</span><span class="n">norm_percent</span><span class="w">
+</span><span class="c1"># [1] 83.13865</span><span class="w">
+</span></code></pre></div></div>
 
 <p>83% isn’t too bad!</p>
 
-<p><img class="emoji" title=":grinning:" alt=":grinning:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f600.png" height="20" width="20" align="absmiddle"> Let’s look at a visualization of the obtained components!</p>
+<p><img class="emoji" title=":grinning:" alt=":grinning:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f600.png" height="20" width="20"> Let’s look at a visualization of the obtained components!</p>
 
 <p><img src="../images/CP_tensor_decomposition/rank-3_approx.png" alt="components of a rank-3 approximation to a 3-way tensor"></p>
 

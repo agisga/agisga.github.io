@@ -87,22 +87,21 @@
 
 <p>The data is supplied to the model fitting method <code class="highlighter-rouge">LMM#from_formula</code> as a <code class="highlighter-rouge">Daru::DataFrame</code> (from the excellent Ruby gem <a href="https://github.com/v0dro/daru.git">daru</a>). In order to test <code class="highlighter-rouge">LMM#from_formula</code>, I have generated a data set of the following form:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">alien_species</span><span class="p">.</span><span class="nf">head</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">alien_species</span><span class="p">.</span><span class="nf">head</span>
 <span class="o">=&gt;</span> 
 <span class="c1">#&lt;Daru::DataFrame:70197332524760 @name = 1cd9d732-526b-49ae-8cb1-35cd69541c87 @size = 10&gt;</span>
                   <span class="no">Age</span> <span class="no">Aggression</span>   <span class="no">Location</span>    <span class="no">Species</span> 
-         <span class="mi">0</span>     <span class="mi">204</span><span class="o">.</span><span class="mi">95</span> <span class="mi">877</span><span class="o">.</span><span class="mi">542420</span>     <span class="no">Asylum</span>      <span class="no">Dalek</span> 
-         <span class="mi">1</span>      <span class="mi">39</span><span class="o">.</span><span class="mi">88</span> <span class="mi">852</span><span class="o">.</span><span class="mi">528392</span>  <span class="no">OodSphere</span> <span class="no">WeepingAng</span> 
-         <span class="mi">2</span>     <span class="mi">107</span><span class="o">.</span><span class="mi">34</span> <span class="mi">388</span><span class="o">.</span><span class="mi">791416</span>     <span class="no">Asylum</span>      <span class="no">Human</span> 
-         <span class="mi">3</span>     <span class="mi">210</span><span class="o">.</span><span class="mo">01</span> <span class="mi">170</span><span class="o">.</span><span class="mo">010124</span>  <span class="no">OodSphere</span>        <span class="no">Ood</span> 
-         <span class="mi">4</span>     <span class="mi">270</span><span class="o">.</span><span class="mi">22</span> <span class="mi">1078</span><span class="o">.</span><span class="mi">31219</span>  <span class="no">OodSphere</span>      <span class="no">Dalek</span> 
-         <span class="mi">5</span>     <span class="mi">157</span><span class="o">.</span><span class="mi">65</span> <span class="mi">164</span><span class="o">.</span><span class="mi">924992</span>  <span class="no">OodSphere</span>        <span class="no">Ood</span> 
-         <span class="mi">6</span>     <span class="mi">136</span><span class="o">.</span><span class="mi">15</span> <span class="mi">865</span><span class="o">.</span><span class="mi">838374</span>  <span class="no">OodSphere</span> <span class="no">WeepingAng</span> 
-         <span class="mi">7</span>     <span class="mi">241</span><span class="o">.</span><span class="mi">31</span> <span class="mi">1052</span><span class="o">.</span><span class="mi">36035</span>      <span class="no">Earth</span>      <span class="no">Dalek</span> 
-         <span class="mi">8</span>      <span class="mi">86</span><span class="o">.</span><span class="mi">84</span> <span class="o">-</span><span class="mi">8</span><span class="o">.</span><span class="mi">5725199</span>     <span class="no">Asylum</span>        <span class="no">Ood</span> 
-         <span class="mi">9</span>      <span class="mi">206</span><span class="o">.</span><span class="mi">7</span> <span class="mi">1070</span><span class="o">.</span><span class="mi">71900</span>  <span class="no">OodSphere</span>      <span class="no">Dalek</span> 
-</code></pre>
-</div>
+         <span class="mi">0</span>     <span class="mf">204.95</span> <span class="mf">877.542420</span>     <span class="no">Asylum</span>      <span class="no">Dalek</span> 
+         <span class="mi">1</span>      <span class="mf">39.88</span> <span class="mf">852.528392</span>  <span class="no">OodSphere</span> <span class="no">WeepingAng</span> 
+         <span class="mi">2</span>     <span class="mf">107.34</span> <span class="mf">388.791416</span>     <span class="no">Asylum</span>      <span class="no">Human</span> 
+         <span class="mi">3</span>     <span class="mf">210.01</span> <span class="mf">170.010124</span>  <span class="no">OodSphere</span>        <span class="no">Ood</span> 
+         <span class="mi">4</span>     <span class="mf">270.22</span> <span class="mf">1078.31219</span>  <span class="no">OodSphere</span>      <span class="no">Dalek</span> 
+         <span class="mi">5</span>     <span class="mf">157.65</span> <span class="mf">164.924992</span>  <span class="no">OodSphere</span>        <span class="no">Ood</span> 
+         <span class="mi">6</span>     <span class="mf">136.15</span> <span class="mf">865.838374</span>  <span class="no">OodSphere</span> <span class="no">WeepingAng</span> 
+         <span class="mi">7</span>     <span class="mf">241.31</span> <span class="mf">1052.36035</span>      <span class="no">Earth</span>      <span class="no">Dalek</span> 
+         <span class="mi">8</span>      <span class="mf">86.84</span> <span class="o">-</span><span class="mf">8.5725199</span>     <span class="no">Asylum</span>        <span class="no">Ood</span> 
+         <span class="mi">9</span>      <span class="mf">206.7</span> <span class="mf">1070.71900</span>  <span class="no">OodSphere</span>      <span class="no">Dalek</span> 
+</code></pre></div></div>
 
 <p>As we can see, the data set contains two numeric variables <em>Age</em> and <em>Aggression</em>, and two categorical variables <em>Location</em> and <em>Species</em>. These data are available for 100 individuals.</p>
 
@@ -118,38 +117,35 @@
 
 <p>We fit this model in Ruby using <code class="highlighter-rouge">MixedModels</code> with:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_formula</span><span class="p">(</span><span class="ss">formula: </span><span class="s2">"Aggression ~ Age + Species + (Age | Location)"</span><span class="p">,</span> 
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_formula</span><span class="p">(</span><span class="ss">formula: </span><span class="s2">"Aggression ~ Age + Species + (Age | Location)"</span><span class="p">,</span> 
                              <span class="ss">data: </span><span class="n">alien_species</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>where the argument <code class="highlighter-rouge">formula</code> takes in a <code class="highlighter-rouge">String</code> that contains a formula written in the formula language that is used in the R-package <code class="highlighter-rouge">lme4</code> (<code class="highlighter-rouge">MixedModels</code> currently supports most of the formula language except some shortcuts). Since <code class="highlighter-rouge">lme4</code> is currently the most commonly used package for linear mixed models, a lot of documentation and tutorials to the formula interface can be found online.</p>
 
 <p>We print some of the results that we have obtained:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"REML criterion: </span><span class="se">\t</span><span class="si">#{</span><span class="n">model_fit</span><span class="p">.</span><span class="nf">dev_optimal</span><span class="si">}</span><span class="s2">"</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"REML criterion: </span><span class="se">\t</span><span class="si">#{</span><span class="n">model_fit</span><span class="p">.</span><span class="nf">dev_optimal</span><span class="si">}</span><span class="s2">"</span>
 <span class="nb">puts</span> <span class="s2">"Fixed effects:"</span>
 <span class="nb">puts</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef</span>
 <span class="nb">puts</span> <span class="s2">"Standard deviation: </span><span class="se">\t</span><span class="si">#{</span><span class="no">Math</span><span class="o">::</span><span class="n">sqrt</span><span class="p">(</span><span class="n">model_fit</span><span class="p">.</span><span class="nf">sigma2</span><span class="p">)</span><span class="si">}</span><span class="s2">"</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Which produces the output:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>REML criterion: 	333.71553910151437
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>REML criterion: 	333.71553910151437
 Fixed effects:
 {"x0"=&gt;1016.2867207023437, "x1"=&gt;-0.06531615342788923, 
 "x2"=&gt;-499.69369529020815, "x3"=&gt;-899.569321353576, 
 "x4"=&gt;-199.5889580420067}
 Standard deviation: 	0.9745169802141329
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h3 id="comparison-with-r-lme4">Comparison with R lme4</h3>
 
 <p>We fit the same model in R using the package <code class="highlighter-rouge">lme4</code>, and print out the estimates for the same quantities as previously:</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lmer</span><span class="p">(</span><span class="n">Aggression</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">Age</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Species</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">Age</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Location</span><span class="p">),</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alien.species</span><span class="p">)</span><span class="w">
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lmer</span><span class="p">(</span><span class="n">Aggression</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">Age</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Species</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="n">Age</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">Location</span><span class="p">),</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">alien.species</span><span class="p">)</span><span class="w">
 </span><span class="o">&gt;</span><span class="w"> </span><span class="n">REMLcrit</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span><span class="w">
 </span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="m">333.7155</span><span class="w">
 </span><span class="o">&gt;</span><span class="w"> </span><span class="n">fixef</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span><span class="w">
@@ -159,8 +155,7 @@ Standard deviation: 	0.9745169802141329
       </span><span class="m">-199.58895813</span><span class="w"> 
 </span><span class="o">&gt;</span><span class="w"> </span><span class="n">sigma</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span><span class="w">
 </span><span class="p">[</span><span class="m">1</span><span class="p">]</span><span class="w"> </span><span class="m">0.9745324</span><span class="w">
-</span></code></pre>
-</div>
+</span></code></pre></div></div>
 
 <p>We observe that the parameter estimates from Ruby and R agree up to at least four digits behind the floating point.</p>
 
@@ -172,20 +167,19 @@ Standard deviation: 	0.9745169802141329
 
 <p>In the current implementation of <code class="highlighter-rouge">MixedModels</code> this is handled by the method <code class="highlighter-rouge">Daru::DataFrame::create_indicator_vectors_for_categorical_vectors!</code> (defined <a href="https://github.com/agisga/MixedModels/blob/master/lib/MixedModels/daru_methods.rb#L90">here</a>). It adds a set of 0-1-valued vectors for each non-numeric vector in the <code class="highlighter-rouge">Daru::DataFrame</code>:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">new</span><span class="p">([(</span><span class="mi">1</span><span class="p">.</span><span class="nf">.</span><span class="mi">7</span><span class="p">).</span><span class="nf">to_a</span><span class="p">,</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'b'</span><span class="p">,</span><span class="s1">'b'</span><span class="p">,</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'c'</span><span class="p">,</span><span class="s1">'d'</span><span class="p">,</span><span class="s1">'c'</span><span class="p">]],</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">df</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">new</span><span class="p">([(</span><span class="mi">1</span><span class="o">..</span><span class="mi">7</span><span class="p">).</span><span class="nf">to_a</span><span class="p">,</span> <span class="p">[</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'b'</span><span class="p">,</span><span class="s1">'b'</span><span class="p">,</span><span class="s1">'a'</span><span class="p">,</span><span class="s1">'c'</span><span class="p">,</span><span class="s1">'d'</span><span class="p">,</span><span class="s1">'c'</span><span class="p">]],</span>
                            <span class="ss">order: </span><span class="p">[</span><span class="s1">'int'</span><span class="p">,</span><span class="s1">'char'</span><span class="p">])</span> 
 <span class="o">&gt;</span> <span class="n">df</span><span class="p">.</span><span class="nf">create_indicator_vectors_for_categorical_vectors!</span>
   <span class="c1"># =&gt; &lt;Daru::DataFrame:70212314363900 @name = 1a2a49d9-35d3-4adf-a993-5266d7d79442 @size = 7&gt;</span>
              <span class="n">int</span>       <span class="n">char</span> <span class="n">char_lvl_b</span> <span class="n">char_lvl_c</span> <span class="n">char_lvl_d</span> 
-    <span class="mi">0</span>          <span class="mi">1</span>          <span class="n">a</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span> 
-    <span class="mi">1</span>          <span class="mi">2</span>          <span class="n">b</span>        <span class="mi">1</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span> 
-    <span class="mi">2</span>          <span class="mi">3</span>          <span class="n">b</span>        <span class="mi">1</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span> 
-    <span class="mi">3</span>          <span class="mi">4</span>          <span class="n">a</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span> 
-    <span class="mi">4</span>          <span class="mi">5</span>          <span class="n">c</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">1</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span> 
-    <span class="mi">5</span>          <span class="mi">6</span>          <span class="n">d</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">1</span><span class="o">.</span><span class="mi">0</span> 
-    <span class="mi">6</span>          <span class="mi">7</span>          <span class="n">c</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">1</span><span class="o">.</span><span class="mi">0</span>        <span class="mi">0</span><span class="o">.</span><span class="mi">0</span>
-</code></pre>
-</div>
+    <span class="mi">0</span>          <span class="mi">1</span>          <span class="n">a</span>        <span class="mf">0.0</span>        <span class="mf">0.0</span>        <span class="mf">0.0</span> 
+    <span class="mi">1</span>          <span class="mi">2</span>          <span class="n">b</span>        <span class="mf">1.0</span>        <span class="mf">0.0</span>        <span class="mf">0.0</span> 
+    <span class="mi">2</span>          <span class="mi">3</span>          <span class="n">b</span>        <span class="mf">1.0</span>        <span class="mf">0.0</span>        <span class="mf">0.0</span> 
+    <span class="mi">3</span>          <span class="mi">4</span>          <span class="n">a</span>        <span class="mf">0.0</span>        <span class="mf">0.0</span>        <span class="mf">0.0</span> 
+    <span class="mi">4</span>          <span class="mi">5</span>          <span class="n">c</span>        <span class="mf">0.0</span>        <span class="mf">1.0</span>        <span class="mf">0.0</span> 
+    <span class="mi">5</span>          <span class="mi">6</span>          <span class="n">d</span>        <span class="mf">0.0</span>        <span class="mf">0.0</span>        <span class="mf">1.0</span> 
+    <span class="mi">6</span>          <span class="mi">7</span>          <span class="n">c</span>        <span class="mf">0.0</span>        <span class="mf">1.0</span>        <span class="mf">0.0</span>
+</code></pre></div></div>
 
 <p>(where it didn’t add a vector for level “a” of “char”, because it assumes a model with intercept by default)</p>
 
@@ -197,15 +191,13 @@ Standard deviation: 	0.9745169802141329
 
 <p><code class="highlighter-rouge">LMM#from_formula</code> takes in a <code class="highlighter-rouge">String</code> containing a formula specifying the model, for example</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="s2">"z ~ x + y + x:y + (x | u)"</span><span class="o">.</span>
-</code></pre>
-</div>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"z ~ x + y + x:y + (x | u)"</span><span class="o">.</span>
+</code></pre></div></div>
 
 <p>It transforms this formula into another <code class="highlighter-rouge">String</code>, for the above example:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="s2">"lmm_formula(:intercept) + lmm_variable(:x) + lmm_variable(:y) + lmm_variable(:x) * lmm_variable(:y) + (lmm_variable(:intercept) + lmm_variable(:x) | lmm_variable(:u)))"</span><span class="p">,</span>
-</code></pre>
-</div>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"lmm_formula(:intercept) + lmm_variable(:x) + lmm_variable(:y) + lmm_variable(:x) * lmm_variable(:y) + (lmm_variable(:intercept) + lmm_variable(:x) | lmm_variable(:u)))"</span><span class="p">,</span>
+</code></pre></div></div>
 
 <p>adding intercept terms and wrapping all variables in <code class="highlighter-rouge">lmm_variable()</code>.</p>
 

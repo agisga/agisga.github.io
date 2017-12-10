@@ -91,10 +91,9 @@
 
 <p>Cypress uses the <code class="highlighter-rouge">module</code> utility to manage multiple compilers, set environment variables, etc. In order to use Ruby as well as Intel MKL (which is contained in the Intel Parallel Studio XE suite), I need to load the corresponding modules:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ module load ruby
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ module load ruby
 $ module load intel-psxe
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Now I can use Ruby in version 2.2.3 as well as the Intel compiler suite and Intel MKL in my current session on Cypress. However, before installing NMatrix, I need to install its dependencies such as <code class="highlighter-rouge">bundler</code>.</p>
 
@@ -102,33 +101,29 @@ $ module load intel-psxe
 
 <p>As a student I of course don’t have permission to install software system-wide on my university’s HPC. The option <code class="highlighter-rouge">--user-install</code> can be used with <code class="highlighter-rouge">gem install</code> to install gems locally in the user’s home directory. For more convenience one can add the line</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>gem: --user-install
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gem: --user-install
+</code></pre></div></div>
 
 <p>to <code class="highlighter-rouge">.gemrc</code>. This way I can install <code class="highlighter-rouge">bundler</code>.</p>
 
 <p>The remaining dependencies of <code class="highlighter-rouge">nmatrix</code> are installed with <code class="highlighter-rouge">bundle install</code>. In order for it to work, however, I need to add my local gem executable directory to path. In my case this is done with</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>export PATH=$PATH:/home/agossman/.gem/ruby/2.2.0/bin/
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>export PATH=$PATH:/home/agossman/.gem/ruby/2.2.0/bin/
+</code></pre></div></div>
 
 <p>Also, <code class="highlighter-rouge">bundle install</code> needs to be invoked with an option for installation in the home directory, which in my case is:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>bundle install --path /home/agossman/.gem/ruby/2.2.0/
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle install --path /home/agossman/.gem/ruby/2.2.0/
+</code></pre></div></div>
 
 <h2 id="installing-nmatrix-and-nmatrix-lapacke-with-intel-mkl">Installing NMatrix and NMatrix-lapacke with Intel MKL</h2>
 
 <p>I followed the advice given in a comment in <a href="https://github.com/SciRuby/nmatrix/blob/b7d367f544a9d48af5f1b9dedb7ef6adcf488091/ext/nmatrix_lapacke/extconf.rb#L178"><code class="highlighter-rouge">nmatix/ext/nmatrix_lapacke/extconf.rb</code></a>:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>#To use the Intel MKL, comment out the line above, and also comment out the bit above with have_library and dir_config for lapack.
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#To use the Intel MKL, comment out the line above, and also comment out the bit above with have_library and dir_config for lapack.
 #Then add something like the line below (for exactly what linker flags to use see https://software.intel.com/en-us/articles/intel-mkl-link-line-advisor ):
 #$libs += " -L${MKLROOT}/lib/intel64 -lmkl_intel_lp64 -lmkl_core -lmkl_sequential "
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>However, it took me a while to figure out the right linker flags. I used the <a href="https://software.intel.com/en-us/articles/intel-mkl-link-line-advisor">MKL link line advisor</a>. Screen shots of inputs leading to working link lines can be found at the bottom of this page.</p>
 
@@ -155,9 +150,8 @@ $ module load intel-psxe
 
     <p>In this case, the following link line needs to be added to <a href="https://github.com/SciRuby/nmatrix/blob/b7d367f544a9d48af5f1b9dedb7ef6adcf488091/ext/nmatrix_lapacke/extconf.rb#L178"><code class="highlighter-rouge">nmatix/ext/nmatrix_lapacke/extconf.rb</code></a>:</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code>$libs += " -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_core.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a -Wl,--end-group -liomp5 -ldl -lpthread "
-</code></pre>
-    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$libs += " -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_lp64.a ${MKLROOT}/lib/intel64/libmkl_core.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a -Wl,--end-group -liomp5 -ldl -lpthread "
+</code></pre></div>    </div>
   </li>
   <li>
     <p>Using linking via SDL, <code class="highlighter-rouge">nmatrix-lapacke</code> compiles, passes the tests, installs, and works great. However, usage of Intel Xeon Phi Coprocessors is not possible if SDL is used for linking.</p>
@@ -170,9 +164,8 @@ $ module load intel-psxe
 
     <p>The necessary link line that should be used in <a href="https://github.com/SciRuby/nmatrix/blob/b7d367f544a9d48af5f1b9dedb7ef6adcf488091/ext/nmatrix_lapacke/extconf.rb#L178"><code class="highlighter-rouge">nmatix/ext/nmatrix_lapacke/extconf.rb</code></a> is:</p>
 
-    <div class="highlighter-rouge"><pre class="highlight"><code>$libs += " -Wl,--no-as-needed -L${MKLROOT}/lib/intel64  -lmkl_rt -lpthread "
-</code></pre>
-    </div>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$libs += " -Wl,--no-as-needed -L${MKLROOT}/lib/intel64  -lmkl_rt -lpthread "
+</code></pre></div>    </div>
   </li>
 </ol>
 
@@ -180,11 +173,10 @@ $ module load intel-psxe
 
 <p>After the linking flags have been determined and added into the code, the development version of <code class="highlighter-rouge">nmatrix</code> and <code class="highlighter-rouge">nmatrix-lapacke</code> can be compiled, tested, and installed as described in the <a href="https://github.com/SciRuby/nmatrix">NMatrix README</a> with the following lines of terminal input:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>$ bundle exec rake compile nmatrix_plugins=lapacke
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ bundle exec rake compile nmatrix_plugins=lapacke
 $ bundle exec rake spec nmatrix_plugins=lapacke
 $ bundle exec rake install nmatrix_plugins=lapacke
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="simple-performance-tests">Simple performance tests</h2>
 
@@ -194,7 +186,7 @@ $ bundle exec rake install nmatrix_plugins=lapacke
 
 <p>Consider the SVD of a 100 × 100 matrix:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="mi">10000</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">10000</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
   <span class="n">a</span> <span class="o">=</span> <span class="no">NMatrix</span><span class="p">.</span><span class="nf">random</span><span class="p">([</span><span class="mi">100</span><span class="p">,</span><span class="mi">100</span><span class="p">],</span> <span class="ss">dtype: :float64</span><span class="p">)</span>
   <span class="n">u</span><span class="p">,</span> <span class="n">s</span><span class="p">,</span> <span class="n">vt</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="nf">gesvd</span>
 
@@ -205,8 +197,7 @@ $ bundle exec rake install nmatrix_plugins=lapacke
     <span class="nb">puts</span> <span class="s2">"SVD does not work!"</span>
   <span class="k">end</span> 
 <span class="k">end</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The results are:</p>
 
@@ -221,13 +212,12 @@ $ bundle exec rake install nmatrix_plugins=lapacke
 
 <p>Consider a Cholesky factorization of a 5000 × 5000 matrix:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="mi">10</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="mi">10</span><span class="p">.</span><span class="nf">times</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
   <span class="n">a</span> <span class="o">=</span> <span class="no">NMatrix</span><span class="p">.</span><span class="nf">random</span><span class="p">([</span><span class="mi">5000</span><span class="p">,</span><span class="mi">5000</span><span class="p">],</span> <span class="ss">dtype: :float64</span><span class="p">)</span>
   <span class="n">b</span> <span class="o">=</span> <span class="n">a</span><span class="p">.</span><span class="nf">dot</span> <span class="n">a</span><span class="p">.</span><span class="nf">transpose</span>
   <span class="n">b</span><span class="p">.</span><span class="nf">factorize_cholesky</span>
 <span class="k">end</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The results are:</p>
 

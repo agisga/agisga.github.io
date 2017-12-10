@@ -77,7 +77,7 @@ sass:
   style: :compressed
 
 # Use the following plug-ins
-gems:
+plugins:
   - jekyll-sitemap # Create a sitemap using the official Jekyll sitemap gem
   - jemoji # Enable emoji
   - jekyll-paginate
@@ -107,10 +107,5 @@ scholar:
   replace_strings: true
   join_strings:    true
   # (see https://github.com/inukshuk/jekyll-scholar/blob/4b8c0f2f777866be3dedfa126ff51a7746df6533/features/string.feature)
-
-  details_dir:    bibliography
-  details_layout: bibtex.html
-  details_link:   Details
-  # (see https://github.com/inukshuk/jekyll-scholar/blob/aec36c9fa59a794cbb40df14de1153d9b63bcf32/features/details.feature)
 
   query: "@*"

@@ -105,12 +105,11 @@
   </li>
 </ul>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">opt</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">withCallingHandlers</span><span class="p">(</span><span class="n">do.call</span><span class="p">(</span><span class="n">optfun</span><span class="p">,</span><span class="w"> </span><span class="n">arglist</span><span class="p">),</span><span class="w">
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">opt</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">withCallingHandlers</span><span class="p">(</span><span class="n">do.call</span><span class="p">(</span><span class="n">optfun</span><span class="p">,</span><span class="w"> </span><span class="n">arglist</span><span class="p">),</span><span class="w">
                            </span><span class="n">warning</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">function</span><span class="p">(</span><span class="n">w</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
                                </span><span class="n">curWarnings</span><span class="w"> </span><span class="o">&lt;&lt;-</span><span class="w"> </span><span class="n">append</span><span class="p">(</span><span class="n">curWarnings</span><span class="p">,</span><span class="nf">list</span><span class="p">(</span><span class="n">w</span><span class="o">$</span><span class="n">message</span><span class="p">))</span><span class="w">
                            </span><span class="p">})</span><span class="w">
-</span></code></pre>
-</div>
+</span></code></pre></div></div>
 
 <ul>
   <li>
@@ -124,13 +123,12 @@
   </li>
 </ul>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="nf">attr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span><span class="s2">"optimizer"</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">optimizer</span><span class="w">
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">attr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span><span class="s2">"optimizer"</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">optimizer</span><span class="w">
 </span><span class="nf">attr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span><span class="s2">"control"</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">control</span><span class="w">
 </span><span class="nf">attr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span><span class="s2">"warnings"</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">curWarnings</span><span class="w">
 </span><span class="nf">attr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span><span class="s2">"derivs"</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">derivs</span><span class="w">
 </span><span class="n">opt</span><span class="w">
-</span></code></pre>
-</div>
+</span></code></pre></div></div>
 
 <h1 id="extended-convergence-checking---checkconv">Extended convergence checking - <code class="highlighter-rouge">checkConv</code></h1>
 
@@ -140,10 +138,9 @@
   <li>Compute a scaled gradient as the solution to the linear system with the Cholesky factor of the Hessian as the matrix on the left hand side, and the gradient on the right hand side:</li>
 </ul>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">scgrad</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tryCatch</span><span class="p">(</span><span class="n">with</span><span class="p">(</span><span class="n">derivs</span><span class="p">,</span><span class="n">solve</span><span class="p">(</span><span class="n">chol</span><span class="p">(</span><span class="n">Hessian</span><span class="p">),</span><span class="n">gradient</span><span class="p">)),</span><span class="w">
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">scgrad</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tryCatch</span><span class="p">(</span><span class="n">with</span><span class="p">(</span><span class="n">derivs</span><span class="p">,</span><span class="n">solve</span><span class="p">(</span><span class="n">chol</span><span class="p">(</span><span class="n">Hessian</span><span class="p">),</span><span class="n">gradient</span><span class="p">)),</span><span class="w">
                         </span><span class="n">error</span><span class="o">=</span><span class="k">function</span><span class="p">(</span><span class="n">e</span><span class="p">)</span><span class="n">e</span><span class="p">)</span><span class="w">
-</span></code></pre>
-</div>
+</span></code></pre></div></div>
 
 <ul>
   <li>
@@ -179,7 +176,7 @@
 
 <p>This function takes as inputs the environment of the objective function, the parameter estimates obtained from the optimization, the fixed effects and random effects model matrices etc., the original function call, and the messages generated from the convergence check in <code class="highlighter-rouge">checkConv</code>. It checks, reorganizes and renames the parameters, and finally returns everything in an object of class <code class="highlighter-rouge">lmerMod</code>:</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="n">new</span><span class="p">(</span><span class="nf">switch</span><span class="p">(</span><span class="n">rcl</span><span class="p">,</span><span class="w"> </span><span class="n">lmerResp</span><span class="o">=</span><span class="s2">"lmerMod"</span><span class="p">,</span><span class="w"> </span><span class="n">glmResp</span><span class="o">=</span><span class="s2">"glmerMod"</span><span class="p">,</span><span class="w"> </span><span class="n">nlsResp</span><span class="o">=</span><span class="s2">"nlmerMod"</span><span class="p">),</span><span class="w">
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">new</span><span class="p">(</span><span class="nf">switch</span><span class="p">(</span><span class="n">rcl</span><span class="p">,</span><span class="w"> </span><span class="n">lmerResp</span><span class="o">=</span><span class="s2">"lmerMod"</span><span class="p">,</span><span class="w"> </span><span class="n">glmResp</span><span class="o">=</span><span class="s2">"glmerMod"</span><span class="p">,</span><span class="w"> </span><span class="n">nlsResp</span><span class="o">=</span><span class="s2">"nlmerMod"</span><span class="p">),</span><span class="w">
     </span><span class="n">call</span><span class="o">=</span><span class="n">mc</span><span class="p">,</span><span class="w"> </span><span class="n">frame</span><span class="o">=</span><span class="n">fr</span><span class="p">,</span><span class="w"> </span><span class="n">flist</span><span class="o">=</span><span class="n">reTrms</span><span class="o">$</span><span class="n">flist</span><span class="p">,</span><span class="w"> </span><span class="n">cnms</span><span class="o">=</span><span class="n">reTrms</span><span class="o">$</span><span class="n">cnms</span><span class="p">,</span><span class="w">
     </span><span class="n">Gp</span><span class="o">=</span><span class="n">reTrms</span><span class="o">$</span><span class="n">Gp</span><span class="p">,</span><span class="w"> </span><span class="n">theta</span><span class="o">=</span><span class="n">pp</span><span class="o">$</span><span class="n">theta</span><span class="p">,</span><span class="w"> </span><span class="n">beta</span><span class="o">=</span><span class="n">beta</span><span class="p">,</span><span class="w">
     </span><span class="n">u</span><span class="o">=</span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">trivial.y</span><span class="p">)</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="kc">NA_real_</span><span class="p">,</span><span class="n">nrow</span><span class="p">(</span><span class="n">pp</span><span class="o">$</span><span class="n">Zt</span><span class="p">))</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">pp</span><span class="o">$</span><span class="n">u</span><span class="p">(</span><span class="n">fac</span><span class="p">),</span><span class="w">
@@ -192,8 +189,7 @@
                     </span><span class="n">feval</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="nf">is.null</span><span class="p">(</span><span class="n">opt</span><span class="o">$</span><span class="n">feval</span><span class="p">))</span><span class="w"> </span><span class="kc">NA</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="n">opt</span><span class="o">$</span><span class="n">feval</span><span class="p">,</span><span class="w">
                     </span><span class="n">warnings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">attr</span><span class="p">(</span><span class="n">opt</span><span class="p">,</span><span class="s2">"warnings"</span><span class="p">),</span><span class="w"> </span><span class="n">val</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">opt</span><span class="o">$</span><span class="n">par</span><span class="p">)</span><span class="w">
     </span><span class="p">)</span><span class="w">
-</span></code></pre>
-</div>
+</span></code></pre></div></div>
 
   </div>
 

@@ -104,45 +104,42 @@
 <p>For purposes of illustration, I use the same data as in my previous <a href="http://agisga.github.io/MixedModels_from_formula/">blog post</a>.
 The simulated data set contains two numeric variables <em>Age</em> and <em>Aggression</em>, and two categorical variables <em>Location</em> and <em>Species</em>. These data are available for 100 individuals.</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">alien_species</span><span class="p">.</span><span class="nf">head</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span> <span class="n">alien_species</span><span class="p">.</span><span class="nf">head</span>
 <span class="o">=&gt;</span> 
 <span class="c1">#&lt;Daru::DataFrame:70197332524760 @name = 1cd9d732-526b-49ae-8cb1-35cd69541c87 @size = 10&gt;</span>
                   <span class="no">Age</span> <span class="no">Aggression</span>   <span class="no">Location</span>    <span class="no">Species</span> 
-         <span class="mi">0</span>     <span class="mi">204</span><span class="o">.</span><span class="mi">95</span> <span class="mi">877</span><span class="o">.</span><span class="mi">542420</span>     <span class="no">Asylum</span>      <span class="no">Dalek</span> 
-         <span class="mi">1</span>      <span class="mi">39</span><span class="o">.</span><span class="mi">88</span> <span class="mi">852</span><span class="o">.</span><span class="mi">528392</span>  <span class="no">OodSphere</span> <span class="no">WeepingAng</span> 
-         <span class="mi">2</span>     <span class="mi">107</span><span class="o">.</span><span class="mi">34</span> <span class="mi">388</span><span class="o">.</span><span class="mi">791416</span>     <span class="no">Asylum</span>      <span class="no">Human</span> 
-         <span class="mi">3</span>     <span class="mi">210</span><span class="o">.</span><span class="mo">01</span> <span class="mi">170</span><span class="o">.</span><span class="mo">010124</span>  <span class="no">OodSphere</span>        <span class="no">Ood</span> 
-         <span class="mi">4</span>     <span class="mi">270</span><span class="o">.</span><span class="mi">22</span> <span class="mi">1078</span><span class="o">.</span><span class="mi">31219</span>  <span class="no">OodSphere</span>      <span class="no">Dalek</span> 
-         <span class="mi">5</span>     <span class="mi">157</span><span class="o">.</span><span class="mi">65</span> <span class="mi">164</span><span class="o">.</span><span class="mi">924992</span>  <span class="no">OodSphere</span>        <span class="no">Ood</span> 
-         <span class="mi">6</span>     <span class="mi">136</span><span class="o">.</span><span class="mi">15</span> <span class="mi">865</span><span class="o">.</span><span class="mi">838374</span>  <span class="no">OodSphere</span> <span class="no">WeepingAng</span> 
-         <span class="mi">7</span>     <span class="mi">241</span><span class="o">.</span><span class="mi">31</span> <span class="mi">1052</span><span class="o">.</span><span class="mi">36035</span>      <span class="no">Earth</span>      <span class="no">Dalek</span> 
-         <span class="mi">8</span>      <span class="mi">86</span><span class="o">.</span><span class="mi">84</span> <span class="o">-</span><span class="mi">8</span><span class="o">.</span><span class="mi">5725199</span>     <span class="no">Asylum</span>        <span class="no">Ood</span> 
-         <span class="mi">9</span>      <span class="mi">206</span><span class="o">.</span><span class="mi">7</span> <span class="mi">1070</span><span class="o">.</span><span class="mi">71900</span>  <span class="no">OodSphere</span>      <span class="no">Dalek</span> 
-</code></pre>
-</div>
+         <span class="mi">0</span>     <span class="mf">204.95</span> <span class="mf">877.542420</span>     <span class="no">Asylum</span>      <span class="no">Dalek</span> 
+         <span class="mi">1</span>      <span class="mf">39.88</span> <span class="mf">852.528392</span>  <span class="no">OodSphere</span> <span class="no">WeepingAng</span> 
+         <span class="mi">2</span>     <span class="mf">107.34</span> <span class="mf">388.791416</span>     <span class="no">Asylum</span>      <span class="no">Human</span> 
+         <span class="mi">3</span>     <span class="mf">210.01</span> <span class="mf">170.010124</span>  <span class="no">OodSphere</span>        <span class="no">Ood</span> 
+         <span class="mi">4</span>     <span class="mf">270.22</span> <span class="mf">1078.31219</span>  <span class="no">OodSphere</span>      <span class="no">Dalek</span> 
+         <span class="mi">5</span>     <span class="mf">157.65</span> <span class="mf">164.924992</span>  <span class="no">OodSphere</span>        <span class="no">Ood</span> 
+         <span class="mi">6</span>     <span class="mf">136.15</span> <span class="mf">865.838374</span>  <span class="no">OodSphere</span> <span class="no">WeepingAng</span> 
+         <span class="mi">7</span>     <span class="mf">241.31</span> <span class="mf">1052.36035</span>      <span class="no">Earth</span>      <span class="no">Dalek</span> 
+         <span class="mi">8</span>      <span class="mf">86.84</span> <span class="o">-</span><span class="mf">8.5725199</span>     <span class="no">Asylum</span>        <span class="no">Ood</span> 
+         <span class="mi">9</span>      <span class="mf">206.7</span> <span class="mf">1070.71900</span>  <span class="no">OodSphere</span>      <span class="no">Dalek</span> 
+</code></pre></div></div>
 
 <p>We model the <em>Aggression</em> level of an individual as a linear function of the <em>Age</em> (<em>Aggression</em> decreases with <em>Age</em>), with a different constant added for each <em>Species</em> (i.e. each species has a different base level of aggression). Moreover, we assume that there is a random fluctuation in <em>Aggression</em> due to the <em>Location</em> that an individual is at. Additionally, there is a random fluctuation in how <em>Age</em> affects <em>Aggression</em> at each different <em>Location</em>.</p>
 
 <p>We fit this model in Ruby using <code class="highlighter-rouge">mixed_models</code> with:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'mixed_models'</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'mixed_models'</span>
 <span class="n">alien_species</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">from_csv</span> <span class="s1">'./data/alien_species.csv'</span>
 <span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_formula</span><span class="p">(</span><span class="ss">formula: </span><span class="s2">"Aggression ~ Age + Species + (Age | Location)"</span><span class="p">,</span> 
                              <span class="ss">data: </span><span class="n">alien_species</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="test-statistics">Test statistics</h2>
 
 <p>The <a href="https://en.wikipedia.org/wiki/Wald_test#Test_on_a_single_parameter">Wald Z test statistics</a> for the fixed effects coefficients can be computed with:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_z</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_z</span>
 
 <span class="c1"># =&gt; {:intercept=&gt;16.882603431075875, :Age=&gt;-0.7266646548258817, </span>
-<span class="ss">:Species_lvl_Human</span><span class="o">=&gt;-</span><span class="mi">1862</span><span class="o">.</span><span class="mi">7747813759402</span><span class="p">,</span> <span class="ss">:Species_lvl_Ood</span><span class="o">=&gt;-</span><span class="mi">3196</span><span class="o">.</span><span class="mi">2289922406044</span><span class="p">,</span> 
-<span class="ss">:Species_lvl_WeepingAngel</span><span class="o">=&gt;-</span><span class="mi">723</span><span class="o">.</span><span class="mi">7158917283754</span><span class="p">}</span>
-</code></pre>
-</div>
+<span class="ss">:Species_lvl_Human</span><span class="o">=&gt;-</span><span class="mf">1862.7747813759402</span><span class="p">,</span> <span class="ss">:Species_lvl_Ood</span><span class="o">=&gt;-</span><span class="mf">3196.2289922406044</span><span class="p">,</span> 
+<span class="ss">:Species_lvl_WeepingAngel</span><span class="o">=&gt;-</span><span class="mf">723.7158917283754</span><span class="p">}</span>
+</code></pre></div></div>
 
 <p>We see that the variable <code class="highlighter-rouge">Species</code> seems to have a huge influence on <code class="highlighter-rouge">Aggression</code>, while <code class="highlighter-rouge">Age</code> not so much.</p>
 
@@ -158,13 +155,12 @@ The simulated data set contains two numeric variables <em>Age</em> and <em>Aggre
 
 <p>The corresponding (approximate) p-values are obtained with:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_p</span><span class="p">(</span><span class="ss">method: :wald</span><span class="p">)</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_p</span><span class="p">(</span><span class="ss">method: :wald</span><span class="p">)</span>
 
 <span class="c1"># =&gt; {:intercept=&gt;0.0, :Age=&gt;0.4674314106158888, </span>
-<span class="ss">:Species_lvl_Human</span><span class="o">=&gt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> <span class="ss">:Species_lvl_Ood</span><span class="o">=&gt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">,</span> 
-<span class="ss">:Species_lvl_WeepingAngel</span><span class="o">=&gt;</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">}</span>
-</code></pre>
-</div>
+<span class="ss">:Species_lvl_Human</span><span class="o">=&gt;</span><span class="mf">0.0</span><span class="p">,</span> <span class="ss">:Species_lvl_Ood</span><span class="o">=&gt;</span><span class="mf">0.0</span><span class="p">,</span> 
+<span class="ss">:Species_lvl_WeepingAngel</span><span class="o">=&gt;</span><span class="mf">0.0</span><span class="p">}</span>
+</code></pre></div></div>
 
 <p>We see that indeed the aggression level of each species is highly significantly different from the base level (which is the species <code class="highlighter-rouge">Dalek</code> in this model), while statistically we don’t have enough evidence to conclude that the age of an individual is a good predictor of his/her/its aggression level.</p>
 
@@ -174,15 +170,14 @@ The simulated data set contains two numeric variables <em>Age</em> and <em>Aggre
 
 <p>We can use the Wald method for confidence intervals as well. For example 90% confidence intervals for each fixed effects coefficient estimate can be computed as follows.</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">level: </span><span class="mi">0</span><span class="o">.</span><span class="mi">9</span><span class="p">,</span> <span class="ss">method: :wald</span><span class="p">)</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">level: </span><span class="mf">0.9</span><span class="p">,</span> <span class="ss">method: :wald</span><span class="p">)</span>
 
 <span class="c1"># =&gt; {:intercept=&gt;[917.2710135369496, 1115.302428002405],</span>
- <span class="ss">:Age</span><span class="o">=&gt;</span><span class="p">[</span><span class="o">-</span><span class="mi">0</span><span class="o">.</span><span class="mi">2131635992213468</span><span class="p">,</span> <span class="mi">0</span><span class="o">.</span><span class="mi">08253129235199347</span><span class="p">],</span>
- <span class="ss">:Species_lvl_Human</span><span class="o">=&gt;</span><span class="p">[</span><span class="o">-</span><span class="mi">500</span><span class="o">.</span><span class="mi">13493113101106</span><span class="p">,</span> <span class="o">-</span><span class="mi">499</span><span class="o">.</span><span class="mi">25245944940696</span><span class="p">],</span>
- <span class="ss">:Species_lvl_Ood</span><span class="o">=&gt;</span><span class="p">[</span><span class="o">-</span><span class="mi">900</span><span class="o">.</span><span class="mo">032260611745</span><span class="mi">8</span><span class="p">,</span> <span class="o">-</span><span class="mi">899</span><span class="o">.</span><span class="mi">1063820954081</span><span class="p">],</span>
- <span class="ss">:Species_lvl_WeepingAngel</span><span class="o">=&gt;</span><span class="p">[</span><span class="o">-</span><span class="mi">200</span><span class="o">.</span><span class="mo">0425</span><span class="mi">8166587766</span><span class="p">,</span> <span class="o">-</span><span class="mi">199</span><span class="o">.</span><span class="mi">13533441813757</span><span class="p">]}</span>
-</code></pre>
-</div>
+ <span class="ss">:Age</span><span class="o">=&gt;</span><span class="p">[</span><span class="o">-</span><span class="mf">0.2131635992213468</span><span class="p">,</span> <span class="mf">0.08253129235199347</span><span class="p">],</span>
+ <span class="ss">:Species_lvl_Human</span><span class="o">=&gt;</span><span class="p">[</span><span class="o">-</span><span class="mf">500.13493113101106</span><span class="p">,</span> <span class="o">-</span><span class="mf">499.25245944940696</span><span class="p">],</span>
+ <span class="ss">:Species_lvl_Ood</span><span class="o">=&gt;</span><span class="p">[</span><span class="o">-</span><span class="mf">900.0322606117458</span><span class="p">,</span> <span class="o">-</span><span class="mf">899.1063820954081</span><span class="p">],</span>
+ <span class="ss">:Species_lvl_WeepingAngel</span><span class="o">=&gt;</span><span class="p">[</span><span class="o">-</span><span class="mf">200.04258166587766</span><span class="p">,</span> <span class="o">-</span><span class="mf">199.13533441813757</span><span class="p">]}</span>
+</code></pre></div></div>
 
 <p>As for the p-values, the Wald method is currently the only option and the default.</p>
 

@@ -110,13 +110,12 @@
 
 <p>As an example let’s generate a bootstrap sample of the intercept term for the <a href="http://agisga.github.io/MixedModels_from_formula/">alien species data</a>. The following code does the job:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'mixed_models'</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'mixed_models'</span>
 <span class="n">df</span> <span class="o">=</span> <span class="no">Daru</span><span class="o">::</span><span class="no">DataFrame</span><span class="p">.</span><span class="nf">from_csv</span> <span class="s1">'./data/alien_species.csv'</span>
 <span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_formula</span><span class="p">(</span><span class="ss">formula: </span><span class="s2">"Aggression ~ Age + Species + (Age | Location)"</span><span class="p">,</span> <span class="ss">data: </span><span class="n">df</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">bootstrap</span><span class="p">(</span><span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
 <span class="n">y</span> <span class="o">=</span> <span class="n">nsim</span><span class="p">.</span><span class="nf">times</span><span class="p">.</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">result</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="ss">:intercept</span><span class="p">]</span> <span class="p">}</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Notice that I didn’t pass the argument <code class="highlighter-rouge">what_to_collect</code> to <code class="highlighter-rouge">#bootstrap</code>, because the intercept is one of the fixed effects terms which are collected by default.</p>
 
@@ -126,41 +125,38 @@
 
 <p>The image was produced by the following code.</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'gnuplotrb'</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'gnuplotrb'</span>
 <span class="kp">include</span> <span class="no">GnuplotRB</span>
-<span class="n">bin_width</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="nf">max</span> <span class="o">-</span> <span class="n">y</span><span class="p">.</span><span class="nf">min</span><span class="p">)</span><span class="o">/</span><span class="mi">10</span><span class="o">.</span><span class="mi">0</span>
-<span class="n">bins</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="nf">min</span><span class="p">.</span><span class="nf">.</span><span class="n">y</span><span class="p">.</span><span class="nf">max</span><span class="p">).</span><span class="nf">step</span><span class="p">(</span><span class="n">bin_width</span><span class="p">).</span><span class="nf">to_a</span>
-<span class="n">rel_freq</span> <span class="o">=</span> <span class="no">Array</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">bins</span><span class="p">.</span><span class="nf">length</span><span class="o">-</span><span class="mi">1</span><span class="p">){</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">}</span>
+<span class="n">bin_width</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="nf">max</span> <span class="o">-</span> <span class="n">y</span><span class="p">.</span><span class="nf">min</span><span class="p">)</span><span class="o">/</span><span class="mf">10.0</span>
+<span class="n">bins</span> <span class="o">=</span> <span class="p">(</span><span class="n">y</span><span class="p">.</span><span class="nf">min</span><span class="o">..</span><span class="n">y</span><span class="p">.</span><span class="nf">max</span><span class="p">).</span><span class="nf">step</span><span class="p">(</span><span class="n">bin_width</span><span class="p">).</span><span class="nf">to_a</span>
+<span class="n">rel_freq</span> <span class="o">=</span> <span class="no">Array</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="n">bins</span><span class="p">.</span><span class="nf">length</span><span class="o">-</span><span class="mi">1</span><span class="p">){</span><span class="mf">0.0</span><span class="p">}</span>
 <span class="n">y</span><span class="p">.</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">r</span><span class="o">|</span>
   <span class="mi">0</span><span class="p">.</span><span class="nf">upto</span><span class="p">(</span><span class="n">bins</span><span class="p">.</span><span class="nf">length</span><span class="o">-</span><span class="mi">2</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
     <span class="k">if</span> <span class="n">r</span> <span class="o">&gt;=</span> <span class="n">bins</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">&amp;&amp;</span> <span class="n">r</span> <span class="o">&lt;</span> <span class="n">bins</span><span class="p">[</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="k">then</span>
-      <span class="n">rel_freq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span><span class="o">.</span><span class="mi">0</span><span class="o">/</span><span class="n">y</span><span class="p">.</span><span class="nf">length</span>
+      <span class="n">rel_freq</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="mf">1.0</span><span class="o">/</span><span class="n">y</span><span class="p">.</span><span class="nf">length</span>
     <span class="k">end</span>
   <span class="k">end</span>
 <span class="k">end</span>
-<span class="n">bins_center</span> <span class="o">=</span> <span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="p">.</span><span class="nf">.</span><span class="p">.</span><span class="nf">-</span><span class="mi">1</span><span class="p">].</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">b</span><span class="o">|</span> <span class="n">b</span> <span class="o">+</span> <span class="n">bin_width</span><span class="o">/</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span> <span class="p">}</span>
+<span class="n">bins_center</span> <span class="o">=</span> <span class="n">bins</span><span class="p">[</span><span class="mi">0</span><span class="o">...-</span><span class="mi">1</span><span class="p">].</span><span class="nf">map</span> <span class="p">{</span> <span class="o">|</span><span class="n">b</span><span class="o">|</span> <span class="n">b</span> <span class="o">+</span> <span class="n">bin_width</span><span class="o">/</span><span class="mf">2.0</span> <span class="p">}</span>
 <span class="n">plot</span> <span class="o">=</span> <span class="no">Plot</span><span class="p">.</span><span class="nf">new</span><span class="p">([[</span><span class="n">bins_center</span><span class="p">,</span> <span class="n">rel_freq</span><span class="p">],</span> <span class="ss">with: </span><span class="s1">'boxes'</span><span class="p">,</span> <span class="ss">notitle: </span><span class="kp">true</span><span class="p">],</span>
                 <span class="ss">style: </span><span class="s1">'fill solid 0.5'</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <h2 id="bootstrap-confidence-intervals">Bootstrap confidence intervals</h2>
 
 <p>Of course, confidence intervals can be constructed based on the bootstrap samples obtained via <code class="highlighter-rouge">LMM#bootstrap</code>. This functionality is now included in <code class="highlighter-rouge">LMM#fix_ef_conf_int</code>. For example, still using the alien species data, basic bootstrap confidence intervals with confidence level of 95% for the fixed effects coefficient estimates can be computed with:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :bootstrap</span><span class="p">,</span> <span class="ss">boottype: :basic</span><span class="p">,</span> <span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
-</code></pre>
-</div>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :bootstrap</span><span class="p">,</span> <span class="ss">boottype: :basic</span><span class="p">,</span> <span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
+</code></pre></div></div>
 
 <p>The result is a Hash of interval bounds for each fixed effects term:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code><span class="p">{</span><span class="err">:intercept=&gt;[901.1323777908297,</span><span class="w"> </span><span class="err">1127.8830074251803],</span><span class="w"> 
-</span><span class="err">:Age=&gt;[-0.24497613247630068,</span><span class="w"> </span><span class="err">0.10778076861255856],</span><span class="w"> 
-</span><span class="err">:Species_lvl_Human=&gt;[-500.23358644022164,</span><span class="w"> </span><span class="err">-499.1708950551018],</span><span class="w"> 
-</span><span class="err">:Species_lvl_Ood=&gt;[-900.1587789864999,</span><span class="w"> </span><span class="err">-899.0059837383694],</span><span class="w"> 
-</span><span class="err">:Species_lvl_WeepingAngel=&gt;[-200.1445476541481,</span><span class="w"> </span><span class="err">-199.0552908625565]</span><span class="p">}</span><span class="w">
-</span></code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{:intercept=&gt;[901.1323777908297, 1127.8830074251803], 
+:Age=&gt;[-0.24497613247630068, 0.10778076861255856], 
+:Species_lvl_Human=&gt;[-500.23358644022164, -499.1708950551018], 
+:Species_lvl_Ood=&gt;[-900.1587789864999, -899.0059837383694], 
+:Species_lvl_WeepingAngel=&gt;[-200.1445476541481, -199.0552908625565]}
+</code></pre></div></div>
 
 <h3 id="bootstrap-interval-types">Bootstrap interval types</h3>
 
@@ -200,24 +196,22 @@
 
 <p>The method <code class="highlighter-rouge">:all</code> returns a <code class="highlighter-rouge">Daru::DataFrame</code> containing the confidence intervals obtained by each of the available methods. The data frame can be printed in form of a nice looking table for inspection. For example for the alien species data we obtain all types of 95% confidence intervals with</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">ci</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :all</span><span class="p">,</span> <span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
-</code></pre>
-</div>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">ci</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :all</span><span class="p">,</span> <span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
+</code></pre></div></div>
 
 <p>and print them to screen as a table with</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="c1"># round all results to two decimal places</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># round all results to two decimal places</span>
 <span class="n">ci</span><span class="p">.</span><span class="nf">each_vector</span> <span class="k">do</span> <span class="o">|</span><span class="n">v</span><span class="o">|</span>
   <span class="n">v</span><span class="p">.</span><span class="nf">each_index</span> <span class="p">{</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">0</span><span class="p">].</span><span class="nf">round</span><span class="p">(</span><span class="mi">2</span><span class="p">),</span> <span class="n">v</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="mi">1</span><span class="p">].</span><span class="nf">round</span><span class="p">(</span><span class="mi">2</span><span class="p">)}</span>
 <span class="k">end</span>
 <span class="nb">puts</span> <span class="s2">"Confidence intervals obtained with each of the available methods:"</span>
 <span class="nb">puts</span> <span class="n">ci</span><span class="p">.</span><span class="nf">inspect</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>which yields</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Confidence intervals obtained with each of the available methods:
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Confidence intervals obtained with each of the available methods:
 
 #&lt;Daru::DataFrame:70245799731260 @name = 1a212339-2e38-4c4c-8f08-f2edc3668f30 @size = 5&gt;
                                 intercept                  Age    Species_lvl_Human      Species_lvl_Ood Species_lvl_WeepingA 
@@ -226,8 +220,7 @@
            boot_norm    [897.88, 1131.31]        [-0.23, 0.11]    [-500.2, -499.16]   [-900.09, -899.01]   [-200.12, -199.05] 
               boot_t    [902.48, 1136.56]        [-0.24, 0.11]   [-500.22, -499.18]    [-900.1, -899.03]   [-200.13, -199.06] 
            boot_perc     [896.02, 1130.1]         [-0.25, 0.1]   [-500.21, -499.17]   [-900.11, -899.04]   [-200.12, -199.05]
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Since here we are dealing with data that was simulated according to the assumptions of the linear mixed model, all parameters end up approximately meeting the normality assumptions, and therefore all confidence interval methods turn out to be pretty much equivalent. Often when analyzing less ideal data, this will not be the case. Then it might be necessary to compare different types of confidence intervals in order to draw the right conclusions.</p>
 
@@ -241,7 +234,7 @@
 
 <p>Finally I also want to examine the parallel computing capabilities of the bootstrap confidence interval methods a little. The following code benchmarks the computation of studentized bootstrap confidence intervals in parallel and single-threaded.</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'benchmark'</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">require</span> <span class="s1">'benchmark'</span>
 <span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="kp">nil</span>
 <span class="no">Benchmark</span><span class="p">.</span><span class="nf">bm</span><span class="p">(</span><span class="mi">17</span><span class="p">)</span> <span class="k">do</span> <span class="o">|</span><span class="n">bm</span><span class="o">|</span>
   <span class="n">bm</span><span class="p">.</span><span class="nf">report</span><span class="p">(</span><span class="s1">'single-threaded'</span><span class="p">)</span> <span class="k">do</span>
@@ -252,16 +245,14 @@
     <span class="n">ci_bootstrap</span> <span class="o">=</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :bootstrap</span><span class="p">,</span> <span class="ss">nsim: </span><span class="n">nsim</span><span class="p">,</span> <span class="ss">parallel: </span><span class="kp">true</span><span class="p">)</span>
   <span class="k">end</span>
 <span class="k">end</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The obtained results are given in this table.</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>                        user     system      total        real
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                        user     system      total        real
 single-threaded   101.540000   0.000000 101.540000 (101.452211)
 parallel           16.150000   0.030000 170.980000 ( 55.285422)
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The parallel execution does in fact utilize all threads on both cores of my laptop (as I can simply observe by watching <code class="highlighter-rouge">htop</code>). As expected, the parallel execution turns out to be about twice as fast as single-threaded.</p>
 

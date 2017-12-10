@@ -109,54 +109,49 @@
 
 <p>As an example, we use <a href="http://archive.ics.uci.edu/ml/datasets/BlogFeedback">data</a> from the UCI machine learning repository, which originate from blog posts from various sources in 2010-2012, in order to model (the logarithm of) the number of comments that a blog post receives. The linear predictors are the text length, the log-transform of the average number of comments at the hosting website, the average number of trackbacks at the hosting website, and the parent blog posts. We assume a random effect on the number of comments due to the day of the week on which the blog post was published. In <code class="highlighter-rouge">mixed_models</code> this model can be fit with</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_formula</span><span class="p">(</span><span class="ss">formula: </span><span class="s2">"log_comments ~ log_host_comments_avg + host_trackbacks_avg + length + has_parent_with_comments + (1 | day)"</span><span class="p">,</span> 
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_formula</span><span class="p">(</span><span class="ss">formula: </span><span class="s2">"log_comments ~ log_host_comments_avg + host_trackbacks_avg + length + has_parent_with_comments + (1 | day)"</span><span class="p">,</span> 
                               <span class="ss">data: </span><span class="n">blog_data</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>and we can display some information about the estimated fixed effects with</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">puts</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_summary</span><span class="p">.</span><span class="nf">inspect</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
-</code></pre>
-</div>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">fix_ef_summary</span><span class="p">.</span><span class="nf">inspect</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+</code></pre></div></div>
 
 <p>which produces the following output:</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>                                             coef                       sd                  z_score            WaldZ_p_value 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                                             coef                       sd                  z_score            WaldZ_p_value 
                intercept       1.2847896684307731     0.030380582281933178        42.28983027737477                      0.0 
    log_host_comments_avg        0.415586319225577     0.007848368759350875        52.95193586953086                      0.0 
      host_trackbacks_avg     -0.07551588997745964     0.010915623834434068       -6.918146971979714    4.575895218295045e-12 
                   length   1.8245853808280765e-05    2.981631039432429e-06        6.119420400102211    9.391631916599863e-10 
 has_parent_with_comments      -0.4616662830553772      0.13936886611993773      -3.3125496095955715    0.0009244972814528296 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>We can also display the estimated random effects coefficients and the random effects standard deviation,</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"Random effects coefficients:"</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"Random effects coefficients:"</span>
 <span class="nb">puts</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">ran_ef</span>
 <span class="nb">puts</span> <span class="s2">"Random effects correlation structure:"</span>
 <span class="nb">puts</span> <span class="n">model_fit</span><span class="p">.</span><span class="nf">ran_ef_summary</span><span class="p">.</span><span class="nf">inspect</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>which produces</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>Random effects coefficients:
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Random effects coefficients:
 {:intercept_fr=&gt;0.0, :intercept_mo=&gt;0.0, :intercept_sa=&gt;0.0, :intercept_su=&gt;0.0, :intercept_th=&gt;0.0, :intercept_tu=&gt;0.0, :intercept_we=&gt;0.0}
 Random effects standard deviation:
 
 #&lt;Daru::DataFrame:70278348234580 @name = 8e11a27f-81b0-48a0-9771-085a8f30693d @size = 1&gt;
                   day 
        day        0.0 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>Interestingly, the estimates of the random effects coefficients and standard deviation are all zero! That is, we have a singular fit. Thus, our results imply that the day of the week on which a blog post is published has no effect on the number of comments that the blog post will receive.</p>
 
 <p>It is worth pointing out that such a model fit with a singular covariance matrix is problematic with the current version of Python’s <code class="highlighter-rouge">statmodels</code> (described as “numerically challenging” in the <a href="http://statsmodels.sourceforge.net/devel/mixed_linear.html">documentation</a>) and the R package <code class="highlighter-rouge">nlme</code> (“Singular covariance matrices correspond to infinite parameter values”, a <a href="https://stat.ethz.ch/pipermail/r-sig-mixed-models/2014q4/022791.html">mailing list reply</a> by Douglas Bates, the author of <code class="highlighter-rouge">nlme</code>). However, <code class="highlighter-rouge">mixed_models</code>, <code class="highlighter-rouge">lme4</code> and <code class="highlighter-rouge">MixedModels.jl</code> can handle singular fits without problems. In fact, like <code class="highlighter-rouge">mixed_models</code> above, <code class="highlighter-rouge">lme4</code> estimates the random effects coefficients and standard deviation to be zero, as we can see from the following R output:</p>
 
-<div class="language-R highlighter-rouge"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lmer</span><span class="p">(</span><span class="n">log_comments</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">log_host_comments_avg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">host_trackbacks_avg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">has_parent_with_comments</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">day</span><span class="p">),</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">)</span><span class="w">
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">&gt;</span><span class="w"> </span><span class="n">mod</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">lmer</span><span class="p">(</span><span class="n">log_comments</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">log_host_comments_avg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">host_trackbacks_avg</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">has_parent_with_comments</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="p">(</span><span class="m">1</span><span class="o">|</span><span class="n">day</span><span class="p">),</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">df</span><span class="p">)</span><span class="w">
 </span><span class="n">Warning</span><span class="w"> </span><span class="n">message</span><span class="o">:</span><span class="w">
 </span><span class="n">Some</span><span class="w"> </span><span class="n">predictor</span><span class="w"> </span><span class="n">variables</span><span class="w"> </span><span class="n">are</span><span class="w"> </span><span class="n">on</span><span class="w"> </span><span class="n">very</span><span class="w"> </span><span class="n">different</span><span class="w"> </span><span class="n">scales</span><span class="o">:</span><span class="w"> </span><span class="n">consider</span><span class="w"> </span><span class="n">rescaling</span><span class="w"> 
 </span><span class="o">&gt;</span><span class="w"> </span><span class="n">ranef</span><span class="p">(</span><span class="n">mod</span><span class="p">)</span><span class="w">
@@ -174,8 +169,7 @@ Random effects standard deviation:
  </span><span class="n">Groups</span><span class="w">   </span><span class="n">Name</span><span class="w">        </span><span class="n">Std.Dev.</span><span class="w">
  </span><span class="n">day</span><span class="w">      </span><span class="p">(</span><span class="n">Intercept</span><span class="p">)</span><span class="w"> </span><span class="m">0.0000</span><span class="w">  
  </span><span class="n">Residual</span><span class="w">             </span><span class="m">1.2614</span><span class="w">
-</span></code></pre>
-</div>
+</span></code></pre></div></div>
 
 <p>Unfortunately, <code class="highlighter-rouge">mixed_models</code> is rather slow when applied to such a large data set (<code class="highlighter-rouge">blog_data</code> is a data frame of size 22435×8), especially when compared to <code class="highlighter-rouge">lme4</code> which uses many sparse matrix tricks and is mostly written in C++ (integrated in R via <code class="highlighter-rouge">Rcpp</code>) to speed up computation. The difference in performance between <code class="highlighter-rouge">mixed_models</code> and <code class="highlighter-rouge">lme4</code> is on the order of hours for large data, and Julia’s <code class="highlighter-rouge">MixedModels.jl</code> promises to be even faster than <code class="highlighter-rouge">lme4</code>. However, there is no noticeable difference in performance speed for smaller data sets.</p>
 
@@ -189,15 +183,14 @@ Random effects standard deviation:
 
 <p>As an example we fit a linear mixed model with nested random effects to a data frame with 100 rows, of the form:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="c1">#&lt;Daru::DataFrame:69912847885160 @name = 2b161c5d-00de-4240-be50-8fa84f3aed24 @size = 5&gt;</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#&lt;Daru::DataFrame:69912847885160 @name = 2b161c5d-00de-4240-be50-8fa84f3aed24 @size = 5&gt;</span>
                     <span class="n">a</span>          <span class="n">b</span>          <span class="n">x</span>          <span class="n">y</span> 
-         <span class="mi">0</span>         <span class="n">a3</span>         <span class="n">b1</span> <span class="mi">0</span><span class="o">.</span><span class="mi">38842531</span> <span class="mi">5</span><span class="o">.</span><span class="mi">10364866</span> 
-         <span class="mi">1</span>         <span class="n">a3</span>         <span class="n">b2</span> <span class="mi">0</span><span class="o">.</span><span class="mi">44622300</span> <span class="mi">6</span><span class="o">.</span><span class="mi">23307061</span> 
-         <span class="mi">2</span>         <span class="n">a3</span>         <span class="n">b1</span> <span class="mi">1</span><span class="o">.</span><span class="mi">54993657</span> <span class="mi">12</span><span class="o">.</span><span class="mi">2050404</span> 
-         <span class="mi">3</span>         <span class="n">a3</span>         <span class="n">b1</span> <span class="mi">1</span><span class="o">.</span><span class="mi">52786614</span> <span class="mi">12</span><span class="o">.</span><span class="mo">00675</span><span class="mi">95</span> 
-         <span class="mi">4</span>         <span class="n">a3</span>         <span class="n">b2</span> <span class="mi">0</span><span class="o">.</span><span class="mi">76011212</span> <span class="mi">8</span><span class="o">.</span><span class="mi">20054527</span>
-</code></pre>
-</div>
+         <span class="mi">0</span>         <span class="n">a3</span>         <span class="n">b1</span> <span class="mf">0.38842531</span> <span class="mf">5.10364866</span> 
+         <span class="mi">1</span>         <span class="n">a3</span>         <span class="n">b2</span> <span class="mf">0.44622300</span> <span class="mf">6.23307061</span> 
+         <span class="mi">2</span>         <span class="n">a3</span>         <span class="n">b1</span> <span class="mf">1.54993657</span> <span class="mf">12.2050404</span> 
+         <span class="mi">3</span>         <span class="n">a3</span>         <span class="n">b1</span> <span class="mf">1.52786614</span> <span class="mf">12.0067595</span> 
+         <span class="mi">4</span>         <span class="n">a3</span>         <span class="n">b2</span> <span class="mf">0.76011212</span> <span class="mf">8.20054527</span>
+</code></pre></div></div>
 
 <p>We consider the following model:</p>
 
@@ -210,27 +203,24 @@ Random effects standard deviation:
 
 <p>That is, mathematically the model can be expressed as</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>y = beta_0 + beta_1 * x + gamma(a) + delta(a,b) + epsilon
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>y = beta_0 + beta_1 * x + gamma(a) + delta(a,b) + epsilon
+</code></pre></div></div>
 
 <p>where <code class="highlighter-rouge">gamma(a) ~ N(0, phi**2)</code> and <code class="highlighter-rouge">delta(a,b) ~ N(0, psi**2)</code> are normally distributed random variables which assume different realizations for different values of <code class="highlighter-rouge">a</code> and <code class="highlighter-rouge">b</code>, and where <code class="highlighter-rouge">epsilon</code> is a random Gaussian noise term with variance <code class="highlighter-rouge">sigma**2</code>. The goal is to estimate the parameters <code class="highlighter-rouge">beta_0</code>, <code class="highlighter-rouge">beta_1</code>, <code class="highlighter-rouge">phi</code>, <code class="highlighter-rouge">psi</code> and <code class="highlighter-rouge">sigma</code>.</p>
 
 <p>We fit this model in <code class="highlighter-rouge">mixed_models</code>, and display the estimated random effects correlation structure with</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">mod</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_formula</span><span class="p">(</span><span class="ss">formula: </span><span class="s2">"y ~ x + (1|a) + (1|a:b)"</span><span class="p">,</span> 
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mod</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">from_formula</span><span class="p">(</span><span class="ss">formula: </span><span class="s2">"y ~ x + (1|a) + (1|a:b)"</span><span class="p">,</span> 
                        <span class="ss">data: </span><span class="n">df</span><span class="p">,</span> <span class="ss">reml: </span><span class="kp">false</span><span class="p">)</span>
 <span class="nb">puts</span> <span class="n">mod</span><span class="p">.</span><span class="nf">ran_ef_summary</span><span class="p">.</span><span class="nf">inspect</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>which produces the output</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>                    a    a_and_b 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                    a    a_and_b 
          a 1.34108300        nil 
    a_and_b        nil 0.97697500
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>The correlation between the factor <code class="highlighter-rouge">a</code> and the nested random effect <code class="highlighter-rouge">a_and_b</code> is denoted as <code class="highlighter-rouge">nil</code>, because the random effects in the model at hand are assumed to be independent.</p>
 
@@ -238,30 +228,27 @@ Random effects standard deviation:
 
 <p>We can compute five types of 95% confidence intervals for the fixed effects coefficients with the following line of code:</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">mod</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :all</span><span class="p">,</span> <span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
-</code></pre>
-</div>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mod</span><span class="p">.</span><span class="nf">fix_ef_conf_int</span><span class="p">(</span><span class="ss">method: :all</span><span class="p">,</span> <span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
+</code></pre></div></div>
 
 <p>which yields the result</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>                                          intercept                                        x 
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>                                          intercept                                        x 
     wald_z [-1.0442515623151203, 2.433416817887737]   [4.302419420148841, 5.038899876985704] 
 boot_basic [-0.9676586601496888, 2.486799230544233]    [4.30540212917657, 5.028701160534481] 
  boot_norm [-1.0575520080398213, 2.4667867000424115   [4.295959190826356, 5.043382379744274] 
     boot_t [-0.9676586601496886, 2.486799230544233]    [4.30540212917657, 5.028701160534481] 
  boot_perc [-1.0976339749716164, 2.3568239157223054   [4.312618136600064, 5.035917167957975] 
 
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>For example, we see here that the intercept term is likely not significantly different from zero. We could proceed now by performing hypotheses tests using <code class="highlighter-rouge">#fix_ef_p</code> or <code class="highlighter-rouge">#likelihood_ratio_test</code>, or by refitting a model without an intercept using <code class="highlighter-rouge">#drop_fix_ef</code>.</p>
 
 <p>We can also test the nested random effect for significance, in order to decide whether we should drop that term from the model to reduce model complexity. We can use a bootstrap based version of likelihood ratio test as follows.</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="n">mod</span><span class="p">.</span><span class="nf">ran_ef_p</span><span class="p">(</span><span class="ss">variable: :intercept</span><span class="p">,</span> <span class="ss">grouping: </span><span class="p">[</span><span class="ss">:a</span><span class="p">,</span> <span class="ss">:b</span><span class="p">],</span> 
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mod</span><span class="p">.</span><span class="nf">ran_ef_p</span><span class="p">(</span><span class="ss">variable: :intercept</span><span class="p">,</span> <span class="ss">grouping: </span><span class="p">[</span><span class="ss">:a</span><span class="p">,</span> <span class="ss">:b</span><span class="p">],</span> 
              <span class="ss">method: :bootstrap</span><span class="p">,</span> <span class="ss">nsim: </span><span class="mi">1000</span><span class="p">)</span>
-</code></pre>
-</div>
+</code></pre></div></div>
 
 <p>We get a p-value of 9.99e-4, suggesting that we probably should keep the term <code class="highlighter-rouge">(1|a:b)</code> in the model formula.</p>
 
@@ -273,9 +260,8 @@ boot_basic [-0.9676586601496888, 2.486799230544233]    [4.30540212917657, 5.0287
 
 <p>We model the quantitative trait <code class="highlighter-rouge">y</code> (a vector of length 1200) as</p>
 
-<div class="highlighter-rouge"><pre class="highlight"><code>y = X * beta + b + epsilon,
-</code></pre>
-</div>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>y = X * beta + b + epsilon,
+</code></pre></div></div>
 
 <p>where <code class="highlighter-rouge">X</code> is a <code class="highlighter-rouge">1200 x 130</code> matrix containing the genotypes (i.e. 130 SNPs for each of the 1200 subjects); <code class="highlighter-rouge">epsilon</code> is a vector of independent random noise terms with variances equal to <code class="highlighter-rouge">sigma**2</code>; <code class="highlighter-rouge">beta</code> is a vector of unknown fixed effects coefficients measuring the contribution of each SNP to the quantitative trait <code class="highlighter-rouge">y</code>; and <code class="highlighter-rouge">b</code> is a vector of random effects.</p>
 
@@ -287,16 +273,15 @@ boot_basic [-0.9676586601496888, 2.486799230544233]    [4.30540212917657, 5.0287
 
 <p>Having all the model matrices and vectors, we compute the Cholesky factor of the kinship matrix and fit the model with</p>
 
-<div class="language-ruby highlighter-rouge"><pre class="highlight"><code><span class="c1"># upper triangulat Cholesky factor</span>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># upper triangulat Cholesky factor</span>
 <span class="n">kinship_mat_cholesky_factor</span> <span class="o">=</span> <span class="n">kinship_mat</span><span class="p">.</span><span class="nf">factorize_cholesky</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> 
 
 <span class="c1"># Fit the model</span>
 <span class="n">model_fit</span> <span class="o">=</span> <span class="no">LMM</span><span class="p">.</span><span class="nf">new</span><span class="p">(</span><span class="ss">x: </span><span class="n">x</span><span class="p">,</span> <span class="ss">y: </span><span class="n">y</span><span class="p">,</span> <span class="ss">zt: </span><span class="n">z</span><span class="p">,</span>
                     <span class="ss">x_col_names: </span><span class="n">x_names</span><span class="p">,</span> 
-                    <span class="ss">start_point: </span><span class="p">[</span><span class="mi">2</span><span class="o">.</span><span class="mi">0</span><span class="p">],</span> 
-                    <span class="ss">lower_bound: </span><span class="p">[</span><span class="mi">0</span><span class="o">.</span><span class="mi">0</span><span class="p">])</span> <span class="p">{</span> <span class="o">|</span><span class="n">th</span><span class="o">|</span> <span class="n">kinship_mat_cholesky_factor</span> <span class="o">*</span> <span class="n">th</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">}</span>
-</code></pre>
-</div>
+                    <span class="ss">start_point: </span><span class="p">[</span><span class="mf">2.0</span><span class="p">],</span> 
+                    <span class="ss">lower_bound: </span><span class="p">[</span><span class="mf">0.0</span><span class="p">])</span> <span class="p">{</span> <span class="o">|</span><span class="n">th</span><span class="o">|</span> <span class="n">kinship_mat_cholesky_factor</span> <span class="o">*</span> <span class="n">th</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="p">}</span>
+</code></pre></div></div>
 
 <p>Then we can use the available hypotheses test and confidence interval methods to determine which SNPs are significant predictors of the quantitative trait. Out of the 130 SNPs in the model, we find 24 to be significant as linear predictors.</p>
 

@@ -128,32 +128,28 @@ As mentioned in the beginning of <a href="http://www.alexejgossmann.com/tensor_d
 
 <p>We can demonstrate that in R:</p>
 
-<div class="language-R highlighter-rouge">
-<pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">rTensor</span><span class="p">)</span><span class="w">
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">rTensor</span><span class="p">)</span><span class="w">
 
 </span><span class="n">tnsr</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.tensor</span><span class="p">(</span><span class="n">array</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">12</span><span class="p">,</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">)))</span><span class="w">
 </span><span class="n">mat</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">matrix</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">6</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="w">
 
-</span><span class="c1"># 1-mode product performed via the function ttm in rTensor
+</span><span class="c1"># 1-mode product performed via the function ttm in rTensor</span><span class="w">
 </span><span class="n">tnsr_times_mat</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ttm</span><span class="p">(</span><span class="n">tnsr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tnsr</span><span class="p">,</span><span class="w"> </span><span class="n">mat</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mat</span><span class="p">,</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w">
-</span></code></pre>
-</div>
+</span></code></pre></div></div>
 
 <p>Now, for example, the first slice of <code class="highlighter-rouge">tnsr_times_mat</code> is the same as the matrix product of <code class="highlighter-rouge">mat</code> with the first slice of <code class="highlighter-rouge">tnsr</code>:</p>
 
-<div class="language-R highlighter-rouge">
-<pre class="highlight"><code><span class="n">tnsr_times_mat</span><span class="o">@</span><span class="n">data</span><span class="p">[</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">]</span><span class="w">
-</span><span class="c1">#      [,1] [,2]
-# [1,]    9   19
-# [2,]   12   26
-# [3,]   15   33
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tnsr_times_mat</span><span class="o">@</span><span class="n">data</span><span class="p">[</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">]</span><span class="w">
+</span><span class="c1">#      [,1] [,2]</span><span class="w">
+</span><span class="c1"># [1,]    9   19</span><span class="w">
+</span><span class="c1"># [2,]   12   26</span><span class="w">
+</span><span class="c1"># [3,]   15   33</span><span class="w">
 </span><span class="n">mat</span><span class="w"> </span><span class="o">%*%</span><span class="w"> </span><span class="n">as.matrix</span><span class="p">(</span><span class="n">tnsr</span><span class="o">@</span><span class="n">data</span><span class="p">[</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">])</span><span class="w">
-</span><span class="c1">#      [,1] [,2]
-# [1,]    9   19
-# [2,]   12   26
-# [3,]   15   33
-</span></code></pre>
-</div>
+</span><span class="c1">#      [,1] [,2]</span><span class="w">
+</span><span class="c1"># [1,]    9   19</span><span class="w">
+</span><span class="c1"># [2,]   12   26</span><span class="w">
+</span><span class="c1"># [3,]   15   33</span><span class="w">
+</span></code></pre></div></div>
 
 <p>You might want to play around some more with the function <code class="highlighter-rouge">ttm</code> in R to get a better understanding of the <em>k</em>-mode product.</p>
 
@@ -196,40 +192,39 @@ Y &=& X \times\subscript{1} A^{(1)} \times\subscript{2} A^{(2)} \times\subscript
     <p>$X\subscript{(k)}$ is the mode-$k$ unfolding (or mode-$k$ matricization) of the tensor $X$. The mode-$k$ unfolding arranges the mode-$k$ fibers (a <em>fiber</em> is a generalization of <em>column</em> to tensors) of $X$ as columns into a matrix. The concept may be easiest to understand by looking at an example. The following R code shows a 3-way tensor and all three of its mode-$k$ unfoldings (using the <code class="highlighter-rouge">k_unfold</code> function from the <code class="highlighter-rouge">rTensor</code> package):</p>
 
     <div class="language-R highlighter-rouge">
-<pre class="highlight"><code><span class="n">tnsr</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.tensor</span><span class="p">(</span><span class="n">array</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">12</span><span class="p">,</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">)))</span><span class="w">
+<div class="highlight"><pre class="highlight"><code><span class="n">tnsr</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as.tensor</span><span class="p">(</span><span class="n">array</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="m">12</span><span class="p">,</span><span class="w"> </span><span class="n">dim</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">)))</span><span class="w">
 </span><span class="n">tnsr</span><span class="o">@</span><span class="n">data</span><span class="w">
-</span><span class="c1"># , , 1
-#
-#      [,1] [,2] [,3]
-# [1,]    1    3    5
-# [2,]    2    4    6
-#
-# , , 2
-#
-#      [,1] [,2] [,3]
-# [1,]    7    9   11
-# [2,]    8   10   12
-</span><span class="w">
-</span><span class="c1"># mode-1 unfolding:
+</span><span class="c1"># , , 1</span><span class="w">
+</span><span class="c1">#</span><span class="w">
+</span><span class="c1">#      [,1] [,2] [,3]</span><span class="w">
+</span><span class="c1"># [1,]    1    3    5</span><span class="w">
+</span><span class="c1"># [2,]    2    4    6</span><span class="w">
+</span><span class="c1">#</span><span class="w">
+</span><span class="c1"># , , 2</span><span class="w">
+</span><span class="c1">#</span><span class="w">
+</span><span class="c1">#      [,1] [,2] [,3]</span><span class="w">
+</span><span class="c1"># [1,]    7    9   11</span><span class="w">
+</span><span class="c1"># [2,]    8   10   12</span><span class="w">
+
+</span><span class="c1"># mode-1 unfolding:</span><span class="w">
 </span><span class="n">k_unfold</span><span class="p">(</span><span class="n">tnsr</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="o">@</span><span class="n">data</span><span class="w">
-</span><span class="c1">#      [,1] [,2] [,3] [,4] [,5] [,6]
-# [1,]    1    3    5    7    9   11
-# [2,]    2    4    6    8   10   12
-</span><span class="w">
-</span><span class="c1"># mode-2 unfolding:
+</span><span class="c1">#      [,1] [,2] [,3] [,4] [,5] [,6]</span><span class="w">
+</span><span class="c1"># [1,]    1    3    5    7    9   11</span><span class="w">
+</span><span class="c1"># [2,]    2    4    6    8   10   12</span><span class="w">
+
+</span><span class="c1"># mode-2 unfolding:</span><span class="w">
 </span><span class="n">k_unfold</span><span class="p">(</span><span class="n">tnsr</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">)</span><span class="o">@</span><span class="n">data</span><span class="w">
-</span><span class="c1">#      [,1] [,2] [,3] [,4]
-# [1,]    1    2    7    8
-# [2,]    3    4    9   10
-# [3,]    5    6   11   12
-</span><span class="w">
-</span><span class="c1"># mode-3 unfolding:
+</span><span class="c1">#      [,1] [,2] [,3] [,4]</span><span class="w">
+</span><span class="c1"># [1,]    1    2    7    8</span><span class="w">
+</span><span class="c1"># [2,]    3    4    9   10</span><span class="w">
+</span><span class="c1"># [3,]    5    6   11   12</span><span class="w">
+
+</span><span class="c1"># mode-3 unfolding:</span><span class="w">
 </span><span class="n">k_unfold</span><span class="p">(</span><span class="n">tnsr</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">)</span><span class="o">@</span><span class="n">data</span><span class="w">
-</span><span class="c1">#      [,1] [,2] [,3] [,4] [,5] [,6]
-# [1,]    1    2    3    4    5    6
-# [2,]    7    8    9   10   11   12
-</span></code></pre>
-    </div>
+</span><span class="c1">#      [,1] [,2] [,3] [,4] [,5] [,6]</span><span class="w">
+</span><span class="c1"># [1,]    1    2    3    4    5    6</span><span class="w">
+</span><span class="c1"># [2,]    7    8    9   10   11   12</span><span class="w">
+</span></code></pre></div>    </div>
   </li>
 </ul>
 
@@ -245,25 +240,21 @@ Y &=& X \times\subscript{1} A^{(1)} \times\subscript{2} A^{(2)} \times\subscript
 
 <p>In R we can perform HOSVD using the function <code class="highlighter-rouge">hosvd</code> from <code class="highlighter-rouge">rTensor</code>:</p>
 
-<div class="language-R highlighter-rouge">
-<pre class="highlight"><code><span class="n">tnsr</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">rand_tensor</span><span class="p">(</span><span class="n">modes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="m">40</span><span class="p">,</span><span class="w"> </span><span class="m">50</span><span class="p">))</span><span class="w">
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tnsr</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">rand_tensor</span><span class="p">(</span><span class="n">modes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">30</span><span class="p">,</span><span class="w"> </span><span class="m">40</span><span class="p">,</span><span class="w"> </span><span class="m">50</span><span class="p">))</span><span class="w">
 </span><span class="n">hosv_decomp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">hosvd</span><span class="p">(</span><span class="n">tnsr</span><span class="p">)</span><span class="w">
-</span></code></pre>
-</div>
+</span></code></pre></div></div>
 
 <p>Now <code class="highlighter-rouge">hosv_decomp$Z</code> is our matrix $G$, and <code class="highlighter-rouge">hosv_decomp$U</code> is a list containing all the matrices $A^{(k)}$. We can use the function <code class="highlighter-rouge">ttl</code>, which performs multiple <em>k</em>-mode products on multiple modes successively given a tensor and a list of matrices, to check that up to numerical error the equation
 $X = G \times\subscript{1} A^{(1)} \times\subscript{2} A^{(2)} \times\subscript{3} \ldots \times\subscript{N} A^{(N)}$
 is satisfied:</p>
 
-<div class="language-R highlighter-rouge">
-<pre class="highlight"><code><span class="n">HOSVD_prod</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ttl</span><span class="p">(</span><span class="n">hosv_decomp</span><span class="o">$</span><span class="n">Z</span><span class="p">,</span><span class="w"> </span><span class="n">hosv_decomp</span><span class="o">$</span><span class="n">U</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">)</span><span class="w">
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">HOSVD_prod</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ttl</span><span class="p">(</span><span class="n">hosv_decomp</span><span class="o">$</span><span class="n">Z</span><span class="p">,</span><span class="w"> </span><span class="n">hosv_decomp</span><span class="o">$</span><span class="n">U</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">)</span><span class="w">
 </span><span class="n">error</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tnsr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">HOSVD_prod</span><span class="w">
 </span><span class="n">table</span><span class="p">(</span><span class="nf">abs</span><span class="p">(</span><span class="n">error</span><span class="o">@</span><span class="n">data</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="m">1e-12</span><span class="p">)</span><span class="w">
-</span><span class="c1">#
-#  TRUE
-# 60000
-</span></code></pre>
-</div>
+</span><span class="c1">#</span><span class="w">
+</span><span class="c1">#  TRUE</span><span class="w">
+</span><span class="c1"># 60000</span><span class="w">
+</span></code></pre></div></div>
 
 <h3 id="higher-order-orthogonal-iteration-hooi">Higher order orthogonal iteration (HOOI)</h3>
 
@@ -291,7 +282,7 @@ is satisfied:</p>
 
 <p>I have downloaded from Kaggle the World Development Indicators <a href="https://www.kaggle.com/worldbank/world-development-indicators">dataset</a>, originally collected and published by The World Bank (the original dataset is available <a href="http://data.worldbank.org/data-catalog/world-development-indicators">here</a>).</p>
 
-<p>The data can be arranged into a three-way tensor with the three modes corresponding to <em>country</em> (<a href="https://www.kaggle.com/benhamner/d/worldbank/world-development-indicators/countries-in-the-wdi-data">list of available countries</a>), <em>indicator</em> (<a href="https://www.kaggle.com/benhamner/d/worldbank/world-development-indicators/indicators-in-data">list of available indicators</a>), and <em>year</em> (1960-2014). Since I didn’t have any time to deal with NA values in any creative way, I have kept only three indicators in the dataset. And I have replaced the remaining NAs with a country-wise average value for each particular indicator. Also, I have forgotten to normalize the data <img class="emoji" title=":disappointed:" alt=":disappointed:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f61e.png" height="20" width="20" align="absmiddle">. The preprocessing resulted in a tensor of size 247-countries-by-3-indicators-by-55-years, that looks sort of like this:</p>
+<p>The data can be arranged into a three-way tensor with the three modes corresponding to <em>country</em> (<a href="https://www.kaggle.com/benhamner/d/worldbank/world-development-indicators/countries-in-the-wdi-data">list of available countries</a>), <em>indicator</em> (<a href="https://www.kaggle.com/benhamner/d/worldbank/world-development-indicators/indicators-in-data">list of available indicators</a>), and <em>year</em> (1960-2014). Since I didn’t have any time to deal with NA values in any creative way, I have kept only three indicators in the dataset. And I have replaced the remaining NAs with a country-wise average value for each particular indicator. Also, I have forgotten to normalize the data <img class="emoji" title=":disappointed:" alt=":disappointed:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f61e.png" height="20" width="20">. The preprocessing resulted in a tensor of size 247-countries-by-3-indicators-by-55-years, that looks sort of like this:</p>
 
 <p><img src="../images/Tucker_decomposition/3-way_tensor_small.png" alt="Figure: 3-way tensor obtained from the WDI data"></p>
 
@@ -299,50 +290,44 @@ is satisfied:</p>
 
 <p>We use the function <code class="highlighter-rouge">tucker</code> from <code class="highlighter-rouge">rTensor</code> to obtain a Tucker decomposition via HOOI, where we set the ranks to the value 3 at each mode.</p>
 
-<div class="language-R highlighter-rouge">
-<pre class="highlight"><code><span class="nf">dim</span><span class="p">(</span><span class="n">wdi_tnsr</span><span class="p">)</span><span class="w">
-</span><span class="c1"># [1] 247   3  55
-</span><span class="w">
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">dim</span><span class="p">(</span><span class="n">wdi_tnsr</span><span class="p">)</span><span class="w">
+</span><span class="c1"># [1] 247   3  55</span><span class="w">
+
 </span><span class="n">tucker_decomp</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tucker</span><span class="p">(</span><span class="n">wdi_tnsr</span><span class="p">,</span><span class="w"> </span><span class="n">ranks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">,</span><span class="w"> </span><span class="m">3</span><span class="p">))</span><span class="w">
 
 </span><span class="n">str</span><span class="p">(</span><span class="n">tucker_decomp</span><span class="p">)</span><span class="w">
-</span><span class="c1"># List of 7
-#  $ Z           :Formal class 'Tensor' [package "rTensor"] with 3 slots
-#   .. ..@ num_modes: int 3
-#   .. ..@ modes    : int [1:3] 3 3 3
-#   .. ..@ data     : num [1:3, 1:3, 1:3] -6.60e+10 -1.13e+05 6.24e+05 -7.76e+05 -1.93e+08 ...
-#  $ U           :List of 3
-#   ..$ : num [1:247, 1:3] -0.02577 -0.00065 -0.01146 -0.19637 -0.17317 ...
-#   ..$ : num [1:3, 1:3] -1.00 -6.97e-10 -2.08e-02 2.08e-02 -4.70e-08 ...
-#   ..$ : num [1:55, 1:3] -0.0762 -0.0772 -0.0785 -0.0802 -0.082 ...
-#  $ conv        : logi TRUE
-#  $ est         :Formal class 'Tensor' [package "rTensor"] with 3 slots
-#   .. ..@ num_modes: int 3
-#   .. ..@ modes    : int [1:3] 247 3 55
-#   .. ..@ data     : num [1:247, 1:3, 1:55] 9.83e+07 4.44e+06 8.81e+07 1.05e+09 8.97e+08 ...
-#  $ norm_percent: num 99.4
-#  $ fnorm_resid : num 3.9e+08
-#  $ all_resids  : num [1:2] 3.9e+08 3.9e+08
-# NULL
-</span></code></pre>
-</div>
+</span><span class="c1"># List of 7</span><span class="w">
+</span><span class="c1">#  $ Z           :Formal class 'Tensor' [package "rTensor"] with 3 slots</span><span class="w">
+</span><span class="c1">#   .. ..@ num_modes: int 3</span><span class="w">
+</span><span class="c1">#   .. ..@ modes    : int [1:3] 3 3 3</span><span class="w">
+</span><span class="c1">#   .. ..@ data     : num [1:3, 1:3, 1:3] -6.60e+10 -1.13e+05 6.24e+05 -7.76e+05 -1.93e+08 ...</span><span class="w">
+</span><span class="c1">#  $ U           :List of 3</span><span class="w">
+</span><span class="c1">#   ..$ : num [1:247, 1:3] -0.02577 -0.00065 -0.01146 -0.19637 -0.17317 ...</span><span class="w">
+</span><span class="c1">#   ..$ : num [1:3, 1:3] -1.00 -6.97e-10 -2.08e-02 2.08e-02 -4.70e-08 ...</span><span class="w">
+</span><span class="c1">#   ..$ : num [1:55, 1:3] -0.0762 -0.0772 -0.0785 -0.0802 -0.082 ...</span><span class="w">
+</span><span class="c1">#  $ conv        : logi TRUE</span><span class="w">
+</span><span class="c1">#  $ est         :Formal class 'Tensor' [package "rTensor"] with 3 slots</span><span class="w">
+</span><span class="c1">#   .. ..@ num_modes: int 3</span><span class="w">
+</span><span class="c1">#   .. ..@ modes    : int [1:3] 247 3 55</span><span class="w">
+</span><span class="c1">#   .. ..@ data     : num [1:247, 1:3, 1:55] 9.83e+07 4.44e+06 8.81e+07 1.05e+09 8.97e+08 ...</span><span class="w">
+</span><span class="c1">#  $ norm_percent: num 99.4</span><span class="w">
+</span><span class="c1">#  $ fnorm_resid : num 3.9e+08</span><span class="w">
+</span><span class="c1">#  $ all_resids  : num [1:2] 3.9e+08 3.9e+08</span><span class="w">
+</span><span class="c1"># NULL</span><span class="w">
+</span></code></pre></div></div>
 
 <p>To see how well the tensor decomposition approximates the original tensor, we can look at the relative error</p>
 
-<div class="language-R highlighter-rouge">
-<pre class="highlight"><code><span class="n">wdi_tnsr_approx</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ttl</span><span class="p">(</span><span class="n">tucker_decomp</span><span class="o">$</span><span class="n">Z</span><span class="p">,</span><span class="w"> </span><span class="n">tucker_decomp</span><span class="o">$</span><span class="n">U</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">)</span><span class="w">
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">wdi_tnsr_approx</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ttl</span><span class="p">(</span><span class="n">tucker_decomp</span><span class="o">$</span><span class="n">Z</span><span class="p">,</span><span class="w"> </span><span class="n">tucker_decomp</span><span class="o">$</span><span class="n">U</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="m">3</span><span class="p">)</span><span class="w">
 </span><span class="n">fnorm</span><span class="p">(</span><span class="n">wdi_tnsr</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">wdi_tnsr_approx</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">fnorm</span><span class="p">(</span><span class="n">wdi_tnsr</span><span class="p">)</span><span class="w">
-</span><span class="c1"># [1] 0.005908934
-</span></code></pre>
-</div>
+</span><span class="c1"># [1] 0.005908934</span><span class="w">
+</span></code></pre></div></div>
 
 <p>and at the percentage of the norm of the original tensor explained by the Tucker decomposition</p>
 
-<div class="language-R highlighter-rouge">
-<pre class="highlight"><code><span class="n">tucker_decomp</span><span class="o">$</span><span class="n">norm_percent</span><span class="w">
-</span><span class="c1"># [1] 99.40911
-</span></code></pre>
-</div>
+<div class="language-R highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tucker_decomp</span><span class="o">$</span><span class="n">norm_percent</span><span class="w">
+</span><span class="c1"># [1] 99.40911</span><span class="w">
+</span></code></pre></div></div>
 
 <p>We, observe that we indeed achieve a recovery with an accuracy of over 99%. For comparison, the original tensor contains <code class="highlighter-rouge">247 * 3 * 55 = 40755</code> entries, while the computed Tucker decomposition consists of only <code class="highlighter-rouge">127 * 3 + 3 * 3 + 55 * 3 + 3 * 3 * 3 = 582</code> numbers. That’s a reduction in size by a factor greater than 70.</p>
 
