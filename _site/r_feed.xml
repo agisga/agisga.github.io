@@ -339,7 +339,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
 
 &lt;p&gt;The functions &lt;code class=&quot;highlighter-rouge&quot;&gt;tic&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;toc&lt;/code&gt; are used in the same manner for benchmarking as the just demonstrated &lt;code class=&quot;highlighter-rouge&quot;&gt;Sys.time&lt;/code&gt;. However &lt;code class=&quot;highlighter-rouge&quot;&gt;tictoc&lt;/code&gt; adds a lot more convenience to the whole.&lt;/p&gt;
 
-&lt;p&gt;The most recent development&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; version of &lt;code class=&quot;highlighter-rouge&quot;&gt;tictoc&lt;/code&gt; can be installed from github:&lt;/p&gt;
+&lt;p&gt;The most recent development version of &lt;code class=&quot;highlighter-rouge&quot;&gt;tictoc&lt;/code&gt; can be installed from github:&lt;/p&gt;
 
 &lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;devtools&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;install_github&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;jabiru/tictoc&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -400,7 +400,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
 
 &lt;p&gt;The documentation to the function &lt;code class=&quot;highlighter-rouge&quot;&gt;benchmark&lt;/code&gt; from the &lt;code class=&quot;highlighter-rouge&quot;&gt;rbenchmark&lt;/code&gt; R package describes it as “a simple wrapper around &lt;code class=&quot;highlighter-rouge&quot;&gt;system.time&lt;/code&gt;”. However it adds a lot of convenience compared to bare &lt;code class=&quot;highlighter-rouge&quot;&gt;system.time&lt;/code&gt; calls. For example it requires just one &lt;code class=&quot;highlighter-rouge&quot;&gt;benchmark&lt;/code&gt; call to time multiple replications of multiple expressions. Additionally the returned results are conveniently organized in a data frame.&lt;/p&gt;
 
-&lt;p&gt;I installed the development&lt;sup id=&quot;fnref:1:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; version of the &lt;code class=&quot;highlighter-rouge&quot;&gt;rbenchmark&lt;/code&gt; package from github:&lt;/p&gt;
+&lt;p&gt;I installed the development[^1] version of the &lt;code class=&quot;highlighter-rouge&quot;&gt;rbenchmark&lt;/code&gt; package from github:&lt;/p&gt;
 
 &lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;devtools&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;install_github&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;eddelbuettel/rbenchmark&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -507,16 +507,6 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
 &lt;/ul&gt;
 
 &lt;p&gt;For these reasons I will go with &lt;code class=&quot;highlighter-rouge&quot;&gt;microbenchmark&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;tictoc&lt;/code&gt;. :bowtie:&lt;/p&gt;
-
-&lt;hr /&gt;
-
-&lt;div class=&quot;footnotes&quot;&gt;
-  &lt;ol&gt;
-    &lt;li id=&quot;fn:1&quot;&gt;
-      &lt;p&gt;Though the repository does not seem to be very active. So the github version is probably no different from the stable release on CRAN.&amp;nbsp;&lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&amp;nbsp;&lt;a href=&quot;#fnref:1:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;sup&gt;2&lt;/sup&gt;&lt;/a&gt;&lt;/p&gt;
-    &lt;/li&gt;
-  &lt;/ol&gt;
-&lt;/div&gt;
 </description>
               <pubdate>2017-05-27T21:09:00-07:00</pubdate>
               <link>http://www.alexejgossmann.com/benchmarking_r/</link>

@@ -29,7 +29,7 @@ end_time - start_time
 
 The functions `tic` and `toc` are used in the same manner for benchmarking as the just demonstrated `Sys.time`. However `tictoc` adds a lot more convenience to the whole.
 
-The most recent development[^1] version of `tictoc` can be installed from github:
+The most recent development version of `tictoc` can be installed from github:
 
 ```R
 devtools::install_github("jabiru/tictoc")
@@ -200,7 +200,3 @@ The given demonstration of the different benchmarking functions is surely not ex
 * To my knowledge `microbenchmark` is the only benchmarking package that has visualizations built in :+1:.
 
 For these reasons I will go with `microbenchmark` and `tictoc`. :bowtie:
-
---------------
-
-[^1]: Though the repository does not seem to be very active. So the github version is probably no different from the stable release on CRAN.
