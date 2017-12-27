@@ -188,7 +188,7 @@ The end goal is, of course, to replace the patent examiner with an AI trained on
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-          <pubDate>2017-09-22T00:00:00-05:00</pubDate>
+          <pubDate>2017-09-22T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/patents_part_1/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/patents_part_1/</guid>
         </item>
@@ -293,7 +293,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
     &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ggtitle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;paste&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_rep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;repetitions of an LM fit with&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;rows,&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;columns&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 </description>
-          <pubDate>2017-06-05T19:00:00-05:00</pubDate>
+          <pubDate>2017-06-05T17:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/Freedmans_paradox/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/Freedmans_paradox/</guid>
         </item>
@@ -326,7 +326,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
 
 &lt;p&gt;The most recent development&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt; version of &lt;code class=&quot;highlighter-rouge&quot;&gt;tictoc&lt;/code&gt; can be installed from github:&lt;/p&gt;
 
-&lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;devtools&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;install_github&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;collectivemedia/tictoc&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;div class=&quot;language-R highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;devtools&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;install_github&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;jabiru/tictoc&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;One can time a single code chunk:&lt;/p&gt;
@@ -503,7 +503,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-          <pubDate>2017-05-27T23:09:00-05:00</pubDate>
+          <pubDate>2017-05-27T21:09:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/benchmarking_r/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/benchmarking_r/</guid>
         </item>
@@ -575,7 +575,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-          <pubDate>2017-05-09T20:40:00-05:00</pubDate>
+          <pubDate>2017-05-09T18:40:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/the-lean-phd-student/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/the-lean-phd-student/</guid>
         </item>
@@ -669,7 +669,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
 &lt;p&gt;Additionally, it is quite informative to look at a &lt;a href=&quot;https://plot.ly/~agisga/11&quot;&gt;visualization of the salary increase from starting to mid-career&lt;/a&gt;.&lt;/p&gt;
 &lt;iframe width=&quot;800&quot; height=&quot;500&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot; src=&quot;//plot.ly/~agisga/11.embed&quot;&gt;&lt;/iframe&gt;
 </description>
-          <pubDate>2017-04-27T23:08:00-05:00</pubDate>
+          <pubDate>2017-04-27T21:08:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/salaries_by_school_plotly_viz/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/salaries_by_school_plotly_viz/</guid>
         </item>
@@ -918,7 +918,7 @@ is satisfied:&lt;/p&gt;
 
 &lt;p&gt;Even though data compression does not make much sense for the size of the dataset considered here, it clearly shows potential to be very useful for purposes of data distribution and data storage, when the data size far exceeds the terabyte range.&lt;/p&gt;
 </description>
-          <pubDate>2017-04-05T00:50:00-05:00</pubDate>
+          <pubDate>2017-04-04T22:50:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/tensor_decomposition_tucker/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/tensor_decomposition_tucker/</guid>
         </item>
@@ -1118,7 +1118,7 @@ for(i in 1:30) {
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-          <pubDate>2017-04-02T14:30:00-05:00</pubDate>
+          <pubDate>2017-04-02T12:30:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/tensor_decomposition_CP/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/tensor_decomposition_CP/</guid>
         </item>
@@ -1843,7 +1843,7 @@ ftp&amp;gt; quit
   &lt;li&gt;&lt;a href=&quot;http://jvns.ca/zines/&quot;&gt;http://jvns.ca/zines/&lt;/a&gt; — &lt;em&gt;informative&lt;/em&gt; fanzines about some Linux tools.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-          <pubDate>2017-03-25T11:30:15-05:00</pubDate>
+          <pubDate>2017-03-25T09:30:15-07:00</pubDate>
           <link>http://www.alexejgossmann.com/linux-cheat-sheet/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/linux-cheat-sheet/</guid>
         </item>
@@ -1996,7 +1996,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 &lt;a rel=&quot;license&quot; href=&quot;http://creativecommons.org/licenses/by/4.0/&quot;&gt;&lt;img alt=&quot;Creative Commons License&quot; style=&quot;border-width:0&quot; src=&quot;https://i.creativecommons.org/l/by/4.0/80x15.png&quot; /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel=&quot;license&quot; href=&quot;http://creativecommons.org/licenses/by/4.0/&quot;&gt;Creative Commons Attribution 4.0 International License&lt;/a&gt;.
 &lt;/font&gt;
 </description>
-          <pubDate>2017-03-18T00:00:00-05:00</pubDate>
+          <pubDate>2017-03-18T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/contours_of_statistical_penalty_functions_as_GIFs/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/contours_of_statistical_penalty_functions_as_GIFs/</guid>
         </item>
@@ -2040,7 +2040,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 
 &lt;p&gt;Because I know from &lt;a href=&quot;http://www.phdcomics.com/comics/archive.php?comicid=1415&quot;&gt;a phdcomics cartoon&lt;/a&gt; that caffeine combined with a lack of sleep will turn me into a robot rather than into somebody who might eventually finish graduate school…&lt;/p&gt;
 </description>
-          <pubDate>2017-02-15T02:35:00-06:00</pubDate>
+          <pubDate>2017-02-15T00:35:00-08:00</pubDate>
           <link>http://www.alexejgossmann.com/grad-school-and-coffee/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/grad-school-and-coffee/</guid>
         </item>
@@ -2153,7 +2153,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 
 &lt;p&gt;&lt;img src=&quot;../images/MRI_viz/lung_orthographic-1.png&quot; alt=&quot;plot of chunk lung_orthographic&quot; /&gt;&lt;/p&gt;
 </description>
-          <pubDate>2017-01-27T10:30:15-06:00</pubDate>
+          <pubDate>2017-01-27T08:30:15-08:00</pubDate>
           <link>http://www.alexejgossmann.com/MRI_viz/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/MRI_viz/</guid>
         </item>
@@ -2206,7 +2206,7 @@ Here I experienced some buggy behavior: The web interface would not accept my cr
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-          <pubDate>2016-11-07T00:00:00-06:00</pubDate>
+          <pubDate>2016-11-07T00:00:00-08:00</pubDate>
           <link>http://www.alexejgossmann.com/amahi/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/amahi/</guid>
         </item>
@@ -2235,7 +2235,7 @@ Here I experienced some buggy behavior: The web interface would not accept my cr
   &lt;li&gt;&lt;a href=&quot;https://www.kaggle.com/agisga/d/benhamner/clinton-trump-tweets/top-10-tweets&quot;&gt;I have also written a script producing the above visualizations of the top ten tweets of either presidential candidate&lt;/a&gt;, learning more about ggplot2 in the process.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-          <pubDate>2016-10-25T00:00:00-05:00</pubDate>
+          <pubDate>2016-10-25T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/clinton_trump_tweets/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/clinton_trump_tweets/</guid>
         </item>
@@ -2322,7 +2322,7 @@ A^{-} :=  \sum_{i=1}^k \frac{1}{\lambda_i} q_i q_i^T.
 Ohio, USA: Institute of Mathematical Statistics, 2007.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-          <pubDate>2016-08-23T00:00:00-05:00</pubDate>
+          <pubDate>2016-08-23T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/generalized_inverse/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/generalized_inverse/</guid>
         </item>
@@ -2464,7 +2464,7 @@ Ohio, USA: Institute of Mathematical Statistics, 2007.&lt;/li&gt;
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-          <pubDate>2016-07-23T00:00:00-05:00</pubDate>
+          <pubDate>2016-07-23T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/categorical_data_glm_in_ruby/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/categorical_data_glm_in_ruby/</guid>
         </item>
@@ -2827,7 +2827,7 @@ Ohio, USA: Institute of Mathematical Statistics, 2007.&lt;/li&gt;
 ## 8     &amp;lt;NA&amp;gt;      &amp;lt;NA&amp;gt;   &amp;lt;NA&amp;gt;             Image       1992&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 </description>
-          <pubDate>2016-07-19T00:00:00-05:00</pubDate>
+          <pubDate>2016-07-19T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/dplyr_basics/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/dplyr_basics/</guid>
         </item>
@@ -2893,7 +2893,7 @@ Ohio, USA: Institute of Mathematical Statistics, 2007.&lt;/li&gt;
 
 &lt;p&gt;Of course, the method does not perform this good under all circumstances — the interested reader can learn more from the papers referred to in the &lt;a href=&quot;https://github.com/agisga/grpSLOPE/blob/master/README.md&quot;&gt;grpSLOPE README on github&lt;/a&gt; (unfortunately, the “real” journal publication is still under preparation, and another related journal publication is currently under review, so, not publicly available yet either).&lt;/p&gt;
 </description>
-          <pubDate>2016-05-12T00:00:00-05:00</pubDate>
+          <pubDate>2016-05-12T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/grpSLOPE_on_CRAN/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/grpSLOPE_on_CRAN/</guid>
         </item>
@@ -2907,7 +2907,7 @@ Ohio, USA: Institute of Mathematical Statistics, 2007.&lt;/li&gt;
 &lt;p&gt;The content of this post has moved to &lt;a href=&quot;http://www.alexejgossmann.com/Lehmanns_TSH_and_TPE/&quot;&gt;http://www.alexejgossmann.com/Lehmanns_TSH_and_TPE/&lt;/a&gt;.&lt;/p&gt;
 
 </description>
-          <pubDate>2015-12-06T00:00:00-06:00</pubDate>
+          <pubDate>2015-12-06T00:00:00-08:00</pubDate>
           <link>http://www.alexejgossmann.com/TSH_and_TPE_observations/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/TSH_and_TPE_observations/</guid>
         </item>
@@ -3075,7 +3075,7 @@ $ bundle exec rake install nmatrix_plugins=lapacke
 &lt;p&gt;&lt;img src=&quot;/images/link-line-1.png?raw=true&quot; alt=&quot;SDL link line&quot; /&gt;
 &lt;img src=&quot;/images/link-line-2.png?raw=true&quot; alt=&quot;Static linking link line&quot; /&gt;&lt;/p&gt;
 </description>
-          <pubDate>2015-10-08T00:00:00-05:00</pubDate>
+          <pubDate>2015-10-08T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/nmatrix-on-my-universities-hpc/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/nmatrix-on-my-universities-hpc/</guid>
         </item>
@@ -3310,7 +3310,7 @@ boot_basic [-0.9676586601496888, 2.486799230544233]    [4.30540212917657, 5.0287
 
 &lt;p&gt;I want to thank Google and the &lt;a href=&quot;sciruby.com&quot;&gt;Ruby Science Foundation&lt;/a&gt; for giving me this excellent opportunity! I especially want to thank &lt;a href=&quot;http://thebird.nl/&quot;&gt;Pjotr Prins&lt;/a&gt; who was my mentor for the project for much helpful advice and suggestions as well as his prompt responses to any of my concerns. I also want to thank my fellow GSoC participants &lt;a href=&quot;https://github.com/wlevine&quot;&gt;Will&lt;/a&gt;, &lt;a href=&quot;https://github.com/dilcom&quot;&gt;Ivan&lt;/a&gt;, and &lt;a href=&quot;https://github.com/v0dro&quot;&gt;Sameer&lt;/a&gt; for their help with certain aspects of my project.&lt;/p&gt;
 </description>
-          <pubDate>2015-08-19T00:00:00-05:00</pubDate>
+          <pubDate>2015-08-19T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/gsoc-2015-mixed_models/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/gsoc-2015-mixed_models/</guid>
         </item>
@@ -3498,7 +3498,7 @@ parallel           16.150000   0.030000 170.980000 ( 55.285422)
 
 &lt;!--The reason is that even though the bootstrap sample is obtained by `LMM#bootstrap` in parallel, the computation of the intervals from the bootstrap sample (like finding percentiles or transformations of the bootstrap sample) is always single-threaded. Better performance can be achieved for example by writing methods specifically adapted to a given data analysis, which would utilize the argument `what_to_collect` in the method `LMM#bootstrap` in a way optimal for the given setting. --&gt;
 </description>
-          <pubDate>2015-08-06T00:00:00-05:00</pubDate>
+          <pubDate>2015-08-06T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/bootstap_confidence_intervals/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/bootstap_confidence_intervals/</guid>
         </item>
@@ -3738,7 +3738,7 @@ SNP127
 
 &lt;p&gt;We see that 24 out of the 25 SNPs detected by the Wald Z tests were also detected by the bootstrap method. In fact, it turns out that the set of SNPs detected by the studentized bootstrap is a subset of the SNP set identified by the Wald Z tests. The reason for this behaviour is probably that the fixed effects coefficient estimates are approximately normally distributed for the given data (which in itself is an interesting discovery).&lt;/p&gt;
 </description>
-          <pubDate>2015-07-07T00:00:00-05:00</pubDate>
+          <pubDate>2015-07-07T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/mixed_models_applied_to_family_SNP_data/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/mixed_models_applied_to_family_SNP_data/</guid>
         </item>
@@ -3895,7 +3895,7 @@ Continuing our example, we have:
 --&gt;
 
 </description>
-          <pubDate>2015-07-03T00:00:00-05:00</pubDate>
+          <pubDate>2015-07-03T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/MixedModels_p_values_and_CI/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/MixedModels_p_values_and_CI/</guid>
         </item>
@@ -4030,7 +4030,7 @@ Standard deviation: 	0.9745169802141329
 
 &lt;p&gt;Finally, &lt;code class=&quot;highlighter-rouge&quot;&gt;LMM#from_daru&lt;/code&gt; constructs the model matrices, vectors and the covariance function &lt;code class=&quot;highlighter-rouge&quot;&gt;Proc&lt;/code&gt;, which are passed on to &lt;code class=&quot;highlighter-rouge&quot;&gt;LMM#initialize&lt;/code&gt; that performs the actual model fit.&lt;/p&gt;
 </description>
-          <pubDate>2015-06-17T00:00:00-05:00</pubDate>
+          <pubDate>2015-06-17T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/MixedModels_from_formula/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/MixedModels_from_formula/</guid>
         </item>
@@ -4173,7 +4173,7 @@ Politeness_{ijk} &amp;=&amp; Intercept + SubjectIntercept_{j} + ScenarioIntercep
 &lt;/ul&gt;
 
 </description>
-          <pubDate>2015-06-12T00:00:00-05:00</pubDate>
+          <pubDate>2015-06-12T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/LMM-model-specification/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/LMM-model-specification/</guid>
         </item>
@@ -4278,7 +4278,7 @@ Additionally, via the Cholesky decomposition we write&lt;/p&gt;
 
 &lt;p&gt;We see that all values agree between Ruby and R up to at least one digit behind the floating point (these values are the REML criterion, fixed effects estimates, random effects standard deviations and correlation, and residual variance and standard deviation, to be more precise). The slight differences are probably due to different optimization routines.&lt;/p&gt;
 </description>
-          <pubDate>2015-06-04T00:00:00-05:00</pubDate>
+          <pubDate>2015-06-04T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/First-linear-mixed-model-fit/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/First-linear-mixed-model-fit/</guid>
         </item>
@@ -4399,7 +4399,7 @@ Additionally, via the Cholesky decomposition we write&lt;/p&gt;
     &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
-          <pubDate>2015-05-17T00:00:00-05:00</pubDate>
+          <pubDate>2015-05-17T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/Dissect_lmer_part3/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/Dissect_lmer_part3/</guid>
         </item>
@@ -4502,7 +4502,7 @@ d_Utr           = d_LamtUt * wtres;
 
 &lt;p&gt;It seems that the implementation in the package &lt;a href=&quot;https://github.com/lme4/lme4pureR&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;lme4pureR&lt;/code&gt;&lt;/a&gt; performs all the same calculations, but is written in a much better readable R code (much fewer lines of code, without external pointers to C++ objects and no C++/C used at all, without passing different R environments from function to function, etc.). I will look at it in detail as soon as I finish dissecting &lt;code class=&quot;highlighter-rouge&quot;&gt;lme4&lt;/code&gt;’s &lt;code class=&quot;highlighter-rouge&quot;&gt;lmer&lt;/code&gt;.&lt;/p&gt;
 </description>
-          <pubDate>2015-05-15T00:00:00-05:00</pubDate>
+          <pubDate>2015-05-15T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/Dissect_lmer_part2/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/Dissect_lmer_part2/</guid>
         </item>
@@ -4580,7 +4580,7 @@ The code is confusing. So, let’s go through it step-by-step.&lt;/p&gt;
   &lt;/li&gt;
 &lt;/ul&gt;
 </description>
-          <pubDate>2015-05-10T00:00:00-05:00</pubDate>
+          <pubDate>2015-05-10T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/Dissect_lmer_part1/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/Dissect_lmer_part1/</guid>
         </item>
@@ -4699,7 +4699,7 @@ The code is confusing. So, let’s go through it step-by-step.&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/images/bvp2.png?raw=true&quot; alt=&quot;BVP example 2 plot&quot; title=&quot;BVP example 2 plot&quot; /&gt;&lt;/p&gt;
 </description>
-          <pubDate>2015-05-02T00:00:00-05:00</pubDate>
+          <pubDate>2015-05-02T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/BVP/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/BVP/</guid>
         </item>
@@ -4860,7 +4860,7 @@ We demonstrate it by solving the following differential equation:&lt;/p&gt;
 &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
-          <pubDate>2015-04-26T00:00:00-05:00</pubDate>
+          <pubDate>2015-04-26T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/ODE/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/ODE/</guid>
         </item>
@@ -4972,7 +4972,7 @@ We demonstrate it by solving the following differential equation:&lt;/p&gt;
 
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
-          <pubDate>2015-04-19T00:00:00-05:00</pubDate>
+          <pubDate>2015-04-19T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/Advection-Equation/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/Advection-Equation/</guid>
         </item>
@@ -5069,7 +5069,7 @@ We demonstrate it by solving the following differential equation:&lt;/p&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 </description>
-          <pubDate>2015-03-29T00:00:00-05:00</pubDate>
+          <pubDate>2015-03-29T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/Permute-Columns-Of-An-NMatrix/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/Permute-Columns-Of-An-NMatrix/</guid>
         </item>
@@ -5080,7 +5080,7 @@ We demonstrate it by solving the following differential equation:&lt;/p&gt;
           <title>Hello World!</title>
           <description>&lt;p&gt;Hello World!&lt;/p&gt;
 </description>
-          <pubDate>2015-03-29T00:00:00-05:00</pubDate>
+          <pubDate>2015-03-29T00:00:00-07:00</pubDate>
           <link>http://www.alexejgossmann.com/Hello-World/</link>
           <guid isPermaLink="true">http://www.alexejgossmann.com/Hello-World/</guid>
         </item>

@@ -32,7 +32,7 @@ The functions `tic` and `toc` are used in the same manner for benchmarking as th
 The most recent development[^1] version of `tictoc` can be installed from github:
 
 ```R
-devtools::install_github("collectivemedia/tictoc")
+devtools::install_github("jabiru/tictoc")
 ```
 
 One can time a single code chunk:
