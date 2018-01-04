@@ -8,7 +8,7 @@ I'm a PhD student in the [Bioinnovation program at Tulane University in New Orle
 
 ### More information
 
-* You can read my [CV]({{ site.baseurl }}/pdfs/Alexej_Gossmann-CV.pdf).
+* You can read my [CV](https://github.com/agisga/CV/raw/master/Alexej_Gossmann_CV.pdf).
 
 ### Links
 
