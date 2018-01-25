@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Probabilistic interpretation of AUC – Alexej Gossmann</title>
+
+        <meta charset="utf-8">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+
+    
+    <meta name="description" content="Unfortunately this was not taught in any of my statistics or data analysis classes at university (wtf it so needs to be :scream_cat:).
+So it took me some until I learned that the AUC has a nice probabilistic meaning.
+
+">
+    <meta property="og:description" content="Unfortunately this was not taught in any of my statistics or data analysis classes at university (wtf it so needs to be :scream_cat:).
+So it took me some until I learned that the AUC has a nice probabilistic meaning.
+
+">
+    
+    <meta name="author" content="Alexej Gossmann">
+
+    
+    <meta property="og:title" content="Probabilistic interpretation of AUC">
+    <meta property="twitter:title" content="Probabilistic interpretation of AUC">
+    
+
+    <!--[if lt IE 9]>
+      <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link rel="stylesheet" type="text/css" href="/style.css">
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - PhD student with focus on statistics, machine learning, and programming, among other things" href="/feed.xml">
+
+    <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
+
+    <!-- MathJax integration and configuration-->
+    <!-- Use standard LaTeX delimiters and turn on equation numbering -->
+    <script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+      tex2jax: {
+        inlineMath: [ ["$","$"] ],
+        displayMath: [ ["$$","$$"] ],
+        processEscapes: true
+      },
+      TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        Macros: {
+          subscript: ['_{#1}', 1],
+          superscript: ['^{#1}', 1]
+        }
+      }
+    });
+    </script>
+    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML-full">
+    </script>
+ </head>
+
+  <body>
+    <div class="wrapper-masthead">
+      <header class="masthead clearfix">
+        <a href="/" class="site-avatar"><img src="/images/avatar.png"></a>
+
+        <div class="site-info">
+          <h1 class="site-name"><a href="/">Alexej Gossmann</a></h1>
+          <p class="site-description">PhD student with focus on statistics, machine learning, and programming, among other things</p>
+        </div>
+
+        <nav>
+          <a href="/">/blog/</a>
+          <a href="/publications">/publications/</a>
+          <a href="/code">/code/</a>
+          <a href="/about">/about/</a>
+        </nav>
+      </header>
+    </div>
+
+    <div id="main" role="main" class="container">
+      <article class="post">
+  <h1>Probabilistic interpretation of AUC</h1>
+
+  <div class="entry">
+    <p>Unfortunately this was not taught in any of my statistics or data analysis classes at university (wtf it so needs to be <img class="emoji" title=":scream_cat:" alt=":scream_cat:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f640.png" height="20" width="20">).
+So it took me some until I learned that the <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve">AUC</a> has a nice probabilistic meaning.</p>
+
+<h2 id="whats-auc-anyway">What’s AUC anyway?</h2>
+
+<p>Consider:</p>
+<ol>
+  <li>A dataset $S$: $(\mathbf{x}_1, y_1), \ldots, (\mathbf{x}_n, y_n) \in \mathbb{R}^p \times \{0, 1\}$, where
+    <ul>
+      <li>$\mathbf{x}_i$ is a vector of $p$ features collected for the $i$th subject,</li>
+      <li>$y_i$ is the $i$th subject’s label (binary outcome variable of interest, like a disease status, class membership, or whatever binary label).</li>
+    </ul>
+  </li>
+  <li>A classification algorithm (like logistic regression, SVM, deep neural net, or whatever you like), trained on $S$, that assigns a score (or probability) $\hat{p}(\mathbf{x}_{\ast})$ to any new observation $\mathbf{x}_{\ast} \in \mathbb{R}^p$ signifying how likely its label is $y_{\ast} = 1$.</li>
+</ol>
+
+<p>Then:</p>
+<ol>
+  <li>A <em>decision threshold</em> (or <em>operating point</em>) can be chosen to assign a class label ($y_{\ast} = 0$ or $1$) to $\mathbf{x}_{\ast}$ based on the value of $\hat{p}(\mathbf{x}_{\ast})$.
+The chosen threshold determines the balance between how many <em>false positives</em> and <em>false negatives</em> will result from this classification.</li>
+  <li>Plotting the <em>true positive rate</em> (TPR) against the <em>false positive rate</em> (FPR) <em>as the operating point changes from its minimum to its maximum value</em> yields the <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic"><em>receiver operating characteristic (ROC) curve</em></a>. Check the <a href="https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Confusion_matrix">confusion matrix</a> if you are not sure what TPR and FPR refer to.</li>
+  <li>The area under the ROC curve, or AUC, is used as a measure of classifier performance.</li>
+</ol>
+
+<p>Here is some R code for clarification (not even using <code class="highlighter-rouge">tidyverse</code> <img class="emoji" title=":stuck_out_tongue:" alt=":stuck_out_tongue:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f61b.png" height="20" width="20">):</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># load some data, fit a logistic regression classifier</span><span class="w">
+</span><span class="n">data</span><span class="p">(</span><span class="n">iris</span><span class="p">)</span><span class="w">
+</span><span class="n">versicolor_virginica</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">iris</span><span class="p">[</span><span class="n">iris</span><span class="o">$</span><span class="n">Species</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="s2">"setosa"</span><span class="p">,</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="n">logistic_reg_fit</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">glm</span><span class="p">(</span><span class="n">Species</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">Sepal.Width</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">Sepal.Length</span><span class="p">,</span><span class="w">
+                        </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">versicolor_virginica</span><span class="p">,</span><span class="w">
+                        </span><span class="n">family</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"binomial"</span><span class="p">)</span><span class="w">
+</span><span class="n">y</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">ifelse</span><span class="p">(</span><span class="n">versicolor_virginica</span><span class="o">$</span><span class="n">Species</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="s2">"versicolor"</span><span class="p">,</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w">
+</span><span class="n">y_pred</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">logistic_reg_fit</span><span class="o">$</span><span class="n">fitted.values</span><span class="w">
+
+</span><span class="c1"># get TPR and FPR at different values of the decision threshold</span><span class="w">
+</span><span class="n">threshold</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">seq</span><span class="p">(</span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="p">,</span><span class="w"> </span><span class="n">length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">100</span><span class="p">)</span><span class="w">
+</span><span class="n">FPR</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">sapply</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span><span class="w">
+  </span><span class="k">function</span><span class="p">(</span><span class="n">thresh</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nf">sum</span><span class="p">(</span><span class="n">y_pred</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">thresh</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w">
+  </span><span class="p">})</span><span class="w">
+</span><span class="n">TPR</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">sapply</span><span class="p">(</span><span class="n">threshold</span><span class="p">,</span><span class="w">
+  </span><span class="k">function</span><span class="p">(</span><span class="n">thresh</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nf">sum</span><span class="p">(</span><span class="n">y_pred</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="n">thresh</span><span class="w"> </span><span class="o">&amp;</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w">
+  </span><span class="p">})</span><span class="w">
+
+</span><span class="c1"># plot an ROC curve</span><span class="w">
+</span><span class="n">plot</span><span class="p">(</span><span class="n">FPR</span><span class="p">,</span><span class="w"> </span><span class="n">TPR</span><span class="p">)</span><span class="w">
+</span><span class="n">lines</span><span class="p">(</span><span class="n">FPR</span><span class="p">,</span><span class="w"> </span><span class="n">TPR</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
+
+<p>A rather ugly ROC curve emerges:</p>
+
+<p><img src="/images/20180124-AUC/ROC.png?raw=true" alt="ROC curve R example" title="An ugly ROC curve"></p>
+
+<p>The area under the ROC curve, or AUC, seem like a nice heuristic to evaluate and compare the overall performance of classification models independent of the exact decision threshold chosen. But there’s more to it.</p>
+
+<h2 id="probabilistic-interpretation">Probabilistic interpretation</h2>
+
+<p>As above, assume that we are looking at a dataset where we want to distinguish data points of <em>type 0</em> from those of <em>type 1</em>. Consider a classification algorithm that assigns to a random observation $\mathbf{x}\in\mathbb{R}^p$ a score (or probability) $\hat{p}(\mathbf{x}) \in [0,1]$ signifying membership in <em>class 1</em>. If the final classification between <em>class 1</em> and <em>class 0</em> is determined by a decision threshold $t\in[0, 1]$, then the <em>true positive rate</em> (a.k.a. <em>sensitivity</em> or <em>recall</em>) can be written as a conditional probability</p>
+
+<script type="math/tex; mode=display">T(t) := P[\hat{p}(\mathbf{x}) > t \,|\, \mathbf{x}\,\text{belongs to class 1}],</script>
+
+<p>and the <em>false positive rate</em> (or <em>1 - specificity</em>) can be written as</p>
+
+<script type="math/tex; mode=display">F(t) := P[\hat{p}(\mathbf{x}) > t \,|\, \mathbf{x}\,\text{does not belong to class 1}].</script>
+
+<p>For brevity of notation let’s say $y(\mathbf{x}) = 1$ instead of “$\mathbf{x}$ belongs to class 1”, and $y(\mathbf{x})=0$ instead of “$\mathbf{x}$ doesn’t belong to class 1”.</p>
+
+<p>The ROC curve simply plots $T(t)$ against $F(t)$ while varying $t$ from 0 to 1.
+Thus, if we view $T$ as a function of $F$, the AUC can be rewritten as follows.</p>
+
+<script type="math/tex; mode=display">% <![CDATA[
+\begin{eqnarray}
+  \mathrm{AUC} &=& \int_0^1 T(F_0) \,\mathrm{d}F_0 \nonumber \\
+  &=& \int_0^1 P[\hat{p}(\mathbf{x}) > F^{-1}(F_0) \,|\, y(\mathbf{x}) = 1] \,\mathrm{d}F_0 \nonumber \\
+  &=& \int_1^0 P[\hat{p}(\mathbf{x}) > F^{-1}(F(t)) \,|\, y(\mathbf{x}) = 1] \cdot F'(t) \,\mathrm{d}t \nonumber \\
+  &=& \int_0^1 P[\hat{p}(\mathbf{x}) > t \,|\, y(\mathbf{x}) = 1] \cdot P[\hat{p}(\mathbf{x^{\prime}}) = t \,|\, y(\mathbf{x^{\prime}}) = 0] \,\mathrm{d}t \nonumber \\
+  &=& \int_0^1 P[\hat{p}(\mathbf{x}) > \hat{p}(\mathbf{x^{\prime}}) \,\&\, \hat{p}(\mathbf{x^{\prime}}) = t \,|\, y(\mathbf{x}) = 1 \,\&\, y(\mathbf{x^{\prime}}) = 0] \,\mathrm{d}t \nonumber \\
+  &=& P[\hat{p}(\mathbf{x}) > \hat{p}(\mathbf{x^{\prime}}) \,|\, y(\mathbf{x}) = 1 \,\&\, y(\mathbf{x^{\prime}}) = 0]. \nonumber
+\end{eqnarray} %]]></script>
+
+<p>So, given a randomly chosen observation $\mathbf{x}$ belonging to <em>class 1</em>, and a randomly chosen observation $\mathbf{x^{\prime}}$ belonging to <em>class 0</em>, the AUC is the probability that the evaluated classification algorithm will assign a higher score to $\mathbf{x}$ than to $\mathbf{x^{\prime}}$, i.e., the conditional probability of $\hat{p}(\mathbf{x}) &gt; \hat{p}(\mathbf{x^{\prime}})$.</p>
+
+<p>In other words, if the classification algorithm distinguishes “positive” and “negative” examples (e.g., disease status), then</p>
+
+<blockquote>
+  <p>AUC is the probability of correct ranking of a random “positive”-“negative” pair.</p>
+</blockquote>
+
+<h2 id="computing-auc">Computing AUC</h2>
+
+<p>The above probabilistic interpretation suggest a simple formula to compute AUC on a finite sample.</p>
+
+<blockquote>
+  <p>Among all “positive”-“negative” pairs in the dataset compute the proportion of those which are ranked correctly by the evaluated classification algorithm.</p>
+</blockquote>
+
+<p>Here is an inefficient implementation using results from the above logistic regression example:</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">s</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">which</span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">1</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">j</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="n">which</span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="n">y_pred</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">s</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">1</span><span class="w">
+    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">y_pred</span><span class="p">[</span><span class="n">j</span><span class="p">])</span><span class="w"> </span><span class="p">{</span><span class="w">
+      </span><span class="n">s</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">0.5</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="n">s</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="p">(</span><span class="nf">sum</span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">sum</span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">))</span><span class="w">
+</span><span class="n">s</span><span class="w">
+</span><span class="c1"># [1] 0.7918</span><span class="w">
+</span></code></pre></div></div>
+
+<p>The <strong>proportion of correctly ranked “positive”-“negative” pairs</strong> yields estimated $\mathrm{AUC} = 0.7918$.</p>
+
+<p>We can compare this value to the area under the ROC curve computed with the <a href="https://en.wikipedia.org/wiki/Trapezoidal_rule">trapezoidal rule</a>.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">s</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">0</span><span class="w">
+</span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="p">(</span><span class="nf">length</span><span class="p">(</span><span class="n">FPR</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="m">1</span><span class="p">))</span><span class="w"> </span><span class="p">{</span><span class="w">
+  </span><span class="n">dFPR</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">abs</span><span class="p">(</span><span class="n">FPR</span><span class="p">[</span><span class="n">i</span><span class="m">+1</span><span class="p">]</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">FPR</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="w">
+  </span><span class="n">s</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">0.5</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">dFPR</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">TPR</span><span class="p">[</span><span class="n">i</span><span class="m">+1</span><span class="p">]</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">TPR</span><span class="p">[</span><span class="n">i</span><span class="p">])</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span><span class="n">s</span><span class="w">
+</span><span class="c1"># [1] 0.7922</span><span class="w">
+</span></code></pre></div></div>
+
+<p><strong>Trapezoidal rule</strong> yields estimated $\mathrm{AUC} = 0.7922$. The difference of $0.0004$ can be explained by the fact that we evaluated the ROC curve at only 100 points.</p>
+
+<p>Since there is a minor disagreement, let’s use some standard R package to compute AUC.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">ROCR</span><span class="p">)</span><span class="w">
+</span><span class="n">pred</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">prediction</span><span class="p">(</span><span class="n">y_pred</span><span class="p">,</span><span class="w"> </span><span class="n">y</span><span class="p">)</span><span class="w">
+</span><span class="n">auc</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">as.numeric</span><span class="p">(</span><span class="n">performance</span><span class="p">(</span><span class="n">pred</span><span class="p">,</span><span class="w"> </span><span class="n">measure</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">"auc"</span><span class="p">)</span><span class="o">@</span><span class="n">y.values</span><span class="p">)</span><span class="w">
+</span><span class="n">auc</span><span class="w">
+</span><span class="c1"># [1] 0.7918</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Same as the proportion of correctly ranked pairs! <img class="emoji" title=":grin:" alt=":grin:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f601.png" height="20" width="20"></p>
+
+<h2 id="so-what-why-care-about-auc-anyway">So what? Why care about AUC anyway?</h2>
+
+<ul>
+  <li>It has a fu*** nice probabilistic meaning!</li>
+</ul>
+
+<p>Besides, as a measure of classification performance AUC has many advantages compared to other “single number” performance measures:</p>
+
+<ul>
+  <li>Independence of the decision threshold.</li>
+  <li>Invariance to prior class probabilities or class prevalence in the data.</li>
+  <li>Can choose/change a decision threshold based on cost-benefit analysis after model training.</li>
+  <li>Extensively used in machine learning, and in medical research – and that for good reasons, as for example explained in an <a href="https://lukeoakdenrayner.wordpress.com/2017/12/06/do-machines-actually-beat-doctors-roc-curves-and-performance-metrics/">excellent blog post on deep learning research in medicine by Luke Oakden-Rayner</a>.</li>
+</ul>
+
+  </div>
+
+  <div class="date">
+    Written on January 25, 2018
+  </div>
+
+  <div class="date">
+    Tags:
+    
+    <a href="/tag/math">#math</a>
+    
+    <a href="/tag/r">#r</a>
+    
+  </div>
+
+  
+<div class="comments">
+	<div id="disqus_thread"></div>
+	<script type="text/javascript">
+
+	    var disqus_shortname = 'agisga';
+
+	    (function() {
+	        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+	        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+	        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+	    })();
+
+	</script>
+	<noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+</noscript>
+</div>
+
+</article>
+
+    </div>
+
+    <div class="wrapper-footer">
+      <div class="container">
+        <footer class="footer">
+          
+<a href="mailto:alexej.go@gmail.com"><i class="svg-icon email"></i></a>
+<a href="https://www.facebook.com/alexej.yexela"><i class="svg-icon facebook"></i></a>
+
+<a href="https://github.com/agisga"><i class="svg-icon github"></i></a>
+
+<a href="https://www.linkedin.com/in/alexejgossmann"><i class="svg-icon linkedin"></i></a>
+
+<a href="/feed.xml"><i class="svg-icon rss"></i></a>
+
+
+
+
+        </footer>
+      </div>
+    </div>
+
+    
+	<!-- Google Analytics -->
+	<script>
+		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+		ga('create', 'UA-94080131-1', 'auto');
+		ga('send', 'pageview', {
+		  'page': '/auc/',
+		  'title': 'Probabilistic interpretation of AUC'
+		});
+	</script>
+	<!-- End Google Analytics -->
+
+
+  </body>
+</html>

@@ -6,6 +6,177 @@
     
       
         
+      
+        
+          
+            <item>
+              <title>Probabilistic interpretation of AUC</title>
+              <description>&lt;p&gt;Unfortunately this was not taught in any of my statistics or data analysis classes at university (wtf it so needs to be :scream_cat:).
+So it took me some until I learned that the &lt;a href=&quot;https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve&quot;&gt;AUC&lt;/a&gt; has a nice probabilistic meaning.&lt;/p&gt;
+
+&lt;h2 id=&quot;whats-auc-anyway&quot;&gt;What’s AUC anyway?&lt;/h2&gt;
+
+&lt;p&gt;Consider:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;A dataset &lt;img src=&quot;http://latex.codecogs.com/png.latex?S\inline&quot;/&gt;: &lt;img src=&quot;http://latex.codecogs.com/png.latex?(\mathbf{x}_1, y_1), \ldots, (\mathbf{x}_n, y_n) \in \mathbb{R}^p \times \{0, 1\}\inline&quot;/&gt;, where
+    &lt;ul&gt;
+      &lt;li&gt;&lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x}_i\inline&quot;/&gt; is a vector of &lt;img src=&quot;http://latex.codecogs.com/png.latex?p\inline&quot;/&gt; features collected for the &lt;img src=&quot;http://latex.codecogs.com/png.latex?i\inline&quot;/&gt;th subject,&lt;/li&gt;
+      &lt;li&gt;&lt;img src=&quot;http://latex.codecogs.com/png.latex?y_i\inline&quot;/&gt; is the &lt;img src=&quot;http://latex.codecogs.com/png.latex?i\inline&quot;/&gt;th subject’s label (binary outcome variable of interest, like a disease status, class membership, or whatever binary label).&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;A classification algorithm (like logistic regression, SVM, deep neural net, or whatever you like), trained on &lt;img src=&quot;http://latex.codecogs.com/png.latex?S\inline&quot;/&gt;, that assigns a score (or probability) &lt;img src=&quot;http://latex.codecogs.com/png.latex?\hat{p}(\mathbf{x}_{\ast})\inline&quot;/&gt; to any new observation &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x}_{\ast} \in \mathbb{R}^p\inline&quot;/&gt; signifying how likely its label is &lt;img src=&quot;http://latex.codecogs.com/png.latex?y_{\ast} = 1\inline&quot;/&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Then:&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;A &lt;em&gt;decision threshold&lt;/em&gt; (or &lt;em&gt;operating point&lt;/em&gt;) can be chosen to assign a class label (&lt;img src=&quot;http://latex.codecogs.com/png.latex?y_{\ast} = 0\inline&quot;/&gt; or &lt;img src=&quot;http://latex.codecogs.com/png.latex?1\inline&quot;/&gt;) to &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x}_{\ast}\inline&quot;/&gt; based on the value of &lt;img src=&quot;http://latex.codecogs.com/png.latex?\hat{p}(\mathbf{x}_{\ast})\inline&quot;/&gt;.
+The chosen threshold determines the balance between how many &lt;em&gt;false positives&lt;/em&gt; and &lt;em&gt;false negatives&lt;/em&gt; will result from this classification.&lt;/li&gt;
+  &lt;li&gt;Plotting the &lt;em&gt;true positive rate&lt;/em&gt; (TPR) against the &lt;em&gt;false positive rate&lt;/em&gt; (FPR) &lt;em&gt;as the operating point changes from its minimum to its maximum value&lt;/em&gt; yields the &lt;a href=&quot;https://en.wikipedia.org/wiki/Receiver_operating_characteristic&quot;&gt;&lt;em&gt;receiver operating characteristic (ROC) curve&lt;/em&gt;&lt;/a&gt;. Check the &lt;a href=&quot;https://en.wikipedia.org/wiki/Sensitivity_and_specificity#Confusion_matrix&quot;&gt;confusion matrix&lt;/a&gt; if you are not sure what TPR and FPR refer to.&lt;/li&gt;
+  &lt;li&gt;The area under the ROC curve, or AUC, is used as a measure of classifier performance.&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Here is some R code for clarification (not even using &lt;code class=&quot;highlighter-rouge&quot;&gt;tidyverse&lt;/code&gt; :stuck_out_tongue:):&lt;/p&gt;
+
+&lt;div class=&quot;language-r highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# load some data, fit a logistic regression classifier&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iris&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;versicolor_virginica&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iris&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;iris&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Species&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;setosa&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logistic_reg_fit&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;glm&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Species&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;~&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Sepal.Width&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Sepal.Length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                        &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;versicolor_virginica&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+                        &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;family&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;binomial&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ifelse&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;versicolor_virginica&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;Species&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;versicolor&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_pred&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;logistic_reg_fit&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fitted.values&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# get TPR and FPR at different values of the decision threshold&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;threshold&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;seq&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FPR&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sapply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;threshold&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thresh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_pred&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thresh&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TPR&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sapply&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;threshold&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thresh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_pred&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;thresh&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# plot an ROC curve&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;plot&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FPR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TPR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lines&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FPR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TPR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;A rather ugly ROC curve emerges:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/images/20180124-AUC/ROC.png?raw=true&quot; alt=&quot;ROC curve R example&quot; title=&quot;An ugly ROC curve&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;The area under the ROC curve, or AUC, seem like a nice heuristic to evaluate and compare the overall performance of classification models independent of the exact decision threshold chosen. But there’s more to it.&lt;/p&gt;
+
+&lt;h2 id=&quot;probabilistic-interpretation&quot;&gt;Probabilistic interpretation&lt;/h2&gt;
+
+&lt;p&gt;As above, assume that we are looking at a dataset where we want to distinguish data points of &lt;em&gt;type 0&lt;/em&gt; from those of &lt;em&gt;type 1&lt;/em&gt;. Consider a classification algorithm that assigns to a random observation &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x}\in\mathbb{R}^p\inline&quot;/&gt; a score (or probability) &lt;img src=&quot;http://latex.codecogs.com/png.latex?\hat{p}(\mathbf{x}) \in [0,1]\inline&quot;/&gt; signifying membership in &lt;em&gt;class 1&lt;/em&gt;. If the final classification between &lt;em&gt;class 1&lt;/em&gt; and &lt;em&gt;class 0&lt;/em&gt; is determined by a decision threshold &lt;img src=&quot;http://latex.codecogs.com/png.latex?t\in[0, 1]\inline&quot;/&gt;, then the &lt;em&gt;true positive rate&lt;/em&gt; (a.k.a. &lt;em&gt;sensitivity&lt;/em&gt; or &lt;em&gt;recall&lt;/em&gt;) can be written as a conditional probability&lt;/p&gt;
+
+&lt;div style=&quot;text-align:center;&quot;&gt;&lt;img src=&quot;http://latex.codecogs.com/png.latex?T(t) := P[\hat{p}(\mathbf{x}) &gt; t \,|\, \mathbf{x}\,\text{belongs to class 1}],&quot; alt=&quot;T(t) := P[\hat{p}(\mathbf{x}) &gt; t \,|\, \mathbf{x}\,\text{belongs to class 1}],&quot; /&gt;&lt;/div&gt;
+
+&lt;p&gt;and the &lt;em&gt;false positive rate&lt;/em&gt; (or &lt;em&gt;1 - specificity&lt;/em&gt;) can be written as&lt;/p&gt;
+
+&lt;div style=&quot;text-align:center;&quot;&gt;&lt;img src=&quot;http://latex.codecogs.com/png.latex?F(t) := P[\hat{p}(\mathbf{x}) &gt; t \,|\, \mathbf{x}\,\text{does not belong to class 1}].&quot; alt=&quot;F(t) := P[\hat{p}(\mathbf{x}) &gt; t \,|\, \mathbf{x}\,\text{does not belong to class 1}].&quot; /&gt;&lt;/div&gt;
+
+&lt;p&gt;For brevity of notation let’s say &lt;img src=&quot;http://latex.codecogs.com/png.latex?y(\mathbf{x}) = 1\inline&quot;/&gt; instead of “&lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x}\inline&quot;/&gt; belongs to class 1”, and &lt;img src=&quot;http://latex.codecogs.com/png.latex?y(\mathbf{x})=0\inline&quot;/&gt; instead of “&lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x}\inline&quot;/&gt; doesn’t belong to class 1”.&lt;/p&gt;
+
+&lt;p&gt;The ROC curve simply plots &lt;img src=&quot;http://latex.codecogs.com/png.latex?T(t)\inline&quot;/&gt; against &lt;img src=&quot;http://latex.codecogs.com/png.latex?F(t)\inline&quot;/&gt; while varying &lt;img src=&quot;http://latex.codecogs.com/png.latex?t\inline&quot;/&gt; from 0 to 1.
+Thus, if we view &lt;img src=&quot;http://latex.codecogs.com/png.latex?T\inline&quot;/&gt; as a function of &lt;img src=&quot;http://latex.codecogs.com/png.latex?F\inline&quot;/&gt;, the AUC can be rewritten as follows.&lt;/p&gt;
+
+&lt;script type=&quot;math/tex; mode=display&quot;&gt;% &lt;![CDATA[
+\begin{eqnarray}
+  \mathrm{AUC} &amp;=&amp; \int_0^1 T(F_0) \,\mathrm{d}F_0 \nonumber \\
+  &amp;=&amp; \int_0^1 P[\hat{p}(\mathbf{x}) &gt; F^{-1}(F_0) \,|\, y(\mathbf{x}) = 1] \,\mathrm{d}F_0 \nonumber \\
+  &amp;=&amp; \int_1^0 P[\hat{p}(\mathbf{x}) &gt; F^{-1}(F(t)) \,|\, y(\mathbf{x}) = 1] \cdot F'(t) \,\mathrm{d}t \nonumber \\
+  &amp;=&amp; \int_0^1 P[\hat{p}(\mathbf{x}) &gt; t \,|\, y(\mathbf{x}) = 1] \cdot P[\hat{p}(\mathbf{x^{\prime}}) = t \,|\, y(\mathbf{x^{\prime}}) = 0] \,\mathrm{d}t \nonumber \\
+  &amp;=&amp; \int_0^1 P[\hat{p}(\mathbf{x}) &gt; \hat{p}(\mathbf{x^{\prime}}) \,\&amp;\, \hat{p}(\mathbf{x^{\prime}}) = t \,|\, y(\mathbf{x}) = 1 \,\&amp;\, y(\mathbf{x^{\prime}}) = 0] \,\mathrm{d}t \nonumber \\
+  &amp;=&amp; P[\hat{p}(\mathbf{x}) &gt; \hat{p}(\mathbf{x^{\prime}}) \,|\, y(\mathbf{x}) = 1 \,\&amp;\, y(\mathbf{x^{\prime}}) = 0]. \nonumber
+\end{eqnarray} %]]&gt;&lt;/script&gt;
+
+&lt;p&gt;So, given a randomly chosen observation &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x}\inline&quot;/&gt; belonging to &lt;em&gt;class 1&lt;/em&gt;, and a randomly chosen observation &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x^{\prime}}\inline&quot;/&gt; belonging to &lt;em&gt;class 0&lt;/em&gt;, the AUC is the probability that the evaluated classification algorithm will assign a higher score to &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x}\inline&quot;/&gt; than to &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x^{\prime}}\inline&quot;/&gt;, i.e., the conditional probability of &lt;img src=&quot;http://latex.codecogs.com/png.latex?\hat{p}(\mathbf{x}) &amp;gt; \hat{p}(\mathbf{x^{\prime}})\inline&quot;/&gt;.&lt;/p&gt;
+
+&lt;p&gt;In other words, if the classification algorithm distinguishes “positive” and “negative” examples (e.g., disease status), then&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;AUC is the probability of correct ranking of a random “positive”-“negative” pair.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;computing-auc&quot;&gt;Computing AUC&lt;/h2&gt;
+
+&lt;p&gt;The above probabilistic interpretation suggest a simple formula to compute AUC on a finite sample.&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Among all “positive”-“negative” pairs in the dataset compute the proportion of those which are ranked correctly by the evaluated classification algorithm.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;Here is an inefficient implementation using results from the above logistic regression example:&lt;/p&gt;
+
+&lt;div class=&quot;language-r highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;which&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;which&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_pred&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_pred&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_pred&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_pred&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;j&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sum&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# [1] 0.7918&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;The &lt;strong&gt;proportion of correctly ranked “positive”-“negative” pairs&lt;/strong&gt; yields estimated &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathrm{AUC} = 0.7918\inline&quot;/&gt;.&lt;/p&gt;
+
+&lt;p&gt;We can compare this value to the area under the ROC curve computed with the &lt;a href=&quot;https://en.wikipedia.org/wiki/Trapezoidal_rule&quot;&gt;trapezoidal rule&lt;/a&gt;.&lt;/p&gt;
+
+&lt;div class=&quot;language-r highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FPR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dFPR&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;abs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FPR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;+1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;FPR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0.5&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dFPR&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TPR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;m&quot;&gt;+1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;TPR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;s&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# [1] 0.7922&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;Trapezoidal rule&lt;/strong&gt; yields estimated &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathrm{AUC} = 0.7922\inline&quot;/&gt;. The difference of &lt;img src=&quot;http://latex.codecogs.com/png.latex?0.0004\inline&quot;/&gt; can be explained by the fact that we evaluated the ROC curve at only 100 points.&lt;/p&gt;
+
+&lt;p&gt;Since there is a minor disagreement, let’s use some standard R package to compute AUC.&lt;/p&gt;
+
+&lt;div class=&quot;language-r highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;library&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ROCR&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pred&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prediction&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_pred&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;auc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;as.numeric&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;performance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;pred&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;measure&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;auc&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;@&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y.values&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;auc&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# [1] 0.7918&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Same as the proportion of correctly ranked pairs! :grin:&lt;/p&gt;
+
+&lt;h2 id=&quot;so-what-why-care-about-auc-anyway&quot;&gt;So what? Why care about AUC anyway?&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;It has a fu*** nice probabilistic meaning!&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Besides, as a measure of classification performance AUC has many advantages compared to other “single number” performance measures:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Independence of the decision threshold.&lt;/li&gt;
+  &lt;li&gt;Invariance to prior class probabilities or class prevalence in the data.&lt;/li&gt;
+  &lt;li&gt;Can choose/change a decision threshold based on cost-benefit analysis after model training.&lt;/li&gt;
+  &lt;li&gt;Extensively used in machine learning, and in medical research – and that for good reasons, as for example explained in an &lt;a href=&quot;https://lukeoakdenrayner.wordpress.com/2017/12/06/do-machines-actually-beat-doctors-roc-curves-and-performance-metrics/&quot;&gt;excellent blog post on deep learning research in medicine by Luke Oakden-Rayner&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+              <pubdate>2018-01-25T00:00:00-05:00</pubdate>
+              <link>http://www.alexejgossmann.com/auc/</link>
+              <guid ispermalink="true">http://www.alexejgossmann.com/auc/</guid>
+            </item>
+          
+        
+      
+    
+      
+        
           
             <item>
               <title>Mining USPTO full text patent data - Analysis of machine learning and AI related patents granted in 2017 so far - Part 1</title>
@@ -189,7 +360,7 @@ The end goal is, of course, to replace the patent examiner with an AI trained on
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-              <pubdate>2017-09-22T00:00:00-05:00</pubdate>
+              <pubdate>2017-09-22T00:00:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/patents_part_1/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/patents_part_1/</guid>
             </item>
@@ -302,7 +473,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
     &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ggtitle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;paste&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_rep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;repetitions of an LM fit with&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;rows,&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;columns&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 </description>
-              <pubdate>2017-06-05T19:00:00-05:00</pubdate>
+              <pubdate>2017-06-05T20:00:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/Freedmans_paradox/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/Freedmans_paradox/</guid>
             </item>
@@ -508,7 +679,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
 
 &lt;p&gt;For these reasons I will go with &lt;code class=&quot;highlighter-rouge&quot;&gt;microbenchmark&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;tictoc&lt;/code&gt;. :bowtie:&lt;/p&gt;
 </description>
-              <pubdate>2017-05-27T23:09:00-05:00</pubdate>
+              <pubdate>2017-05-28T00:09:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/benchmarking_r/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/benchmarking_r/</guid>
             </item>
@@ -614,7 +785,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
 &lt;p&gt;Additionally, it is quite informative to look at a &lt;a href=&quot;https://plot.ly/~agisga/11&quot;&gt;visualization of the salary increase from starting to mid-career&lt;/a&gt;.&lt;/p&gt;
 &lt;iframe width=&quot;800&quot; height=&quot;500&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot; src=&quot;//plot.ly/~agisga/11.embed&quot;&gt;&lt;/iframe&gt;
 </description>
-              <pubdate>2017-04-27T23:08:00-05:00</pubdate>
+              <pubdate>2017-04-28T00:08:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/salaries_by_school_plotly_viz/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/salaries_by_school_plotly_viz/</guid>
             </item>
@@ -873,7 +1044,7 @@ is satisfied:&lt;/p&gt;
 
 &lt;p&gt;Even though data compression does not make much sense for the size of the dataset considered here, it clearly shows potential to be very useful for purposes of data distribution and data storage, when the data size far exceeds the terabyte range.&lt;/p&gt;
 </description>
-              <pubdate>2017-04-05T00:50:00-05:00</pubdate>
+              <pubdate>2017-04-05T01:50:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/tensor_decomposition_tucker/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/tensor_decomposition_tucker/</guid>
             </item>
@@ -1079,7 +1250,7 @@ for(i in 1:30) {
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-              <pubdate>2017-04-02T14:30:00-05:00</pubdate>
+              <pubdate>2017-04-02T15:30:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/tensor_decomposition_CP/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/tensor_decomposition_CP/</guid>
             </item>
@@ -1242,7 +1413,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 &lt;a rel=&quot;license&quot; href=&quot;http://creativecommons.org/licenses/by/4.0/&quot;&gt;&lt;img alt=&quot;Creative Commons License&quot; style=&quot;border-width:0&quot; src=&quot;https://i.creativecommons.org/l/by/4.0/80x15.png&quot; /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel=&quot;license&quot; href=&quot;http://creativecommons.org/licenses/by/4.0/&quot;&gt;Creative Commons Attribution 4.0 International License&lt;/a&gt;.
 &lt;/font&gt;
 </description>
-              <pubdate>2017-03-18T00:00:00-05:00</pubdate>
+              <pubdate>2017-03-18T00:00:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/contours_of_statistical_penalty_functions_as_GIFs/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/contours_of_statistical_penalty_functions_as_GIFs/</guid>
             </item>
@@ -1296,7 +1467,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 
 &lt;p&gt;Because I know from &lt;a href=&quot;http://www.phdcomics.com/comics/archive.php?comicid=1415&quot;&gt;a phdcomics cartoon&lt;/a&gt; that caffeine combined with a lack of sleep will turn me into a robot rather than into somebody who might eventually finish graduate school…&lt;/p&gt;
 </description>
-              <pubdate>2017-02-15T02:35:00-06:00</pubdate>
+              <pubdate>2017-02-15T03:35:00-05:00</pubdate>
               <link>http://www.alexejgossmann.com/grad-school-and-coffee/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/grad-school-and-coffee/</guid>
             </item>
@@ -1419,7 +1590,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 
 &lt;p&gt;&lt;img src=&quot;../images/MRI_viz/lung_orthographic-1.png&quot; alt=&quot;plot of chunk lung_orthographic&quot; /&gt;&lt;/p&gt;
 </description>
-              <pubdate>2017-01-27T10:30:15-06:00</pubdate>
+              <pubdate>2017-01-27T11:30:15-05:00</pubdate>
               <link>http://www.alexejgossmann.com/MRI_viz/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/MRI_viz/</guid>
             </item>
@@ -1468,7 +1639,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
   &lt;li&gt;&lt;a href=&quot;https://www.kaggle.com/agisga/d/benhamner/clinton-trump-tweets/top-10-tweets&quot;&gt;I have also written a script producing the above visualizations of the top ten tweets of either presidential candidate&lt;/a&gt;, learning more about ggplot2 in the process.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-              <pubdate>2016-10-25T00:00:00-05:00</pubdate>
+              <pubdate>2016-10-25T00:00:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/clinton_trump_tweets/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/clinton_trump_tweets/</guid>
             </item>
@@ -1857,7 +2028,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 ## 8     &amp;lt;NA&amp;gt;      &amp;lt;NA&amp;gt;   &amp;lt;NA&amp;gt;             Image       1992&lt;/code&gt;&lt;/pre&gt;&lt;/figure&gt;
 
 </description>
-              <pubdate>2016-07-19T00:00:00-05:00</pubdate>
+              <pubdate>2016-07-19T00:00:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/dplyr_basics/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/dplyr_basics/</guid>
             </item>
@@ -1927,7 +2098,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 
 &lt;p&gt;Of course, the method does not perform this good under all circumstances — the interested reader can learn more from the papers referred to in the &lt;a href=&quot;https://github.com/agisga/grpSLOPE/blob/master/README.md&quot;&gt;grpSLOPE README on github&lt;/a&gt; (unfortunately, the “real” journal publication is still under preparation, and another related journal publication is currently under review, so, not publicly available yet either).&lt;/p&gt;
 </description>
-              <pubdate>2016-05-12T00:00:00-05:00</pubdate>
+              <pubdate>2016-05-12T00:00:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/grpSLOPE_on_CRAN/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/grpSLOPE_on_CRAN/</guid>
             </item>
