@@ -10,11 +10,11 @@
 
     
     <meta name="description" content="Unfortunately this was not taught in any of my statistics or data analysis classes at university (wtf it so needs to be :scream_cat:).
-So it took me some until I learned that the AUC has a nice probabilistic meaning.
+So it took me some time until I learned that the AUC has a nice probabilistic meaning.
 
 ">
     <meta property="og:description" content="Unfortunately this was not taught in any of my statistics or data analysis classes at university (wtf it so needs to be :scream_cat:).
-So it took me some until I learned that the AUC has a nice probabilistic meaning.
+So it took me some time until I learned that the AUC has a nice probabilistic meaning.
 
 ">
     
@@ -81,9 +81,11 @@ So it took me some until I learned that the AUC has a nice probabilistic meaning
 
   <div class="entry">
     <p>Unfortunately this was not taught in any of my statistics or data analysis classes at university (wtf it so needs to be <img class="emoji" title=":scream_cat:" alt=":scream_cat:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f640.png" height="20" width="20">).
-So it took me some until I learned that the <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve">AUC</a> has a nice probabilistic meaning.</p>
+So it took me some time until I learned that the <a href="https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve">AUC</a> has a nice probabilistic meaning.</p>
 
 <h2 id="whats-auc-anyway">What’s AUC anyway?</h2>
+
+<p>AUC is the <strong>a</strong>rea <strong>u</strong>nder the ROC <strong>c</strong>urve. The ROC curve is the <strong>r</strong>eceiver <strong>o</strong>perating <strong>c</strong>haracteristic curve. AUC is simply the area between that curve and the x-axis. So, to understand AUC we need to look at the concept of an ROC curve.</p>
 
 <p>Consider:</p>
 <ol>
@@ -93,7 +95,7 @@ So it took me some until I learned that the <a href="https://en.wikipedia.org/wi
       <li>$y_i$ is the $i$th subject’s label (binary outcome variable of interest, like a disease status, class membership, or whatever binary label).</li>
     </ul>
   </li>
-  <li>A classification algorithm (like logistic regression, SVM, deep neural net, or whatever you like), trained on $S$, that assigns a score (or probability) $\hat{p}(\mathbf{x}_{\ast})$ to any new observation $\mathbf{x}_{\ast} \in \mathbb{R}^p$ signifying how likely its label is $y_{\ast} = 1$.</li>
+  <li>A classification algorithm (such as logistic regression, SVM, deep neural net, or whatever you like), trained on $S$, that assigns a score (or probability) $\hat{p}(\mathbf{x}_{\ast})$ to any new observation $\mathbf{x}_{\ast} \in \mathbb{R}^p$ signifying how likely its label is $y_{\ast} = 1$.</li>
 </ol>
 
 <p>Then:</p>
@@ -135,7 +137,9 @@ The chosen threshold determines the balance between how many <em>false positives
 
 <p><img src="/images/20180124-AUC/ROC.png?raw=true" alt="ROC curve R example" title="An ugly ROC curve"></p>
 
-<p>The area under the ROC curve, or AUC, seem like a nice heuristic to evaluate and compare the overall performance of classification models independent of the exact decision threshold chosen. But there’s more to it.</p>
+<p>The area under the ROC curve, or AUC, seems like a nice heuristic to evaluate and compare the overall performance of classification models independent of the exact decision threshold chosen. $\mathrm{AUC} = 1.0$ signifies perfect classification accuracy, and $\mathrm{AUC} = 0.5$ is the accuracy of making classification decisions via coin toss.
+Most classification algorithms will result in an AUC in that range.
+But there’s more to it.</p>
 
 <h2 id="probabilistic-interpretation">Probabilistic interpretation</h2>
 
@@ -159,10 +163,20 @@ Thus, if we view $T$ as a function of $F$, the AUC can be rewritten as follows.<
   &=& \int_1^0 P[\hat{p}(\mathbf{x}) > F^{-1}(F(t)) \,|\, y(\mathbf{x}) = 1] \cdot F'(t) \,\mathrm{d}t \nonumber \\
   &=& \int_0^1 P[\hat{p}(\mathbf{x}) > t \,|\, y(\mathbf{x}) = 1] \cdot P[\hat{p}(\mathbf{x^{\prime}}) = t \,|\, y(\mathbf{x^{\prime}}) = 0] \,\mathrm{d}t \nonumber \\
   &=& \int_0^1 P[\hat{p}(\mathbf{x}) > \hat{p}(\mathbf{x^{\prime}}) \,\&\, \hat{p}(\mathbf{x^{\prime}}) = t \,|\, y(\mathbf{x}) = 1 \,\&\, y(\mathbf{x^{\prime}}) = 0] \,\mathrm{d}t \nonumber \\
-  &=& P[\hat{p}(\mathbf{x}) > \hat{p}(\mathbf{x^{\prime}}) \,|\, y(\mathbf{x}) = 1 \,\&\, y(\mathbf{x^{\prime}}) = 0]. \nonumber
+  &=& P[\hat{p}(\mathbf{x}) > \hat{p}(\mathbf{x^{\prime}}) \,|\, y(\mathbf{x}) = 1 \,\&\, y(\mathbf{x^{\prime}}) = 0], \nonumber
 \end{eqnarray} %]]></script>
 
+<p>where we used the fact that the probability density function</p>
+
+<script type="math/tex; mode=display">P[\hat{p}(\mathbf{x^{\prime}}) = t \,|\, y(\mathbf{x^{\prime}}) = 0] =: f(t)</script>
+
+<p>is the derivative with respect to $t$ of the cumulative distribution function</p>
+
+<script type="math/tex; mode=display">P[\hat{p}(\mathbf{x^{\prime}}) \leq t \,|\, y(\mathbf{x^{\prime}}) = 0] = 1-F(t).</script>
+
 <p>So, given a randomly chosen observation $\mathbf{x}$ belonging to <em>class 1</em>, and a randomly chosen observation $\mathbf{x^{\prime}}$ belonging to <em>class 0</em>, the AUC is the probability that the evaluated classification algorithm will assign a higher score to $\mathbf{x}$ than to $\mathbf{x^{\prime}}$, i.e., the conditional probability of $\hat{p}(\mathbf{x}) &gt; \hat{p}(\mathbf{x^{\prime}})$.</p>
+
+<p>An alternative <em>purely geometric</em> proof can be found in the <a href="https://madrury.github.io/jekyll/update/statistics/2017/06/21/auc-proof.html">Scatterplot Smoothers blog</a>.</p>
 
 <p>In other words, if the classification algorithm distinguishes “positive” and “negative” examples (e.g., disease status), then</p>
 
@@ -172,7 +186,7 @@ Thus, if we view $T$ as a function of $F$, the AUC can be rewritten as follows.<
 
 <h2 id="computing-auc">Computing AUC</h2>
 
-<p>The above probabilistic interpretation suggest a simple formula to compute AUC on a finite sample.</p>
+<p>The above probabilistic interpretation suggest a simple formula to compute AUC on a finite sample:</p>
 
 <blockquote>
   <p>Among all “positive”-“negative” pairs in the dataset compute the proportion of those which are ranked correctly by the evaluated classification algorithm.</p>
@@ -220,6 +234,23 @@ Thus, if we view $T$ as a function of $F$, the AUC can be rewritten as follows.<
 </span></code></pre></div></div>
 
 <p>Same as the proportion of correctly ranked pairs! <img class="emoji" title=":grin:" alt=":grin:" src="https://assets-cdn.github.com/images/icons/emoji/unicode/1f601.png" height="20" width="20"></p>
+
+<h4 id="wilcoxon-mann-whitney-test">Wilcoxon-Mann-Whitney test</h4>
+
+<p>By analysing the probabilistic meaning of AUC, we not only got a practically relevant interpretation of this classification performance metric, but we also obtained a simple formula to estimate the AUC of a trained classification algorithm.
+Well, it turns out that taking the proportion of correctly ranked “positive”-“negative” pairs as a formula to estimate the AUC <a href="https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test#Area-under-curve_(AUC)_statistic_for_ROC_curves">is equivalent to the Wilcoxon-Mann-Whitney statistical test</a>.
+This fact can also be easily demonstrated in a couple lines of R code.</p>
+
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">y_is_1</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">which</span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">1</span><span class="p">)</span><span class="w">
+</span><span class="n">y_is_0</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">which</span><span class="p">(</span><span class="n">y</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="m">0</span><span class="p">)</span><span class="w">
+</span><span class="n">n_pairs</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="n">y_is_1</span><span class="p">)</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="nf">length</span><span class="p">(</span><span class="n">y_is_0</span><span class="p">)</span><span class="w">
+</span><span class="n">WMW_test</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">wilcox.test</span><span class="p">(</span><span class="n">y_pred</span><span class="p">[</span><span class="n">y_is_1</span><span class="p">],</span><span class="w"> </span><span class="n">y_pred</span><span class="p">[</span><span class="n">y_is_0</span><span class="p">])</span><span class="w">
+</span><span class="n">WMW_test</span><span class="o">$</span><span class="n">statistic</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="n">n_pairs</span><span class="w">
+</span><span class="c1">#      W</span><span class="w">
+</span><span class="c1"># 0.7918</span><span class="w">
+</span></code></pre></div></div>
+
+<p>Same answer!</p>
 
 <h2 id="so-what-why-care-about-auc-anyway">So what? Why care about AUC anyway?</h2>
 

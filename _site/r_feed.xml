@@ -12,9 +12,11 @@
             <item>
               <title>Probabilistic interpretation of AUC</title>
               <description>&lt;p&gt;Unfortunately this was not taught in any of my statistics or data analysis classes at university (wtf it so needs to be :scream_cat:).
-So it took me some until I learned that the &lt;a href=&quot;https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve&quot;&gt;AUC&lt;/a&gt; has a nice probabilistic meaning.&lt;/p&gt;
+So it took me some time until I learned that the &lt;a href=&quot;https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve&quot;&gt;AUC&lt;/a&gt; has a nice probabilistic meaning.&lt;/p&gt;
 
 &lt;h2 id=&quot;whats-auc-anyway&quot;&gt;What’s AUC anyway?&lt;/h2&gt;
+
+&lt;p&gt;AUC is the &lt;strong&gt;a&lt;/strong&gt;rea &lt;strong&gt;u&lt;/strong&gt;nder the ROC &lt;strong&gt;c&lt;/strong&gt;urve. The ROC curve is the &lt;strong&gt;r&lt;/strong&gt;eceiver &lt;strong&gt;o&lt;/strong&gt;perating &lt;strong&gt;c&lt;/strong&gt;haracteristic curve. AUC is simply the area between that curve and the x-axis. So, to understand AUC we need to look at the concept of an ROC curve.&lt;/p&gt;
 
 &lt;p&gt;Consider:&lt;/p&gt;
 &lt;ol&gt;
@@ -24,7 +26,7 @@ So it took me some until I learned that the &lt;a href=&quot;https://en.wikipedi
       &lt;li&gt;&lt;img src=&quot;http://latex.codecogs.com/png.latex?y_i\inline&quot;/&gt; is the &lt;img src=&quot;http://latex.codecogs.com/png.latex?i\inline&quot;/&gt;th subject’s label (binary outcome variable of interest, like a disease status, class membership, or whatever binary label).&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-  &lt;li&gt;A classification algorithm (like logistic regression, SVM, deep neural net, or whatever you like), trained on &lt;img src=&quot;http://latex.codecogs.com/png.latex?S\inline&quot;/&gt;, that assigns a score (or probability) &lt;img src=&quot;http://latex.codecogs.com/png.latex?\hat{p}(\mathbf{x}_{\ast})\inline&quot;/&gt; to any new observation &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x}_{\ast} \in \mathbb{R}^p\inline&quot;/&gt; signifying how likely its label is &lt;img src=&quot;http://latex.codecogs.com/png.latex?y_{\ast} = 1\inline&quot;/&gt;.&lt;/li&gt;
+  &lt;li&gt;A classification algorithm (such as logistic regression, SVM, deep neural net, or whatever you like), trained on &lt;img src=&quot;http://latex.codecogs.com/png.latex?S\inline&quot;/&gt;, that assigns a score (or probability) &lt;img src=&quot;http://latex.codecogs.com/png.latex?\hat{p}(\mathbf{x}_{\ast})\inline&quot;/&gt; to any new observation &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x}_{\ast} \in \mathbb{R}^p\inline&quot;/&gt; signifying how likely its label is &lt;img src=&quot;http://latex.codecogs.com/png.latex?y_{\ast} = 1\inline&quot;/&gt;.&lt;/li&gt;
 &lt;/ol&gt;
 
 &lt;p&gt;Then:&lt;/p&gt;
@@ -66,7 +68,9 @@ The chosen threshold determines the balance between how many &lt;em&gt;false pos
 
 &lt;p&gt;&lt;img src=&quot;/images/20180124-AUC/ROC.png?raw=true&quot; alt=&quot;ROC curve R example&quot; title=&quot;An ugly ROC curve&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;The area under the ROC curve, or AUC, seem like a nice heuristic to evaluate and compare the overall performance of classification models independent of the exact decision threshold chosen. But there’s more to it.&lt;/p&gt;
+&lt;p&gt;The area under the ROC curve, or AUC, seems like a nice heuristic to evaluate and compare the overall performance of classification models independent of the exact decision threshold chosen. &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathrm{AUC} = 1.0\inline&quot;/&gt; signifies perfect classification accuracy, and &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathrm{AUC} = 0.5\inline&quot;/&gt; is the accuracy of making classification decisions via coin toss.
+Most classification algorithms will result in an AUC in that range.
+But there’s more to it.&lt;/p&gt;
 
 &lt;h2 id=&quot;probabilistic-interpretation&quot;&gt;Probabilistic interpretation&lt;/h2&gt;
 
@@ -90,10 +94,20 @@ Thus, if we view &lt;img src=&quot;http://latex.codecogs.com/png.latex?T\inline&
   &amp;=&amp; \int_1^0 P[\hat{p}(\mathbf{x}) &gt; F^{-1}(F(t)) \,|\, y(\mathbf{x}) = 1] \cdot F'(t) \,\mathrm{d}t \nonumber \\
   &amp;=&amp; \int_0^1 P[\hat{p}(\mathbf{x}) &gt; t \,|\, y(\mathbf{x}) = 1] \cdot P[\hat{p}(\mathbf{x^{\prime}}) = t \,|\, y(\mathbf{x^{\prime}}) = 0] \,\mathrm{d}t \nonumber \\
   &amp;=&amp; \int_0^1 P[\hat{p}(\mathbf{x}) &gt; \hat{p}(\mathbf{x^{\prime}}) \,\&amp;\, \hat{p}(\mathbf{x^{\prime}}) = t \,|\, y(\mathbf{x}) = 1 \,\&amp;\, y(\mathbf{x^{\prime}}) = 0] \,\mathrm{d}t \nonumber \\
-  &amp;=&amp; P[\hat{p}(\mathbf{x}) &gt; \hat{p}(\mathbf{x^{\prime}}) \,|\, y(\mathbf{x}) = 1 \,\&amp;\, y(\mathbf{x^{\prime}}) = 0]. \nonumber
+  &amp;=&amp; P[\hat{p}(\mathbf{x}) &gt; \hat{p}(\mathbf{x^{\prime}}) \,|\, y(\mathbf{x}) = 1 \,\&amp;\, y(\mathbf{x^{\prime}}) = 0], \nonumber
 \end{eqnarray} %]]&gt;&lt;/script&gt;
 
+&lt;p&gt;where we used the fact that the probability density function&lt;/p&gt;
+
+&lt;div style=&quot;text-align:center;&quot;&gt;&lt;img src=&quot;http://latex.codecogs.com/png.latex?P[\hat{p}(\mathbf{x^{\prime}}) = t \,|\, y(\mathbf{x^{\prime}}) = 0] =: f(t)&quot; alt=&quot;P[\hat{p}(\mathbf{x^{\prime}}) = t \,|\, y(\mathbf{x^{\prime}}) = 0] =: f(t)&quot; /&gt;&lt;/div&gt;
+
+&lt;p&gt;is the derivative with respect to &lt;img src=&quot;http://latex.codecogs.com/png.latex?t\inline&quot;/&gt; of the cumulative distribution function&lt;/p&gt;
+
+&lt;div style=&quot;text-align:center;&quot;&gt;&lt;img src=&quot;http://latex.codecogs.com/png.latex?P[\hat{p}(\mathbf{x^{\prime}}) \leq t \,|\, y(\mathbf{x^{\prime}}) = 0] = 1-F(t).&quot; alt=&quot;P[\hat{p}(\mathbf{x^{\prime}}) \leq t \,|\, y(\mathbf{x^{\prime}}) = 0] = 1-F(t).&quot; /&gt;&lt;/div&gt;
+
 &lt;p&gt;So, given a randomly chosen observation &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x}\inline&quot;/&gt; belonging to &lt;em&gt;class 1&lt;/em&gt;, and a randomly chosen observation &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x^{\prime}}\inline&quot;/&gt; belonging to &lt;em&gt;class 0&lt;/em&gt;, the AUC is the probability that the evaluated classification algorithm will assign a higher score to &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x}\inline&quot;/&gt; than to &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathbf{x^{\prime}}\inline&quot;/&gt;, i.e., the conditional probability of &lt;img src=&quot;http://latex.codecogs.com/png.latex?\hat{p}(\mathbf{x}) &amp;gt; \hat{p}(\mathbf{x^{\prime}})\inline&quot;/&gt;.&lt;/p&gt;
+
+&lt;p&gt;An alternative &lt;em&gt;purely geometric&lt;/em&gt; proof can be found in the &lt;a href=&quot;https://madrury.github.io/jekyll/update/statistics/2017/06/21/auc-proof.html&quot;&gt;Scatterplot Smoothers blog&lt;/a&gt;.&lt;/p&gt;
 
 &lt;p&gt;In other words, if the classification algorithm distinguishes “positive” and “negative” examples (e.g., disease status), then&lt;/p&gt;
 
@@ -103,7 +117,7 @@ Thus, if we view &lt;img src=&quot;http://latex.codecogs.com/png.latex?T\inline&
 
 &lt;h2 id=&quot;computing-auc&quot;&gt;Computing AUC&lt;/h2&gt;
 
-&lt;p&gt;The above probabilistic interpretation suggest a simple formula to compute AUC on a finite sample.&lt;/p&gt;
+&lt;p&gt;The above probabilistic interpretation suggest a simple formula to compute AUC on a finite sample:&lt;/p&gt;
 
 &lt;blockquote&gt;
   &lt;p&gt;Among all “positive”-“negative” pairs in the dataset compute the proportion of those which are ranked correctly by the evaluated classification algorithm.&lt;/p&gt;
@@ -152,6 +166,23 @@ Thus, if we view &lt;img src=&quot;http://latex.codecogs.com/png.latex?T\inline&
 
 &lt;p&gt;Same as the proportion of correctly ranked pairs! :grin:&lt;/p&gt;
 
+&lt;h4 id=&quot;wilcoxon-mann-whitney-test&quot;&gt;Wilcoxon-Mann-Whitney test&lt;/h4&gt;
+
+&lt;p&gt;By analysing the probabilistic meaning of AUC, we not only got a practically relevant interpretation of this classification performance metric, but we also obtained a simple formula to estimate the AUC of a trained classification algorithm.
+Well, it turns out that taking the proportion of correctly ranked “positive”-“negative” pairs as a formula to estimate the AUC &lt;a href=&quot;https://en.wikipedia.org/wiki/Mann%E2%80%93Whitney_U_test#Area-under-curve_(AUC)_statistic_for_ROC_curves&quot;&gt;is equivalent to the Wilcoxon-Mann-Whitney statistical test&lt;/a&gt;.
+This fact can also be easily demonstrated in a couple lines of R code.&lt;/p&gt;
+
+&lt;div class=&quot;language-r highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;y_is_1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;which&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_is_0&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;which&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;m&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_pairs&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_is_1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;length&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_is_0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WMW_test&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;-&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;wilcox.test&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_pred&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_is_1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_pred&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;y_is_0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;WMW_test&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;$&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;statistic&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_pairs&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;#      W&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;c1&quot;&gt;# 0.7918&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Same answer!&lt;/p&gt;
+
 &lt;h2 id=&quot;so-what-why-care-about-auc-anyway&quot;&gt;So what? Why care about AUC anyway?&lt;/h2&gt;
 
 &lt;ul&gt;
@@ -167,7 +198,7 @@ Thus, if we view &lt;img src=&quot;http://latex.codecogs.com/png.latex?T\inline&
   &lt;li&gt;Extensively used in machine learning, and in medical research – and that for good reasons, as for example explained in an &lt;a href=&quot;https://lukeoakdenrayner.wordpress.com/2017/12/06/do-machines-actually-beat-doctors-roc-curves-and-performance-metrics/&quot;&gt;excellent blog post on deep learning research in medicine by Luke Oakden-Rayner&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-              <pubdate>2018-01-25T00:00:00-05:00</pubdate>
+              <pubdate>2018-01-25T01:00:00-05:00</pubdate>
               <link>http://www.alexejgossmann.com/auc/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/auc/</guid>
             </item>
