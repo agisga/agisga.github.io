@@ -65,7 +65,7 @@ The chosen threshold determines the balance between how many &lt;em&gt;false pos
 
 &lt;p&gt;&lt;img src=&quot;/images/20180124-AUC/ROC.png?raw=true&quot; alt=&quot;ROC curve R example&quot; title=&quot;An ugly ROC curve&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;The area under the ROC curve, or AUC, seems like a nice heuristic to evaluate and compare the overall performance of classification models independent of the exact decision threshold chosen. &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathrm{AUC} = 1.0\inline&quot;/&gt; signifies perfect classification accuracy, and &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathrm{AUC} = 0.5\inline&quot;/&gt; is the accuracy of making classification decisions via coin toss.
+&lt;p&gt;The area under the ROC curve, or AUC, seems like a nice heuristic to evaluate and compare the overall performance of classification models independent of the exact decision threshold chosen. &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathrm{AUC} = 1.0\inline&quot;/&gt; signifies perfect classification accuracy, and &lt;img src=&quot;http://latex.codecogs.com/png.latex?\mathrm{AUC} = 0.5\inline&quot;/&gt; is the accuracy of making classification decisions via coin toss (or rather a continuous coin that outputs values in &lt;img src=&quot;http://latex.codecogs.com/png.latex?[0,1]\inline&quot;/&gt;…).
 Most classification algorithms will result in an AUC in that range.
 But there’s more to it.&lt;/p&gt;
 
@@ -88,7 +88,7 @@ Thus, if we view &lt;img src=&quot;http://latex.codecogs.com/png.latex?T\inline&
 \begin{eqnarray}
   \mathrm{AUC} &amp;=&amp; \int_0^1 T(F_0) \,\mathrm{d}F_0 \nonumber \\
   &amp;=&amp; \int_0^1 P[\hat{p}(\mathbf{x}) &gt; F^{-1}(F_0) \,|\, y(\mathbf{x}) = 1] \,\mathrm{d}F_0 \nonumber \\
-  &amp;=&amp; \int_1^0 P[\hat{p}(\mathbf{x}) &gt; F^{-1}(F(t)) \,|\, y(\mathbf{x}) = 1] \cdot F'(t) \,\mathrm{d}t \nonumber \\
+  &amp;=&amp; \int_1^0 P[\hat{p}(\mathbf{x}) &gt; F^{-1}(F(t)) \,|\, y(\mathbf{x}) = 1] \cdot \frac{\partial F(t)}{\partial t} \,\mathrm{d}t \nonumber \\
   &amp;=&amp; \int_0^1 P[\hat{p}(\mathbf{x}) &gt; t \,|\, y(\mathbf{x}) = 1] \cdot P[\hat{p}(\mathbf{x^{\prime}}) = t \,|\, y(\mathbf{x^{\prime}}) = 0] \,\mathrm{d}t \nonumber \\
   &amp;=&amp; \int_0^1 P[\hat{p}(\mathbf{x}) &gt; \hat{p}(\mathbf{x^{\prime}}) \,\&amp;\, \hat{p}(\mathbf{x^{\prime}}) = t \,|\, y(\mathbf{x}) = 1 \,\&amp;\, y(\mathbf{x^{\prime}}) = 0] \,\mathrm{d}t \nonumber \\
   &amp;=&amp; P[\hat{p}(\mathbf{x}) &gt; \hat{p}(\mathbf{x^{\prime}}) \,|\, y(\mathbf{x}) = 1 \,\&amp;\, y(\mathbf{x^{\prime}}) = 0], \nonumber
