@@ -1,9 +1,52 @@
 @inproceedings{gossmann2018,
- author = {Gossmann, Alexej and Pezeshk, Aria and Sahiner, Berkman},
- title = {Test data reuse for evaluation of adaptive machine learning algorithms: Over-fitting to a fixed ``test'' dataset and a potential solution},
- booktitle = {Proceedings of SPIE: Medical Imaging 2018},
- year = {2018},
- location = {Houston, Texas},
+  title      = "{Test data reuse for evaluation of adaptive machine learning
+                algorithms: over-fitting to a fixed 'test' dataset and a
+                potential solution}",
+  booktitle  = "{Medical Imaging 2018: Image Perception, Observer Performance,
+                and Technology Assessment}",
+  author     = "Gossmann, Alexej and Pezeshk, Aria and Sahiner, Berkman",
+  abstract   = "After the initial release of a machine learning algorithm, the
+                subsequently gathered data can be used to augment the training
+                dataset in order to modify or fine-tune the algorithm. For
+                algorithm performance evaluation that generalizes to a targeted
+                population of cases, ideally, test datasets randomly drawn from
+                the targeted population are used. To ensure that test results
+                generalize to new data, the algorithm needs to be evaluated on
+                new and independent test data each time a new performance
+                evaluation is required. However, medical test datasets of
+                sufficient quality are often hard to acquire, and it is
+                tempting to utilize a previously-used test dataset for a new
+                performance evaluation. With extensive simulation studies, we
+                illustrate how such a ``naive'' approach to test data reuse can
+                inadvertently result in overfitting the algorithm to the test
+                data, even when only a global performance metric is reported
+                back from the test dataset. The overfitting behavior leads to a
+                loss in generalization and overly optimistic conclusions about
+                the algorithm performance. We investigate the use of the
+                Thresholdout method of Dwork et. al. (Ref. 1) to tackle this
+                problem. Thresholdout allows repeated reuse of the same test
+                dataset. It essentially reports a noisy version of the
+                performance metric on the test data, and provides theoretical
+                guarantees on how many times the test dataset can be accessed
+                to ensure generalization of the reported answers to the
+                underlying distribution. With extensive simulation studies, we
+                show that Thresholdout indeed substantially reduces the problem
+                of overfitting to the test data under the simulation
+                conditions, at the cost of a mild additional uncertainty on the
+                reported test performance. We also extend some of the
+                theoretical guarantees to the area under the ROC curve as the
+                reported performance metric.",
+  publisher  = "International Society for Optics and Photonics",
+  month      =  mar,
+  year       =  2018,
+  url        = "https://www.spiedigitallibrary.org/conference-proceedings-of-spie/10577/105770K/Test-data-reuse-for-evaluation-of-adaptive-machine-learning-algorithms/10.1117/12.2293818.short?SSO=1",
+  keywords   = "adaptive data analysis; continuous machine learning; data
+                reuse; receiver operating characteristic curve (ROC); area
+                under the ROC curve (AUC); classification performance;
+                Thresholdout; reusable holdout;",
+  conference = "Medical Imaging 2018: Image Perception, Observer Performance,
+                and Technology Assessment",
+  doi        = "10.1117/12.2293818"
 }
 
 @inproceedings{cao2015,
