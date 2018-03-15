@@ -386,7 +386,7 @@ The end goal is, of course, to replace the patent examiner with an AI trained on
 &lt;div class=&quot;footnotes&quot;&gt;
   &lt;ol&gt;
     &lt;li id=&quot;fn:keywords&quot;&gt;
-      &lt;p&gt;There are two main aspects to my reasoning as to this particular choice of keywords. (1) I wanted to keep the list relatively short in order to have a more specific search, and (2) I tried to avoid keywords which may generate false positives (e.g., the term “AI” would match all sorts of codes present in the patent text, such as “123456789 AI N1”). In no way am I claiming that this is a perfect list of keywords to identify ML and AI related patents, but I think that it’s definitely a good start.&amp;nbsp;&lt;a href=&quot;#fnref:keywords&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;There are two main aspects to my reasoning as to this particular choice of keywords. (1) I wanted to keep the list relatively short in order to have a more specific search, and (2) I tried to avoid keywords which may generate false positives (e.g., the term “AI” would match all sorts of codes present in the patent text, such as “123456789 AI N1”). In no way am I claiming that this is a perfect list of keywords to identify ML and AI related patents, but I think that it’s definitely a good start. &lt;a href=&quot;#fnref:keywords&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
   &lt;/ol&gt;
 &lt;/div&gt;
@@ -1276,7 +1276,7 @@ for(i in 1:30) {
 &lt;div class=&quot;footnotes&quot;&gt;
   &lt;ol&gt;
     &lt;li id=&quot;fn:1&quot;&gt;
-      &lt;p&gt;The two data modes can correspond to many types of measurements, other than space and time. Here, I use space and time for example purposes only because those are very familiar concepts. I am neither suggesting that specifically spatio-temporal data should be analyzed in this way, nor that tensor decomposition is generally a good approach for spatio-temporal data (I actually have no idea).&amp;nbsp;&lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+      &lt;p&gt;The two data modes can correspond to many types of measurements, other than space and time. Here, I use space and time for example purposes only because those are very familiar concepts. I am neither suggesting that specifically spatio-temporal data should be analyzed in this way, nor that tensor decomposition is generally a good approach for spatio-temporal data (I actually have no idea). &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
     &lt;/li&gt;
   &lt;/ol&gt;
 &lt;/div&gt;

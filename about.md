@@ -4,11 +4,13 @@ title: About
 permalink: /about/
 ---
 
-I'm a PhD student in the [Bioinnovation program at Tulane University in New Orleans](http://www2.tulane.edu/bioinnovation-IGERT/). Until recently I was an [ABD](https://en.wikipedia.org/wiki/All_but_dissertation) student in mathematics, where most of my strengths lie. I keep a blog to practice writing fast.
+I'm a PhD student in the [Bioinnovation program at Tulane University in New Orleans](http://www2.tulane.edu/bioinnovation-IGERT/). Previously I was an [ABD](https://en.wikipedia.org/wiki/All_but_dissertation) student in mathematics, where most of my strengths lie.
+
+I keep a <a href="{{ site.baseurl }}/">blog</a> to practice writing fast.
 
 ### More information
 
-* You can read my [CV](https://github.com/agisga/CV/raw/master/Alexej_Gossmann_CV.pdf).
+* [My academic CV](https://github.com/agisga/CV/raw/master/Alexej_Gossmann_CV.pdf).
 
 ### Links
 
