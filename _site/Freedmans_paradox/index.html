@@ -85,11 +85,12 @@
 
 <p>I am going to use a few R packages (most notably the package <code class="highlighter-rouge">broom</code> to fit and analyze many many linear models in a single step).</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span><span class="w">
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">library</span><span class="p">(</span><span class="n">dplyr</span><span class="p">)</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">broom</span><span class="p">)</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">ggplot2</span><span class="p">)</span><span class="w">
 </span><span class="n">library</span><span class="p">(</span><span class="n">tidyr</span><span class="p">)</span><span class="w">
-</span><span class="n">set.seed</span><span class="p">(</span><span class="m">20170605</span><span class="p">)</span></code></pre></figure>
+</span><span class="n">set.seed</span><span class="p">(</span><span class="m">20170605</span><span class="p">)</span><span class="w">
+</span></code></pre></div></div>
 
 <p>The considered data structure is the following:</p>
 
@@ -100,7 +101,7 @@
 
 <p>Instead of Freedman’s 10 repetitions we perform 1000. So let’s generate all 1000 datasets at once as stacked in a large data frame:</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">n_row</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">100</span><span class="w">
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">n_row</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">100</span><span class="w">
 </span><span class="c1"># n_col is set to 51 because the 51st column will serve as y</span><span class="w">
 </span><span class="n">n_col</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">51</span><span class="w">
 </span><span class="n">n_rep</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="m">1000</span><span class="w">
@@ -109,7 +110,8 @@
 </span><span class="n">X</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">matrix</span><span class="p">(</span><span class="n">rnorm</span><span class="p">(</span><span class="n">n_rep</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n_row</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n_col</span><span class="p">),</span><span class="w"> </span><span class="n">n_rep</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">n_row</span><span class="p">,</span><span class="w"> </span><span class="n">n_col</span><span class="p">)</span><span class="w">
 </span><span class="n">colnames</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">paste0</span><span class="p">(</span><span class="s2">"X"</span><span class="p">,</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="n">n_col</span><span class="p">)</span><span class="w">
 </span><span class="c1"># ...and then transformed to a data frame with a repetition number column</span><span class="w">
-</span><span class="n">X_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as_data_frame</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">mutate</span><span class="p">(</span><span class="n">repetition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="n">n_rep</span><span class="p">,</span><span class="w"> </span><span class="n">each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n_row</span><span class="p">))</span></code></pre></figure>
+</span><span class="n">X_df</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">as_data_frame</span><span class="p">(</span><span class="n">X</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">mutate</span><span class="p">(</span><span class="n">repetition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="m">1</span><span class="o">:</span><span class="n">n_rep</span><span class="p">,</span><span class="w"> </span><span class="n">each</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">n_row</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
 
 <p><strong>The data are analyzed in two successive linear models. The second (illegally) reusing the results of the first.</strong></p>
 
@@ -118,13 +120,14 @@ After the 1000 ordinary linear models are fit to the data, we record for each of
 
 <p>Using functions from the <code class="highlighter-rouge">broom</code> package we can fit and extract information from all 1000 models at once.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="c1"># all models can be fit at once...</span><span class="w">
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># all models can be fit at once...</span><span class="w">
 </span><span class="n">models_df</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">X_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">group_by</span><span class="p">(</span><span class="n">repetition</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
   </span><span class="n">do</span><span class="p">(</span><span class="n">full_model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">lm</span><span class="p">(</span><span class="n">X</span><span class="m">51</span><span class="w"> </span><span class="o">~</span><span class="w"> </span><span class="n">.</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="m">0</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">select</span><span class="p">(</span><span class="n">.</span><span class="p">,</span><span class="w"> </span><span class="o">-</span><span class="n">repetition</span><span class="p">)))</span><span class="w">
 </span><span class="c1"># ...then the results are extracted</span><span class="w">
 </span><span class="n">model_coefs</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">tidy</span><span class="p">(</span><span class="n">models_df</span><span class="p">,</span><span class="w"> </span><span class="n">full_model</span><span class="p">)</span><span class="w">
 </span><span class="n">model_statistics</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">glance</span><span class="p">(</span><span class="n">models_df</span><span class="p">,</span><span class="w"> </span><span class="n">full_model</span><span class="p">)</span><span class="w">
-</span><span class="n">model_statistics</span><span class="o">$</span><span class="n">data_reuse</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="kc">FALSE</span><span class="p">,</span><span class="w"> </span><span class="n">nrow</span><span class="p">(</span><span class="n">model_statistics</span><span class="p">))</span></code></pre></figure>
+</span><span class="n">model_statistics</span><span class="o">$</span><span class="n">data_reuse</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">rep</span><span class="p">(</span><span class="kc">FALSE</span><span class="p">,</span><span class="w"> </span><span class="n">nrow</span><span class="p">(</span><span class="n">model_statistics</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
 
 <p><em>The second model fit.</em>
 For each one of the first 1000 models, the corresponding second linear model is fit using only those variables which have p-values significant at the 25% level in the first model.
@@ -132,7 +135,7 @@ That is, the second model uses the first model for variable selection.</p>
 
 <p>This gives us 1000 reduced re-fitted linear models. We record the same model statistics (R squared, F, and t tests) as for the first group of models.</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">reduced_models</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">()</span><span class="w">
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">reduced_models</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nf">list</span><span class="p">()</span><span class="w">
 </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">i</span><span class="w"> </span><span class="k">in</span><span class="w"> </span><span class="m">1</span><span class="o">:</span><span class="n">n_rep</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">
   </span><span class="n">full_data</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">X_df</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w"> </span><span class="n">filter</span><span class="p">(</span><span class="n">repetition</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">i</span><span class="p">)</span><span class="w">
   </span><span class="n">significant_coefs</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">model_coefs</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
@@ -144,7 +147,8 @@ That is, the second model uses the first model for variable selection.</p>
   </span><span class="n">tmp_df</span><span class="o">$</span><span class="n">repetition</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">i</span><span class="w">
   </span><span class="n">tmp_df</span><span class="o">$</span><span class="n">data_reuse</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="kc">TRUE</span><span class="w">
   </span><span class="n">model_statistics</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="n">bind_rows</span><span class="p">(</span><span class="n">model_statistics</span><span class="p">,</span><span class="w"> </span><span class="n">tmp_df</span><span class="p">)</span><span class="w">
-</span><span class="p">}</span></code></pre></figure>
+</span><span class="p">}</span><span class="w">
+</span></code></pre></div></div>
 
 <p>Finally let’s look at the results. The figure shows the distributions of the considered model statistics across the 1000 repetitions for model fits with and without data reuse (the code producing this figure is given at the bottom of this post):</p>
 
@@ -159,7 +163,7 @@ That is, the second model uses the first model for variable selection.</p>
 <hr />
 <p>This code generates the above figure:</p>
 
-<figure class="highlight"><pre><code class="language-r" data-lang="r"><span class="n">model_statistics</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
+<div class="language-r highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">model_statistics</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
   </span><span class="n">select</span><span class="p">(</span><span class="n">r.squared</span><span class="p">,</span><span class="w"> </span><span class="n">p.value</span><span class="p">,</span><span class="w"> </span><span class="n">statistic</span><span class="p">,</span><span class="w"> </span><span class="n">repetition</span><span class="p">,</span><span class="w"> </span><span class="n">data_reuse</span><span class="p">)</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
   </span><span class="n">mutate</span><span class="p">(</span><span class="n">data_reuse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ifelse</span><span class="p">(</span><span class="n">data_reuse</span><span class="p">,</span><span class="w"> </span><span class="s2">"With Data Reuse"</span><span class="p">,</span><span class="w"> </span><span class="s2">"Without Data Reuse"</span><span class="p">))</span><span class="w"> </span><span class="o">%&gt;%</span><span class="w">
   </span><span class="n">mutate</span><span class="p">(</span><span class="n">data_reuse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">factor</span><span class="p">(</span><span class="n">data_reuse</span><span class="p">,</span><span class="w"> </span><span class="n">levels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="s2">"Without Data Reuse"</span><span class="p">,</span><span class="w"> </span><span class="s2">"With Data Reuse"</span><span class="p">),</span><span class="w">
@@ -172,8 +176,8 @@ That is, the second model uses the first model for variable selection.</p>
     </span><span class="n">facet_wrap</span><span class="p">(</span><span class="o">~</span><span class="n">data_reuse</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w">
     </span><span class="n">theme_linedraw</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w">
     </span><span class="n">scale_y_continuous</span><span class="p">(</span><span class="n">breaks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nf">c</span><span class="p">(</span><span class="m">0.05</span><span class="p">,</span><span class="w"> </span><span class="m">2</span><span class="p">,</span><span class="w"> </span><span class="m">4</span><span class="p">,</span><span class="w"> </span><span class="m">6</span><span class="p">))</span><span class="w"> </span><span class="o">+</span><span class="w">
-    </span><span class="n">ggtitle</span><span class="p">(</span><span class="n">paste</span><span class="p">(</span><span class="n">n_rep</span><span class="p">,</span><span class="w"> </span><span class="s2">"repetitions of an LM fit with"</span><span class="p">,</span><span class="w"> </span><span class="n">n_row</span><span class="p">,</span><span class="w"> </span><span class="s2">"rows,"</span><span class="p">,</span><span class="w"> </span><span class="n">n_col</span><span class="p">,</span><span class="w"> </span><span class="s2">"columns"</span><span class="p">))</span></code></pre></figure>
-
+    </span><span class="n">ggtitle</span><span class="p">(</span><span class="n">paste</span><span class="p">(</span><span class="n">n_rep</span><span class="p">,</span><span class="w"> </span><span class="s2">"repetitions of an LM fit with"</span><span class="p">,</span><span class="w"> </span><span class="n">n_row</span><span class="p">,</span><span class="w"> </span><span class="s2">"rows,"</span><span class="p">,</span><span class="w"> </span><span class="n">n_col</span><span class="p">,</span><span class="w"> </span><span class="s2">"columns"</span><span class="p">))</span><span class="w">
+</span></code></pre></div></div>
 
   </div>
 
