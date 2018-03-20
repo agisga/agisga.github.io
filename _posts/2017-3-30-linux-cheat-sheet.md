@@ -615,3 +615,4 @@ $ scp <user@remotesystem>:/home/user/somefile /local/dir/
 
 * <http://explainshell.com> &mdash; see help text that matches each argument of a given command line. *Extremely* useful!
 * <http://jvns.ca/zines/> &mdash; *informative* fanzines about some Linux tools.
+* <http://tldr.sh/> &mdash; *simplified* man pages (so short!), driven by practical examples.
