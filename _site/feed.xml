@@ -7,6 +7,64 @@
     
       
         <item>
+          <title>Neural networks and deep learning &amp;mdash; self-study and 2 presentations</title>
+          <description>&lt;p&gt;Last month, after mentioning “deep learning” a few times to some professors, I suddenly found myself in a position where I had to prepare three talks about “deep learning” within just one month… :sweat_smile:
+This is not to complain. I actually strongly enjoy studying the relevant theory, applying it to interesting datasets, and presenting what I have learned.
+Besides, teaching may be the best way to learn.
+However, it is quite funny. :laughing:
+The deep learning hype is too real. :trollface:&lt;/p&gt;
+
+&lt;p&gt;In this post I want to share my presentation slides (see below), some other resources, and some thoughts, in case any of that can be helpful to other deep learning beginners.&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+
+&lt;p&gt;Neural networks (NNs) and deep learning (DL, also deep NNs, or DNNs) are not my research area, but currently it is one of my main side-interests.
+(D)NNs are truly fascinating to somebody with substantial experience in statistics or the more conventional machine learning (like myself). Initially it seems counterintuitive how these extremely overparametrized models are even supposed to work, but then you fit those models, and their performance is so good that it seems to border on magic. :crystal_ball:&lt;/p&gt;
+
+&lt;h2 id=&quot;slides&quot;&gt;Slides&lt;/h2&gt;
+
+&lt;p&gt;These &lt;code class=&quot;highlighter-rouge&quot;&gt;html&lt;/code&gt; slides were created with the excellent &lt;a href=&quot;https://github.com/hakimel/reveal.js/&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;reveal.js&lt;/code&gt;&lt;/a&gt;.&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.alexejgossmann.com/reveal.js/20180426-Math-Modeling-Guest-Lecture.html&quot;&gt;&lt;strong&gt;An introduction to neural networks and deep learning&lt;/strong&gt;&lt;/a&gt; — guest lecture for a mathematical modeling class in the department of biomedical engineering at Tulane (with live-demos using Google Cloud, see slides).&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.alexejgossmann.com/reveal.js/20180411-Journal-Club.html&quot;&gt;&lt;strong&gt;A survey on Deep Learning in Medical Image Analysis&lt;/strong&gt;&lt;/a&gt; — journal club presentation based on a paper by Litjens, Kooi, Bejnordi, et al. This was presented as a 2-part talk.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;my-favorite-learning-resources&quot;&gt;My favorite learning resources&lt;/h2&gt;
+
+&lt;p&gt;I was able give the above presentations, because I did a good amount of self-study on NN and DL in my free time. Here are some of the resources that I have used, and that I highly recommend:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;I worked through the &lt;a href=&quot;http://www.fast.ai/&quot;&gt;fast.ai&lt;/a&gt; MOOC &lt;a href=&quot;http://course.fast.ai/&quot;&gt;“Practical Deep Learning For Coders, Part 1”&lt;/a&gt; by Jeremy Howard and Rachel Thomas. It is not spoon-feeding (if you want to actually understand what’s going on), but highly recommended as a starting point. Jeremy Howard is fantastic at giving clear and simple explanations to complex concepts, and the provided Jupyter Notebooks are excellent to get started with the practical application of DL.&lt;/li&gt;
+  &lt;li&gt;At the same time I swallowed Michael Nielsen’s &lt;a href=&quot;http://neuralnetworksanddeeplearning.com/&quot;&gt;“Neural Networks and Deep Learning”&lt;/a&gt; book, which was a pleasure to read.&lt;/li&gt;
+  &lt;li&gt;Then I participated in the IPAM/UCLA workshop &lt;a href=&quot;https://www.ipam.ucla.edu/programs/workshops/new-deep-learning-techniques/?tab=schedule&quot;&gt;“New Deep Learning Techniques”&lt;/a&gt; in February (videos and slides available on the linked site), which blew my mind by covering so many different perspectives which I was not aware of.&lt;/li&gt;
+  &lt;li&gt;Currently I am working through the lectures and assignments from Stanford’s &lt;a href=&quot;https://cs231n.github.io/&quot;&gt;CS231n&lt;/a&gt; (lectures available on YouTube) together with the &lt;a href=&quot;http://ods.ai/&quot;&gt;ods.ai&lt;/a&gt; community (see &lt;a href=&quot;https://github.com/Yorko/mlcourse_open/wiki/Passing-cs231n-together&quot;&gt;passing cs231n together&lt;/a&gt;). Feel free to contact me if you want to discuss the CS231n assignments in the near future.&lt;/li&gt;
+  &lt;li&gt;During the entire time, I was also (slowly) working on my Python skills, as well as figuring out how to set up AWS, and Google Cloud GPU instances. Unfortunately, figuring out and setting up the required drivers, libraries, etc. is still very non-trivial. For many people I meet in academia this may even be the greatest bottleneck towards deep learning. &lt;a href=&quot;https://github.com/agisga/coding_notes/blob/master/google_cloud.md&quot;&gt;This is the setup I am currently using&lt;/a&gt;.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;These resources have worked very well for me. My background is mostly academic, and includes experience in statistical modeling, (non-deep) machine learning, an all-but-dissertation status in a math PhD program, and some domain knowledge in medical imaging.
+While it is helpful with some of the above, none of that is really that important or necessary.
+Though some math is definitely needed, it does not need to be at a PhD level.
+Medical or biological knowledge helps only if those are the application of DL that you seek out (which I do).
+Understanding some basic machine learning and data science practices certainly helps, but the relevant material is covered in all DL courses that I have tried.
+However, what helps immensely in any case is proficiency with git, Github, Linux, as well as general programming and data processing skills.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot;&gt;
+      &lt;p&gt;I hope that still being close to the beginning of my DL journey makes me in some way more helpful to the absolute beginner (which I too was just a few months ago)… Maybe right now I have some perspective that may get lost should I become a DL expert… &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+</description>
+          <pubDate>2018-04-29T00:00:00-05:00</pubDate>
+          <link>http://www.alexejgossmann.com/deep-learning-self-study/</link>
+          <guid isPermaLink="true">http://www.alexejgossmann.com/deep-learning-self-study/</guid>
+        </item>
+      
+    
+      
+        <item>
           <title>Probabilistic interpretation of AUC</title>
           <description>&lt;p&gt;Unfortunately this was not taught in any of my statistics or data analysis classes at university (wtf it so needs to be :scream_cat:).
 So it took me some time until I learned that the &lt;a href=&quot;https://en.wikipedia.org/wiki/Receiver_operating_characteristic#Area_under_the_curve&quot;&gt;AUC&lt;/a&gt; has a nice probabilistic meaning.&lt;/p&gt;
