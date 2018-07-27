@@ -8,7 +8,7 @@ tags:
 - LMM
 ---
 
-(**EDIT:** I have also written [a more theoretical blog post](http://www.alexejgossmann.com/Lehmanns_TSH_and_TPE/bootstrap_intervals_for_LMM/) on the topic.)
+(**EDIT:** I have also written [a more theoretical blog post](https://agisga.github.io/Lehmanns_TSH_and_TPE/bootstrap_intervals_for_LMM/) on the topic.)
 
 During the last couple of days, I have added some parametric bootstrap capabilities to [`mixed_models`](https://github.com/agisga/mixed_models.git). The following demonstrates first how to resample fixed effects coefficient estimates via bootstrapping. Then various types of bootstrap confidence intervals are presented. Examples of computation and a brief comparison of different types of bootstrap confidence intervals are given.
 

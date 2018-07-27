@@ -8,7 +8,7 @@ tags:
 ---
 
 In many applications, data naturally form an *n*-way tensor with *n > 2*, rather than a "tidy" table.
-As mentioned in the beginning of [my last blog post](http://www.alexejgossmann.com/tensor_decomposition_CP/), a tensor is essentially a multi-dimensional array:
+As mentioned in the beginning of [my last blog post]({{ site.baseurl }}/tensor_decomposition_CP/), a tensor is essentially a multi-dimensional array:
 - a tensor of order one is a vector, which simply is a column of numbers,
 - a tensor of order two is a matrix, which is basically numbers arranged in a rectangle,
 - a tensor of order three looks like numbers arranged in rectangular box (or a cube, if all modes have the same dimension),
@@ -82,7 +82,7 @@ In case of three-way tensors, we can hold on to the following mental image:
 
 ![Figure showing a Tucker decomposition of a 3-way tensor](../images/Tucker_decomposition/3-modal_Tucker_decomposition.jpg)
 
-It is interesting to note that the CP decomposition, that I introduced in [a previous blog post](http://www.alexejgossmann.com/tensor_decomposition_CP/), is a special case of the Tucker decomposition, where the core tensor $G$ is constrained to be superdiagonal.
+It is interesting to note that the CP decomposition, that I introduced in [a previous blog post]({{ site.baseurl }}/tensor_decomposition_CP/), is a special case of the Tucker decomposition, where the core tensor $G$ is constrained to be superdiagonal.
 
 ### Higher-order SVD (HOSVD)
 

@@ -3,32 +3,32 @@
   <head>
     <title>Visualization of MRI data in R – Alexej Gossmann</title>
 
-        <meta charset="utf-8">
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
 
     
     <meta name="description" content="Lately I was getting a little bored with genomic data (and then TCGA2STAT started to give me a segfault on my university’s high performance computing facility too :stuck_out_tongue:). So I decided to analyze some brain imaging data that I had lying around instead. The first step is to do some visual data exploration. In this blog post I present some functions which I was able to find for MRI visualization in R, and which I found to be very useful. All functions presented below presuppose an image in the NIfTI data format as input, and are very user-friendly.
 
-">
+" />
     <meta property="og:description" content="Lately I was getting a little bored with genomic data (and then TCGA2STAT started to give me a segfault on my university’s high performance computing facility too :stuck_out_tongue:). So I decided to analyze some brain imaging data that I had lying around instead. The first step is to do some visual data exploration. In this blog post I present some functions which I was able to find for MRI visualization in R, and which I found to be very useful. All functions presented below presuppose an image in the NIfTI data format as input, and are very user-friendly.
 
-">
+" />
     
-    <meta name="author" content="Alexej Gossmann">
+    <meta name="author" content="Alexej Gossmann" />
 
     
-    <meta property="og:title" content="Visualization of MRI data in R">
-    <meta property="twitter:title" content="Visualization of MRI data in R">
+    <meta property="og:title" content="Visualization of MRI data in R" />
+    <meta property="twitter:title" content="Visualization of MRI data in R" />
     
 
     <!--[if lt IE 9]>
       <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <link rel="stylesheet" type="text/css" href="/style.css">
-    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - PhD student with focus on statistics, machine learning, and programming, among other things" href="/feed.xml">
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - PhD student with focus on statistics, machine learning, and programming, among other things" href="/feed.xml" />
 
     <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
 
@@ -50,7 +50,8 @@
       }
     });
     </script>
-    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML-full">
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML-full">
     </script>
  </head>
 

@@ -3,10 +3,10 @@
   <head>
     <title>Understanding the Tucker decomposition, and compressing tensor-valued data (with R code) – Alexej Gossmann</title>
 
-        <meta charset="utf-8">
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+        <meta charset="utf-8" />
+    <meta content='text/html; charset=utf-8' http-equiv='Content-Type'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0, maximum-scale=1.0'>
 
     
     <meta name="description" content="In many applications, data naturally form an n-way tensor with n &gt; 2, rather than a “tidy” table.
@@ -18,7 +18,7 @@ As mentioned in the beginning of my last blog post, a tensor is essentially a mu
   an nth order (or n-way) tensor looks like numbers arranged in an n-hyperrectangle… you get the idea…
 
 
-">
+" />
     <meta property="og:description" content="In many applications, data naturally form an n-way tensor with n &gt; 2, rather than a “tidy” table.
 As mentioned in the beginning of my last blog post, a tensor is essentially a multi-dimensional array:
 
@@ -28,21 +28,21 @@ As mentioned in the beginning of my last blog post, a tensor is essentially a mu
   an nth order (or n-way) tensor looks like numbers arranged in an n-hyperrectangle… you get the idea…
 
 
-">
+" />
     
-    <meta name="author" content="Alexej Gossmann">
+    <meta name="author" content="Alexej Gossmann" />
 
     
-    <meta property="og:title" content="Understanding the Tucker decomposition, and compressing tensor-valued data (with R code)">
-    <meta property="twitter:title" content="Understanding the Tucker decomposition, and compressing tensor-valued data (with R code)">
+    <meta property="og:title" content="Understanding the Tucker decomposition, and compressing tensor-valued data (with R code)" />
+    <meta property="twitter:title" content="Understanding the Tucker decomposition, and compressing tensor-valued data (with R code)" />
     
 
     <!--[if lt IE 9]>
       <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
 
-    <link rel="stylesheet" type="text/css" href="/style.css">
-    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - PhD student with focus on statistics, machine learning, and programming, among other things" href="/feed.xml">
+    <link rel="stylesheet" type="text/css" href="/style.css" />
+    <link rel="alternate" type="application/rss+xml" title="Alexej Gossmann - PhD student with focus on statistics, machine learning, and programming, among other things" href="/feed.xml" />
 
     <!-- Created with Jekyll Now - http://github.com/barryclark/jekyll-now -->
 
@@ -64,7 +64,8 @@ As mentioned in the beginning of my last blog post, a tensor is essentially a mu
       }
     });
     </script>
-    <script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML-full">
+    <script type="text/javascript" async
+      src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML-full">
     </script>
  </head>
 
@@ -93,7 +94,7 @@ As mentioned in the beginning of my last blog post, a tensor is essentially a mu
 
   <div class="entry">
     <p>In many applications, data naturally form an <em>n</em>-way tensor with <em>n &gt; 2</em>, rather than a “tidy” table.
-As mentioned in the beginning of <a href="http://www.alexejgossmann.com/tensor_decomposition_CP/">my last blog post</a>, a tensor is essentially a multi-dimensional array:</p>
+As mentioned in the beginning of <a href="/tensor_decomposition_CP/">my last blog post</a>, a tensor is essentially a multi-dimensional array:</p>
 <ul>
   <li>a tensor of order one is a vector, which simply is a column of numbers,</li>
   <li>a tensor of order two is a matrix, which is basically numbers arranged in a rectangle,</li>
@@ -171,7 +172,7 @@ As mentioned in the beginning of <a href="http://www.alexejgossmann.com/tensor_d
 
 <p><img src="../images/Tucker_decomposition/3-modal_Tucker_decomposition.jpg" alt="Figure showing a Tucker decomposition of a 3-way tensor"></p>
 
-<p>It is interesting to note that the CP decomposition, that I introduced in <a href="http://www.alexejgossmann.com/tensor_decomposition_CP/">a previous blog post</a>, is a special case of the Tucker decomposition, where the core tensor $G$ is constrained to be superdiagonal.</p>
+<p>It is interesting to note that the CP decomposition, that I introduced in <a href="/tensor_decomposition_CP/">a previous blog post</a>, is a special case of the Tucker decomposition, where the core tensor $G$ is constrained to be superdiagonal.</p>
 
 <h3 id="higher-order-svd-hosvd">Higher-order SVD (HOSVD)</h3>
 

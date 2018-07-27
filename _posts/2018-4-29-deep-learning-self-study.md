@@ -21,8 +21,8 @@ Neural networks (NNs) and deep learning (DL, also deep NNs, or DNNs) are not my 
 
 These `html` slides were created with the excellent [`reveal.js`](https://github.com/hakimel/reveal.js/).
 
-* [__An introduction to neural networks and deep learning__](http://www.alexejgossmann.com/reveal.js/20180426-Math-Modeling-Guest-Lecture.html) &mdash; guest lecture for a mathematical modeling class in the department of biomedical engineering at Tulane (with live-demos using Google Cloud, see slides).
-* [__A survey on Deep Learning in Medical Image Analysis__](http://www.alexejgossmann.com/reveal.js/20180411-Journal-Club.html) &mdash; journal club presentation based on a paper by Litjens, Kooi, Bejnordi, et al. This was presented as a 2-part talk.
+* [__An introduction to neural networks and deep learning__](https://agisga.github.io/reveal.js/20180426-Math-Modeling-Guest-Lecture.html) &mdash; guest lecture for a mathematical modeling class in the department of biomedical engineering at Tulane (with live-demos using Google Cloud, see slides).
+* [__A survey on Deep Learning in Medical Image Analysis__](https://agisga.github.io/reveal.js/20180411-Journal-Club.html) &mdash; journal club presentation based on a paper by Litjens, Kooi, Bejnordi, et al. This was presented as a 2-part talk.
 
 ## My favorite learning resources
 

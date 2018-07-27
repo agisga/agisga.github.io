@@ -204,7 +204,7 @@ This fact can also be easily demonstrated in a couple lines of R code.&lt;/p&gt;
   &lt;li&gt;Extensively used in machine learning, and in medical research – and that for good reasons, as for example explained in an &lt;a href=&quot;https://lukeoakdenrayner.wordpress.com/2017/12/06/do-machines-actually-beat-doctors-roc-curves-and-performance-metrics/&quot;&gt;excellent blog post on deep learning research in medicine by Luke Oakden-Rayner&lt;/a&gt;.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-              <pubdate>2018-01-25T00:00:00-06:00</pubdate>
+              <pubdate>2018-01-25T01:00:00-05:00</pubdate>
               <link>http://www.alexejgossmann.com/auc/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/auc/</guid>
             </item>
@@ -397,7 +397,7 @@ The end goal is, of course, to replace the patent examiner with an AI trained on
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-              <pubdate>2017-09-22T00:00:00-05:00</pubdate>
+              <pubdate>2017-09-22T00:00:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/patents_part_1/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/patents_part_1/</guid>
             </item>
@@ -514,7 +514,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
     &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ggtitle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;paste&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_rep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;repetitions of an LM fit with&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;rows,&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;n_col&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;columns&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
-              <pubdate>2017-06-05T19:00:00-05:00</pubdate>
+              <pubdate>2017-06-05T20:00:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/Freedmans_paradox/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/Freedmans_paradox/</guid>
             </item>
@@ -720,7 +720,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
 
 &lt;p&gt;For these reasons I will go with &lt;code class=&quot;highlighter-rouge&quot;&gt;microbenchmark&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;tictoc&lt;/code&gt;. :bowtie:&lt;/p&gt;
 </description>
-              <pubdate>2017-05-27T23:09:00-05:00</pubdate>
+              <pubdate>2017-05-28T00:09:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/benchmarking_r/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/benchmarking_r/</guid>
             </item>
@@ -826,7 +826,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
 &lt;p&gt;Additionally, it is quite informative to look at a &lt;a href=&quot;https://plot.ly/~agisga/11&quot;&gt;visualization of the salary increase from starting to mid-career&lt;/a&gt;.&lt;/p&gt;
 &lt;iframe width=&quot;800&quot; height=&quot;500&quot; frameborder=&quot;0&quot; scrolling=&quot;no&quot; src=&quot;//plot.ly/~agisga/11.embed&quot;&gt;&lt;/iframe&gt;
 </description>
-              <pubdate>2017-04-27T23:08:00-05:00</pubdate>
+              <pubdate>2017-04-28T00:08:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/salaries_by_school_plotly_viz/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/salaries_by_school_plotly_viz/</guid>
             </item>
@@ -846,7 +846,7 @@ That is, the second model uses the first model for variable selection.&lt;/p&gt;
             <item>
               <title>Understanding the Tucker decomposition, and compressing tensor-valued data (with R code)</title>
               <description>&lt;p&gt;In many applications, data naturally form an &lt;em&gt;n&lt;/em&gt;-way tensor with &lt;em&gt;n &amp;gt; 2&lt;/em&gt;, rather than a “tidy” table.
-As mentioned in the beginning of &lt;a href=&quot;http://www.alexejgossmann.com/tensor_decomposition_CP/&quot;&gt;my last blog post&lt;/a&gt;, a tensor is essentially a multi-dimensional array:&lt;/p&gt;
+As mentioned in the beginning of &lt;a href=&quot;/tensor_decomposition_CP/&quot;&gt;my last blog post&lt;/a&gt;, a tensor is essentially a multi-dimensional array:&lt;/p&gt;
 &lt;ul&gt;
   &lt;li&gt;a tensor of order one is a vector, which simply is a column of numbers,&lt;/li&gt;
   &lt;li&gt;a tensor of order two is a matrix, which is basically numbers arranged in a rectangle,&lt;/li&gt;
@@ -924,7 +924,7 @@ As mentioned in the beginning of &lt;a href=&quot;http://www.alexejgossmann.com/
 
 &lt;p&gt;&lt;img src=&quot;../images/Tucker_decomposition/3-modal_Tucker_decomposition.jpg&quot; alt=&quot;Figure showing a Tucker decomposition of a 3-way tensor&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;It is interesting to note that the CP decomposition, that I introduced in &lt;a href=&quot;http://www.alexejgossmann.com/tensor_decomposition_CP/&quot;&gt;a previous blog post&lt;/a&gt;, is a special case of the Tucker decomposition, where the core tensor &lt;img src=&quot;http://latex.codecogs.com/png.latex?G\inline&quot;/&gt; is constrained to be superdiagonal.&lt;/p&gt;
+&lt;p&gt;It is interesting to note that the CP decomposition, that I introduced in &lt;a href=&quot;/tensor_decomposition_CP/&quot;&gt;a previous blog post&lt;/a&gt;, is a special case of the Tucker decomposition, where the core tensor &lt;img src=&quot;http://latex.codecogs.com/png.latex?G\inline&quot;/&gt; is constrained to be superdiagonal.&lt;/p&gt;
 
 &lt;h3 id=&quot;higher-order-svd-hosvd&quot;&gt;Higher-order SVD (HOSVD)&lt;/h3&gt;
 
@@ -1085,7 +1085,7 @@ is satisfied:&lt;/p&gt;
 
 &lt;p&gt;Even though data compression does not make much sense for the size of the dataset considered here, it clearly shows potential to be very useful for purposes of data distribution and data storage, when the data size far exceeds the terabyte range.&lt;/p&gt;
 </description>
-              <pubdate>2017-04-05T00:50:00-05:00</pubdate>
+              <pubdate>2017-04-05T01:50:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/tensor_decomposition_tucker/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/tensor_decomposition_tucker/</guid>
             </item>
@@ -1291,7 +1291,7 @@ for(i in 1:30) {
   &lt;/ol&gt;
 &lt;/div&gt;
 </description>
-              <pubdate>2017-04-02T14:30:00-05:00</pubdate>
+              <pubdate>2017-04-02T15:30:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/tensor_decomposition_CP/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/tensor_decomposition_CP/</guid>
             </item>
@@ -1454,7 +1454,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 &lt;a rel=&quot;license&quot; href=&quot;http://creativecommons.org/licenses/by/4.0/&quot;&gt;&lt;img alt=&quot;Creative Commons License&quot; style=&quot;border-width:0&quot; src=&quot;https://i.creativecommons.org/l/by/4.0/80x15.png&quot; /&gt;&lt;/a&gt;&lt;br /&gt;This work is licensed under a &lt;a rel=&quot;license&quot; href=&quot;http://creativecommons.org/licenses/by/4.0/&quot;&gt;Creative Commons Attribution 4.0 International License&lt;/a&gt;.
 &lt;/font&gt;
 </description>
-              <pubdate>2017-03-18T00:00:00-05:00</pubdate>
+              <pubdate>2017-03-18T00:00:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/contours_of_statistical_penalty_functions_as_GIFs/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/contours_of_statistical_penalty_functions_as_GIFs/</guid>
             </item>
@@ -1508,7 +1508,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 
 &lt;p&gt;Because I know from &lt;a href=&quot;http://www.phdcomics.com/comics/archive.php?comicid=1415&quot;&gt;a phdcomics cartoon&lt;/a&gt; that caffeine combined with a lack of sleep will turn me into a robot rather than into somebody who might eventually finish graduate school…&lt;/p&gt;
 </description>
-              <pubdate>2017-02-15T02:35:00-06:00</pubdate>
+              <pubdate>2017-02-15T03:35:00-05:00</pubdate>
               <link>http://www.alexejgossmann.com/grad-school-and-coffee/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/grad-school-and-coffee/</guid>
             </item>
@@ -1631,7 +1631,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 
 &lt;p&gt;&lt;img src=&quot;../images/MRI_viz/lung_orthographic-1.png&quot; alt=&quot;plot of chunk lung_orthographic&quot; /&gt;&lt;/p&gt;
 </description>
-              <pubdate>2017-01-27T10:30:15-06:00</pubdate>
+              <pubdate>2017-01-27T11:30:15-05:00</pubdate>
               <link>http://www.alexejgossmann.com/MRI_viz/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/MRI_viz/</guid>
             </item>
@@ -1680,7 +1680,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
   &lt;li&gt;&lt;a href=&quot;https://www.kaggle.com/agisga/d/benhamner/clinton-trump-tweets/top-10-tweets&quot;&gt;I have also written a script producing the above visualizations of the top ten tweets of either presidential candidate&lt;/a&gt;, learning more about ggplot2 in the process.&lt;/li&gt;
 &lt;/ul&gt;
 </description>
-              <pubdate>2016-10-25T00:00:00-05:00</pubdate>
+              <pubdate>2016-10-25T00:00:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/clinton_trump_tweets/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/clinton_trump_tweets/</guid>
             </item>
@@ -2121,7 +2121,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 ## 8     &amp;lt;NA&amp;gt;      &amp;lt;NA&amp;gt;   &amp;lt;NA&amp;gt;             Image       1992
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
-              <pubdate>2016-07-19T00:00:00-05:00</pubdate>
+              <pubdate>2016-07-19T00:00:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/dplyr_basics/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/dplyr_basics/</guid>
             </item>
@@ -2191,7 +2191,7 @@ We observe that for &lt;img src=&quot;http://latex.codecogs.com/png.latex?p \leq
 
 &lt;p&gt;Of course, the method does not perform this good under all circumstances — the interested reader can learn more from the papers referred to in the &lt;a href=&quot;https://github.com/agisga/grpSLOPE/blob/master/README.md&quot;&gt;grpSLOPE README on github&lt;/a&gt; (unfortunately, the “real” journal publication is still under preparation, and another related journal publication is currently under review, so, not publicly available yet either).&lt;/p&gt;
 </description>
-              <pubdate>2016-05-12T00:00:00-05:00</pubdate>
+              <pubdate>2016-05-12T00:00:00-04:00</pubdate>
               <link>http://www.alexejgossmann.com/grpSLOPE_on_CRAN/</link>
               <guid ispermalink="true">http://www.alexejgossmann.com/grpSLOPE_on_CRAN/</guid>
             </item>
