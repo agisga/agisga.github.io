@@ -7,5 +7,6 @@ Changes can be pushed to AWS S3 conveniently with the [s3_website gem](https://g
 Just do:
 
 ```
+bundle exec jekyll build
 s3_website push
 ```

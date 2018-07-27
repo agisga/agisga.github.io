@@ -7,6 +7,128 @@
     
       
         <item>
+          <title>Setting up an HTTPS static site using AWS S3 and Cloudfront (and also Jekyll and s3_website)</title>
+          <description>&lt;p&gt;For a while now I wanted to migrate my websites away from Github pages.
+While Github provides an excellent free service, there are some limitations to its capabilities, and the longer I wait the harder (or the more inconvenient) it becomes to migrate away from gh-pages.
+AWS S3 + CloudFront is a widely-used alternative that has been around for a long time.
+Moreover, I was planning to get more familiar with AWS at all levels anyway.
+So, it’s a great learning opportunity too.&lt;/p&gt;
+
+&lt;p&gt;There are a &lt;a href=&quot;https://medium.com/@esfoobar/setting-up-an-https-static-site-using-amazon-aws-7ab270c4e277&quot;&gt;number&lt;/a&gt; &lt;a href=&quot;https://www.david-merrick.com/2017/05/24/moving-my-jekyll-website-from-github-pages-to-s3/&quot;&gt;of&lt;/a&gt; &lt;a href=&quot;https://vickylai.com/verbose/hosting-your-static-site-with-aws-s3-route-53-and-cloudfront/&quot;&gt;very&lt;/a&gt; &lt;a href=&quot;https://medium.com/@jameshamann/migrating-your-jekyll-website-to-aws-bc9582b3fbb2&quot;&gt;helpful&lt;/a&gt; &lt;a href=&quot;https://blog.jpterry.com/howto/2016/02/02/secure-static-hosting-w-s3-cloudfront-acm.html&quot;&gt;tutorials&lt;/a&gt; online on how to set up an HTTPS static site using AWS S3 and CloudFront.
+Of course, as always the case with blog articles, they may be outdated, incomplete, and generally not as trustworthy as &lt;a href=&quot;https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html&quot;&gt;the official AWS documentation on the topic&lt;/a&gt;, which is pretty good too; but it is also somewhat fragmented and inconvenient to follow.
+So I wrote my own summary to refer to in the future.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;tldr:&lt;/strong&gt; Relevant AWS docs: &lt;a href=&quot;https://docs.aws.amazon.com/AmazonS3/latest/dev/HostingWebsiteOnS3Setup.html&quot;&gt;How to create a static website on AWS S3&lt;/a&gt;; &lt;a href=&quot;https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html&quot;&gt;How to use a custom domain with AWS S3&lt;/a&gt;; &lt;a href=&quot;https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-cloudfront-walkthrough.html&quot;&gt;Setting up Amazon CloudFront&lt;/a&gt;; &lt;a href=&quot;https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request-public.html&quot;&gt;SSL certificate instructions&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h3 id=&quot;1-set-up-a-static-site-yet-without-cloudfront-and-without-https&quot;&gt;1 Set up a static site, yet without CloudFront and without HTTPS&lt;/h3&gt;
+
+&lt;p&gt;First, we set up a static HTTP site without a custom domain on AWS S3:&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Create a bucket named &lt;code class=&quot;highlighter-rouge&quot;&gt;example.com&lt;/code&gt; (obviously replace &lt;code class=&quot;highlighter-rouge&quot;&gt;example.com&lt;/code&gt; with your own domain).&lt;/li&gt;
+  &lt;li&gt;Follow the procedure given at &lt;a href=&quot;https://docs.aws.amazon.com/AmazonS3/latest/dev/HostingWebsiteOnS3Setup.html&quot;&gt;https://docs.aws.amazon.com/AmazonS3/latest/dev/HostingWebsiteOnS3Setup.html&lt;/a&gt; to &lt;em&gt;enable website hosting&lt;/em&gt; for the bucket, and to make it &lt;em&gt;publicly readable&lt;/em&gt;; (optionally) if you want to understand the AWS bucket access policy language see &lt;a href=&quot;https://docs.aws.amazon.com/AmazonS3/latest/dev//access-policy-language-overview.html&quot;&gt;https://docs.aws.amazon.com/AmazonS3/latest/dev//access-policy-language-overview.html&lt;/a&gt;, and follow the links from there.&lt;/li&gt;
+  &lt;li&gt;Test the S3 website: Upload an &lt;code class=&quot;highlighter-rouge&quot;&gt;index.html&lt;/code&gt; to the bucket (you can keep all options for the upload at their default values). Go to &lt;a href=&quot;http://example.com.s3-website-us-east-1.amazonaws.com/&quot;&gt;http://example.com.s3-website-us-east-1.amazonaws.com/&lt;/a&gt; (where you need to replace &lt;code class=&quot;highlighter-rouge&quot;&gt;example.com&lt;/code&gt; with the bucket name, and &lt;code class=&quot;highlighter-rouge&quot;&gt;us-east-1&lt;/code&gt; with your bucket’s region), and see if the contents of &lt;code class=&quot;highlighter-rouge&quot;&gt;index.html&lt;/code&gt; show up.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Yay :laughing: we have a working website!! …without a custom domain or https :sweat_smile:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;The www subdomain:&lt;/strong&gt; Now prepare another S3 bucket for the subdomain “www.example.com” to be later redirected to the root domain “example.com” (btw, if you so wish, &lt;code class=&quot;highlighter-rouge&quot;&gt;www.example.com&lt;/code&gt; can be the main S3 bucket and the &lt;code class=&quot;highlighter-rouge&quot;&gt;example.com&lt;/code&gt; bucket can be configured to redirect — just swap their roles in this entire writeup):&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Create a bucket named &lt;code class=&quot;highlighter-rouge&quot;&gt;www.example.com&lt;/code&gt; (all options can be left at their defaults; this bucket doesn’t need to be publicly readable).&lt;/li&gt;
+  &lt;li&gt;Configure &lt;code class=&quot;highlighter-rouge&quot;&gt;www.example.com&lt;/code&gt; to redirect all requests to &lt;code class=&quot;highlighter-rouge&quot;&gt;example.com&lt;/code&gt; following Step 2.3 from the AWS docs at &lt;a href=&quot;https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html&quot;&gt;https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html&lt;/a&gt;.&lt;/li&gt;
+  &lt;li&gt;Test the endpoints for the redirect by going to &lt;a href=&quot;http://www.example.com.s3-website-us-east-1.amazonaws.com/&quot;&gt;http://www.example.com.s3-website-us-east-1.amazonaws.com/&lt;/a&gt; (as before replace the bucket name and region accordingly).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Map the domain and subdomain to their S3 buckets:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Amazon Route 53 is a service that maintains a mapping between the alias records and the IP of the bucket.
+You need to follow Step 3 from the AWS docs at &lt;a href=&quot;https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html&quot;&gt;https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Configuration with your domain name registrar:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;In AWS go to Route 53 -&amp;gt; Hosted zones -&amp;gt; example.com&lt;/li&gt;
+  &lt;li&gt;The NS (name servers) records that you see are what needs to be provided to the domain name registrar. For example, for GoDaddy I have to choose to use “custom nameservers” under the DNS settings for the domain, and then to input all (four in my case) of the URLs provided as values under the NS record.&lt;/li&gt;
+  &lt;li&gt;Your website should now appear under http://example.com (and http://www.example.com).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;:smile: So we have a website with a custom domain!! …though yet without CloudFront (so loading may be rather slow) and without HTTPS.&lt;/p&gt;
+
+&lt;h4 id=&quot;optional-configure-an-iam-role-with-limited-access-permissions&quot;&gt;Optional: Configure an IAM role with limited access permissions&lt;/h4&gt;
+
+&lt;p&gt;Now it seems a good idea to create a new user that has full read-write permission to the &lt;code class=&quot;highlighter-rouge&quot;&gt;example.com&lt;/code&gt; bucket and full permission to CloudFront, but does not have any further AWS permissions.
+A suitable IAM policy document can be found at: &lt;a href=&quot;https://github.com/laurilehmijoki/s3_website/blob/master/additional-docs/setting-up-aws-credentials.md&quot;&gt;https://github.com/laurilehmijoki/s3_website/blob/master/additional-docs/setting-up-aws-credentials.md&lt;/a&gt;
+Make sure to save the new user’s access key ID and secret access key somewhere in a private place.&lt;/p&gt;
+
+&lt;h4 id=&quot;optional-use-jekyll-and-s3_website-to-generate-a-static-site-and-to-push-it-to-the-s3-bucket&quot;&gt;Optional: Use Jekyll and s3_website to generate a static site and to push it to the S3 bucket&lt;/h4&gt;
+
+&lt;p&gt;Well, I typically use &lt;a href=&quot;https://jekyllrb.com/&quot;&gt;Jekyll&lt;/a&gt; to make my static sites (because it’s awesome!).
+The Ruby gem &lt;a href=&quot;https://github.com/laurilehmijoki/s3_website&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;s3_website&lt;/code&gt;&lt;/a&gt; can be used to push the website to, or to synchronized it with the S3 bucket.
+The &lt;a href=&quot;https://github.com/laurilehmijoki/s3_website&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;s3_website&lt;/code&gt; documentation&lt;/a&gt; is easy to follow.
+I have found it convenient to use the &lt;a href=&quot;https://github.com/bkeepers/dotenv&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;dotenv&lt;/code&gt; gem&lt;/a&gt; to keep the access key ID and the secret access key of the user (that was just created) locally in a &lt;code class=&quot;highlighter-rouge&quot;&gt;.env&lt;/code&gt; file (don’t commit/push it to github!!!)
+At this point you may also choose to allow &lt;code class=&quot;highlighter-rouge&quot;&gt;s3_website&lt;/code&gt; to set up CloudFront for the website to save some time later (though without the SSL certificate, which will still have to be added manually, see below).&lt;/p&gt;
+
+&lt;h3 id=&quot;2-request-a-public-ssl-certificate&quot;&gt;2 Request a public SSL certificate&lt;/h3&gt;
+
+&lt;p&gt;We need an SSL certificate to enable HTTPS for the custom domain when it is accessed through CloudFront.&lt;/p&gt;
+
+&lt;p&gt;Follow the AWS docs at &lt;a href=&quot;https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request-public.html&quot;&gt;https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request-public.html&lt;/a&gt; to request an SSL certificate for your domain. Some important points:&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Add &lt;code class=&quot;highlighter-rouge&quot;&gt;example.com&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;*.example.com&lt;/code&gt; to the certificate.&lt;/li&gt;
+  &lt;li&gt;Use DNS validation (rather than email validation), whereby in the “pending validation” stage you can choose “Create record in Route 53” which saves time (since we have already configures Route 53 for this domain).&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;I encountered one caveat in this process:&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;To use an ACM Certificate with CloudFront, you must request or import the certificate in the US East (N. Virginia) region.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;(from &lt;a href=&quot;http://docs.aws.amazon.com/acm/latest/userguide/acm-services.html&quot;&gt;http://docs.aws.amazon.com/acm/latest/userguide/acm-services.html&lt;/a&gt;); i.e., change region to US East N. Virginia (top right corner within the AWS interface).&lt;/p&gt;
+
+&lt;h3 id=&quot;3-create-a-cloudfront-distribution&quot;&gt;3 Create a CloudFront distribution&lt;/h3&gt;
+
+&lt;p&gt;Follow these AWS docs to create a CloudFront distribution: &lt;a href=&quot;https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-cloudfront-walkthrough.html&quot;&gt;https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-cloudfront-walkthrough.html&lt;/a&gt;; unless a CloudFront distribution was already created by &lt;code class=&quot;highlighter-rouge&quot;&gt;s3_website&lt;/code&gt; (see one of the previous optional steps), in which case it needs to be merely edited (add the SSL certificate to it, and update “Alternate Domain Names” with &lt;code class=&quot;highlighter-rouge&quot;&gt;yourdomain.com&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;www.yourdomain.com&lt;/code&gt; if necessary).&lt;/p&gt;
+
+&lt;p&gt;Notice the designated CloudFront distribution domain, which should look similar to vtrlj8ubh2k69.cloudfront.net. Once set up the website should appear under it.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;A few points I found noteworthy:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;One can choose to set HTTP to always redirect to HTTPS.&lt;/li&gt;
+  &lt;li&gt;Once issued, the SSL certificate can be selected from the drop down menu under “Custom SSL Certificates”.&lt;/li&gt;
+  &lt;li&gt;As pointed out in &lt;a href=&quot;https://vickylai.com/verbose/hosting-your-static-site-with-aws-s3-route-53-and-cloudfront/&quot;&gt;Vicky Lai’s blog post&lt;/a&gt; the “Origin” column in the CloudFront Console should show the S3 bucket’s endpoint &lt;code class=&quot;highlighter-rouge&quot;&gt;example.com.s3-website.us-east-1.amazonaws.com&lt;/code&gt;, and not the bucket name &lt;code class=&quot;highlighter-rouge&quot;&gt;example.com.s3.amazonaws.com&lt;/code&gt; (btw &lt;code class=&quot;highlighter-rouge&quot;&gt;s3_website&lt;/code&gt; does this correctly). Note that when setting up, the drop down menu offers only the bucket name to be picked rather the correct endpoint; so, don’t use the drop down menu; type it in yourself.&lt;sup id=&quot;fnref:1&quot;&gt;&lt;a href=&quot;#fn:1&quot; class=&quot;footnote&quot;&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;Update A records in Route 53, and update the&lt;/strong&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;s3_website&lt;/code&gt; &lt;strong&gt;configs:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;In AWS go to Route 53 -&amp;gt; Hosted zones -&amp;gt; example.com&lt;/li&gt;
+  &lt;li&gt;For both A records, change the “Alias Target” from the S3 endpoint to the CloudFront distribution domain (i.e., something like &lt;code class=&quot;highlighter-rouge&quot;&gt;vtrlj8ubh2k69.cloudfront.net&lt;/code&gt;).&lt;/li&gt;
+  &lt;li&gt;If you use &lt;code class=&quot;highlighter-rouge&quot;&gt;s3_website&lt;/code&gt; check or set the &lt;code class=&quot;highlighter-rouge&quot;&gt;cloudfront_distribution_id&lt;/code&gt; property in &lt;code class=&quot;highlighter-rouge&quot;&gt;s3_website.yml&lt;/code&gt; to the correct distribution ID (something like &lt;code class=&quot;highlighter-rouge&quot;&gt;SY9Q4DHIOUG7A&lt;/code&gt;)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;That’s it — the site should now be accessible under &lt;code class=&quot;highlighter-rouge&quot;&gt;https://example.com&lt;/code&gt; and &lt;code class=&quot;highlighter-rouge&quot;&gt;https://www.example.com&lt;/code&gt;. :tada: :tada: :tada:&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;div class=&quot;footnotes&quot;&gt;
+  &lt;ol&gt;
+    &lt;li id=&quot;fn:1&quot;&gt;
+      &lt;p&gt;It is not exactly clear to me what difference it makes to set the “Origin” to &lt;code class=&quot;highlighter-rouge&quot;&gt;example.com.s3.amazonaws.com&lt;/code&gt; vs &lt;code class=&quot;highlighter-rouge&quot;&gt;example.com.s3-website.us-east-1.amazonaws.com&lt;/code&gt;. However, it solved one of my issues. At first I set the “Origin” value to the bucket name, similar to &lt;code class=&quot;highlighter-rouge&quot;&gt;example.com.s3.amazonaws.com&lt;/code&gt;, since that is what was offered by the drop down menu in CloudFront. The landing page of the website was working just fine under the custom domain. However, when I navigated to subdirectories in my domain, similar to &lt;code class=&quot;highlighter-rouge&quot;&gt;example.com/about/&lt;/code&gt;, the server did not seem to understand that it needed to look for the &lt;code class=&quot;highlighter-rouge&quot;&gt;index.html&lt;/code&gt; within the &lt;code class=&quot;highlighter-rouge&quot;&gt;about&lt;/code&gt; directory, and produced an error. Once I edited the “Origin” record to the S3 bucket endpoint, similar to &lt;code class=&quot;highlighter-rouge&quot;&gt;example.com.s3-website.us-east-1.amazonaws.com&lt;/code&gt;, all pages of the website started to display perfectly fine. &lt;a href=&quot;#fnref:1&quot; class=&quot;reversefootnote&quot;&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+    &lt;/li&gt;
+  &lt;/ol&gt;
+&lt;/div&gt;
+</description>
+          <pubDate>2018-07-27T00:00:00-04:00</pubDate>
+          <link>http://www.alexejgossmann.com/AWS_S3_and_CloudFront/</link>
+          <guid isPermaLink="true">http://www.alexejgossmann.com/AWS_S3_and_CloudFront/</guid>
+        </item>
+      
+    
+      
+        <item>
           <title>Neural networks and deep learning &amp;mdash; self-study and 2 presentations</title>
           <description>&lt;p&gt;Last month, after mentioning “deep learning” a few times to some professors, I suddenly found myself in a position where I had to prepare three talks about “deep learning” within just one month… :sweat_smile:
 This is not to complain. I actually strongly enjoy studying the relevant theory, applying it to interesting datasets, and presenting what I have learned.
