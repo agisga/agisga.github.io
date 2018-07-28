@@ -16,7 +16,7 @@ There are a [number](https://medium.com/@esfoobar/setting-up-an-https-static-sit
 Of course, as always the case with blog articles, they may be outdated, incomplete, and generally not as trustworthy as [the official AWS documentation on the topic](https://docs.aws.amazon.com/AmazonS3/latest/dev/WebsiteHosting.html), which is pretty good too; but it is also somewhat fragmented and inconvenient to follow.
 So I wrote my own summary to refer to in the future.
 
-**tldr:** Relevant AWS docs: [How to create a static website on AWS S3](https://docs.aws.amazon.com/AmazonS3/latest/dev/HostingWebsiteOnS3Setup.html); [How to use a custom domain with AWS S3](https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html); [Setting up Amazon CloudFront](https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-cloudfront-walkthrough.html); [SSL certificate instructions](https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request-public.html).
+**Relevant AWS docs:** [How to create a static website on AWS S3](https://docs.aws.amazon.com/AmazonS3/latest/dev/HostingWebsiteOnS3Setup.html); [How to use a custom domain with AWS S3](https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html); [Setting up Amazon CloudFront](https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-cloudfront-walkthrough.html); [SSL certificate instructions](https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request-public.html).
 
 ### 1 Set up a static site, yet without CloudFront and without HTTPS
 
