@@ -24,15 +24,15 @@ First, we set up a static HTTP site without a custom domain on AWS S3:
 
 - Create a bucket named `example.com` (obviously replace `example.com` with your own domain).
 - Follow the procedure given at <https://docs.aws.amazon.com/AmazonS3/latest/dev/HostingWebsiteOnS3Setup.html> to *enable website hosting* for the bucket, and to make it *publicly readable*; (optionally) if you want to understand the AWS bucket access policy language see <https://docs.aws.amazon.com/AmazonS3/latest/dev//access-policy-language-overview.html>, and follow the links from there.
-- Test the S3 website: Upload an `index.html` to the bucket (you can keep all options for the upload at their default values). Go to <http://example.com.s3-website-us-east-1.amazonaws.com/> (where you need to replace `example.com` with the bucket name, and `us-east-1` with your bucket's region), and see if the contents of `index.html` show up.
+- Test the S3 website: Upload an `index.html` to the bucket (you can keep all options for the upload at their default values). Then go to `http://example.com.s3-website-us-east-1.amazonaws.com/` (where you need to replace `example.com` with the bucket name, and `us-east-1` with your bucket's region), and see if the contents of `index.html` show up.
 
-Yay :laughing: we have a working website!! ...without a custom domain or https :sweat_smile:
+Yay :laughing: we have a working website!! ...without a custom domain or https yet :sweat_smile:
 
 **The www subdomain:** Now prepare another S3 bucket for the subdomain "www.example.com" to be later redirected to the root domain "example.com" (btw, if you so wish, `www.example.com` can be the main S3 bucket and the `example.com` bucket can be configured to redirect &mdash; just swap their roles in this entire writeup):
 
 - Create a bucket named `www.example.com` (all options can be left at their defaults; this bucket doesn't need to be publicly readable).
 - Configure `www.example.com` to redirect all requests to `example.com` following Step 2.3 from the AWS docs at <https://docs.aws.amazon.com/AmazonS3/latest/dev/website-hosting-custom-domain-walkthrough.html>.
-- Test the endpoints for the redirect by going to <http://www.example.com.s3-website-us-east-1.amazonaws.com/> (as before replace the bucket name and region accordingly).
+- Test the endpoints for the redirect by going to `http://www.example.com.s3-website-us-east-1.amazonaws.com/` (as before replace the bucket name and region accordingly).
 
 **Map the domain and subdomain to their S3 buckets:**
 
@@ -45,7 +45,7 @@ You need to follow Step 3 from the AWS docs at <https://docs.aws.amazon.com/Amaz
 - The NS (name servers) records that you see are what needs to be provided to the domain name registrar. For example, for GoDaddy I have to choose to use "custom nameservers" under the DNS settings for the domain, and then to input all (four in my case) of the URLs provided as values under the NS record.
 - Your website should now appear under http://example.com (and http://www.example.com).
 
-:smile: So we have a website with a custom domain!! ...though yet without CloudFront (so loading may be rather slow) and without HTTPS.
+:smile: So we have a website with a custom domain!! ...though without CloudFront (so loading may be rather slow) and without HTTPS.
 
 #### Optional: Configure an IAM role with limited access permissions
 
@@ -61,11 +61,11 @@ The [`s3_website` documentation](https://github.com/laurilehmijoki/s3_website) i
 I have found it convenient to use the [`dotenv` gem](https://github.com/bkeepers/dotenv) to keep the access key ID and the secret access key of the user (that was just created) locally in a `.env` file (don't commit/push it to github!!!)
 At this point you may also choose to allow `s3_website` to set up CloudFront for the website to save some time later (though without the SSL certificate, which will still have to be added manually, see below).
 
-### 2 Request a public SSL certificate
+### 2 Request an SSL certificate
 
 We need an SSL certificate to enable HTTPS for the custom domain when it is accessed through CloudFront.
 
-Follow the AWS docs at <https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request-public.html> to request an SSL certificate for your domain. Some important points:
+Follow the AWS docs at <https://docs.aws.amazon.com/acm/latest/userguide/gs-acm-request-public.html> to request a public certificate for your domain. Some important points:
 * Add `example.com` and `*.example.com` to the certificate.
 * Use DNS validation (rather than email validation), whereby in the "pending validation" stage you can choose "Create record in Route 53" which saves time (since we have already configures Route 53 for this domain).
 
@@ -73,7 +73,7 @@ I encountered one caveat in this process:
 
 > To use an ACM Certificate with CloudFront, you must request or import the certificate in the US East (N. Virginia) region.
 
-(from <http://docs.aws.amazon.com/acm/latest/userguide/acm-services.html>); i.e., change region to US East N. Virginia (top right corner within the AWS interface).
+(from <http://docs.aws.amazon.com/acm/latest/userguide/acm-services.html>); i.e., change region to US East N. Virginia if needed (top right corner within the AWS interface).
 
 ### 3 Create a CloudFront distribution
 
