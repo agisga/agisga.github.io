@@ -14,6 +14,7 @@ I keep a <a href="{{ site.baseurl }}/">blog</a> to practice writing fast.
 
 ### Links
 
+* [0-fold Cross Validation](https://0foldcv.com)
 * [Bioinnovation PhD program, Tulane University](http://www2.tulane.edu/bioinnovation-IGERT/)
 * [Multiscale Bioimaging and Bioinformatics Laboratory, Tulane University](http://www.tulane.edu/~wyp/)
 * [R-bloggers](https://www.r-bloggers.com/)
