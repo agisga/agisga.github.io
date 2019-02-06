@@ -6,6 +6,8 @@ permalink: /about/
 
 I keep a <a href="{{ site.baseurl }}/">blog</a> to practice writing fast.
 
+All opinions are mine (obviously).
+
 ### More information
 
 * [My academic CV](https://github.com/agisga/CV/raw/master/Alexej_Gossmann_CV.pdf).

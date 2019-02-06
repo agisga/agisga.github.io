@@ -6,7 +6,7 @@
 name: Alexej Gossmann
 
 # Short bio or description (displayed in the header)
-description: Sleep deprived focus on statistics, machine learning, and programming, among other things
+description: Focus on statistics, machine learning, and programming, among other things
 # description: New Orleans 😎
 # description: Proper noun | [ɐlʲɪkˈsʲej ˈɡɔsman] | PhD student at Tulane University
 # description: I am interested in math, stats, coding, genetics, ...
@@ -30,7 +30,7 @@ footer-links:
   linkedin: alexejgossmann
   pinterest:
   rss: feed.xml
-  twitter:
+  twitter: agisga
   stackoverflow: # your stackoverflow profile, e.g. "users/50476/bart-kiers"
   youtube: # channel/<your_long_string> or user/<user-name>
   googleplus: # anything in your profile username that comes after plus.google.com/

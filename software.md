@@ -4,6 +4,10 @@ title: Code
 permalink: /code/
 ---
 
+* [`ThresholdoutAUC`](https://github.com/DIDSR/ThresholdoutAUC) &mdash; Something interesting here.[^1]
+<br>
+[:octocat: github](https://github.com/DIDSR/ThresholdoutAUC)
+
 * [`grpSLOPE`](https://github.com/agisga/grpSLOPE) &mdash; Group SLOPE is a penalized linear regression method that is used for adaptive selection of groups of significant predictors in a high-dimensional linear model. A unique feature of the Group SLOPE method is that it offers (group) false discovery rate control (i.e., control of the expected proportion of irrelevant groups among the total number of groups of predictors selected by the Group SLOPE method). This R package is associated with [Brzyski et. al.(2018) "Group SLOPE - adaptive selection of groups of predictor"](http://dx.doi.org/10.1080/01621459.2017.1411269) ([arXiv version](http://arxiv.org/abs/1610.04960)).
 <br>
 [:octocat: github](https://github.com/agisga/grpSLOPE) [:page_facing_up: gh-pages](https://agisga.github.io/grpSLOPE/) [:v: CRAN](https://cran.r-project.org/web/packages/grpSLOPE/index.html)
@@ -27,3 +31,7 @@ permalink: /code/
 [:octocat: github](https://github.com/agisga/spitzy) [:page_facing_up: gh-pages](https://agisga.github.io/spitzy/) [:gem: rubygems](https://rubygems.org/gems/spitzy)
 
 * When I have some free time, I like to contribute code to open source software projects (mostly, related to mathematics, statistics or machine learning). Visit my [github page](https://github.com/agisga) for the projects that I contribute to.
+
+------------------
+
+[^1]: note to self: update description.
